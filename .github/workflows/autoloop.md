@@ -40,13 +40,21 @@ safe-outputs:
   create-pull-request:
     draft: true
     labels: [automation, autoloop]
-    protected-files: fallback-to-issue
+    protected-files:
+      policy: fallback-to-issue
+      exclude:
+        - package.json
+        - bunfig.toml
     preserve-branch-name: true
     max: 1
   push-to-pull-request-branch:
     target: "*"
     title-prefix: "[Autoloop"
     max: 1
+    protected-files:
+      exclude:
+        - package.json
+        - bunfig.toml
   create-issue:
     labels: [automation, autoloop]
     max: 1

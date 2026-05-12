@@ -22,6 +22,7 @@ Only modify these files:
 - `README.md` — short status note for this milestone
 
 Do NOT modify:
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
 - `.github/workflows/**`
 - `.autoloop/**` (except this program file)
 - Dependency lockfiles unless required by test execution
