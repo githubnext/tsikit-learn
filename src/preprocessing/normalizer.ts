@@ -40,7 +40,10 @@ export class Normalizer extends BaseEstimator {
     });
   }
 
-  fit_transform(X: Float64Array[], _y?: Float64Array | Int32Array): Float64Array[] {
+  fit_transform(
+    X: Float64Array[],
+    _y?: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.transform(X);
   }
 

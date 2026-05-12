@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import { LinearRegression } from "../src/linear_model/linear_regression.ts";
 import { Ridge } from "../src/linear_model/ridge.ts";
 
@@ -16,8 +16,10 @@ describe("LinearRegression", () => {
     reg.fit(X, y);
 
     expect(reg.coef_).toBeDefined();
-    expect(Math.abs((reg.coef_ as Float64Array)[0]! - 2)).toBeLessThan(1e-6);
-    expect(Math.abs((reg.intercept_ as number))).toBeLessThan(1e-6);
+    expect(Math.abs(((reg.coef_ as Float64Array)[0] ?? 0) - 2)).toBeLessThan(
+      1e-6,
+    );
+    expect(Math.abs(reg.intercept_ as number)).toBeLessThan(1e-6);
   });
 
   it("fits with intercept", () => {
@@ -30,7 +32,9 @@ describe("LinearRegression", () => {
     const reg = new LinearRegression();
     reg.fit(X, y);
 
-    expect(Math.abs((reg.coef_ as Float64Array)[0]! - 2)).toBeLessThan(1e-6);
+    expect(Math.abs(((reg.coef_ as Float64Array)[0] ?? 0) - 2)).toBeLessThan(
+      1e-6,
+    );
     expect(Math.abs((reg.intercept_ as number) - 1)).toBeLessThan(1e-6);
   });
 
@@ -44,7 +48,9 @@ describe("LinearRegression", () => {
     const reg = new LinearRegression({ fit_intercept: false });
     reg.fit(X, y);
 
-    expect(Math.abs((reg.coef_ as Float64Array)[0]! - 3)).toBeLessThan(1e-6);
+    expect(Math.abs(((reg.coef_ as Float64Array)[0] ?? 0) - 3)).toBeLessThan(
+      1e-6,
+    );
     expect(reg.intercept_).toBe(0);
   });
 
@@ -55,7 +61,7 @@ describe("LinearRegression", () => {
     reg.fit(X, y);
 
     const pred = reg.predict([new Float64Array([3])]);
-    expect(Math.abs(pred[0]! - 3)).toBeLessThan(1e-4);
+    expect(Math.abs((pred[0] ?? 0) - 3)).toBeLessThan(1e-4);
   });
 
   it("fits multiple features", () => {
@@ -71,7 +77,7 @@ describe("LinearRegression", () => {
     reg.fit(X, y);
 
     const pred = reg.predict([new Float64Array([1, 2])]);
-    expect(Math.abs(pred[0]! - 5)).toBeLessThan(0.1);
+    expect(Math.abs((pred[0] ?? 0) - 5)).toBeLessThan(0.1);
   });
 
   it("computes R² score", () => {
@@ -90,8 +96,10 @@ describe("LinearRegression", () => {
   });
 
   it("returns R² close to 1 for perfect linear data", () => {
-    const X = Array.from({ length: 20 }, (_, i) =>
-      new Float64Array([i, i * 2]));
+    const X = Array.from(
+      { length: 20 },
+      (_, i) => new Float64Array([i, i * 2]),
+    );
     const y = new Float64Array(Array.from({ length: 20 }, (_, i) => i * 3 + 1));
     const reg = new LinearRegression();
     reg.fit(X, y);
@@ -124,7 +132,9 @@ describe("Ridge", () => {
     reg.fit(X, y);
 
     // With tiny alpha, should be close to OLS
-    expect(Math.abs((reg.coef_ as Float64Array)[0]! - 2)).toBeLessThan(0.01);
+    expect(Math.abs(((reg.coef_ as Float64Array)[0] ?? 0) - 2)).toBeLessThan(
+      0.01,
+    );
   });
 
   it("shrinks coefficients with large alpha", () => {
@@ -140,23 +150,31 @@ describe("Ridge", () => {
     regLowAlpha.fit(X, y);
     regHighAlpha.fit(X, y);
 
-    const normLow = Array.from(regLowAlpha.coef_ as Float64Array)
-      .reduce((a, b) => a + b * b, 0);
-    const normHigh = Array.from(regHighAlpha.coef_ as Float64Array)
-      .reduce((a, b) => a + b * b, 0);
+    const normLow = Array.from(regLowAlpha.coef_ as Float64Array).reduce(
+      (a, b) => a + b * b,
+      0,
+    );
+    const normHigh = Array.from(regHighAlpha.coef_ as Float64Array).reduce(
+      (a, b) => a + b * b,
+      0,
+    );
 
     // Higher alpha → smaller coefficients
     expect(normHigh).toBeLessThan(normLow);
   });
 
   it("predicts correctly", () => {
-    const X = [new Float64Array([1]), new Float64Array([2]), new Float64Array([3])];
+    const X = [
+      new Float64Array([1]),
+      new Float64Array([2]),
+      new Float64Array([3]),
+    ];
     const y = new Float64Array([1, 2, 3]);
     const reg = new Ridge({ alpha: 0.001 });
     reg.fit(X, y);
 
     const pred = reg.predict([new Float64Array([4])]);
-    expect(Math.abs(pred[0]! - 4)).toBeLessThan(0.1);
+    expect(Math.abs((pred[0] ?? 0) - 4)).toBeLessThan(0.1);
   });
 
   it("score is R²", () => {

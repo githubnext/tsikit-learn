@@ -1,17 +1,17 @@
-import { describe, it, expect } from "bun:test";
-import {
-  mean_squared_error,
-  mean_absolute_error,
-  r2_score,
-} from "../src/metrics/regression.ts";
+import { describe, expect, it } from "bun:test";
 import {
   accuracy_score,
   confusion_matrix,
+  f1_score,
   precision_score,
   recall_score,
-  f1_score,
 } from "../src/metrics/classification.ts";
-import { train_test_split, KFold } from "../src/model_selection/split.ts";
+import {
+  mean_absolute_error,
+  mean_squared_error,
+  r2_score,
+} from "../src/metrics/regression.ts";
+import { KFold, train_test_split } from "../src/model_selection/split.ts";
 
 describe("Regression metrics", () => {
   it("MSE is 0 for perfect prediction", () => {
@@ -69,7 +69,9 @@ describe("train_test_split", () => {
   it("splits data correctly", () => {
     const X = Array.from({ length: 100 }, (_, i) => new Float64Array([i]));
     const y = new Float64Array(Array.from({ length: 100 }, (_, i) => i));
-    const { XTrain, XTest, yTrain, yTest } = train_test_split(X, y, { testSize: 0.2 });
+    const { XTrain, XTest, yTrain, yTest } = train_test_split(X, y, {
+      testSize: 0.2,
+    });
     expect(XTrain.length).toBe(80);
     expect(XTest.length).toBe(20);
     expect(yTrain.length).toBe(80);

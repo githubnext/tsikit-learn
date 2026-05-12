@@ -4,8 +4,8 @@
  */
 
 import { BaseEstimator } from "../base.js";
-import { checkArray } from "../utils/validation.js";
 import { ValueError } from "../exceptions.js";
+import { checkArray } from "../utils/validation.js";
 
 export interface MinMaxScalerParams {
   feature_range?: [number, number];
@@ -46,24 +46,28 @@ export class MinMaxScaler extends BaseEstimator {
     this.n_samples_seen_ = n;
     this.n_features_in_ = p;
 
-    const dataMin = new Float64Array(p).fill(Infinity);
-    const dataMax = new Float64Array(p).fill(-Infinity);
+    const dataMin = new Float64Array(p).fill(Number.POSITIVE_INFINITY);
+    const dataMax = new Float64Array(p).fill(Number.NEGATIVE_INFINITY);
     for (const row of X) {
       for (let j = 0; j < p; j++) {
         const v = row[j] ?? 0;
-        if (v < (dataMin[j] ?? Infinity)) dataMin[j] = v;
-        if (v > (dataMax[j] ?? -Infinity)) dataMax[j] = v;
+        if (v < (dataMin[j] ?? Number.POSITIVE_INFINITY)) dataMin[j] = v;
+        if (v > (dataMax[j] ?? Number.NEGATIVE_INFINITY)) dataMax[j] = v;
       }
     }
     this.data_min_ = dataMin;
     this.data_max_ = dataMax;
-    this.data_range_ = Float64Array.from(dataMax, (v, i) => v - (dataMin[i] ?? 0));
+    this.data_range_ = Float64Array.from(
+      dataMax,
+      (v, i) => v - (dataMin[i] ?? 0),
+    );
     const rangeScale = rMax - rMin;
     this.scale_ = Float64Array.from(this.data_range_, (v) =>
       v === 0 ? 0 : rangeScale / v,
     );
-    this.min_ = Float64Array.from(this.scale_, (v, i) =>
-      rMin - v * (dataMin[i] ?? 0),
+    this.min_ = Float64Array.from(
+      this.scale_,
+      (v, i) => rMin - v * (dataMin[i] ?? 0),
     );
     return this;
   }
@@ -99,7 +103,10 @@ export class MinMaxScaler extends BaseEstimator {
     });
   }
 
-  fit_transform(X: Float64Array[], y?: Float64Array | Int32Array): Float64Array[] {
+  fit_transform(
+    X: Float64Array[],
+    y?: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 }

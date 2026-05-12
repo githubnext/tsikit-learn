@@ -6,7 +6,9 @@
 /** Raised when an estimator is used before being fitted. */
 export class NotFittedError extends Error {
   override readonly name = "NotFittedError";
-  constructor(message = "This estimator is not fitted yet. Call 'fit' with appropriate arguments before using this estimator.") {
+  constructor(
+    message = "This estimator is not fitted yet. Call 'fit' with appropriate arguments before using this estimator.",
+  ) {
     super(message);
   }
 }

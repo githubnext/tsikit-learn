@@ -1,5 +1,11 @@
-import { describe, it, expect } from "bun:test";
-import { BaseEstimator, ClassifierMixin, RegressorMixin, clone, check_is_fitted } from "../src/base.ts";
+import { describe, expect, it } from "bun:test";
+import {
+  BaseEstimator,
+  ClassifierMixin,
+  RegressorMixin,
+  check_is_fitted,
+  clone,
+} from "../src/base.ts";
 import { NotFittedError } from "../src/exceptions.ts";
 
 class DummyEstimator extends BaseEstimator {
@@ -23,8 +29,8 @@ describe("BaseEstimator", () => {
   it("get_params returns constructor params", () => {
     const est = new DummyEstimator(2.0, "hello");
     const params = est.get_params();
-    expect(params["alpha"]).toBe(2.0);
-    expect(params["beta"]).toBe("hello");
+    expect(params.alpha).toBe(2.0);
+    expect(params.beta).toBe("hello");
   });
 
   it("set_params updates params", () => {
@@ -37,7 +43,7 @@ describe("BaseEstimator", () => {
     const est = new DummyEstimator();
     expect(() => est.fit()._check_is_fitted(["fitted_"])).not.toThrow();
     const est2 = new DummyEstimator();
-    expect(() => est2["_check_is_fitted"](["fitted_"])).toThrow(NotFittedError);
+    expect(() => est2._check_is_fitted(["fitted_"])).toThrow(NotFittedError);
   });
 });
 

@@ -21,7 +21,8 @@ export abstract class BaseEstimator {
     for (const key of Object.keys(this)) {
       const val = (this as Record<string, unknown>)[key];
       if (typeof val !== "function") {
-        out[key] = deep && val instanceof BaseEstimator ? val.get_params(deep) : val;
+        out[key] =
+          deep && val instanceof BaseEstimator ? val.get_params(deep) : val;
       }
     }
     return out;
@@ -37,7 +38,9 @@ export abstract class BaseEstimator {
 
   /** Assert the estimator is fitted. */
   protected _check_is_fitted(attributes: string[]): void {
-    const missing = attributes.filter((a) => (this as Record<string, unknown>)[a] === undefined);
+    const missing = attributes.filter(
+      (a) => (this as Record<string, unknown>)[a] === undefined,
+    );
     if (missing.length > 0) {
       throw new NotFittedError(
         `This ${this.constructor.name} instance is not fitted yet. Call 'fit' first.`,
@@ -90,7 +93,10 @@ export abstract class TransformerMixin {
   readonly _estimator_type = "transformer" as const;
 
   /** Fit and transform in one step. */
-  fit_transform(X: Float64Array[], y?: Float64Array | Int32Array): Float64Array[] {
+  fit_transform(
+    X: Float64Array[],
+    y?: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 
@@ -120,14 +126,21 @@ export function clone<T extends BaseEstimator>(estimator: T): T {
 }
 
 /** Check if an estimator is fitted by looking for a trailing underscore attribute. */
-export function check_is_fitted(estimator: BaseEstimator, attributes?: string[]): void {
-  const attrs = attributes ?? Object.keys(estimator).filter((k) => k.endsWith("_") && !k.startsWith("_"));
+export function check_is_fitted(
+  estimator: BaseEstimator,
+  attributes?: string[],
+): void {
+  const attrs =
+    attributes ??
+    Object.keys(estimator).filter((k) => k.endsWith("_") && !k.startsWith("_"));
   if (attrs.length === 0) {
     throw new NotFittedError(
       `This ${estimator.constructor.name} instance is not fitted yet.`,
     );
   }
-  const missing = attrs.filter((a) => (estimator as unknown as Record<string, unknown>)[a] === undefined);
+  const missing = attrs.filter(
+    (a) => (estimator as unknown as Record<string, unknown>)[a] === undefined,
+  );
   if (missing.length > 0) {
     throw new NotFittedError(
       `This ${estimator.constructor.name} instance is not fitted yet. Missing attributes: ${missing.join(", ")}.`,

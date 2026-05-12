@@ -1,9 +1,9 @@
-import { describe, it, expect } from "bun:test";
-import { StandardScaler } from "../src/preprocessing/standard_scaler.ts";
-import { MinMaxScaler } from "../src/preprocessing/minmax_scaler.ts";
-import { LabelEncoder } from "../src/preprocessing/label_encoder.ts";
-import { Normalizer } from "../src/preprocessing/normalizer.ts";
+import { describe, expect, it } from "bun:test";
 import { NotFittedError } from "../src/exceptions.ts";
+import { LabelEncoder } from "../src/preprocessing/label_encoder.ts";
+import { MinMaxScaler } from "../src/preprocessing/minmax_scaler.ts";
+import { Normalizer } from "../src/preprocessing/normalizer.ts";
+import { StandardScaler } from "../src/preprocessing/standard_scaler.ts";
 
 describe("StandardScaler", () => {
   const X = [
@@ -16,8 +16,12 @@ describe("StandardScaler", () => {
     const scaler = new StandardScaler();
     scaler.fit(X);
     expect(scaler.mean_).toBeDefined();
-    expect(Math.abs((scaler.mean_ as Float64Array)[0]! - 3)).toBeLessThan(1e-10);
-    expect(Math.abs((scaler.mean_ as Float64Array)[1]! - 4)).toBeLessThan(1e-10);
+    expect(Math.abs(((scaler.mean_ as Float64Array)[0] ?? 0) - 3)).toBeLessThan(
+      1e-10,
+    );
+    expect(Math.abs(((scaler.mean_ as Float64Array)[1] ?? 0) - 4)).toBeLessThan(
+      1e-10,
+    );
   });
 
   it("transforms to zero mean", () => {
@@ -33,7 +37,12 @@ describe("StandardScaler", () => {
     const Xr = scaler.inverse_transform(Xt);
     for (let i = 0; i < X.length; i++) {
       for (let j = 0; j < (X[i] as Float64Array).length; j++) {
-        expect(Math.abs((Xr[i] as Float64Array)[j]! - (X[i] as Float64Array)[j]!)).toBeLessThan(1e-8);
+        expect(
+          Math.abs(
+            ((Xr[i] as Float64Array)[j] ?? 0) -
+              ((X[i] as Float64Array)[j] ?? 0),
+          ),
+        ).toBeLessThan(1e-8);
       }
     }
   });
@@ -71,7 +80,12 @@ describe("MinMaxScaler", () => {
     const Xr = scaler.inverse_transform(Xt);
     for (let i = 0; i < X.length; i++) {
       for (let j = 0; j < (X[i] as Float64Array).length; j++) {
-        expect(Math.abs((Xr[i] as Float64Array)[j]! - (X[i] as Float64Array)[j]!)).toBeLessThan(1e-8);
+        expect(
+          Math.abs(
+            ((Xr[i] as Float64Array)[j] ?? 0) -
+              ((X[i] as Float64Array)[j] ?? 0),
+          ),
+        ).toBeLessThan(1e-8);
       }
     }
   });

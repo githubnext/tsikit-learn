@@ -4,8 +4,8 @@
  */
 
 import { BaseEstimator, TransformerMixin } from "../base.js";
-import { checkArray, checkFeaturesConsistency } from "../utils/validation.js";
 import { ValueError } from "../exceptions.js";
+import { checkArray, checkFeaturesConsistency } from "../utils/validation.js";
 
 export interface StandardScalerParams {
   copy?: boolean;
@@ -53,9 +53,8 @@ export class StandardScaler extends BaseEstimator {
     }
 
     this.mean_ = mean;
-    const variance = n > 1
-      ? Float64Array.from(M2, (v) => v / (n - 1))
-      : new Float64Array(p);
+    const variance =
+      n > 1 ? Float64Array.from(M2, (v) => v / (n - 1)) : new Float64Array(p);
     this.var_ = variance;
     this.scale_ = Float64Array.from(variance, (v) => Math.sqrt(v) || 1.0);
     return this;
@@ -90,7 +89,10 @@ export class StandardScaler extends BaseEstimator {
     });
   }
 
-  fit_transform(X: Float64Array[], y?: Float64Array | Int32Array): Float64Array[] {
+  fit_transform(
+    X: Float64Array[],
+    y?: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 }

@@ -57,15 +57,19 @@ export function train_test_split(
   const nTrain = n - nTest;
 
   if (nTrain <= 0) {
-    throw new ValueError(`With n_samples=${n} and test_size=${testSize}, the resulting train set would be empty.`);
+    throw new ValueError(
+      `With n_samples=${n} and test_size=${testSize}, the resulting train set would be empty.`,
+    );
   }
 
   const rng = lcg(randomState);
-  const indices = shuffle ? shuffleIndices(n, rng) : (() => {
-    const idx = new Int32Array(n);
-    for (let i = 0; i < n; i++) idx[i] = i;
-    return idx;
-  })();
+  const indices = shuffle
+    ? shuffleIndices(n, rng)
+    : (() => {
+        const idx = new Int32Array(n);
+        for (let i = 0; i < n; i++) idx[i] = i;
+        return idx;
+      })();
 
   const trainIdx = indices.slice(0, nTrain);
   const testIdx = indices.slice(nTrain);
@@ -76,7 +80,9 @@ export function train_test_split(
   const isInt = y instanceof Int32Array;
   const yTrain = isInt
     ? new Int32Array(Array.from(trainIdx, (i) => (y as Int32Array)[i] ?? 0))
-    : new Float64Array(Array.from(trainIdx, (i) => (y as Float64Array)[i] ?? 0));
+    : new Float64Array(
+        Array.from(trainIdx, (i) => (y as Float64Array)[i] ?? 0),
+      );
   const yTest = isInt
     ? new Int32Array(Array.from(testIdx, (i) => (y as Int32Array)[i] ?? 0))
     : new Float64Array(Array.from(testIdx, (i) => (y as Float64Array)[i] ?? 0));
@@ -120,13 +126,17 @@ export class KFold {
     }
 
     const rng = lcg(this.randomState);
-    const indices = this.shuffle ? shuffleIndices(n, rng) : (() => {
-      const idx = new Int32Array(n);
-      for (let i = 0; i < n; i++) idx[i] = i;
-      return idx;
-    })();
+    const indices = this.shuffle
+      ? shuffleIndices(n, rng)
+      : (() => {
+          const idx = new Int32Array(n);
+          for (let i = 0; i < n; i++) idx[i] = i;
+          return idx;
+        })();
 
-    const foldSizes = new Int32Array(this.nSplits).fill(Math.floor(n / this.nSplits));
+    const foldSizes = new Int32Array(this.nSplits).fill(
+      Math.floor(n / this.nSplits),
+    );
     for (let i = 0; i < n % this.nSplits; i++) {
       foldSizes[i] = (foldSizes[i] ?? 0) + 1;
     }
@@ -184,9 +194,14 @@ export class StratifiedKFold {
     }
 
     // Assign indices to folds
-    const foldIndices: number[][] = Array.from({ length: this.nSplits }, () => []);
+    const foldIndices: number[][] = Array.from(
+      { length: this.nSplits },
+      () => [],
+    );
     for (const [, idxList] of classIndices) {
-      const shuffled = this.shuffle ? [...idxList].sort(() => rng() - 0.5) : idxList;
+      const shuffled = this.shuffle
+        ? [...idxList].sort(() => rng() - 0.5)
+        : idxList;
       shuffled.forEach((idx, i) => {
         (foldIndices[i % this.nSplits] as number[]).push(idx);
       });

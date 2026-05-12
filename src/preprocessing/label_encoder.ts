@@ -27,7 +27,9 @@ export class LabelEncoder extends BaseEstimator {
     for (let i = 0; i < y.length; i++) {
       const encoded = classMap.get(y[i] ?? 0);
       if (encoded === undefined) {
-        throw new ValueError(`y contains previously unseen labels: ${String(y[i])}`);
+        throw new ValueError(
+          `y contains previously unseen labels: ${String(y[i])}`,
+        );
       }
       result[i] = encoded;
     }
@@ -41,7 +43,7 @@ export class LabelEncoder extends BaseEstimator {
     for (let i = 0; i < y.length; i++) {
       const idx = y[i] ?? 0;
       if (idx < 0 || idx >= classes.length) {
-        throw new ValueError(`y contains values not in the fitted classes`);
+        throw new ValueError("y contains values not in the fitted classes");
       }
       result[i] = classes[idx] ?? 0;
     }

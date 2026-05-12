@@ -27,18 +27,22 @@ export function confusion_matrix(
   yPred: Float64Array | Int32Array,
   labels?: Int32Array,
 ): number[][] {
-  const labelSet = labels ?? (() => {
-    const s = new Set<number>();
-    for (const v of yTrue) s.add(v);
-    for (const v of yPred) s.add(v);
-    return new Int32Array([...s].sort((a, b) => a - b));
-  })();
+  const labelSet =
+    labels ??
+    (() => {
+      const s = new Set<number>();
+      for (const v of yTrue) s.add(v);
+      for (const v of yPred) s.add(v);
+      return new Int32Array([...s].sort((a, b) => a - b));
+    })();
 
   const n = labelSet.length;
   const labelIdx = new Map<number, number>();
   for (let i = 0; i < n; i++) labelIdx.set(labelSet[i] ?? 0, i);
 
-  const matrix: number[][] = Array.from({ length: n }, () => new Array<number>(n).fill(0));
+  const matrix: number[][] = Array.from({ length: n }, () =>
+    new Array<number>(n).fill(0),
+  );
   for (let i = 0; i < yTrue.length; i++) {
     const ti = labelIdx.get(yTrue[i] ?? 0);
     const pi = labelIdx.get(yPred[i] ?? 0);

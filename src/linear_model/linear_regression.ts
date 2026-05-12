@@ -7,14 +7,14 @@
  */
 
 import { BaseEstimator, RegressorMixin } from "../base.js";
-import { checkArray, checkXy } from "../utils/validation.js";
 import {
-  gramMatrix,
-  xtDotY,
-  choleskyLinsolve,
-  safeDot,
   addDiagonal,
+  choleskyLinsolve,
+  gramMatrix,
+  safeDot,
+  xtDotY,
 } from "../utils/extmath.js";
+import { checkArray, checkXy } from "../utils/validation.js";
 
 export interface LinearRegressionParams {
   fit_intercept?: boolean;
@@ -91,7 +91,7 @@ export class LinearRegression extends BaseEstimator {
       XCenter = X.map((row) => {
         const centered = new Float64Array(row);
         for (let j = 0; j < centered.length; j++) {
-          centered[j] = (centered[j] ?? 0) - (xMean as Float64Array)[j]!;
+          centered[j] = (centered[j] ?? 0) - ((xMean as Float64Array)[j] ?? 0);
         }
         return centered;
       });

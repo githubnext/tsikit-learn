@@ -19,11 +19,15 @@ export function checkArray(
     throw new ValueError("X must be an array of Float64Arrays");
   }
   if (X.length < minSamples) {
-    throw new ValueError(`X must have at least ${minSamples} samples, got ${X.length}`);
+    throw new ValueError(
+      `X must have at least ${minSamples} samples, got ${X.length}`,
+    );
   }
   const nFeatures = (X[0] ?? new Float64Array(0)).length;
   if (nFeatures < minFeatures) {
-    throw new ValueError(`X must have at least ${minFeatures} features, got ${nFeatures}`);
+    throw new ValueError(
+      `X must have at least ${minFeatures} features, got ${nFeatures}`,
+    );
   }
   for (let i = 0; i < X.length; i++) {
     const row = X[i];

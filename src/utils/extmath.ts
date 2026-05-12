@@ -8,7 +8,8 @@ export function logLogistic(x: Float64Array): Float64Array {
   const result = new Float64Array(x.length);
   for (let i = 0; i < x.length; i++) {
     const xi = x[i] ?? 0;
-    result[i] = xi >= 0 ? -Math.log1p(Math.exp(-xi)) : xi - Math.log1p(Math.exp(xi));
+    result[i] =
+      xi >= 0 ? -Math.log1p(Math.exp(-xi)) : xi - Math.log1p(Math.exp(xi));
   }
   return result;
 }
@@ -62,10 +63,14 @@ export function transpose(X: Float64Array[]): Float64Array[] {
   if (X.length === 0) return [];
   const nRows = X.length;
   const nCols = (X[0] ?? new Float64Array(0)).length;
-  const result: Float64Array[] = Array.from({ length: nCols }, () => new Float64Array(nRows));
+  const result: Float64Array[] = Array.from(
+    { length: nCols },
+    () => new Float64Array(nRows),
+  );
   for (let i = 0; i < nRows; i++) {
     for (let j = 0; j < nCols; j++) {
-      (result[j] ?? new Float64Array(0))[i] = (X[i] ?? new Float64Array(0))[j] ?? 0;
+      (result[j] ?? new Float64Array(0))[i] =
+        (X[i] ?? new Float64Array(0))[j] ?? 0;
     }
   }
   return result;
@@ -77,13 +82,18 @@ export function matMul(A: Float64Array[], B: Float64Array[]): Float64Array[] {
   const nRows = A.length;
   const nCols = (B[0] ?? new Float64Array(0)).length;
   const nInner = B.length;
-  const result: Float64Array[] = Array.from({ length: nRows }, () => new Float64Array(nCols));
+  const result: Float64Array[] = Array.from(
+    { length: nRows },
+    () => new Float64Array(nCols),
+  );
   for (let i = 0; i < nRows; i++) {
     for (let k = 0; k < nInner; k++) {
       const aik = (A[i] ?? new Float64Array(0))[k] ?? 0;
       if (aik === 0) continue;
       for (let j = 0; j < nCols; j++) {
-        result[i]![j] = (result[i]![j] ?? 0) + aik * ((B[k] ?? new Float64Array(0))[j] ?? 0);
+        const resultRow = result[i] ?? new Float64Array(0);
+        resultRow[j] =
+          (resultRow[j] ?? 0) + aik * ((B[k] ?? new Float64Array(0))[j] ?? 0);
       }
     }
   }
@@ -93,7 +103,10 @@ export function matMul(A: Float64Array[], B: Float64Array[]): Float64Array[] {
 /**
  * Solve a lower triangular system Lx = b using forward substitution.
  */
-export function forwardSubstitution(L: Float64Array[], b: Float64Array): Float64Array {
+export function forwardSubstitution(
+  L: Float64Array[],
+  b: Float64Array,
+): Float64Array {
   const n = b.length;
   const x = new Float64Array(n);
   for (let i = 0; i < n; i++) {
@@ -109,7 +122,10 @@ export function forwardSubstitution(L: Float64Array[], b: Float64Array): Float64
 /**
  * Solve an upper triangular system Ux = b using back substitution.
  */
-export function backSubstitution(U: Float64Array[], b: Float64Array): Float64Array {
+export function backSubstitution(
+  U: Float64Array[],
+  b: Float64Array,
+): Float64Array {
   const n = b.length;
   const x = new Float64Array(n);
   for (let i = n - 1; i >= 0; i--) {
@@ -128,12 +144,17 @@ export function backSubstitution(U: Float64Array[], b: Float64Array): Float64Arr
  */
 export function cholesky(A: Float64Array[]): Float64Array[] {
   const n = A.length;
-  const L: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+  const L: Float64Array[] = Array.from(
+    { length: n },
+    () => new Float64Array(n),
+  );
   for (let i = 0; i < n; i++) {
     for (let j = 0; j <= i; j++) {
       let sum = (A[i] ?? new Float64Array(0))[j] ?? 0;
       for (let k = 0; k < j; k++) {
-        sum -= ((L[i] ?? new Float64Array(0))[k] ?? 0) * ((L[j] ?? new Float64Array(0))[k] ?? 0);
+        sum -=
+          ((L[i] ?? new Float64Array(0))[k] ?? 0) *
+          ((L[j] ?? new Float64Array(0))[k] ?? 0);
       }
       if (i === j) {
         (L[i] ?? new Float64Array(0))[j] = Math.sqrt(Math.max(sum, 0));
@@ -150,7 +171,10 @@ export function cholesky(A: Float64Array[]): Float64Array[] {
  * Solve the linear system Ax = b using Cholesky decomposition.
  * A must be symmetric positive definite.
  */
-export function choleskyLinsolve(A: Float64Array[], b: Float64Array): Float64Array {
+export function choleskyLinsolve(
+  A: Float64Array[],
+  b: Float64Array,
+): Float64Array {
   const L = cholesky(A);
   const y = forwardSubstitution(L, b);
   const Lt = transpose(L);
@@ -170,7 +194,8 @@ export function euclideanDistance(a: Float64Array, b: Float64Array): number {
 /** Add identity * alpha to a matrix (in-place). */
 export function addDiagonal(A: Float64Array[], alpha: number): Float64Array[] {
   for (let i = 0; i < A.length; i++) {
-    (A[i] ?? new Float64Array(0))[i] = ((A[i] ?? new Float64Array(0))[i] ?? 0) + alpha;
+    (A[i] ?? new Float64Array(0))[i] =
+      ((A[i] ?? new Float64Array(0))[i] ?? 0) + alpha;
   }
   return A;
 }
