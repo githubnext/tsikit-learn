@@ -44,17 +44,38 @@ safe-outputs:
       policy: fallback-to-issue
       exclude:
         - package.json
+        - package-lock.json
+        - bun.lockb
         - bunfig.toml
+        - yarn.lock
+        - pnpm-lock.yaml
+        - tsconfig.json
+        - biome.json
+        - requirements.txt
+        - pyproject.toml
+        - setup.py
+        - setup.cfg
     preserve-branch-name: true
     max: 1
   push-to-pull-request-branch:
     target: "*"
     title-prefix: "[Autoloop"
-    max: 1
     protected-files:
+      policy: allowed
       exclude:
         - package.json
+        - package-lock.json
+        - bun.lockb
         - bunfig.toml
+        - yarn.lock
+        - pnpm-lock.yaml
+        - tsconfig.json
+        - biome.json
+        - requirements.txt
+        - pyproject.toml
+        - setup.py
+        - setup.cfg
+    max: 1
   create-issue:
     labels: [automation, autoloop]
     max: 1
