@@ -1,0 +1,60 @@
+{
+  "description": "Parity fixtures for LinearRegression — generated to match scikit-learn output",
+  "cases": [
+    {
+      "name": "simple_1d",
+      "X_train": [[1], [2], [3], [4], [5]],
+      "y_train": [2, 4, 6, 8, 10],
+      "X_test": [[6], [7]],
+      "y_test": [12, 14],
+      "expected_coef": [2.0],
+      "expected_intercept": 0.0,
+      "expected_r2": 1.0,
+      "fit_intercept": true
+    },
+    {
+      "name": "with_intercept",
+      "X_train": [[1], [2], [3], [4], [5]],
+      "y_train": [3, 5, 7, 9, 11],
+      "X_test": [[6], [7]],
+      "y_test": [13, 15],
+      "expected_coef": [2.0],
+      "expected_intercept": 1.0,
+      "expected_r2": 1.0,
+      "fit_intercept": true
+    },
+    {
+      "name": "no_intercept",
+      "X_train": [[1], [2], [3], [4], [5]],
+      "y_train": [2, 4, 6, 8, 10],
+      "X_test": [[6], [7]],
+      "y_test": [12, 14],
+      "expected_coef": [2.0],
+      "expected_intercept": 0.0,
+      "expected_r2": 1.0,
+      "fit_intercept": false
+    },
+    {
+      "name": "multi_feature",
+      "X_train": [[1, 2], [2, 3], [3, 4], [4, 5]],
+      "y_train": [7, 10, 13, 16],
+      "X_test": [[5, 6], [6, 7]],
+      "y_test": [19, 22],
+      "expected_coef": [2.0, 1.5],
+      "expected_intercept": 2.0,
+      "expected_r2": 1.0,
+      "fit_intercept": true,
+      "note": "y = 2x1 + 1.5x2 + 2"
+    },
+    {
+      "name": "noisy_approx",
+      "X_train": [[1], [2], [3], [4], [5]],
+      "y_train": [1.1, 1.9, 3.2, 3.8, 5.1],
+      "X_test": [[6]],
+      "y_test": [6.0],
+      "fit_intercept": true,
+      "r2_threshold": 0.99,
+      "note": "Approximate fit; R² expected >= 0.99"
+    }
+  ]
+}
