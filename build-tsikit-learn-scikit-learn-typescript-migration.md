@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-12T13:30:00Z |
-| Iteration Count | 3 |
-| Best Metric | 15 |
+| Last Run | 2026-05-12T19:25:10Z |
+| Iteration Count | 4 |
+| Best Metric | 18 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted, accepted, accepted |
+| Recent Statuses | accepted, accepted, accepted, accepted |
 
 ---
 
@@ -42,10 +42,11 @@
 *(No specific priorities set — agent is exploring freely.)*
 
 Next logical steps:
-1. `linear_model/LogisticRegression` — SGD-based with L-BFGS option
-2. `neighbors/KNeighborsClassifier` and `KNeighborsRegressor` — brute force + KD tree
-3. `naive_bayes/GaussianNB` — fast, educational, easy to implement
-4. `tree/DecisionTreeClassifier` — CART algorithm
+1. `linear_model/Lasso` — coordinate descent
+2. `tree/DecisionTreeRegressor` — extend CART for regression
+3. `svm/SVC` — support vector classification
+4. `cluster/KMeans` — k-means clustering
+5. `decomposition/PCA` — principal component analysis
 
 ---
 
@@ -69,17 +70,26 @@ Next logical steps:
 
 ## 🔭 Future Directions
 
-- Port `linear_model/LogisticRegression` — SGD with gradient updates; enables classification demos
-- Port `linear_model/Lasso` — coordinate descent (more complex than Ridge but important)
-- Port `neighbors/KNeighborsClassifier` — simple brute-force kNN, no dependencies
-- Port `naive_bayes/GaussianNB` — pure math, fast to implement
-- Port `tree/DecisionTreeClassifier` — CART with Gini/entropy split criteria
-- Consider a thin `ndarray` wrapper for ergonomic 2D array API (less verbose than index-checked accesses)
-- Playground: add Ridge vs LinearRegression regularization comparison demo
+- Port `linear_model/Lasso` — coordinate descent (iterative shrinkage)
+- Port `linear_model/ElasticNet` — L1+L2 combination
+- Port `tree/DecisionTreeRegressor` — extend CART for regression targets
+- Port `svm/SVC` — kernel SVM (linear kernel first, then RBF)
+- Port `cluster/KMeans` — Lloyd's algorithm with k-means++ init
+- Port `decomposition/PCA` — SVD-based, using power iteration
+- Consider a thin `ndarray` wrapper for ergonomic 2D array API
+- Playground: add visualizations for decision boundaries, ROC curves
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 4 — 2026-05-12T19:25:10Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25757058444)
+
+- **Status**: ✅ Accepted
+- **Change**: Added LogisticRegression (gradient descent, binary + OVR multiclass), KNeighborsClassifier/Regressor (brute-force), GaussianNB, DecisionTreeClassifier (CART). Rebuilt full foundation as branch was reset to main.
+- **Metric**: 18 (previous best: 15, delta: +3)
+- **Commit**: 3265027
+- **Notes**: Branch was again reset to main (ahead=0, behind>0). Rebuilt entire foundation + added 3 new algorithms: logistic regression, kNN, Gaussian NB, and decision tree (18 files total).
 
 ### Iteration 3 — 2026-05-12T13:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25737555375)
 
