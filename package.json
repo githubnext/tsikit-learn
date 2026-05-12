@@ -1,0 +1,34 @@
+{
+  "name": "tsikit-learn",
+  "version": "0.1.0",
+  "description": "A complete TypeScript port of scikit-learn",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target browser",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit",
+    "lint": "bunx biome check src tests"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "fast-check": "^3.22.0",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "tsb": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "tsb": {
+      "optional": true
+    }
+  }
+}

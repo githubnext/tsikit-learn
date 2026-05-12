@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tsikit-learn — TypeScript scikit-learn</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; }
+    header { padding: 2rem; border-bottom: 1px solid #2a2a2a; }
+    header h1 { font-size: 2rem; color: #4ade80; }
+    header p { color: #999; margin-top: 0.5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding: 2rem; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 1.5rem; }
+    .card h3 { font-size: 1rem; color: #4ade80; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.85rem; color: #888; margin-bottom: 1rem; }
+    .status { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+    .status.done { background: #14532d; color: #4ade80; }
+    .status.pending { background: #1a1a2e; color: #6b7280; }
+    .card a { color: #4ade80; text-decoration: none; font-size: 0.85rem; }
+    .card a:hover { text-decoration: underline; }
+    .demo-container { padding: 2rem; }
+    #demo { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 1.5rem; max-width: 900px; }
+    #demo h2 { color: #4ade80; margin-bottom: 1rem; }
+    canvas { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 4px; }
+    button { background: #4ade80; color: #0f0f0f; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+    button:hover { background: #22c55e; }
+    pre { background: #0f0f0f; border: 1px solid #2a2a2a; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.8rem; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>tsikit-learn 🤖</h1>
+    <p>A complete TypeScript port of scikit-learn — one feature at a time.</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h3>exceptions</h3>
+      <p>NotFittedError, ConvergenceWarning, ValueError</p>
+      <span class="status done">✅ Ported</span>
+    </div>
+    <div class="card">
+      <h3>base</h3>
+      <p>BaseEstimator, ClassifierMixin, RegressorMixin, TransformerMixin</p>
+      <span class="status done">✅ Ported</span>
+    </div>
+    <div class="card">
+      <h3>utils</h3>
+      <p>extmath, validation, multiclass, class_weight</p>
+      <span class="status done">✅ Ported</span>
+    </div>
+    <div class="card">
+      <h3>preprocessing</h3>
+      <p>StandardScaler, MinMaxScaler, LabelEncoder, Normalizer</p>
+      <span class="status done">✅ Ported</span>
+    </div>
+    <div class="card">
+      <h3>metrics</h3>
+      <p>MSE, MAE, R², accuracy, precision, recall, F1, log_loss</p>
+      <span class="status done">✅ Ported</span>
+    </div>
+    <div class="card">
+      <h3>model_selection</h3>
+      <p>train_test_split, KFold, StratifiedKFold</p>
+      <span class="status done">✅ Ported</span>
+    </div>
+    <div class="card">
+      <h3>linear_model.LinearRegression</h3>
+      <p>OLS via Cholesky decomposition (normal equations)</p>
+      <span class="status done">✅ Ported</span> &nbsp;
+      <a href="#demo" onclick="showLinearRegressionDemo()">▶ Demo</a>
+    </div>
+    <div class="card">
+      <h3>linear_model.Ridge</h3>
+      <p>L2-regularized least squares</p>
+      <span class="status done">✅ Ported</span>
+    </div>
+    <div class="card">
+      <h3>linear_model.Lasso</h3>
+      <p>L1-regularized least squares</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+    <div class="card">
+      <h3>linear_model.LogisticRegression</h3>
+      <p>Logistic regression with SGD/L-BFGS solver</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+    <div class="card">
+      <h3>tree</h3>
+      <p>DecisionTreeClassifier, DecisionTreeRegressor</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+    <div class="card">
+      <h3>neighbors</h3>
+      <p>KNeighborsClassifier, KNeighborsRegressor, NearestNeighbors</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+    <div class="card">
+      <h3>naive_bayes</h3>
+      <p>GaussianNB, MultinomialNB, BernoulliNB</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+    <div class="card">
+      <h3>svm</h3>
+      <p>SVC, SVR, LinearSVC, LinearSVR</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+    <div class="card">
+      <h3>cluster</h3>
+      <p>KMeans, DBSCAN, AgglomerativeClustering</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+    <div class="card">
+      <h3>ensemble</h3>
+      <p>RandomForest, GradientBoosting, AdaBoost</p>
+      <span class="status pending">🕐 Pending</span>
+    </div>
+  </div>
+
+  <div class="demo-container">
+    <div id="demo">
+      <h2>LinearRegression Demo</h2>
+      <p>Click "Generate" to create a noisy linear dataset, then "Fit" to train a LinearRegression model.</p>
+      <button onclick="generateData()">Generate Data</button>
+      <button onclick="fitModel()">Fit LinearRegression</button>
+      <canvas id="canvas" width="800" height="400"></canvas>
+      <pre id="output">// Click "Generate Data" to start</pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { LinearRegression, Ridge, StandardScaler, train_test_split, r2_score } from './tsikit-learn.js';
+
+    window.tsl = { LinearRegression, Ridge, StandardScaler, train_test_split, r2_score };
+
+    let data = { X: [], y: [], model: null };
+
+    window.generateData = function() {
+      const n = 80;
+      const X = [];
+      const y = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        const x = (Math.random() - 0.5) * 10;
+        X.push(new Float64Array([x]));
+        y[i] = 2.5 * x + 1.0 + (Math.random() - 0.5) * 4;
+      }
+      data = { X, y, model: null };
+      draw(data.X, data.y, null);
+      document.getElementById('output').textContent = `Generated ${n} samples.\ntrue: y = 2.5x + 1.0 + noise\n\nClick "Fit LinearRegression" to train.`;
+    };
+
+    window.fitModel = function() {
+      if (data.X.length === 0) { generateData(); }
+
+      const { X, y } = data;
+      const { XTrain, XTest, yTrain, yTest } = window.tsl.train_test_split(X, y, { testSize: 0.2, randomState: 42 });
+
+      const reg = new window.tsl.LinearRegression();
+      reg.fit(XTrain, yTrain);
+      data.model = reg;
+
+      const trainScore = reg.score(XTrain, yTrain);
+      const testScore = reg.score(XTest, yTest);
+
+      draw(data.X, data.y, reg);
+      document.getElementById('output').textContent =
+        `LinearRegression fitted!\n` +
+        `  coef_ = [${reg.coef_[0].toFixed(4)}]\n` +
+        `  intercept_ = ${reg.intercept_.toFixed(4)}\n\n` +
+        `  Train R² = ${trainScore.toFixed(4)}\n` +
+        `  Test  R² = ${testScore.toFixed(4)}`;
+    };
+
+    function draw(X, y, model) {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#0f0f0f';
+      ctx.fillRect(0, 0, W, H);
+
+      if (X.length === 0) return;
+
+      const xs = X.map(r => r[0]);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...y), maxY = Math.max(...y);
+      const padX = (maxX - minX) * 0.05, padY = (maxY - minY) * 0.1;
+
+      const toCanvas = (x, yi) => ({
+        cx: ((x - minX + padX) / (maxX - minX + 2 * padX)) * (W - 60) + 30,
+        cy: H - 30 - ((yi - minY + padY) / (maxY - minY + 2 * padY)) * (H - 60),
+      });
+
+      // Draw axes
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(30, 30); ctx.lineTo(30, H - 30); ctx.lineTo(W - 30, H - 30);
+      ctx.stroke();
+
+      // Draw points
+      ctx.fillStyle = '#60a5fa';
+      for (let i = 0; i < X.length; i++) {
+        const { cx, cy } = toCanvas(X[i][0], y[i]);
+        ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // Draw regression line
+      if (model) {
+        const x0 = minX - padX, x1 = maxX + padX;
+        const y0 = model.predict([new Float64Array([x0])])[0];
+        const y1 = model.predict([new Float64Array([x1])])[0];
+        const p0 = toCanvas(x0, y0), p1 = toCanvas(x1, y1);
+        ctx.strokeStyle = '#4ade80';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(p0.cx, p0.cy); ctx.lineTo(p1.cx, p1.cy); ctx.stroke();
+      }
+    }
+
+    // Auto-generate on load
+    generateData();
+  </script>
+</body>
+</html>
