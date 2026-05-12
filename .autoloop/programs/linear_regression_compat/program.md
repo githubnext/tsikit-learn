@@ -9,7 +9,7 @@ target-metric: 1.0
 
 This is a **goal-oriented** program.
 
-Port a first scikit-learn estimator (`LinearRegression`) to TypeScript with a `githubnext/tsessebe`-style dataframe layer touchpoint, and add parity-oriented tests/fixtures for it.
+Port a first scikit-learn estimator (`LinearRegression`) to TypeScript with a `githubnext/tsessebe`-style dataframe adapter interface (typed column/series/table operations similar to pandas-style tabular workflows), and add parity-oriented tests/fixtures for it.
 
 The metric is `linear_regression_port_progress`. **Higher is better.**
 

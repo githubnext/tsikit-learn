@@ -18,9 +18,6 @@ on:
         description: "Run a specific program by name (bypasses scheduling)"
         required: false
         type: string
-  slash_command:
-    name: autoloop
-
 permissions: read-all
 
 timeout-minutes: 45
@@ -116,7 +113,7 @@ steps:
     run: |
       python3 .github/workflows/scripts/autoloop_scheduler.py
 
-source: githubnext/autoloop
+source: .github/workflows/autoloop.md
 engine: copilot
 ---
 
@@ -880,4 +877,3 @@ The `delta` is **signed by metric direction**: for `higher`-direction programs a
 
 > ❌ **Do NOT modify files outside the program's Target list.**
 > The Target section of the program file is the allowlist. Touching anything else (including the evaluation script or the program file itself) is forbidden.
-
