@@ -33,6 +33,7 @@ network:
 
 safe-outputs:
   max-patch-size: 10240
+  max-patch-files: 500
   add-comment:
     max: 7
     target: "*"
@@ -56,6 +57,7 @@ safe-outputs:
         - setup.py
         - setup.cfg
     preserve-branch-name: true
+    recreate-ref: true
     max: 1
   push-to-pull-request-branch:
     target: "*"
