@@ -1,14 +1,5 @@
 /**
  * tsikit-learn — A complete TypeScript port of scikit-learn.
- *
- * Ported modules (Phase 1 + Phase 2 + linear_model):
- * - exceptions: NotFittedError, ConvergenceWarning, ValueError
- * - base: BaseEstimator, ClassifierMixin, RegressorMixin, TransformerMixin, ClusterMixin
- * - utils: extmath, validation, multiclass, class_weight
- * - preprocessing: StandardScaler, MinMaxScaler, LabelEncoder, Normalizer
- * - metrics: regression (mse, mae, r2), classification (accuracy, precision, recall, f1)
- * - model_selection: train_test_split, KFold, StratifiedKFold
- * - linear_model: LinearRegression, Ridge
  */
 
 // Core
@@ -29,3 +20,55 @@ export * from "./model_selection/index.js";
 
 // Linear models
 export * from "./linear_model/index.js";
+
+// SVM
+export * from "./svm/index.js";
+
+// Tree
+export * from "./tree/index.js";
+
+// Ensemble
+export * from "./ensemble/index.js";
+
+// Neighbors
+export * from "./neighbors/index.js";
+
+// Naive Bayes
+export * from "./naive_bayes/index.js";
+
+// Cluster
+export * from "./cluster/index.js";
+
+// Decomposition
+export * from "./decomposition/index.js";
+
+// Neural network
+export * from "./neural_network/index.js";
+
+// Pipeline
+export * from "./pipeline/index.js";
+
+// Impute
+export * from "./impute/index.js";
+
+// Feature selection
+export * from "./feature_selection/index.js";
+
+// Compose
+export * from "./compose/index.js";
+
+// Datasets
+export * from "./datasets/index.js";
+
+// Discriminant analysis
+export * from "./discriminant_analysis/index.js";
+
+// Isotonic
+export * from "./isotonic/index.js";
+
+// Multiclass
+export * from "./multiclass/index.js";
+
+// Calibration
+export * from "./calibration/index.js";
+
