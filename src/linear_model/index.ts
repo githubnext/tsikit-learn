@@ -4,3 +4,5 @@ export * from "./logistic_regression.js";
 export * from "./lasso.js";
 export * from "./sgd.js";
 export * from "./perceptron.js";
+export * from "./passive_aggressive.js";
+export * from "./huber.js";
