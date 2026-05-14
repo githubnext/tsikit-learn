@@ -4,16 +4,16 @@
 
 | Field | Value |
 |-------|-------|
-| last_run | 2026-05-14T01:32:08Z |
-| best_metric | 52 |
+| last_run | 2026-05-14T13:49:09Z |
+| best_metric | 70 |
 | target_metric | null |
-| iteration_count | 9 |
+| iteration_count | 10 |
 | paused | false |
 | pause_reason | |
 | completed | false |
 | completed_reason | |
 | consecutive_errors | 0 |
-| recent_statuses | ✅✅✅✅✅✅✅✅✅ |
+| recent_statuses | ✅✅✅✅✅✅✅✅✅✅ |
 
 **Issue**: #5
 **PR**: #17
@@ -38,6 +38,10 @@
 - `noUncheckedIndexedAccess` requires `arr[i] ?? 0` for all indexed reads on typed arrays
 - Avoid exporting a name (`Params`) from multiple modules — rename to `GridParams` etc.
 - The metric counts non-index `.ts` files in `src/` that contain `export`
+- Always check for existing exports with `grep -rn "export class X" src/` before creating new files to avoid duplicates
+- Biome enforces `useNumberNamespace`: use `Number.POSITIVE_INFINITY`/`Number.NEGATIVE_INFINITY`/`Number.NaN` instead of raw `Infinity`/`-Infinity`/`NaN`
+- TypeScript `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes` requires `!` on indexed writes (`arr[i]! = val`)
+- Destructuring swaps `[a, b] = [b, a]` on typed arrays infer `ArrayBufferLike` instead of `ArrayBuffer` — use explicit temp variable
 
 ---
 
@@ -59,6 +63,20 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 10 — 2026-05-14T13:49:09Z ✅
+
+**Metric**: 70 (+18 from best of 52, +12 from branch of 58)
+
+**Change**: Added 12 new sklearn module files across new module directories. Also fixed all pre-existing CI failures (TypeScript strict errors + 113 biome lint errors).
+
+New modules: AgglomerativeClustering/MiniBatchKMeans (cluster), loadIris/loadWine/loadBreastCancer/makeSwissRoll (datasets), FastICA/LatentDirichletAllocation (decomposition), BaggingClassifier/BaggingRegressor/VotingClassifier (ensemble), RFE/RFECV/SelectFromModel (feature_selection), KNNImputer/IterativeImputer (impute), HuberRegressor/Lars (linear_model), PassiveAggressiveClassifier/PassiveAggressiveRegressor (linear_model), Isomap/LocallyLinearEmbedding (manifold), rocCurve/rocAucScore/precisionRecallCurve/auc/ndcgScore (metrics/ranking), BayesianGaussianMixture (mixture), SplineTransformer/TargetEncoder (preprocessing).
+
+CI fixes: kernel_ridge.ts (destructuring swap → temp var), tsne.ts (non-null assertions), 21 files (Infinity → Number.POSITIVE_INFINITY), 10 files (let → const).
+
+**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25862476212
+
+---
 
 ### Iteration 9 — 2026-05-14T01:32:08Z ✅
 
