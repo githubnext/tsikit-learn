@@ -3,3 +3,4 @@ export * from "./classification.js";
 export * from "./clustering.js";
 export * from "./pairwise.js";
 export * from "./ranking.js";
+export * from "./report.js";

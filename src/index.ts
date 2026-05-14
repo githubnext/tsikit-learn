@@ -102,3 +102,6 @@ export * from "./covariance/index.js";
 // Cross decomposition
 export * from "./cross_decomposition/index.js";
 
+// Inspection
+export * from "./inspection/index.js";
+

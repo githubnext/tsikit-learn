@@ -6,3 +6,4 @@ export * from "./sgd.js";
 export * from "./perceptron.js";
 export * from "./passive_aggressive.js";
 export * from "./huber.js";
+export * from "./bayesian.js";
