@@ -72,3 +72,24 @@ export * from "./multiclass/index.js";
 // Calibration
 export * from "./calibration/index.js";
 
+// Manifold
+export * from "./manifold/index.js";
+
+// Mixture
+export * from "./mixture/index.js";
+
+// Semi-supervised
+export * from "./semi_supervised/index.js";
+
+// Feature extraction
+export * from "./feature_extraction/index.js";
+
+// Multioutput
+export * from "./multioutput/index.js";
+
+// Kernel ridge
+export * from "./kernel_ridge/index.js";
+
+// Gaussian process
+export * from "./gaussian_process/index.js";
+
