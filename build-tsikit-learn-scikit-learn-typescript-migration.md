@@ -4,10 +4,10 @@
 
 | Field | Value |
 |-------|-------|
-| last_run | 2026-05-14T13:49:09Z |
-| best_metric | 70 |
+| last_run | 2026-05-14T19:25:10Z |
+| best_metric | 78 |
 | target_metric | null |
-| iteration_count | 10 |
+| iteration_count | 11 |
 | paused | false |
 | pause_reason | |
 | completed | false |
@@ -54,15 +54,33 @@
 
 ## 🔭 Future Directions
 
-- Port remaining sklearn modules: cross_decomposition, inspection, etc.
-- Add more preprocessing: Binarizer, FunctionTransformer, PowerTransformer
-- Add more metrics: ROC-AUC, PR-AUC, classification_report
-- Add feature_extraction text module (CountVectorizer, TfidfVectorizer)
+- Port remaining sklearn modules: more linear_model (TheilSenRegressor, RANSACRegressor), more cluster (HDBSCAN)
+- Add more ensemble: HistGradientBoostingClassifier/Regressor
+- Add more decomposition: DictionaryLearning, SparsePCA
+- Add tests for new modules (cluster/spectral, ensemble/stacking, etc.)
 - Fix pre-existing lint errors in ensemble/gradient_boosting.ts and discriminant_analysis/lda.ts
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 11 — 2026-05-14T19:25:10Z ✅
+
+**Metric**: 78 (+8 from best of 70)
+
+**Change**: Added 8 new sklearn module files across 8 new/expanded modules:
+- cluster/spectral.ts: SpectralClustering, MeanShift, Birch, OPTICS
+- ensemble/stacking.ts: StackingClassifier, StackingRegressor, AdaBoostClassifier, AdaBoostRegressor
+- manifold/spectral_embedding.ts: SpectralEmbedding
+- inspection/inspection.ts: permutationImportance, partialDependence
+- metrics/report.ts: classificationReport, precisionRecallFscoreSupport
+- preprocessing/kbins.ts: KBinsDiscretizer
+- linear_model/bayesian.ts: BayesianRidge, ARDRegression
+- compose/transformed_target.ts: TransformedTargetRegressor
+
+**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25880658762
+
+---
 
 ### Iteration 10 — 2026-05-14T13:49:09Z ✅
 
