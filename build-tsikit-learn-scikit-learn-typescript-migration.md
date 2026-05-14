@@ -4,19 +4,19 @@
 
 | Field | Value |
 |-------|-------|
-| last_run | 2026-05-13T23:05:55Z |
-| best_metric | 43 |
+| last_run | 2026-05-14T01:32:08Z |
+| best_metric | 52 |
 | target_metric | null |
-| iteration_count | 8 |
+| iteration_count | 9 |
 | paused | false |
 | pause_reason | |
 | completed | false |
 | completed_reason | |
 | consecutive_errors | 0 |
-| recent_statuses | ✅✅✅✅✅✅✅✅ |
+| recent_statuses | ✅✅✅✅✅✅✅✅✅ |
 
 **Issue**: #5
-**PR**: pending CI — created this iteration (autoloop/build-tsikit-learn-scikit-learn-typescript-migration)
+**PR**: #17
 
 ---
 
@@ -34,6 +34,7 @@
 - All inter-module imports must use `.js` extension (not `.ts`) with bundler module resolution
 - `KFold` constructor takes `KFoldOptions` object `{nSplits: n}`, not a plain number
 - `KFold.split()` returns a Generator of `Fold` objects with `trainIndex`/`testIndex` (Int32Array), not tuples
+- Run biome format/lint on new files before committing (format issues exist in older files)
 - `noUncheckedIndexedAccess` requires `arr[i] ?? 0` for all indexed reads on typed arrays
 - Avoid exporting a name (`Params`) from multiple modules — rename to `GridParams` etc.
 - The metric counts non-index `.ts` files in `src/` that contain `export`
@@ -49,15 +50,25 @@
 
 ## 🔭 Future Directions
 
-- Add tests for all new modules
-- Add playground cards for new modules
-- Port remaining sklearn modules: cross_decomposition, gaussian_process, semi_supervised, inspection, etc.
-- Add more preprocessing: RobustScaler, Binarizer, FunctionTransformer
+- Port remaining sklearn modules: cross_decomposition, inspection, etc.
+- Add more preprocessing: Binarizer, FunctionTransformer, PowerTransformer
 - Add more metrics: ROC-AUC, PR-AUC, classification_report
+- Add feature_extraction text module (CountVectorizer, TfidfVectorizer)
+- Fix pre-existing lint errors in ensemble/gradient_boosting.ts and discriminant_analysis/lda.ts
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 9 — 2026-05-14T01:32:08Z ✅
+
+**Metric**: 52 (+9 from best of 43)
+
+**Change**: Added 9 new source files across 7 new modules: manifold (TSNE, MDS), mixture (GaussianMixture), semi_supervised (LabelPropagation, LabelSpreading), feature_extraction (DictVectorizer, FeatureHasher), multioutput (MultiOutputClassifier, MultiOutputRegressor, ClassifierChain), kernel_ridge (KernelRidge), gaussian_process (GaussianProcessRegressor, RBFKernel, ConstantKernel). Also added pairwise metrics (euclidean/cosine/manhattan distances, RBF/linear/polynomial kernels) and RobustScaler/MaxAbsScaler preprocessing.
+
+**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25836319463
+
+---
 
 ### Iteration 8 — 2026-05-13T23:05:55Z ✅
 
