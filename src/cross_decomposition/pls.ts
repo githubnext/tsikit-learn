@@ -152,8 +152,8 @@ export class PLSRegression {
 
     this.xMean_ = colMeans(X);
     this.yMean_ = colMeans(Y);
-    let Xc = center(X, this.xMean_);
-    let Yc = center(Y, this.yMean_);
+    const Xc = center(X, this.xMean_);
+    const Yc = center(Y, this.yMean_);
 
     this.xWeights_ = [];
     this.yWeights_ = [];
@@ -369,7 +369,7 @@ export class PLSSVD {
     this.xScores_ = Array.from({ length: n }, () => new Float64Array(k));
     this.yScores_ = Array.from({ length: n }, () => new Float64Array(k));
 
-    let curXtY = Xtranspose_Y(Xc, Yc);
+    const curXtY = Xtranspose_Y(Xc, Yc);
     for (let comp = 0; comp < k; comp++) {
       const { u, v } = nipals(curXtY);
       this.xWeights_[comp] = u;

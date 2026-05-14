@@ -61,16 +61,16 @@ export class BayesianGaussianMixture {
     });
 
     // Initialize uniform responsibilities
-    let resp = Array.from({ length: n }, () =>
+    const resp = Array.from({ length: n }, () =>
       new Float64Array(K).map(() => 1 / K),
     );
 
     // Dirichlet concentration parameters
-    let alpha = new Float64Array(K).fill(
+    const alpha = new Float64Array(K).fill(
       1 / K + this.weightConcentrationPrior,
     );
 
-    let prevLogLik = -Infinity;
+    const prevLogLik = Number.NEGATIVE_INFINITY;
 
     for (let iter = 0; iter < this.maxIter; iter++) {
       // M-step: compute weighted statistics
@@ -184,7 +184,7 @@ export class BayesianGaussianMixture {
 
     return new Int32Array(
       X.map((x) => {
-        let maxLogProb = -Infinity;
+        let maxLogProb = Number.NEGATIVE_INFINITY;
         let best = 0;
         for (let k = 0; k < this.nComponents; k++) {
           const lp =

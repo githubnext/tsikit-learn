@@ -37,7 +37,7 @@ export class HuberRegressor {
     const n = X.length;
     const p = X[0]?.length ?? 0;
 
-    let w = new Float64Array(p);
+    const w = new Float64Array(p);
     let b = this.fitIntercept ? 0 : 0;
     const lr = 0.01;
 
@@ -171,7 +171,7 @@ export class Lars {
 
     for (let step = 0; step < maxIter; step++) {
       // Find feature most correlated with residual
-      let maxCorr = -Infinity;
+      let maxCorr = Number.NEGATIVE_INFINITY;
       let bestJ = -1;
       for (let j = 0; j < p; j++) {
         if (active.includes(j)) continue;

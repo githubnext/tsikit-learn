@@ -38,12 +38,12 @@ export class AgglomerativeClustering {
     // Distance matrix
     const dist = (a: number[], b: number[]): number => {
       if (this.linkage === "single") {
-        let min = Infinity;
+        let min = Number.POSITIVE_INFINITY;
         for (const i of a)
           for (const j of b) min = Math.min(min, euclidean(X[i]!, X[j]!));
         return min;
       } else if (this.linkage === "complete") {
-        let max = -Infinity;
+        let max = Number.NEGATIVE_INFINITY;
         for (const i of a)
           for (const j of b) max = Math.max(max, euclidean(X[i]!, X[j]!));
         return max;
@@ -56,7 +56,7 @@ export class AgglomerativeClustering {
     };
 
     while (clusters.length > this.nClusters) {
-      let minD = Infinity;
+      let minD = Number.POSITIVE_INFINITY;
       let mergeI = 0;
       let mergeJ = 1;
       for (let i = 0; i < clusters.length; i++) {
@@ -125,7 +125,7 @@ export class MiniBatchKMeans {
     if (n === 0) throw new Error("Empty input");
     const nFeatures = X[0]?.length ?? 0;
 
-    let centers = this._initCenters(X);
+    const centers = this._initCenters(X);
     const counts = new Float64Array(this.nClusters);
 
     for (let iter = 0; iter < this.maxIter; iter++) {
@@ -136,7 +136,7 @@ export class MiniBatchKMeans {
 
       for (const x of batch) {
         let nearest = 0;
-        let minD = Infinity;
+        let minD = Number.POSITIVE_INFINITY;
         for (let k = 0; k < this.nClusters; k++) {
           const d = euclidean(x, centers[k]!);
           if (d < minD) {
@@ -159,7 +159,7 @@ export class MiniBatchKMeans {
 
     for (let i = 0; i < n; i++) {
       let nearest = 0;
-      let minD = Infinity;
+      let minD = Number.POSITIVE_INFINITY;
       for (let k = 0; k < this.nClusters; k++) {
         const d = euclidean(X[i]!, centers[k]!);
         if (d < minD) {
@@ -178,7 +178,7 @@ export class MiniBatchKMeans {
     const out = new Int32Array(X.length);
     for (let i = 0; i < X.length; i++) {
       let nearest = 0;
-      let minD = Infinity;
+      let minD = Number.POSITIVE_INFINITY;
       for (let k = 0; k < this.nClusters; k++) {
         const d = euclidean(X[i]!, this.clusterCenters_[k]!);
         if (d < minD) {

@@ -27,7 +27,7 @@ export class GaussianMixture {
   covariances_: Float64Array[][] | null = null;
   converged_: boolean = false;
   nIter_: number = 0;
-  lowerBound_: number = -Infinity;
+  lowerBound_: number = Number.NEGATIVE_INFINITY;
 
   constructor(options: GaussianMixtureOptions = {}) {
     this.nComponents = options.nComponents ?? 1;
@@ -75,7 +75,7 @@ export class GaussianMixture {
     means.push(new Float64Array(X[Math.floor(Math.random() * n)] ?? new Float64Array(p)));
     for (let c = 1; c < k; c++) {
       const dists = X.map(xi => {
-        let minD = Infinity;
+        let minD = Number.POSITIVE_INFINITY;
         for (const m of means) {
           let d = 0;
           for (let j = 0; j < p; j++) d += ((xi[j] ?? 0) - (m[j] ?? 0)) ** 2;
@@ -96,7 +96,7 @@ export class GaussianMixture {
     const variances = new Float64Array(k).fill(1);
     const weights = new Float64Array(k).fill(1 / k);
 
-    let prevLogLik = -Infinity;
+    let prevLogLik = Number.NEGATIVE_INFINITY;
     for (let iter = 0; iter < this.maxIter; iter++) {
       // E step
       const resp = this._eStep(X, means, Array.from(variances), weights);

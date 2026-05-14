@@ -94,7 +94,7 @@ export class KernelRidge {
         const v = Math.abs((aug[row] as Float64Array)[col] ?? 0);
         if (v > maxVal) { maxVal = v; maxRow = row; }
       }
-      if (maxRow !== col) { [aug[col], aug[maxRow]] = [aug[maxRow] as Float64Array, aug[col] as Float64Array]; }
+      if (maxRow !== col) { const tmp = aug[col]; aug[col] = aug[maxRow] as Float64Array; aug[maxRow] = tmp as Float64Array; }
       const pivot = (aug[col] as Float64Array)[col] ?? 0;
       if (Math.abs(pivot) < 1e-12) continue;
       for (let row = 0; row < n; row++) {

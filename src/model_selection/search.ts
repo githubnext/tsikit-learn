@@ -39,7 +39,7 @@ export class GridSearchCV {
   scoring: string;
 
   bestParams_: GridParams | null = null;
-  bestScore_: number = -Infinity;
+  bestScore_: number = Number.NEGATIVE_INFINITY;
   bestEstimator_: Estimator | null = null;
   cvResults_: { params: GridParams; meanTestScore: number }[] = [];
 
@@ -59,7 +59,7 @@ export class GridSearchCV {
     const kfold = new KFold({ nSplits: this.cv });
 
     this.cvResults_ = [];
-    let bestScore = -Infinity;
+    let bestScore = Number.NEGATIVE_INFINITY;
     let bestParams: GridParams = {};
 
     for (const params of candidates) {

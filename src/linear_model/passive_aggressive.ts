@@ -134,7 +134,7 @@ export class PassiveAggressiveClassifier {
       const nClasses = this.classes_.length;
       return new Int32Array(
         X.map((xi) => {
-          let bestScore = -Infinity;
+          let bestScore = Number.NEGATIVE_INFINITY;
           let bestClass = 0;
           for (let k = 0; k < nClasses; k++) {
             let score = this.intercept_![k] ?? 0;

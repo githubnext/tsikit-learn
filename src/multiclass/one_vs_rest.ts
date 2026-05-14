@@ -52,7 +52,7 @@ export class OneVsRestClassifier {
 
     return new Float64Array(
       Array.from({ length: n }, (_, i) => {
-        let maxScore = -Infinity;
+        let maxScore = Number.NEGATIVE_INFINITY;
         let bestClass = classes[0] ?? 0;
         for (let c = 0; c < nClasses; c++) {
           const score = (scores[c] ?? new Float64Array(n))[i] ?? 0;

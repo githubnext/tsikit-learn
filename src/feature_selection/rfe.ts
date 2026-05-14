@@ -41,7 +41,7 @@ export class RFE {
     const nSamples = X.length;
     const nFeatures = X[0]?.length ?? 0;
     const ranking = new Int32Array(nFeatures).fill(1);
-    let support = new Uint8Array(nFeatures).fill(1);
+    const support = new Uint8Array(nFeatures).fill(1);
     let nFeaturesRemaining = nFeatures;
 
     while (nFeaturesRemaining > this.nFeaturesToSelect) {

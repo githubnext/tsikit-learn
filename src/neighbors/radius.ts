@@ -69,7 +69,7 @@ export class RadiusNeighborsClassifier {
         }
 
         let bestLabel = 0;
-        let bestVotes = -Infinity;
+        let bestVotes = Number.NEGATIVE_INFINITY;
         for (const [label, v] of votes) {
           if (v > bestVotes) {
             bestVotes = v;

@@ -60,8 +60,8 @@ export class TSNE {
     const n = di.length;
     const pi = new Float64Array(n);
     let beta = 1.0;
-    const betaMin = -Infinity;
-    const betaMax = Infinity;
+    const betaMin = Number.NEGATIVE_INFINITY;
+    const betaMax = Number.POSITIVE_INFINITY;
     let betaMinL = betaMin;
     let betaMaxL = betaMax;
     const tol = 1e-5;
@@ -86,10 +86,10 @@ export class TSNE {
       if (Math.abs(hDiff) < tol) break;
       if (hDiff > 0) {
         betaMinL = beta;
-        beta = betaMaxL === Infinity ? beta * 2 : (beta + betaMaxL) / 2;
+        beta = betaMaxL === Number.POSITIVE_INFINITY ? beta * 2 : (beta + betaMaxL) / 2;
       } else {
         betaMaxL = beta;
-        beta = betaMinL === -Infinity ? beta / 2 : (beta + betaMinL) / 2;
+        beta = betaMinL === Number.NEGATIVE_INFINITY ? beta / 2 : (beta + betaMinL) / 2;
       }
       void betaMin; void betaMax;
     }
@@ -279,12 +279,12 @@ export class MDS {
     const vals: number[] = [];
     const Bcopy = new Float64Array(B);
     for (let comp = 0; comp < d; comp++) {
-      let v = new Float64Array(n);
+      const v = new Float64Array(n);
       for (let i = 0; i < n; i++) v[i] = Math.random() - 0.5;
       for (let iter = 0; iter < 100; iter++) {
         const w = new Float64Array(n);
         for (let i = 0; i < n; i++) {
-          for (let j = 0; j < n; j++) w[i] += (Bcopy[i * n + j] ?? 0) * (v[j] ?? 0);
+          for (let j = 0; j < n; j++) w[i]! += (Bcopy[i * n + j] ?? 0) * (v[j] ?? 0);
         }
         let norm = 0;
         for (let i = 0; i < n; i++) norm += (w[i] ?? 0) ** 2;
@@ -301,7 +301,7 @@ export class MDS {
       const lam = vals[comp] ?? 0;
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < n; j++) {
-          Bcopy[i * n + j] -= lam * (v[i] ?? 0) * (v[j] ?? 0);
+          Bcopy[i * n + j]! -= lam * (v[i] ?? 0) * (v[j] ?? 0);
         }
       }
     }

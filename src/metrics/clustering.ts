@@ -34,7 +34,7 @@ export function silhouetteScore(X: Float64Array[], labels: Int32Array): number {
     const ai = aCountI > 0 ? aSumI / aCountI : 0;
 
     // b(i): min mean distance to other clusters
-    let bi = Infinity;
+    let bi = Number.POSITIVE_INFINITY;
     for (const otherLabel of uniqueLabels) {
       if (otherLabel === li) continue;
       let bSum = 0;

@@ -34,16 +34,16 @@ function dijkstra(
   src: number,
 ): Float64Array {
   const n = adj.length;
-  const dist = new Float64Array(n).fill(Infinity);
+  const dist = new Float64Array(n).fill(Number.POSITIVE_INFINITY);
   const visited = new Uint8Array(n);
   dist[src] = 0;
 
   for (let iter = 0; iter < n; iter++) {
     let u = -1;
-    let minD = Infinity;
+    let minD = Number.POSITIVE_INFINITY;
     for (let i = 0; i < n; i++) {
-      if (!visited[i] && (dist[i] ?? Infinity) < minD) {
-        minD = dist[i] ?? Infinity;
+      if (!visited[i] && (dist[i] ?? Number.POSITIVE_INFINITY) < minD) {
+        minD = dist[i] ?? Number.POSITIVE_INFINITY;
         u = i;
       }
     }
@@ -51,7 +51,7 @@ function dijkstra(
     visited[u] = 1;
     for (const { j, d } of adj[u] ?? []) {
       const nd = (dist[u] ?? 0) + d;
-      if (nd < (dist[j] ?? Infinity)) dist[j] = nd;
+      if (nd < (dist[j] ?? Number.POSITIVE_INFINITY)) dist[j] = nd;
     }
   }
   return dist;

@@ -52,7 +52,7 @@ export class SplineTransformer {
 
     // Degree 0
     for (let i = 0; i < n; i++) {
-      B[0]![i] = (t[i] ?? 0) <= x && x < (t[i + 1] ?? Infinity) ? 1 : 0;
+      B[0]![i] = (t[i] ?? 0) <= x && x < (t[i + 1] ?? Number.POSITIVE_INFINITY) ? 1 : 0;
     }
     // Handle right endpoint
     if (Math.abs(x - (t[t.length - 1] ?? 0)) < 1e-10 && n > 0) {

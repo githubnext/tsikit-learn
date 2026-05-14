@@ -21,7 +21,7 @@ export class SimpleImputer {
   ) {
     this.strategy = options.strategy ?? "mean";
     this.fillValue = options.fillValue ?? 0;
-    this.missingValues = options.missingValues ?? NaN;
+    this.missingValues = options.missingValues ?? Number.NaN;
   }
 
   private _isMissing(x: number): boolean {

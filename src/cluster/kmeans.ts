@@ -51,7 +51,7 @@ export class KMeans {
 
     for (let c = 1; c < k; c++) {
       const dists = X.map((xi) => {
-        let minD = Infinity;
+        let minD = Number.POSITIVE_INFINITY;
         for (const center of centers) {
           const d = euclideanSq(xi, center);
           if (d < minD) minD = d;
@@ -85,7 +85,7 @@ export class KMeans {
     for (let iter = 0; iter < this.maxIter; iter++) {
       // Assignment step
       for (let i = 0; i < n; i++) {
-        let minDist = Infinity;
+        let minDist = Number.POSITIVE_INFINITY;
         let minIdx = 0;
         for (let c = 0; c < centers.length; c++) {
           const d = euclideanSq(X[i] ?? new Float64Array(p), centers[c] ?? new Float64Array(p));
@@ -162,7 +162,7 @@ export class KMeans {
     const p = (centers[0] ?? new Float64Array(0)).length;
     return new Int32Array(
       X.map((xi) => {
-        let minDist = Infinity;
+        let minDist = Number.POSITIVE_INFINITY;
         let minIdx = 0;
         for (let c = 0; c < centers.length; c++) {
           const d = euclideanSq(xi, centers[c] ?? new Float64Array(p));
@@ -189,7 +189,7 @@ export class KMeans {
     const p = (centers[0] ?? new Float64Array(0)).length;
     let inertia = 0;
     for (const xi of X) {
-      let minDist = Infinity;
+      let minDist = Number.POSITIVE_INFINITY;
       for (const c of centers) {
         const d = euclideanSq(xi, c.length ? c : new Float64Array(p));
         if (d < minDist) minDist = d;
@@ -223,7 +223,7 @@ export class DBSCAN {
   fitPredict(X: Float64Array[]): Int32Array {
     const n = X.length;
     const labels = new Int32Array(n).fill(-2); // -2 = unvisited, -1 = noise
-    let clusterId = 0;
+    const clusterId = 0;
     const coreIndices: number[] = [];
 
     function getNeighbors(idx: number): number[] {

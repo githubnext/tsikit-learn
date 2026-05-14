@@ -113,7 +113,7 @@ export class SVC {
 
     // SMO-lite
     const alpha = new Float64Array(n);
-    let b = 0;
+    const b = 0;
 
     // Compute kernel matrix
     const K: number[][] = [];
@@ -128,7 +128,7 @@ export class SVC {
     }
 
     for (let iter = 0; iter < this.maxIter; iter++) {
-      let numChanged = 0;
+      const numChanged = 0;
 
       for (let i = 0; i < n; i++) {
         // Compute decision value

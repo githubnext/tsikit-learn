@@ -60,7 +60,7 @@ export class OneHotEncoder {
       let offset = 0;
       for (let j = 0; j < p; j++) {
         const cat = cats[j] ?? new Float64Array(0);
-        let maxVal = -Infinity;
+        let maxVal = Number.NEGATIVE_INFINITY;
         let bestIdx = 0;
         for (let k = 0; k < cat.length; k++) {
           if ((xi[offset + k] ?? 0) > maxVal) {

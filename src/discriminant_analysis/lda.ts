@@ -129,7 +129,7 @@ export class LinearDiscriminantAnalysis {
       const coefC = solveLinear(Sw, meanC);
       this.coef_.push(coefC);
       const prior = (this.priors_[c] ?? 0);
-      let dotMeanCCoef = dotVec(meanC, coefC);
+      const dotMeanCCoef = dotVec(meanC, coefC);
       this.intercept_[c] = -0.5 * dotMeanCCoef + Math.log(prior + 1e-10);
     }
 
@@ -154,10 +154,10 @@ export class LinearDiscriminantAnalysis {
     return new Float64Array(
       decisions.map((d) => {
         let maxIdx = 0;
-        let maxVal = d[0] ?? -Infinity;
+        let maxVal = d[0] ?? Number.NEGATIVE_INFINITY;
         for (let c = 1; c < d.length; c++) {
-          if ((d[c] ?? -Infinity) > maxVal) {
-            maxVal = d[c] ?? -Infinity;
+          if ((d[c] ?? Number.NEGATIVE_INFINITY) > maxVal) {
+            maxVal = d[c] ?? Number.NEGATIVE_INFINITY;
             maxIdx = c;
           }
         }
@@ -264,7 +264,7 @@ export class QuadraticDiscriminantAnalysis {
 
     return new Float64Array(
       X.map((xi) => {
-        let maxScore = -Infinity;
+        let maxScore = Number.NEGATIVE_INFINITY;
         let maxIdx = 0;
         for (let c = 0; c < nClasses; c++) {
           const mean = (this.means_ as Float64Array[])[c] ?? new Float64Array(p);
@@ -275,7 +275,7 @@ export class QuadraticDiscriminantAnalysis {
           for (let j = 0; j < p; j++) diff[j] = (xi[j] ?? 0) - (mean[j] ?? 0);
 
           const solved = solveLinear(cov.length > 0 ? cov as Float64Array[] : [new Float64Array(p)], diff);
-          let mahal = dotVec(diff, solved);
+          const mahal = dotVec(diff, solved);
 
           const score = -0.5 * mahal + Math.log(prior + 1e-10);
           if (score > maxScore) {

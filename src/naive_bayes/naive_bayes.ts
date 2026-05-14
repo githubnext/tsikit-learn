@@ -107,10 +107,10 @@ export class GaussianNB {
     return new Float64Array(
       logProba.map((lp) => {
         let maxIdx = 0;
-        let maxVal = lp[0] ?? -Infinity;
+        let maxVal = lp[0] ?? Number.NEGATIVE_INFINITY;
         for (let c = 1; c < lp.length; c++) {
-          if ((lp[c] ?? -Infinity) > maxVal) {
-            maxVal = lp[c] ?? -Infinity;
+          if ((lp[c] ?? Number.NEGATIVE_INFINITY) > maxVal) {
+            maxVal = lp[c] ?? Number.NEGATIVE_INFINITY;
             maxIdx = c;
           }
         }
@@ -182,7 +182,7 @@ export class MultinomialNB {
     return new Float64Array(
       X.map((xi) => {
         let maxIdx = 0;
-        let maxScore = -Infinity;
+        let maxScore = Number.NEGATIVE_INFINITY;
         for (let c = 0; c < nClasses; c++) {
           let score = (this.classLogPrior_ as Float64Array)[c] ?? 0;
           const flp = (this.featureLogProb_ as Float64Array[])[c] ?? new Float64Array(p);
@@ -271,7 +271,7 @@ export class BernoulliNB {
     return new Float64Array(
       X.map((xi) => {
         let maxIdx = 0;
-        let maxScore = -Infinity;
+        let maxScore = Number.NEGATIVE_INFINITY;
         for (let c = 0; c < nClasses; c++) {
           let score = (this.classLogPrior_ as Float64Array)[c] ?? 0;
           const flp = (this.featureLogProb_ as Float64Array[])[c] ?? new Float64Array(p);

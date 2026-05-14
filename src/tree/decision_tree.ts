@@ -70,7 +70,7 @@ function buildTree(
   }
 
   const nFeatures = (X[0] ?? new Float64Array(0)).length;
-  let bestGain = -Infinity;
+  let bestGain = Number.NEGATIVE_INFINITY;
   let bestFeature = 0;
   let bestThreshold = 0;
 
@@ -156,7 +156,7 @@ export class DecisionTreeClassifier {
       criterion?: string;
     } = {},
   ) {
-    this.maxDepth = options.maxDepth ?? Infinity;
+    this.maxDepth = options.maxDepth ?? Number.POSITIVE_INFINITY;
     this.minSamplesSplit = options.minSamplesSplit ?? 2;
     this.criterion = options.criterion ?? "gini";
   }
@@ -215,7 +215,7 @@ export class DecisionTreeRegressor {
   constructor(
     options: { maxDepth?: number; minSamplesSplit?: number } = {},
   ) {
-    this.maxDepth = options.maxDepth ?? Infinity;
+    this.maxDepth = options.maxDepth ?? Number.POSITIVE_INFINITY;
     this.minSamplesSplit = options.minSamplesSplit ?? 2;
   }
 

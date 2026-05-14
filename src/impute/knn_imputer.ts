@@ -9,14 +9,14 @@ function nanEuclidean(a: Float64Array, b: Float64Array): number {
   let sum = 0;
   let count = 0;
   for (let j = 0; j < a.length; j++) {
-    const av = a[j] ?? NaN;
-    const bv = b[j] ?? NaN;
+    const av = a[j] ?? Number.NaN;
+    const bv = b[j] ?? Number.NaN;
     if (!isNaN(av) && !isNaN(bv)) {
       sum += (av - bv) ** 2;
       count++;
     }
   }
-  return count === 0 ? Infinity : Math.sqrt((sum * a.length) / count);
+  return count === 0 ? Number.POSITIVE_INFINITY : Math.sqrt((sum * a.length) / count);
 }
 
 export interface KNNImputerOptions {
@@ -36,7 +36,7 @@ export class KNNImputer {
   constructor(options: KNNImputerOptions = {}) {
     this.nNeighbors = options.nNeighbors ?? 5;
     this.weights = options.weights ?? "uniform";
-    this.missingValues = options.missingValues ?? NaN;
+    this.missingValues = options.missingValues ?? Number.NaN;
   }
 
   private _isMissing(v: number): boolean {
@@ -49,7 +49,7 @@ export class KNNImputer {
     this.statistics_ = new Float64Array(nFeatures);
 
     for (let j = 0; j < nFeatures; j++) {
-      const vals = X.map((row) => row[j] ?? NaN).filter((v) => !this._isMissing(v));
+      const vals = X.map((row) => row[j] ?? Number.NaN).filter((v) => !this._isMissing(v));
       this.statistics_[j] =
         vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
     }
@@ -64,7 +64,7 @@ export class KNNImputer {
       const result = new Float64Array(row);
       const missingCols: number[] = [];
       for (let j = 0; j < nFeatures; j++) {
-        if (this._isMissing(row[j] ?? NaN)) missingCols.push(j);
+        if (this._isMissing(row[j] ?? Number.NaN)) missingCols.push(j);
       }
 
       if (missingCols.length === 0) return result;
@@ -74,13 +74,13 @@ export class KNNImputer {
         ti,
         d: nanEuclidean(row, trainRow),
       }))
-        .filter((x) => x.d < Infinity)
+        .filter((x) => x.d < Number.POSITIVE_INFINITY)
         .sort((a, b) => a.d - b.d)
         .slice(0, this.nNeighbors);
 
       for (const j of missingCols) {
         const validNeighbors = dists.filter(
-          (x) => !this._isMissing(this.xFit_![x.ti]![j] ?? NaN),
+          (x) => !this._isMissing(this.xFit_![x.ti]![j] ?? Number.NaN),
         );
         if (validNeighbors.length === 0) {
           result[j] = this.statistics_![j] ?? 0;
@@ -129,7 +129,7 @@ export class IterativeImputer {
   constructor(options: IterativeImputerOptions = {}) {
     this.maxIter = options.maxIter ?? 10;
     this.tol = options.tol ?? 1e-3;
-    this.missingValues = options.missingValues ?? NaN;
+    this.missingValues = options.missingValues ?? Number.NaN;
   }
 
   private _isMissing(v: number): boolean {
@@ -140,7 +140,7 @@ export class IterativeImputer {
     const nFeatures = X[0]?.length ?? 0;
     this.statistics_ = new Float64Array(nFeatures);
     for (let j = 0; j < nFeatures; j++) {
-      const vals = X.map((row) => row[j] ?? NaN).filter(
+      const vals = X.map((row) => row[j] ?? Number.NaN).filter(
         (v) => !this._isMissing(v),
       );
       this.statistics_[j] =
@@ -155,10 +155,10 @@ export class IterativeImputer {
     const nFeatures = X[0]?.length ?? 0;
 
     // Initial fill with column mean
-    let filled = X.map((row) => {
+    const filled = X.map((row) => {
       const r = new Float64Array(nFeatures);
       for (let j = 0; j < nFeatures; j++) {
-        r[j] = this._isMissing(row[j] ?? NaN)
+        r[j] = this._isMissing(row[j] ?? Number.NaN)
           ? (this.statistics_![j] ?? 0)
           : (row[j] ?? 0);
       }
@@ -167,7 +167,7 @@ export class IterativeImputer {
 
     const missingMask = X.map((row) =>
       new Uint8Array(nFeatures).map((_, j) =>
-        this._isMissing(row[j] ?? NaN) ? 1 : 0,
+        this._isMissing(row[j] ?? Number.NaN) ? 1 : 0,
       ),
     );
 

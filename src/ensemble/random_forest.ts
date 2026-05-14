@@ -32,7 +32,7 @@ export class RandomForestClassifier {
     } = {},
   ) {
     this.nEstimators = options.nEstimators ?? 100;
-    this.maxDepth = options.maxDepth ?? Infinity;
+    this.maxDepth = options.maxDepth ?? Number.POSITIVE_INFINITY;
     this.minSamplesSplit = options.minSamplesSplit ?? 2;
     this.maxFeatures = options.maxFeatures ?? "sqrt";
   }
@@ -138,7 +138,7 @@ export class RandomForestRegressor {
     } = {},
   ) {
     this.nEstimators = options.nEstimators ?? 100;
-    this.maxDepth = options.maxDepth ?? Infinity;
+    this.maxDepth = options.maxDepth ?? Number.POSITIVE_INFINITY;
     this.minSamplesSplit = options.minSamplesSplit ?? 2;
     this.maxFeatures = options.maxFeatures ?? "sqrt";
   }

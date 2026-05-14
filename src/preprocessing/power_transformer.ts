@@ -45,7 +45,7 @@ export class PowerTransformer {
     // Grid search for lambda that maximizes log-likelihood (simplified)
     const lambdas = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];
     let bestLam = 0;
-    let bestScore = -Infinity;
+    let bestScore = Number.NEGATIVE_INFINITY;
     for (const lam of lambdas) {
       try {
         const transformed = Float64Array.from(col, (x) =>
