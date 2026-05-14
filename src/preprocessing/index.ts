@@ -5,3 +5,4 @@ export * from "./normalizer.js";
 export * from "./polynomial_features.js";
 export * from "./encoders.js";
 export * from "./robust_scaler.js";
+export * from "./power_transformer.js";

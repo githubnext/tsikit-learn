@@ -93,3 +93,12 @@ export * from "./kernel_ridge/index.js";
 // Gaussian process
 export * from "./gaussian_process/index.js";
 
+// Kernel approximation
+export * from "./kernel_approximation/index.js";
+
+// Covariance
+export * from "./covariance/index.js";
+
+// Cross decomposition
+export * from "./cross_decomposition/index.js";
+
