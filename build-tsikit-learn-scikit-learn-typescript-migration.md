@@ -4,16 +4,16 @@
 
 | Field | Value |
 |-------|-------|
-| last_run | 2026-05-14T19:25:10Z |
-| best_metric | 78 |
+| last_run | 2026-05-15T01:30:30Z |
+| best_metric | 87 |
 | target_metric | null |
-| iteration_count | 11 |
+| iteration_count | 12 |
 | paused | false |
 | pause_reason | |
 | completed | false |
 | completed_reason | |
 | consecutive_errors | 0 |
-| recent_statuses | ✅✅✅✅✅✅✅✅✅✅ |
+| recent_statuses | ✅✅✅✅✅✅✅✅✅✅✅ |
 
 **Issue**: #5
 **PR**: #17
@@ -41,7 +41,10 @@
 - Always check for existing exports with `grep -rn "export class X" src/` before creating new files to avoid duplicates
 - Biome enforces `useNumberNamespace`: use `Number.POSITIVE_INFINITY`/`Number.NEGATIVE_INFINITY`/`Number.NaN` instead of raw `Infinity`/`-Infinity`/`NaN`
 - TypeScript `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes` requires `!` on indexed writes (`arr[i]! = val`)
-- Destructuring swaps `[a, b] = [b, a]` on typed arrays infer `ArrayBufferLike` instead of `ArrayBuffer` — use explicit temp variable
+- `biome.json`: disable `noNonNullAssertion` and `noInferrableTypes` — these conflict with `noUncheckedIndexedAccess` TS config which requires `!` assertions on indexed writes
+- Destructuring swaps on typed arrays (even with `as [Float64Array, Float64Array]` cast) may still cause `ArrayBufferLike` errors — use temp variable pattern: `const tmp = arr[i]!; arr[i] = arr[j]!; arr[j] = tmp;`
+- `const` → `let` fix: when biome's `useConst` rule auto-fixes `let` to `const` but the variable IS reassigned later, revert those specific changes manually
+- The push via `push_to_pull_request_branch` is batched to workflow end; CI runs after the workflow completes, not during it
 
 ---
 
@@ -54,15 +57,41 @@
 
 ## 🔭 Future Directions
 
-- Port remaining sklearn modules: more linear_model (TheilSenRegressor, RANSACRegressor), more cluster (HDBSCAN)
-- Add more ensemble: HistGradientBoostingClassifier/Regressor
-- Add more decomposition: DictionaryLearning, SparsePCA
-- Add tests for new modules (cluster/spectral, ensemble/stacking, etc.)
-- Fix pre-existing lint errors in ensemble/gradient_boosting.ts and discriminant_analysis/lda.ts
+- Port more sklearn modules: `linear_model` (OrthogonalMatchingPursuit, MultiTaskLasso, MultiTaskElasticNet), more `neighbors` (BallTree, KDTree), more `preprocessing` (LabelBinarizer, MultiLabelBinarizer)
+- Add tests for new modules (cluster/hdbscan, ensemble/hist_gradient_boosting, etc.)
+- Add playground demos for new modules
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 12 — 2026-05-15T01:30:30Z ✅
+
+**Metric**: 87 (+9 from best of 78)
+
+**Change**: Added 9 new sklearn module files:
+- linear_model/lars.ts: Lars, LassoLars, LarsCV
+- linear_model/theil_sen.ts: TheilSenRegressor, RANSACRegressor
+- cluster/hdbscan.ts: HDBSCAN
+- ensemble/hist_gradient_boosting.ts: HistGradientBoostingClassifier, HistGradientBoostingRegressor
+- decomposition/dictionary_learning.ts: DictionaryLearning, SparsePCA
+- neighbors/nearest_centroid.ts: NearestCentroid, NearestNeighbors
+- preprocessing/binarizer.ts: Binarizer, FunctionTransformer, QuantileTransformer
+- metrics/distance.ts: pairwiseDistances, cosineSimilarity, euclideanDistances, haversineDistances
+- manifold/mds.ts: MDS (Multidimensional Scaling, SMACOF algorithm)
+
+Also fixed pre-existing CI failures:
+- biome.json: disabled noNonNullAssertion + noInferrableTypes (conflict with TS noUncheckedIndexedAccess)
+- cross_decomposition/pls.ts: const→let for Xc/Yc, fixed Float64Array<ArrayBufferLike> cast, fixed array swap
+- decomposition/advanced.ts: fixed array swap to use temp var
+- kernel_ridge/kernel_ridge.ts: fixed array swap
+- cluster/kmeans.ts: const clusterId → let
+- mixture/bayesian_mixture.ts: const resp/prevLogLik → let
+- svm/svc.ts: const b/numChanged → let
+
+**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25895259674
+
+---
 
 ### Iteration 11 — 2026-05-14T19:25:10Z ✅
 
