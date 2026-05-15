@@ -11,3 +11,5 @@ export * from "./lars.js";
 export * from "./theil_sen.js";
 export * from "./multi_task.js";
 export * from "./omp.js";
+export * from "./quantile.js";
+export * from "./coordinate_descent_cv.js";

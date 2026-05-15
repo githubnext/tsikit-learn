@@ -5,3 +5,4 @@ export * from "./pairwise.js";
 export * from "./ranking.js";
 export * from "./report.js";
 export * from "./distance.js";
+export * from "./scorer.js";
