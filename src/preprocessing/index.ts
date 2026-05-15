@@ -9,3 +9,4 @@ export * from "./power_transformer.js";
 export * from "./spline.js";
 export * from "./kbins.js";
 export * from "./binarizer.js";
+export * from "./label_binarizer.js";
