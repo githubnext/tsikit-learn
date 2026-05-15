@@ -4,19 +4,30 @@
 
 | Field | Value |
 |-------|-------|
-| last_run | 2026-05-15T01:30:30Z |
-| best_metric | 87 |
-| target_metric | null |
-| iteration_count | 12 |
-| paused | false |
-| pause_reason | |
-| completed | false |
-| completed_reason | |
-| consecutive_errors | 0 |
-| recent_statuses | ✅✅✅✅✅✅✅✅✅✅✅ |
+| Last Run | 2026-05-15T13:24:42Z |
+| Iteration Count | 13 |
+| Best Metric | 96 |
+| Target Metric | null |
+| Metric Direction | higher |
+| Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
+| PR | #17 |
+| Issue | #5 |
+| Paused | false |
+| Pause Reason | — |
+| Completed | false |
+| Completed Reason | — |
+| Consecutive Errors | 0 |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅ |
 
+---
+
+## 📋 Program Info
+
+**Goal**: Port scikit-learn to TypeScript, one module at a time
+**Metric**: sklearn_features_ported (higher is better)
+**Branch**: [`autoloop/build-tsikit-learn-scikit-learn-typescript-migration`](../../tree/autoloop/build-tsikit-learn-scikit-learn-typescript-migration)
+**Pull Request**: #17
 **Issue**: #5
-**PR**: #17
 
 ---
 
@@ -45,6 +56,8 @@
 - Destructuring swaps on typed arrays (even with `as [Float64Array, Float64Array]` cast) may still cause `ArrayBufferLike` errors — use temp variable pattern: `const tmp = arr[i]!; arr[i] = arr[j]!; arr[j] = tmp;`
 - `const` → `let` fix: when biome's `useConst` rule auto-fixes `let` to `const` but the variable IS reassigned later, revert those specific changes manually
 - The push via `push_to_pull_request_branch` is batched to workflow end; CI runs after the workflow completes, not during it
+- Check for existing exports in `search.ts` before adding `crossValScore` to new files (already exported there)
+- `checkArray` already exists in `utils/validation.ts` — use `checkArray2D` when adding similar utility to `utils/bunch.ts`
 
 ---
 
@@ -57,13 +70,25 @@
 
 ## 🔭 Future Directions
 
-- Port more sklearn modules: `linear_model` (OrthogonalMatchingPursuit, MultiTaskLasso, MultiTaskElasticNet), more `neighbors` (BallTree, KDTree), more `preprocessing` (LabelBinarizer, MultiLabelBinarizer)
-- Add tests for new modules (cluster/hdbscan, ensemble/hist_gradient_boosting, etc.)
-- Add playground demos for new modules
+- Port more sklearn modules: `linear_model` (MultiTaskLassoCV, ElasticNetCV), more `gaussian_process` (kernels), `linear_model` (QuantileRegressor, PoissonRegressor, TweedieRegressor)
+- Add cross-decomposition: PLSCanonical, PLSRegression (CCA already started)
+- Add `neural_network` tests and playground demos
+- Add more `covariance` estimators (EllipticEnvelope)
+- Port `preprocessing` (TargetEncoder improvements)
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 13 — 2026-05-15T13:24:42Z ✅
+
+- **Status**: ✅ Accepted
+- **Change**: Added 9 new sklearn module files: MultiTaskLasso/MultiTaskElasticNet (linear_model/multi_task.ts), OrthogonalMatchingPursuit (linear_model/omp.ts), LabelBinarizer/MultiLabelBinarizer (preprocessing/label_binarizer.ts), BallTree/KDTree (neighbors/ball_tree.ts), BernoulliRBM (neural_network/rbm.ts), GraphicalLasso/MinCovDet (covariance/graphical_lasso.ts), mutualInfoClassif/mutualInfoRegression/GenericUnivariateSelect (feature_selection/mutual_info.ts), crossValidate/learningCurve/validationCurve (model_selection/curve.ts), Bunch/argsort/shuffle/resample/unique (utils/bunch.ts)
+- **Metric**: 96 (previous best: 87, delta: +9)
+- **Commit**: b4870aa
+- **Notes**: Covered multi-task regularized regression, greedy OLS, label binarization, spatial data structures, RBM generative models, graphical models, mutual information-based feature selection, and cross-validation utilities.
+
+---
 
 ### Iteration 12 — 2026-05-15T01:30:30Z ✅
 
@@ -80,14 +105,7 @@
 - metrics/distance.ts: pairwiseDistances, cosineSimilarity, euclideanDistances, haversineDistances
 - manifold/mds.ts: MDS (Multidimensional Scaling, SMACOF algorithm)
 
-Also fixed pre-existing CI failures:
-- biome.json: disabled noNonNullAssertion + noInferrableTypes (conflict with TS noUncheckedIndexedAccess)
-- cross_decomposition/pls.ts: const→let for Xc/Yc, fixed Float64Array<ArrayBufferLike> cast, fixed array swap
-- decomposition/advanced.ts: fixed array swap to use temp var
-- kernel_ridge/kernel_ridge.ts: fixed array swap
-- cluster/kmeans.ts: const clusterId → let
-- mixture/bayesian_mixture.ts: const resp/prevLogLik → let
-- svm/svc.ts: const b/numChanged → let
+Also fixed pre-existing CI failures.
 
 **Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25895259674
 
@@ -97,15 +115,7 @@ Also fixed pre-existing CI failures:
 
 **Metric**: 78 (+8 from best of 70)
 
-**Change**: Added 8 new sklearn module files across 8 new/expanded modules:
-- cluster/spectral.ts: SpectralClustering, MeanShift, Birch, OPTICS
-- ensemble/stacking.ts: StackingClassifier, StackingRegressor, AdaBoostClassifier, AdaBoostRegressor
-- manifold/spectral_embedding.ts: SpectralEmbedding
-- inspection/inspection.ts: permutationImportance, partialDependence
-- metrics/report.ts: classificationReport, precisionRecallFscoreSupport
-- preprocessing/kbins.ts: KBinsDiscretizer
-- linear_model/bayesian.ts: BayesianRidge, ARDRegression
-- compose/transformed_target.ts: TransformedTargetRegressor
+**Change**: Added 8 new sklearn module files across 8 new/expanded modules.
 
 **Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25880658762
 
@@ -113,50 +123,12 @@ Also fixed pre-existing CI failures:
 
 ### Iteration 10 — 2026-05-14T13:49:09Z ✅
 
-**Metric**: 70 (+18 from best of 52, +12 from branch of 58)
+**Metric**: 70 (+18 from best of 52)
 
-**Change**: Added 12 new sklearn module files across new module directories. Also fixed all pre-existing CI failures (TypeScript strict errors + 113 biome lint errors).
-
-New modules: AgglomerativeClustering/MiniBatchKMeans (cluster), loadIris/loadWine/loadBreastCancer/makeSwissRoll (datasets), FastICA/LatentDirichletAllocation (decomposition), BaggingClassifier/BaggingRegressor/VotingClassifier (ensemble), RFE/RFECV/SelectFromModel (feature_selection), KNNImputer/IterativeImputer (impute), HuberRegressor/Lars (linear_model), PassiveAggressiveClassifier/PassiveAggressiveRegressor (linear_model), Isomap/LocallyLinearEmbedding (manifold), rocCurve/rocAucScore/precisionRecallCurve/auc/ndcgScore (metrics/ranking), BayesianGaussianMixture (mixture), SplineTransformer/TargetEncoder (preprocessing).
-
-CI fixes: kernel_ridge.ts (destructuring swap → temp var), tsne.ts (non-null assertions), 21 files (Infinity → Number.POSITIVE_INFINITY), 10 files (let → const).
+**Change**: Added 12 new sklearn module files. Also fixed all pre-existing CI failures.
 
 **Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25862476212
 
 ---
 
-### Iteration 9 — 2026-05-14T01:32:08Z ✅
-
-**Metric**: 52 (+9 from best of 43)
-
-**Change**: Added 9 new source files across 7 new modules: manifold (TSNE, MDS), mixture (GaussianMixture), semi_supervised (LabelPropagation, LabelSpreading), feature_extraction (DictVectorizer, FeatureHasher), multioutput (MultiOutputClassifier, MultiOutputRegressor, ClassifierChain), kernel_ridge (KernelRidge), gaussian_process (GaussianProcessRegressor, RBFKernel, ConstantKernel). Also added pairwise metrics (euclidean/cosine/manhattan distances, RBF/linear/polynomial kernels) and RobustScaler/MaxAbsScaler preprocessing.
-
-**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25836319463
-
----
-
-### Iteration 8 — 2026-05-13T23:05:55Z ✅
-
-**Metric**: 43 (+8 from best of 35)
-
-**Change**: Added 28 new sklearn module files across 16 new module directories.
-
-New modules: LogisticRegression, Lasso, ElasticNet, SGDClassifier, SGDRegressor, Perceptron, silhouetteScore, adjustedRandScore, homogeneityScore, GridSearchCV, crossValScore, SVC, SVR, ColumnTransformer, MLPClassifier, MLPRegressor, DecisionTreeClassifier, DecisionTreeRegressor, RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor, KNeighborsClassifier, KNeighborsRegressor, RadiusNeighborsClassifier, RadiusNeighborsRegressor, KMeans, DBSCAN, PCA, TruncatedSVD, NMF, GaussianNB, MultinomialNB, BernoulliNB, SimpleImputer, Pipeline, makePipeline, SelectKBest, SelectPercentile, VarianceThreshold, fClassif, fRegression, chi2, makeClassification, makeRegression, makeBlobs, makeMoons, makeCircles, PolynomialFeatures, OneHotEncoder, OrdinalEncoder, LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis, IsotonicRegression, OneVsRestClassifier, OneVsOneClassifier, CalibratedClassifierCV.
-
-**Issues fixed**: `.ts` → `.js` imports, `this` context in nested functions, `KFold` API usage, `Params` export conflict.
-
-**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25830884200
-
----
-
-### Iteration 7 — 2026-05-13 ✅
-
-**Metric**: 35
-
-**Change**: Added 20 sklearn modules (Ridge, StandardScaler, MinMaxScaler, LabelEncoder, Normalizer, LinearRegression, KFold, StratifiedKFold, train_test_split, MSE, MAE, R², etc.)
-
----
-
-### Iterations 1-6
-
-Earlier iterations built the foundation: exceptions, base, utils, preprocessing, metrics, model_selection, linear_model.
+### Iters 1–9 — ✅ (metrics 0→52): Foundation, preprocessing, metrics, model_selection, linear_model, manifold, mixture, semi_supervised, feature_extraction, multioutput, kernel_ridge, gaussian_process, svm, tree, ensemble, decomposition, neighbors, neural_network, pipeline, impute, calibration, isotonic, discriminant_analysis, datasets
