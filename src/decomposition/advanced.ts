@@ -508,7 +508,7 @@ export class FactorAnalysis {
       for (let row = col + 1; row < k; row++) {
         if (Math.abs(aug[row]![col] ?? 0) > Math.abs(aug[maxRow]![col] ?? 0)) maxRow = row;
       }
-      [aug[col], aug[maxRow]] = [aug[maxRow]!, aug[col]!] as [Float64Array, Float64Array];
+      const tmpAdv = aug[col]!; aug[col] = aug[maxRow]!; aug[maxRow] = tmpAdv;
       const pivot = aug[col]![col] ?? 1e-12;
       if (Math.abs(pivot) < 1e-15) continue;
       for (let j = 0; j < 2 * k; j++) aug[col]![j] = (aug[col]![j] ?? 0) / pivot;

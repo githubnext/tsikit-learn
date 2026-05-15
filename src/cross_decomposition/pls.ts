@@ -102,7 +102,7 @@ function nipals(
       norm(
         Float64Array.from({ length: q }, (_, i) => (vNew[i] ?? 0) - (v[i] ?? 0)),
       );
-    u = uNew;
+    u = uNew as Float64Array<ArrayBuffer>;
     v = vNew;
     if (diff < tol) break;
   }
@@ -152,8 +152,8 @@ export class PLSRegression {
 
     this.xMean_ = colMeans(X);
     this.yMean_ = colMeans(Y);
-    const Xc = center(X, this.xMean_);
-    const Yc = center(Y, this.yMean_);
+    let Xc = center(X, this.xMean_);
+    let Yc = center(Y, this.yMean_);
 
     this.xWeights_ = [];
     this.yWeights_ = [];
@@ -280,7 +280,7 @@ export class PLSRegression {
       for (let row = col + 1; row < k; row++) {
         if (Math.abs(aug[row]![col] ?? 0) > Math.abs(aug[maxRow]![col] ?? 0)) maxRow = row;
       }
-      [aug[col], aug[maxRow]] = [aug[maxRow]!, aug[col]!] as [Float64Array, Float64Array];
+      const tmpPls = aug[col]!; aug[col] = aug[maxRow]!; aug[maxRow] = tmpPls;
       const pivot = aug[col]![col] ?? 1e-12;
       if (Math.abs(pivot) < 1e-15) continue;
       for (let j = 0; j < 2 * k; j++) aug[col]![j] = (aug[col]![j] ?? 0) / pivot;

@@ -61,7 +61,7 @@ export class BayesianGaussianMixture {
     });
 
     // Initialize uniform responsibilities
-    const resp = Array.from({ length: n }, () =>
+    let resp = Array.from({ length: n }, () =>
       new Float64Array(K).map(() => 1 / K),
     );
 
@@ -70,7 +70,7 @@ export class BayesianGaussianMixture {
       1 / K + this.weightConcentrationPrior,
     );
 
-    const prevLogLik = Number.NEGATIVE_INFINITY;
+    let prevLogLik = Number.NEGATIVE_INFINITY;
 
     for (let iter = 0; iter < this.maxIter; iter++) {
       // M-step: compute weighted statistics

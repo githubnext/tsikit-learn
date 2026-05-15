@@ -223,7 +223,7 @@ export class DBSCAN {
   fitPredict(X: Float64Array[]): Int32Array {
     const n = X.length;
     const labels = new Int32Array(n).fill(-2); // -2 = unvisited, -1 = noise
-    const clusterId = 0;
+    let clusterId = 0;
     const coreIndices: number[] = [];
 
     function getNeighbors(idx: number): number[] {
