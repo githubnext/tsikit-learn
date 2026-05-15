@@ -4,9 +4,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-15T13:24:42Z |
-| Iteration Count | 13 |
-| Best Metric | 96 |
+| Last Run | 2026-05-15T19:23:44Z |
+| Iteration Count | 14 |
+| Best Metric | 105 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -17,7 +17,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -79,6 +79,16 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 14 — 2026-05-15T19:23:44Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25936928642)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 9 new sklearn module files: QuantileRegressor/TweedieRegressor/PoissonRegressor/GammaRegressor, RidgeCV/LassoCV/ElasticNetCV, EllipticEnvelope, ledoitWolf/oas/SparsePrecision, LocalOutlierFactor, CCA, makeScorer/checkScoring/getScorer, graph utilities (connectedComponents/MST/dijkstra), BisectingKMeans
+- **Metric**: 105 (previous best: 96, delta: +9)
+- **Commit**: f161242
+- **Notes**: GLMs, cross-validated linear models, robust covariance outlier detection, LOF, CCA, scoring utilities, graph algorithms, divisive hierarchical clustering.
+
+---
 
 ### Iteration 13 — 2026-05-15T13:24:42Z ✅
 
