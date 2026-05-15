@@ -8,3 +8,4 @@ export * from "./robust_scaler.js";
 export * from "./power_transformer.js";
 export * from "./spline.js";
 export * from "./kbins.js";
+export * from "./binarizer.js";
