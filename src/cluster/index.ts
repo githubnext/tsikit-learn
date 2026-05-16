@@ -4,3 +4,4 @@ export * from "./spectral.js";
 export * from "./hdbscan.js";
 export * from "./bisecting_kmeans.js";
 export * from "./affinity_propagation.js";
+export * from "./feature_agglomeration.js";
