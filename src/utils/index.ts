@@ -4,3 +4,4 @@ export * from "./multiclass.js";
 export * from "./class_weight.js";
 export * from "./bunch.js";
 export * from "./graph.js";
+export * from "./stats.js";

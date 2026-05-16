@@ -10,3 +10,4 @@ export * from "./spline.js";
 export * from "./kbins.js";
 export * from "./binarizer.js";
 export * from "./label_binarizer.js";
+export * from "./data.js";
