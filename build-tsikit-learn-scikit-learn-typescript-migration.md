@@ -1,12 +1,18 @@
-# Autoloop State: build-tsikit-learn-scikit-learn-typescript-migration
+# Autoloop: build-tsikit-learn-scikit-learn-typescript-migration
+
+🤖 *This file is maintained by the Autoloop agent. Maintainers may freely edit any section.*
+
+---
 
 ## ⚙️ Machine State
 
+> 🤖 *Updated automatically after each iteration. The pre-step scheduler reads this table — keep it accurate.*
+
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-16T07:55:00Z |
-| Iteration Count | 15 |
-| Best Metric | 113 |
+| Last Run | 2026-05-16T13:22:26Z |
+| Iteration Count | 16 |
+| Best Metric | 119 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -17,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -58,6 +64,8 @@
 - The push via `push_to_pull_request_branch` is batched to workflow end; CI runs after the workflow completes, not during it
 - Check for existing exports in `search.ts` before adding `crossValScore` to new files (already exported there)
 - `checkArray` already exists in `utils/validation.ts` — use `checkArray2D` when adding similar utility to `utils/bunch.ts`
+- **CRITICAL**: Many classes already exist in unexpected places (MeanShift/Birch/OPTICS in spectral.ts, ARDRegression in bayesian.ts, TargetEncoder in spline.ts, kneighborsGraph in utils/graph.ts). Always grep for the class name before creating a new file.
+- Exported type names clash across modules: always check the full codebase before naming new types (e.g. `Estimator` is in model_selection/search.ts — use `SFSEstimator` for feature_selection)
 
 ---
 
@@ -70,15 +78,28 @@
 
 ## 🔭 Future Directions
 
-- Port more sklearn modules: `linear_model` (MultiTaskLassoCV, ElasticNetCV), more `gaussian_process` (kernels), `linear_model` (QuantileRegressor, PoissonRegressor, TweedieRegressor)
-- Add cross-decomposition: PLSCanonical, PLSRegression (CCA already started)
-- Add `neural_network` tests and playground demos
-- Add more `covariance` estimators (EllipticEnvelope)
-- Port `preprocessing` (TargetEncoder improvements)
+- Port more sklearn modules: `linear_model` utilities (HuberRegressor improvements), more covariance estimators
+- Add `feature_selection` (VarianceThreshold improvements), `preprocessing` (IterativeImputer functional API)
+- Add `utils/estimator_checks.ts` — estimator check utilities  
+- Add `datasets/svmlight.ts` — SVMLight format loading/saving
+- Add more `metrics` utilities: balanced_accuracy_score, fbeta_score, brier_score_loss
+- Add `linear_model/minimum_angle.ts` — LARS path algorithm
+- Add `cluster/dbscan.ts` improvements or standalone
+- Consider `feature_selection/VarianceThreshold` as standalone file
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 16 — 2026-05-16T13:22:26Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25963001743)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 6 new sklearn module files: SequentialFeatureSelector (feature_selection/sequential.ts), MultiTaskLassoCV/MultiTaskElasticNetCV (linear_model/multi_task_cv.ts), ParameterGrid/ParameterSampler/ShuffleSplit/GroupKFold/RepeatedKFold/LeaveOneOut (model_selection/parameter_grid.ts), neighborsGraph/radiusNeighborsGraph (neighbors/graph.ts), dcgScore/cumulativeGainCurve/detCurve/topKAccuracyScore (metrics/curves.ts), KernelCenterer (preprocessing/kernel_centerer.ts)
+- **Metric**: 119 (previous best: 113, delta: +6)
+- **Commit**: 60eb4c4
+- **Notes**: Important lesson: many classes already exist in unexpected places (MeanShift/Birch/OPTICS in spectral.ts, ARDRegression in bayesian.ts, TargetEncoder in spline.ts). Must grep for class names before creating new files to avoid duplicate export conflicts.
+
+---
 
 ### Iteration 15 — 2026-05-16T07:55:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25956238391)
 
@@ -90,65 +111,4 @@
 
 ---
 
-### Iteration 14 — 2026-05-15T19:23:44Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25936928642)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 9 new sklearn module files: QuantileRegressor/TweedieRegressor/PoissonRegressor/GammaRegressor, RidgeCV/LassoCV/ElasticNetCV, EllipticEnvelope, ledoitWolf/oas/SparsePrecision, LocalOutlierFactor, CCA, makeScorer/checkScoring/getScorer, graph utilities (connectedComponents/MST/dijkstra), BisectingKMeans
-- **Metric**: 105 (previous best: 96, delta: +9)
-- **Commit**: f161242
-- **Notes**: GLMs, cross-validated linear models, robust covariance outlier detection, LOF, CCA, scoring utilities, graph algorithms, divisive hierarchical clustering.
-
----
-
-### Iteration 13 — 2026-05-15T13:24:42Z ✅
-
-- **Status**: ✅ Accepted
-- **Change**: Added 9 new sklearn module files: MultiTaskLasso/MultiTaskElasticNet (linear_model/multi_task.ts), OrthogonalMatchingPursuit (linear_model/omp.ts), LabelBinarizer/MultiLabelBinarizer (preprocessing/label_binarizer.ts), BallTree/KDTree (neighbors/ball_tree.ts), BernoulliRBM (neural_network/rbm.ts), GraphicalLasso/MinCovDet (covariance/graphical_lasso.ts), mutualInfoClassif/mutualInfoRegression/GenericUnivariateSelect (feature_selection/mutual_info.ts), crossValidate/learningCurve/validationCurve (model_selection/curve.ts), Bunch/argsort/shuffle/resample/unique (utils/bunch.ts)
-- **Metric**: 96 (previous best: 87, delta: +9)
-- **Commit**: b4870aa
-- **Notes**: Covered multi-task regularized regression, greedy OLS, label binarization, spatial data structures, RBM generative models, graphical models, mutual information-based feature selection, and cross-validation utilities.
-
----
-
-### Iteration 12 — 2026-05-15T01:30:30Z ✅
-
-**Metric**: 87 (+9 from best of 78)
-
-**Change**: Added 9 new sklearn module files:
-- linear_model/lars.ts: Lars, LassoLars, LarsCV
-- linear_model/theil_sen.ts: TheilSenRegressor, RANSACRegressor
-- cluster/hdbscan.ts: HDBSCAN
-- ensemble/hist_gradient_boosting.ts: HistGradientBoostingClassifier, HistGradientBoostingRegressor
-- decomposition/dictionary_learning.ts: DictionaryLearning, SparsePCA
-- neighbors/nearest_centroid.ts: NearestCentroid, NearestNeighbors
-- preprocessing/binarizer.ts: Binarizer, FunctionTransformer, QuantileTransformer
-- metrics/distance.ts: pairwiseDistances, cosineSimilarity, euclideanDistances, haversineDistances
-- manifold/mds.ts: MDS (Multidimensional Scaling, SMACOF algorithm)
-
-Also fixed pre-existing CI failures.
-
-**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25895259674
-
----
-
-### Iteration 11 — 2026-05-14T19:25:10Z ✅
-
-**Metric**: 78 (+8 from best of 70)
-
-**Change**: Added 8 new sklearn module files across 8 new/expanded modules.
-
-**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25880658762
-
----
-
-### Iteration 10 — 2026-05-14T13:49:09Z ✅
-
-**Metric**: 70 (+18 from best of 52)
-
-**Change**: Added 12 new sklearn module files. Also fixed all pre-existing CI failures.
-
-**Run**: https://github.com/githubnext/tsikit-learn/actions/runs/25862476212
-
----
-
-### Iters 1–9 — ✅ (metrics 0→52): Foundation, preprocessing, metrics, model_selection, linear_model, manifold, mixture, semi_supervised, feature_extraction, multioutput, kernel_ridge, gaussian_process, svm, tree, ensemble, decomposition, neighbors, neural_network, pipeline, impute, calibration, isotonic, discriminant_analysis, datasets
+### Iters 1–14 — ✅ (metrics 0→105): Foundation, preprocessing, metrics, model_selection, linear_model, manifold, mixture, semi_supervised, feature_extraction, multioutput, kernel_ridge, gaussian_process, svm, tree, ensemble, decomposition, neighbors, neural_network, pipeline, impute, calibration, isotonic, discriminant_analysis, datasets, covariance, cross_decomposition, inspection, GLMs, LOF, CCA, scoring, graph utils, HDBSCAN, BisectingKMeans, mutual info, CV utilities
