@@ -4,9 +4,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-15T19:23:44Z |
-| Iteration Count | 14 |
-| Best Metric | 105 |
+| Last Run | 2026-05-16T07:55:00Z |
+| Iteration Count | 15 |
+| Best Metric | 113 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -17,7 +17,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -79,6 +79,16 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 15 — 2026-05-16T07:55:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25956238391)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 8 new sklearn module files: AffinityPropagation (cluster), GP kernels (Matern/DotProduct/RationalQuadratic/White/ExpSineSquared/Sum/Product), ICE/PartialDependenceDisplay (inspection), multilabel metrics (jaccardScore/hammingLoss/coverageError/LRAP/rankingLoss), functional preprocessing API (scale/minmaxScale/normalizeArr/robustScale), PatchExtractor (feature_extraction/image), SelfTrainingClassifier (semi_supervised), stats utilities (tTest/fOneWay/mean/variance/pearsonR/spearmanR)
+- **Metric**: 113 (previous best: 105, delta: +8)
+- **Commit**: a7afb7e
+- **Notes**: Covered affinity propagation clustering, comprehensive GP kernel library, ICE inspection tools, multilabel classification metrics, functional scaler API, image patch extraction, semi-supervised self-training, and statistical testing utilities.
+
+---
 
 ### Iteration 14 — 2026-05-15T19:23:44Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25936928642)
 
