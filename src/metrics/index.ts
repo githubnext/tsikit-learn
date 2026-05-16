@@ -7,3 +7,4 @@ export * from "./report.js";
 export * from "./distance.js";
 export * from "./scorer.js";
 export * from "./multilabel.js";
+export * from "./curves.js";
