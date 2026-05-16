@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-16T13:22:26Z |
-| Iteration Count | 16 |
-| Best Metric | 119 |
+| Last Run | 2026-05-16T19:19:59Z |
+| Iteration Count | 17 |
+| Best Metric | 125 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -66,6 +66,8 @@
 - `checkArray` already exists in `utils/validation.ts` — use `checkArray2D` when adding similar utility to `utils/bunch.ts`
 - **CRITICAL**: Many classes already exist in unexpected places (MeanShift/Birch/OPTICS in spectral.ts, ARDRegression in bayesian.ts, TargetEncoder in spline.ts, kneighborsGraph in utils/graph.ts). Always grep for the class name before creating a new file.
 - Exported type names clash across modules: always check the full codebase before naming new types (e.g. `Estimator` is in model_selection/search.ts — use `SFSEstimator` for feature_selection)
+- `+=` on typed array indexed access with `noUncheckedIndexedAccess` requires `!` assertion: `arr[idx]! += val`
+- When a union type `Int32Array | number[]` is passed to `.reduce()`, TypeScript cannot resolve the overloads — use a `for...of` loop instead
 
 ---
 
@@ -78,18 +80,28 @@
 
 ## 🔭 Future Directions
 
-- Port more sklearn modules: `linear_model` utilities (HuberRegressor improvements), more covariance estimators
-- Add `feature_selection` (VarianceThreshold improvements), `preprocessing` (IterativeImputer functional API)
-- Add `utils/estimator_checks.ts` — estimator check utilities  
-- Add `datasets/svmlight.ts` — SVMLight format loading/saving
-- Add more `metrics` utilities: balanced_accuracy_score, fbeta_score, brier_score_loss
-- Add `linear_model/minimum_angle.ts` — LARS path algorithm
-- Add `cluster/dbscan.ts` improvements or standalone
-- Consider `feature_selection/VarianceThreshold` as standalone file
+- Port more sklearn modules: additional linear_model utilities
+- `datasets/openml.ts` — OpenML dataset loading
+- `utils/parallel.ts` — parallel utilities (Parallel, delayed)
+- `preprocessing/label_propagation.ts` — additional label utilities
+- `inspection/permutation_importance.ts` — permutation importance if not already there
+- `model_selection/successive_halving.ts` — HalvingGridSearchCV, HalvingRandomSearchCV
+- Add more cluster utilities: `cluster/ward.ts` — Ward linkage, Fcluster
+- Consider `linear_model/glm.ts` extensions
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 17 — 2026-05-16T19:19:59Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25970630357)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 6 new sklearn module files: balanced_accuracy/fbeta/brier/mcc/kappa/hinge/zero-one metrics (metrics/additional.ts), SVMLight format loading/saving (datasets/svmlight.ts), estimator_checks utilities (utils/estimator_checks.ts), KNeighborsTransformer/RadiusNeighborsTransformer (neighbors/nearest_neighbors_transformer.ts), FeatureAgglomeration (cluster/feature_agglomeration.ts), PolynomialCountSketch (kernel_approximation/polynomial_sketch.ts)
+- **Metric**: 125 (previous best: 119, delta: +6)
+- **Commit**: cc47ef1
+- **Notes**: Pre-existing TS errors in older files (bisecting_kmeans, mixture, etc.) — no new errors from new files. Key lesson: use `for...of` instead of `.reduce()` on `Int32Array | number[]` union types; use `arr[idx]! +=` pattern for typed array indexed writes.
+
+---
 
 ### Iteration 16 — 2026-05-16T13:22:26Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25963001743)
 
