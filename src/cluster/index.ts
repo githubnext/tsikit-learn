@@ -5,3 +5,4 @@ export * from "./hdbscan.js";
 export * from "./bisecting_kmeans.js";
 export * from "./affinity_propagation.js";
 export * from "./feature_agglomeration.js";
+export * from "./ward.js";
