@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-17T01:31:02Z |
-| Iteration Count | 18 |
-| Best Metric | 131 |
+| Last Run | 2026-05-17T07:45:00Z |
+| Iteration Count | 19 |
+| Best Metric | 137 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -93,6 +93,14 @@
 
 ## 📊 Iteration History
 
+### Iteration 19 — 2026-05-17T07:45:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25984963766)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 6 new sklearn module files: RidgeClassifier/RidgeClassifierCV (linear_model/ridge_classifier.ts), OutputCodeClassifier ECOC strategy (multiclass/output_code.ts), RandomState/checkRandomState/resampleArrays utilities (utils/random.ts), make_hastie_10_2/make_friedman1/2/3/make_checkerboard/make_multilabel (datasets/samples_generator.ts), STFT/MelSpectrogram/MFCC/RMS/ZCR audio features (feature_extraction/audio.ts), LassoPath/lassoPath/enetPath coordinate descent path algorithms (linear_model/lasso_path.ts)
+- **Metric**: 137 (previous best: 131, delta: +6)
+- **Commit**: d79b822
+- **Notes**: No new TS errors in new files. Fixed exactOptionalPropertyTypes issue in audio.ts by conditionally assigning optional fields. Renamed DatasetResult to SamplesDatasetResult to avoid conflict with make_datasets.ts export.
+
 ### Iteration 18 — 2026-05-17T01:31:02Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25978033920)
 
 - **Status**: ✅ Accepted
@@ -101,34 +109,6 @@
 - **Commit**: 7f61e20
 - **Notes**: Pre-existing TS errors in older files remain; no new errors from new files. Fixed noUncheckedIndexedAccess `yC[i]` → `yC[i] ?? 0` in lasso_lars_cv.ts.
 
-### Iteration 17 — 2026-05-16T19:19:59Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25970630357)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 6 new sklearn module files: balanced_accuracy/fbeta/brier/mcc/kappa/hinge/zero-one metrics (metrics/additional.ts), SVMLight format loading/saving (datasets/svmlight.ts), estimator_checks utilities (utils/estimator_checks.ts), KNeighborsTransformer/RadiusNeighborsTransformer (neighbors/nearest_neighbors_transformer.ts), FeatureAgglomeration (cluster/feature_agglomeration.ts), PolynomialCountSketch (kernel_approximation/polynomial_sketch.ts)
-- **Metric**: 125 (previous best: 119, delta: +6)
-- **Commit**: cc47ef1
-- **Notes**: Pre-existing TS errors in older files (bisecting_kmeans, mixture, etc.) — no new errors from new files. Key lesson: use `for...of` instead of `.reduce()` on `Int32Array | number[]` union types; use `arr[idx]! +=` pattern for typed array indexed writes.
-
----
-
-### Iteration 16 — 2026-05-16T13:22:26Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25963001743)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 6 new sklearn module files: SequentialFeatureSelector (feature_selection/sequential.ts), MultiTaskLassoCV/MultiTaskElasticNetCV (linear_model/multi_task_cv.ts), ParameterGrid/ParameterSampler/ShuffleSplit/GroupKFold/RepeatedKFold/LeaveOneOut (model_selection/parameter_grid.ts), neighborsGraph/radiusNeighborsGraph (neighbors/graph.ts), dcgScore/cumulativeGainCurve/detCurve/topKAccuracyScore (metrics/curves.ts), KernelCenterer (preprocessing/kernel_centerer.ts)
-- **Metric**: 119 (previous best: 113, delta: +6)
-- **Commit**: 60eb4c4
-- **Notes**: Important lesson: many classes already exist in unexpected places (MeanShift/Birch/OPTICS in spectral.ts, ARDRegression in bayesian.ts, TargetEncoder in spline.ts). Must grep for class names before creating new files to avoid duplicate export conflicts.
-
----
-
-### Iteration 15 — 2026-05-16T07:55:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25956238391)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 8 new sklearn module files: AffinityPropagation (cluster), GP kernels (Matern/DotProduct/RationalQuadratic/White/ExpSineSquared/Sum/Product), ICE/PartialDependenceDisplay (inspection), multilabel metrics (jaccardScore/hammingLoss/coverageError/LRAP/rankingLoss), functional preprocessing API (scale/minmaxScale/normalizeArr/robustScale), PatchExtractor (feature_extraction/image), SelfTrainingClassifier (semi_supervised), stats utilities (tTest/fOneWay/mean/variance/pearsonR/spearmanR)
-- **Metric**: 113 (previous best: 105, delta: +8)
-- **Commit**: a7afb7e
-- **Notes**: Covered affinity propagation clustering, comprehensive GP kernel library, ICE inspection tools, multilabel classification metrics, functional scaler API, image patch extraction, semi-supervised self-training, and statistical testing utilities.
-
----
+### Iters 15–18 — ✅ (metrics 105→131): AffinityPropagation, GP kernels, ICE, multilabel metrics, functional preprocessing, PatchExtractor, SelfTrainingClassifier, stats utilities, balanced_accuracy/fbeta metrics, SVMLight loader, estimator_checks, KNeighborsTransformer, FeatureAgglomeration, PolynomialCountSketch, HalvingGridSearchCV, Parallel utilities, fetchOpenML, metrics displays, MissingIndicator, LassoLarsCV
 
 ### Iters 1–14 — ✅ (metrics 0→105): Foundation, preprocessing, metrics, model_selection, linear_model, manifold, mixture, semi_supervised, feature_extraction, multioutput, kernel_ridge, gaussian_process, svm, tree, ensemble, decomposition, neighbors, neural_network, pipeline, impute, calibration, isotonic, discriminant_analysis, datasets, covariance, cross_decomposition, inspection, GLMs, LOF, CCA, scoring, graph utils, HDBSCAN, BisectingKMeans, mutual info, CV utilities
