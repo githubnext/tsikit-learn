@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-17T07:45:00Z |
-| Iteration Count | 19 |
-| Best Metric | 137 |
+| Last Run | 2026-05-17T13:22:11Z |
+| Iteration Count | 20 |
+| Best Metric | 143 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -68,6 +68,7 @@
 - Exported type names clash across modules: always check the full codebase before naming new types (e.g. `Estimator` is in model_selection/search.ts — use `SFSEstimator` for feature_selection)
 - `+=` on typed array indexed access with `noUncheckedIndexedAccess` requires `!` assertion: `arr[idx]! += val`
 - When a union type `Int32Array | number[]` is passed to `.reduce()`, TypeScript cannot resolve the overloads — use a `for...of` loop instead
+- When creating SparseMatrix in sparsefuncs, use type imports carefully to avoid circular deps
 
 ---
 
@@ -81,17 +82,29 @@
 ## 🔭 Future Directions
 
 - Port more sklearn modules: additional linear_model utilities
-- `datasets/openml.ts` — OpenML dataset loading
-- `utils/parallel.ts` — parallel utilities (Parallel, delayed)
+- `datasets/openml.ts` — OpenML dataset loading ✅ done
+- `utils/parallel.ts` — parallel utilities (Parallel, delayed) ✅ done
 - `preprocessing/label_propagation.ts` — additional label utilities
 - `inspection/permutation_importance.ts` — permutation importance if not already there
-- `model_selection/successive_halving.ts` — HalvingGridSearchCV, HalvingRandomSearchCV
-- Add more cluster utilities: `cluster/ward.ts` — Ward linkage, Fcluster
+- `model_selection/successive_halving.ts` — HalvingGridSearchCV, HalvingRandomSearchCV ✅ done
+- Add more cluster utilities: `cluster/ward.ts` — Ward linkage, Fcluster ✅ done
 - Consider `linear_model/glm.ts` extensions
+- `utils/multiarray.ts` — ndarray-like 2D array utilities
+- `preprocessing/target_encoder_ext.ts` — Target encoder extensions
+- `linear_model/omp_cv.ts` — OrthogonalMatchingPursuitCV
+- `feature_selection/chi2_test.ts` — chi2 statistical test utilities
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 20 — 2026-05-17T13:22:11Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25992026024)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 6 new sklearn module files: NeighborhoodComponentsAnalysis (neighbors/nca.ts), CSR sparse matrix utilities (utils/sparsefuncs.ts), L-BFGS optimizer with Armijo line search (utils/optimize.ts), Ward linkage + fcluster + cophenetic distances (cluster/ward.ts), SGD loss functions + soft thresholding (linear_model/stochastic_gradient.ts), RCV1 dataset metadata + TF-IDF builder + sparse text dataset generator (datasets/rcv1.ts)
+- **Metric**: 143 (previous best: 137, delta: +6)
+- **Commit**: 069c99e
+- **Notes**: Added 6 files across 5 modules. All use correct noUncheckedIndexedAccess patterns, Number.POSITIVE_INFINITY instead of Infinity. SparseMatrix type imported with type-only imports to avoid cycles.
 
 ### Iteration 19 — 2026-05-17T07:45:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25984963766)
 
