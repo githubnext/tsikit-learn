@@ -10,3 +10,4 @@ export * from "./parallel.js";
 export * from "./random.js";
 export * from "./sparsefuncs.js";
 export * from "./optimize.js";
+export * from "./multiarray.js";

@@ -6,3 +6,4 @@ export * from "./lof.js";
 export * from "./graph.js";
 export * from "./nearest_neighbors_transformer.js";
 export * from "./nca.js";
+export * from "./kde.js";

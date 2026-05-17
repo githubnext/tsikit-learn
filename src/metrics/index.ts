@@ -10,3 +10,5 @@ export * from "./multilabel.js";
 export * from "./curves.js";
 export * from "./additional.js";
 export * from "./plot.js";
+export * from "./d2_score.js";
+export * from "./cluster_ext.js";
