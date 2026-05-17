@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-16T19:19:59Z |
-| Iteration Count | 17 |
-| Best Metric | 125 |
+| Last Run | 2026-05-17T01:31:02Z |
+| Iteration Count | 18 |
+| Best Metric | 131 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -92,6 +92,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 18 — 2026-05-17T01:31:02Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25978033920)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 6 new sklearn module files: HalvingGridSearchCV/HalvingRandomSearchCV (model_selection/successive_halving.ts), Parallel/delayed/parallelMap utilities (utils/parallel.ts), fetchOpenML/parseArff/listOpenMLDatasets (datasets/openml.ts), ConfusionMatrixDisplay/RocCurveDisplay/PrecisionRecallDisplay/DetCurveDisplay/CalibrationDisplay (metrics/plot.ts), MissingIndicator (impute/missing_indicator.ts), LassoLarsCV/LassoLarsIC (linear_model/lasso_lars_cv.ts)
+- **Metric**: 131 (previous best: 125, delta: +6)
+- **Commit**: 7f61e20
+- **Notes**: Pre-existing TS errors in older files remain; no new errors from new files. Fixed noUncheckedIndexedAccess `yC[i]` → `yC[i] ?? 0` in lasso_lars_cv.ts.
 
 ### Iteration 17 — 2026-05-16T19:19:59Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25970630357)
 
