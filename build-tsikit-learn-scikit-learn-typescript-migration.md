@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-17T13:22:11Z |
-| Iteration Count | 20 |
-| Best Metric | 143 |
+| Last Run | 2026-05-17T19:20:33Z |
+| Iteration Count | 21 |
+| Best Metric | 149 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -89,14 +89,20 @@
 - `model_selection/successive_halving.ts` — HalvingGridSearchCV, HalvingRandomSearchCV ✅ done
 - Add more cluster utilities: `cluster/ward.ts` — Ward linkage, Fcluster ✅ done
 - Consider `linear_model/glm.ts` extensions
-- `utils/multiarray.ts` — ndarray-like 2D array utilities
-- `preprocessing/target_encoder_ext.ts` — Target encoder extensions
-- `linear_model/omp_cv.ts` — OrthogonalMatchingPursuitCV
-- `feature_selection/chi2_test.ts` — chi2 statistical test utilities
+- `utils/multiarray.ts` — ndarray-like 2D array utilities ✅ done
+- `linear_model/omp_cv.ts` — OrthogonalMatchingPursuitCV ✅ done
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 21 — 2026-05-17T19:20:33Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26000284362)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 6 new sklearn module files: KernelDensity (neighbors/kde.ts), NDArray2D 2D array utilities (utils/multiarray.ts), D2 scores + Tweedie deviance metrics (metrics/d2_score.ts), Davies-Bouldin/Calinski-Harabasz/mutual info/V-measure/Fowlkes-Mallows clustering metrics (metrics/cluster_ext.ts), OrthogonalMatchingPursuitCV (linear_model/omp_cv.ts), TimeSeriesSplit/StratifiedShuffleSplit/LeavePOut/RepeatedStratifiedKFold/PredefinedSplit (model_selection/splitters_ext.ts)
+- **Metric**: 149 (previous best: 143, delta: +6)
+- **Commit**: fd30422
+- **Notes**: Carefully checked for name conflicts before creating each file. All use Number.POSITIVE_INFINITY and noUncheckedIndexedAccess patterns. Removed 3 initial attempts that conflicted with existing classes (RANSACRegressor, TweedieRegressor, MaxAbsScaler, VarianceThreshold, MultiLabelBinarizer, AdditiveChi2Sampler).
 
 ### Iteration 20 — 2026-05-17T13:22:11Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25992026024)
 
