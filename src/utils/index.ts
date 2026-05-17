@@ -6,3 +6,4 @@ export * from "./bunch.js";
 export * from "./graph.js";
 export * from "./stats.js";
 export * from "./estimator_checks.js";
+export * from "./parallel.js";
