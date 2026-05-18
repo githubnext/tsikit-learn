@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-18T01:33:14Z |
-| Iteration Count | 22 |
-| Best Metric | 156 |
+| Last Run | 2026-05-18T08:16:16Z |
+| Iteration Count | 23 |
+| Best Metric | 166 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -97,6 +97,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 23 — 2026-05-18T08:16:16Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26021634662)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 10 new sklearn module files: arrayfuncs (minPos, inplaceRowNormalize, rowDot), tags (EstimatorTags API), deprecation (warn/deprecated/deprecatedClass), base_linear (preprocessData, LinearClassifierMixin, SparseCoefMixin), diagnostics (residualAnalysis, qqPlotData, Cook's distance), digits (loadDigits, loadLinnerud), hierarchical clustering (linkage, cutTree, squareform, copheneticCorr), column_selector (makeColumnSelector, numericColumns), shap_values (LinearExplainer, TreeSHAPExplainer, meanAbsShap), shrinkage covariance (ShrunkCovariance, OAS)
+- **Metric**: 166 (previous best: 156, delta: +10)
+- **Commit**: 9671a3b
+- **Notes**: Fixed LinkageRow name conflict (renamed to HierarchicalLinkageRow). All new files follow noUncheckedIndexedAccess patterns.
 
 ### Iteration 22 — 2026-05-18T01:33:14Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26008787961)
 
