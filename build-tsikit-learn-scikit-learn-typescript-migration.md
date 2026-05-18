@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-17T19:20:33Z |
-| Iteration Count | 21 |
-| Best Metric | 149 |
+| Last Run | 2026-05-18T01:33:14Z |
+| Iteration Count | 22 |
+| Best Metric | 156 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -70,9 +70,11 @@
 - When a union type `Int32Array | number[]` is passed to `.reduce()`, TypeScript cannot resolve the overloads — use a `for...of` loop instead
 - When creating SparseMatrix in sparsefuncs, use type imports carefully to avoid circular deps
 
----
+- When creating new files, always check for naming conflicts with interfaces (e.g., `Dataset` was already exported from load_datasets.ts — rename to `RealDataset`)
+- Type casts `as Record<string, unknown>` require going through `unknown` first: `as unknown as Record<string, unknown>` when BaseEstimator is involved
+- Functions with the same name as existing exports (delayed, haversineDistances, euclideanDistances) must be renamed or omitted from the index
 
-## 🚧 Foreclosed Avenues
+---
 
 - Splitting index.ts files (no benefit to metric count)
 - Using regular function declarations inside class methods that need `this` (causes implicit any)
@@ -96,38 +98,16 @@
 
 ## 📊 Iteration History
 
-### Iteration 21 — 2026-05-17T19:20:33Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26000284362)
+### Iteration 22 — 2026-05-18T01:33:14Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26008787961)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 6 new sklearn module files: KernelDensity (neighbors/kde.ts), NDArray2D 2D array utilities (utils/multiarray.ts), D2 scores + Tweedie deviance metrics (metrics/d2_score.ts), Davies-Bouldin/Calinski-Harabasz/mutual info/V-measure/Fowlkes-Mallows clustering metrics (metrics/cluster_ext.ts), OrthogonalMatchingPursuitCV (linear_model/omp_cv.ts), TimeSeriesSplit/StratifiedShuffleSplit/LeavePOut/RepeatedStratifiedKFold/PredefinedSplit (model_selection/splitters_ext.ts)
-- **Metric**: 149 (previous best: 143, delta: +6)
-- **Commit**: fd30422
-- **Notes**: Carefully checked for name conflicts before creating each file. All use Number.POSITIVE_INFINITY and noUncheckedIndexedAccess patterns. Removed 3 initial attempts that conflicted with existing classes (RANSACRegressor, TweedieRegressor, MaxAbsScaler, VarianceThreshold, MultiLabelBinarizer, AdditiveChi2Sampler).
+- **Change**: Added 7 new sklearn module files: GeneralizedLinearRegressor with link functions (glm.ts), MetaEstimatorMixin/_BaseComposition/available_if (metaestimators.ts), model persistence dumpEstimator/loadEstimator/Memory (persistence.ts), cluster utilities estimateBandwidth/getBinSeeds/meanShiftStep (clustering_utils.ts), pairwise kernels laplacian/sigmoid/chi2/additive_chi2 (pairwise_kernels.ts), real dataset generators california_housing/covtype/kddcup99/olivetti (real_datasets.ts), preprocessing quantization winsorize/boxCox1d/yeoJohnson1d/computeBinEdges (quantization.ts)
+- **Metric**: 156 (previous best: 149, delta: +7)
+- **Commit**: 7cd53ad
+- **Notes**: All new files use Number.POSITIVE_INFINITY/NEGATIVE_INFINITY. Fixed Dataset name conflict by renaming to RealDataset/RealClassificationDataset. Fixed type casts with `as unknown as`. No new TS errors.
 
-### Iteration 20 — 2026-05-17T13:22:11Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25992026024)
+### Iters 18–21 — ✅ (metrics 131→149): HalvingGridSearchCV, Parallel, fetchOpenML, metrics displays, MissingIndicator, LassoLarsCV, RidgeClassifier, OutputCodeClassifier, RandomState, samples_generator, audio features, lasso_path, NeighborhoodComponentsAnalysis, sparsefuncs, optimize, Ward linkage, stochastic_gradient, RCV1, KernelDensity, NDArray2D, D2/Tweedie metrics, clustering metrics, OMP-CV, splitters_ext
 
-- **Status**: ✅ Accepted
-- **Change**: Added 6 new sklearn module files: NeighborhoodComponentsAnalysis (neighbors/nca.ts), CSR sparse matrix utilities (utils/sparsefuncs.ts), L-BFGS optimizer with Armijo line search (utils/optimize.ts), Ward linkage + fcluster + cophenetic distances (cluster/ward.ts), SGD loss functions + soft thresholding (linear_model/stochastic_gradient.ts), RCV1 dataset metadata + TF-IDF builder + sparse text dataset generator (datasets/rcv1.ts)
-- **Metric**: 143 (previous best: 137, delta: +6)
-- **Commit**: 069c99e
-- **Notes**: Added 6 files across 5 modules. All use correct noUncheckedIndexedAccess patterns, Number.POSITIVE_INFINITY instead of Infinity. SparseMatrix type imported with type-only imports to avoid cycles.
-
-### Iteration 19 — 2026-05-17T07:45:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25984963766)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 6 new sklearn module files: RidgeClassifier/RidgeClassifierCV (linear_model/ridge_classifier.ts), OutputCodeClassifier ECOC strategy (multiclass/output_code.ts), RandomState/checkRandomState/resampleArrays utilities (utils/random.ts), make_hastie_10_2/make_friedman1/2/3/make_checkerboard/make_multilabel (datasets/samples_generator.ts), STFT/MelSpectrogram/MFCC/RMS/ZCR audio features (feature_extraction/audio.ts), LassoPath/lassoPath/enetPath coordinate descent path algorithms (linear_model/lasso_path.ts)
-- **Metric**: 137 (previous best: 131, delta: +6)
-- **Commit**: d79b822
-- **Notes**: No new TS errors in new files. Fixed exactOptionalPropertyTypes issue in audio.ts by conditionally assigning optional fields. Renamed DatasetResult to SamplesDatasetResult to avoid conflict with make_datasets.ts export.
-
-### Iteration 18 — 2026-05-17T01:31:02Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/25978033920)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 6 new sklearn module files: HalvingGridSearchCV/HalvingRandomSearchCV (model_selection/successive_halving.ts), Parallel/delayed/parallelMap utilities (utils/parallel.ts), fetchOpenML/parseArff/listOpenMLDatasets (datasets/openml.ts), ConfusionMatrixDisplay/RocCurveDisplay/PrecisionRecallDisplay/DetCurveDisplay/CalibrationDisplay (metrics/plot.ts), MissingIndicator (impute/missing_indicator.ts), LassoLarsCV/LassoLarsIC (linear_model/lasso_lars_cv.ts)
-- **Metric**: 131 (previous best: 125, delta: +6)
-- **Commit**: 7f61e20
-- **Notes**: Pre-existing TS errors in older files remain; no new errors from new files. Fixed noUncheckedIndexedAccess `yC[i]` → `yC[i] ?? 0` in lasso_lars_cv.ts.
-
-### Iters 15–18 — ✅ (metrics 105→131): AffinityPropagation, GP kernels, ICE, multilabel metrics, functional preprocessing, PatchExtractor, SelfTrainingClassifier, stats utilities, balanced_accuracy/fbeta metrics, SVMLight loader, estimator_checks, KNeighborsTransformer, FeatureAgglomeration, PolynomialCountSketch, HalvingGridSearchCV, Parallel utilities, fetchOpenML, metrics displays, MissingIndicator, LassoLarsCV
+### Iters 15–18 — ✅ (metrics 105→131): AffinityPropagation, GP kernels, ICE, multilabel metrics, functional preprocessing, PatchExtractor, SelfTrainingClassifier, stats utilities, balanced_accuracy/fbeta metrics, SVMLight loader, estimator_checks, KNeighborsTransformer, FeatureAgglomeration, PolynomialCountSketch
 
 ### Iters 1–14 — ✅ (metrics 0→105): Foundation, preprocessing, metrics, model_selection, linear_model, manifold, mixture, semi_supervised, feature_extraction, multioutput, kernel_ridge, gaussian_process, svm, tree, ensemble, decomposition, neighbors, neural_network, pipeline, impute, calibration, isotonic, discriminant_analysis, datasets, covariance, cross_decomposition, inspection, GLMs, LOF, CCA, scoring, graph utils, HDBSCAN, BisectingKMeans, mutual info, CV utilities
