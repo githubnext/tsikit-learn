@@ -5,3 +5,4 @@ export * from "./openml.js";
 export * from "./samples_generator.js";
 export * from "./rcv1.js";
 export * from "./real_datasets.js";
+export * from "./digits.js";

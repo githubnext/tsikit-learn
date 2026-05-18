@@ -20,3 +20,5 @@ export * from "./lasso_path.js";
 export * from "./stochastic_gradient.js";
 export * from "./omp_cv.js";
 export * from "./glm.js";
+export * from "./base_linear.js";
+export * from "./diagnostics.js";

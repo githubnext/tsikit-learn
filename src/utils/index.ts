@@ -13,3 +13,6 @@ export * from "./optimize.js";
 export * from "./multiarray.js";
 export * from "./metaestimators.js";
 export * from "./persistence.js";
+export * from "./arrayfuncs.js";
+export * from "./tags.js";
+export * from "./deprecation.js";
