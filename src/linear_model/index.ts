@@ -19,3 +19,4 @@ export * from "./ridge_classifier.js";
 export * from "./lasso_path.js";
 export * from "./stochastic_gradient.js";
 export * from "./omp_cv.js";
+export * from "./glm.js";

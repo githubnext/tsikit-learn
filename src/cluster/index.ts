@@ -6,3 +6,4 @@ export * from "./bisecting_kmeans.js";
 export * from "./affinity_propagation.js";
 export * from "./feature_agglomeration.js";
 export * from "./ward.js";
+export * from "./clustering_utils.js";

@@ -11,3 +11,5 @@ export * from "./random.js";
 export * from "./sparsefuncs.js";
 export * from "./optimize.js";
 export * from "./multiarray.js";
+export * from "./metaestimators.js";
+export * from "./persistence.js";

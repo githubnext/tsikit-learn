@@ -12,3 +12,4 @@ export * from "./binarizer.js";
 export * from "./label_binarizer.js";
 export * from "./data.js";
 export * from "./kernel_centerer.js";
+export * from "./quantization.js";
