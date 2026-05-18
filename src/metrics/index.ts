@@ -13,3 +13,4 @@ export * from "./plot.js";
 export * from "./d2_score.js";
 export * from "./cluster_ext.js";
 export * from "./pairwise_kernels.js";
+export * from "./pairwise_ext.js";

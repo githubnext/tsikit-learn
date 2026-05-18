@@ -16,3 +16,5 @@ export * from "./persistence.js";
 export * from "./arrayfuncs.js";
 export * from "./tags.js";
 export * from "./deprecation.js";
+export * from "./validation_ext.js";
+export * from "./estimator_html.js";

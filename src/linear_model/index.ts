@@ -22,3 +22,5 @@ export * from "./omp_cv.js";
 export * from "./glm.js";
 export * from "./base_linear.js";
 export * from "./diagnostics.js";
+export * from "./logistic_regression_cv.js";
+export * from "./minibatch_cd.js";

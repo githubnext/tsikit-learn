@@ -105,3 +105,6 @@ export * from "./cross_decomposition/index.js";
 // Inspection
 export * from "./inspection/index.js";
 
+// Random projection
+export * from "./random_projection/index.js";
+
