@@ -8,3 +8,4 @@ export * from "./feature_agglomeration.js";
 export * from "./ward.js";
 export * from "./clustering_utils.js";
 export * from "./hierarchical.js";
+export * from "./optics_ext.js";

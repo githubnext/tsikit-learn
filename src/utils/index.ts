@@ -18,3 +18,7 @@ export * from "./tags.js";
 export * from "./deprecation.js";
 export * from "./validation_ext.js";
 export * from "./estimator_html.js";
+export * from "./mocking.js";
+export * from "./fixes.js";
+export * from "./validation_params.js";
+export * from "./set_output.js";

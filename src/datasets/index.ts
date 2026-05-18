@@ -7,3 +7,4 @@ export * from "./rcv1.js";
 export * from "./real_datasets.js";
 export * from "./digits.js";
 export * from "./newsgroups.js";
+export * from "./generator_ext.js";
