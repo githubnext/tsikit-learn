@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-19T01:33:45Z |
-| Iteration Count | 26 |
-| Best Metric | 198 |
+| Last Run | 2026-05-19T08:04:45Z |
+| Iteration Count | 27 |
+| Best Metric | 202 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -75,6 +75,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 27 — 2026-05-19T08:04:45Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26084447960)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 15 new sklearn modules: fetchCaliforniaHousing/fetchCovtype/fetchKddcup99/fetchLfw, fetchSpeciesDistributions/fetchOlivettiFaces, meanPinballLoss/normalizedRmse/concordanceCorrCoef, dcgScoreRanking/MAP/MRR ranking metrics, learningCurveExt/validationCurveExt/bootstrapCI, MetadataRouter/MethodMapping, safeIndexing/multiclass_ext, graph_ext (MST/Floyd-Warshall), enetPathExt/alphaGrid, LabelSpreadingFull, InteractionFeatures/TargetEncoderExt, VarianceThresholdExt/chi2Score/SelectKBestChi2, RandomProjectionLSH/MinHashLSH, elbowMethod/gapStatistic, randomizedSVD/OnlinePCA
+- **Metric**: 202 (previous best: 198, delta: +4)
+- **Commit**: b34bd76
+- **Notes**: Resolved name conflicts by adding Ext suffixes. State showed 198 but actual code was at 187 — re-implemented missing modules from iteration 26 plus new ones.
 
 ### Iteration 26 — 2026-05-19T01:33:45Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26070679102)
 
