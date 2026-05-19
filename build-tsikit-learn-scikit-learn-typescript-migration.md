@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-19T08:04:45Z |
-| Iteration Count | 27 |
-| Best Metric | 202 |
+| Last Run | 2026-05-19T13:54:06Z |
+| Iteration Count | 28 |
+| Best Metric | 211 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -64,17 +64,21 @@
 ## 🔭 Future Directions
 
 - Port more sklearn modules that are clearly missing
-- `utils/graph_ext.ts` — additional graph utilities (minimum_spanning_tree, connected_components)
-- `metrics/ranking_ext.ts` — additional ranking metrics (NDCG, MRR, MAP)
-- `preprocessing/categorical.ts` — additional categorical encoders
-- `linear_model/theil_sen_ext.ts` — extended Theil-Sen utilities
-- `cluster/cluster_ext.ts` — additional clustering utilities (elbow method, silhouette plots)
-- `decomposition/sparse_pca.ts` — SparsePCA, MiniBatchSparsePCA
-- `neighbors/radius_ext.ts` — RadiusNeighborsClassifier/Regressor extensions
+- More linear model extensions
+- Additional manifold learning utilities
+- Extended neural network features
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 28 — 2026-05-19T13:54:06Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26101736997)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 24 new sklearn modules: fetchCaliforniaHousing/fetchCovtype/fetchKddcup99/fetchLfw, fetchSpeciesDistributions/fetchOlivettiFaces, ranking_ext (MAP/MRR/NDCG/CCC/NRMSE/pinball), bootstrap CI/permutation test/repeatedKFold, MetadataRouter/MethodMapping, safeIndexing/resample/shuffle, graph_ext (MST/Floyd-Warshall/components), validation_params_ext, enetPathExt/alphaGrid, theil_sen_ext (Sen slope), TargetEncoderExt/InteractionFeatures, MaxAbsScalerExt/MissingIndicatorExt, VarianceThresholdExt/chi2Score/SelectKBestChi2, RandomProjectionLSH/MinHashLSH, elbowMethod/gapStatistic, cluster_ext (silhouette/CH/DB), SparsePCA/MiniBatchSparsePCA, randomizedSVD/OnlinePCA, RadiusNeighborsClassifier/Regressor, OneVsOneClassifierExt, LabelSpreadingFull, PLSSVDExt, inspection_ext, ShrunkCovarianceExt
+- **Metric**: 211 (previous best: 202, delta: +9)
+- **Commit**: 65d0500
+- **Notes**: Branch was at 187 (iterations 26+27 commits were lost). Re-implemented those modules plus added new ones. Renamed all conflicts with Ext/Full suffixes.
 
 ### Iteration 27 — 2026-05-19T08:04:45Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26084447960)
 
