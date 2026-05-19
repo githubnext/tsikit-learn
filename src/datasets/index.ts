@@ -8,3 +8,4 @@ export * from "./real_datasets.js";
 export * from "./digits.js";
 export * from "./newsgroups.js";
 export * from "./generator_ext.js";
+export * from "./fetch_datasets.js";

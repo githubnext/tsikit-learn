@@ -22,3 +22,4 @@ export * from "./mocking.js";
 export * from "./fixes.js";
 export * from "./validation_params.js";
 export * from "./set_output.js";
+export * from "./metadata_routing.js";

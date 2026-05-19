@@ -25,3 +25,5 @@ export * from "./diagnostics.js";
 export * from "./logistic_regression_cv.js";
 export * from "./minibatch_cd.js";
 export * from "./wls.js";
+export * from "./elasticnet_cv.js";
+export * from "./ard_regression.js";

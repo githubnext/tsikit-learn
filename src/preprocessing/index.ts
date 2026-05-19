@@ -15,3 +15,4 @@ export * from "./kernel_centerer.js";
 export * from "./quantization.js";
 export * from "./data_func.js";
 export * from "./function_transformer.js";
+export * from "./preprocessing_ext.js";

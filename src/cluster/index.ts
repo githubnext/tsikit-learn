@@ -9,3 +9,4 @@ export * from "./ward.js";
 export * from "./clustering_utils.js";
 export * from "./hierarchical.js";
 export * from "./optics_ext.js";
+export * from "./cluster_validation.js";
