@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-19T13:54:06Z |
-| Iteration Count | 28 |
-| Best Metric | 211 |
+| Last Run | 2026-05-19T19:30:04Z |
+| Iteration Count | 29 |
+| Best Metric | 206 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -58,6 +58,7 @@
 - **CRITICAL**: Many classes already exist in unexpected places. Always grep for the class name before creating a new file
 - **CRITICAL**: Many functions exist in unexpected files (resample/shuffle in bunch.ts, typeOfTarget in multiclass.ts, learningCurve/validationCurve in curve.ts, enetPath/lassoPath in lasso_path.ts, maxError/meanTweedieDeviance in d2_score.ts, AdditiveChi2Sampler in rbf_sampler.ts, LabelSpreading in label_propagation.ts)
 - Always rename conflicting exports with a suffix (Ext, Full, Coord, etc.) when the file still adds value
+- **State drift**: The state's best_metric can drift from actual branch state when commits are lost. Always count files on branch at start of each iteration.
 
 ---
 
@@ -72,37 +73,22 @@
 
 ## 📊 Iteration History
 
+### Iteration 29 — 2026-05-19T19:30:04Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26120226181)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 19 new sklearn modules: CategoricalNB/ComplementNB, FeatureUnion/makeUnion, ExtraTreeClassifier/Regressor, MetadataRouter/MethodMapping, elbowMethod/gapStatistic/daviesBouldinScore/calinskiHarabaszScore, bootstrapCI/permutationTest/RepeatedKFold/RepeatedStratifiedKFold, PartialDependencePlot, ElasticNetCV, SparsePCA(ext)/MiniBatchSparsePCA, IncrementalPCAOnline, GenericUnivariateSelect/SelectPercentileExt, VotingRegressor/IsolationForest, LocallyLinearEmbedding, fetch datasets, SVMUtils/kernels, InteractionFeatures/MissingIndicatorExt/ThresholdBinarizer/AdditiveChi2SamplerExt, ARDRegression, LabelSpreadingFull, PLSSVDExt
+- **Metric**: 206 (previous best on branch: 187, delta: +19; state claimed 211 but branch only had 187)
+- **Commit**: e0524c2
+- **Notes**: State claimed best_metric=211 but actual branch had 187 files — previous iterations' commits were lost. Re-built to 206.
+
 ### Iteration 28 — 2026-05-19T13:54:06Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26101736997)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 24 new sklearn modules: fetchCaliforniaHousing/fetchCovtype/fetchKddcup99/fetchLfw, fetchSpeciesDistributions/fetchOlivettiFaces, ranking_ext (MAP/MRR/NDCG/CCC/NRMSE/pinball), bootstrap CI/permutation test/repeatedKFold, MetadataRouter/MethodMapping, safeIndexing/resample/shuffle, graph_ext (MST/Floyd-Warshall/components), validation_params_ext, enetPathExt/alphaGrid, theil_sen_ext (Sen slope), TargetEncoderExt/InteractionFeatures, MaxAbsScalerExt/MissingIndicatorExt, VarianceThresholdExt/chi2Score/SelectKBestChi2, RandomProjectionLSH/MinHashLSH, elbowMethod/gapStatistic, cluster_ext (silhouette/CH/DB), SparsePCA/MiniBatchSparsePCA, randomizedSVD/OnlinePCA, RadiusNeighborsClassifier/Regressor, OneVsOneClassifierExt, LabelSpreadingFull, PLSSVDExt, inspection_ext, ShrunkCovarianceExt
+- **Change**: Added 24 new sklearn modules (many lost from branch)
 - **Metric**: 211 (previous best: 202, delta: +9)
 - **Commit**: 65d0500
-- **Notes**: Branch was at 187 (iterations 26+27 commits were lost). Re-implemented those modules plus added new ones. Renamed all conflicts with Ext/Full suffixes.
 
-### Iteration 27 — 2026-05-19T08:04:45Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26084447960)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 15 new sklearn modules: fetchCaliforniaHousing/fetchCovtype/fetchKddcup99/fetchLfw, fetchSpeciesDistributions/fetchOlivettiFaces, meanPinballLoss/normalizedRmse/concordanceCorrCoef, dcgScoreRanking/MAP/MRR ranking metrics, learningCurveExt/validationCurveExt/bootstrapCI, MetadataRouter/MethodMapping, safeIndexing/multiclass_ext, graph_ext (MST/Floyd-Warshall), enetPathExt/alphaGrid, LabelSpreadingFull, InteractionFeatures/TargetEncoderExt, VarianceThresholdExt/chi2Score/SelectKBestChi2, RandomProjectionLSH/MinHashLSH, elbowMethod/gapStatistic, randomizedSVD/OnlinePCA
-- **Metric**: 202 (previous best: 198, delta: +4)
-- **Commit**: b34bd76
-- **Notes**: Resolved name conflicts by adding Ext suffixes. State showed 198 but actual code was at 187 — re-implemented missing modules from iteration 26 plus new ones.
-
-### Iteration 26 — 2026-05-19T01:33:45Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26070679102)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 11 new sklearn modules: resampleData/shuffleData utils, MetadataRouter, multiclass_ext, safeIndexing, fetchCaliforniaHousing/fetchCovtype/fetchKddcup99/fetchLfw, fetchSpeciesDistributions/fetchOlivettiFaces, coordDescentEnetPath, meanPinballLoss/normalizedRmse/CCC, learningCurveExt/validationCurveExt, LabelSpreadingFull, InteractionFeatures/AdditiveChi2SamplerExt/SkewedChi2Sampler
-- **Metric**: 198 (previous best: 187, delta: +11)
-- **Commit**: f0d5e7f
-- **Notes**: Careful conflict checking required — many functions existed in unexpected files. Renamed conflicting exports with Ext/Full suffixes.
-
-### Iteration 25 — 2026-05-18T19:24:50Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26055324357)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 11 new sklearn modules: LinearSVC/LinearSVR/OneClassSVM, MockClassifier/MockRegressor/CheckingClassifier, loguniform/randint/version utils, validate_params/Interval/StrOptions, brierScoreLoss/detCurve/calibrationCurve/ECE, permutationImportance, set_output/configContext/GlobalConfig, AdvancedFunctionTransformer/makeLogTransformer, clusterOpticsDbscan/Xi/reachabilityPlotData, WeightedLeastSquares/GeneralizedLeastSquares/durbinWatson, makeLowRankMatrix/makeSparseCodedSignal/makeBiclusters
-- **Metric**: 187 (previous best: 176, delta: +11)
-- **Commit**: 0626137
-- **Notes**: Pre-existing diagnostics.ts tsc error unchanged. All new files pass type-check with no new errors.
+### Iters 25–27 — ✅ (metrics 176→202): LinearSVC/LinearSVR, fetch datasets, ranking metrics, bootstrap CI, MetadataRouter, graph_ext, SparsePCA, OnlinePCA, etc.
 
 ### Iters 23–24 — ✅ (metrics 156→176): arrayfuncs, tags, deprecation, base_linear, diagnostics, digits, hierarchical clustering, column_selector, shap_values, shrinkage covariance, plus more
 
