@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-20T08:04:21Z |
-| Iteration Count | 31 |
-| Best Metric | 236 |
+| Last Run | 2026-05-20T12:30:00Z |
+| Iteration Count | 32 |
+| Best Metric | 247 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -59,6 +59,8 @@
 - **CRITICAL**: Many functions exist in unexpected files (resample/shuffle in bunch.ts, typeOfTarget in multiclass.ts, learningCurve/validationCurve in curve.ts, enetPath/lassoPath in lasso_path.ts, maxError/meanTweedieDeviance in d2_score.ts, AdditiveChi2Sampler in rbf_sampler.ts, LabelSpreading in label_propagation.ts)
 - Always rename conflicting exports with a suffix (Ext, Full, Coord, etc.) when the file still adds value
 - **State drift**: The state's best_metric can drift from actual branch state when commits are lost. Always count files on branch at start of each iteration.
+- **CRITICAL**: Before creating any file, run `ls src/<module>/` to see what already exists — many modules have more files than AGENTS.md lists.
+- **Avoid overwriting existing files**: Use `git status` to verify before committing; restore with `git checkout <file>` if needed.
 
 ---
 
@@ -73,7 +75,13 @@
 
 ## 📊 Iteration History
 
-### Iteration 31 — 2026-05-20T08:04:21Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26149646546)
+### Iteration 32 — 2026-05-20T12:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26166655910)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 41 new sklearn modules: MiniBatchKMeans, MeanShift, covariance_ext (OAS/LedoitWolf), decomp_ext (TruncatedSVD/MiniBatch), adaboost (AdaBoost/Bagging), ensemble_ext (ExtraTrees), FeatureHasher, select_from_model (SelectFromModel/VarianceThreshold), gp_ext (GPClassifier), IterativeImputer, coordinate_descent_solver (SAGA/SVRG), linear_classifier_mixin, logistic (LogisticRegression), sgd_classifier (SGDClassifier/Regressor), ransac, tweedie_regressor, manifold_ext (HessianLLE/LTSA), calibration_metrics, curve_display, extended_classification, mixture_ext, group_split (GroupKFold etc), cross_validate, neighbors_ext, mlp_utils, pipeline_utils, preprocessing_utils, sampling, target_encoder, svm (SVC/LinearSVC), svm_ext, tree_export, array_api, extmath_ext, linear_algebra, pprint, sequential_ext, validation_utils, species (datasets), generator_datasets. Fixed pre-existing diagnostics.ts paren syntax error.
+- **Metric**: 247 (previous best: 236, delta: +11; actual branch was at 206 due to state drift, so true delta: +41)
+- **Commit**: 5ecad1c
+- **Notes**: State drift: branch was at 206 despite state claiming 236. Added 41 new files to reach 247.
 
 - **Status**: ✅ Accepted
 - **Change**: Added 30 new sklearn modules (array_api, pprint, extmath_ext, linear_classifier_mixin, sampling, curve_display, extended_classification, FeatureHasher, sequential_ext, pipeline_utils, covariance_ext, mlp_utils, cluster_ext, manifold_ext, ensemble_ext, GroupKFold/LeaveOneGroupOut/GroupShuffleSplit, svm_kernels, svm_ext, species_distributions, tree_export, RANSACRegressor, linear_model_ext, TargetEncoder, preprocessing_utils, neighbors_ext, decomposition_ext, select_ext, gp_ext, mixture_ext, IterativeImputer)
