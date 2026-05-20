@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-20T01:33:59Z |
-| Iteration Count | 30 |
-| Best Metric | 226 |
+| Last Run | 2026-05-20T08:04:21Z |
+| Iteration Count | 31 |
+| Best Metric | 236 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -72,6 +72,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 31 — 2026-05-20T08:04:21Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26149646546)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 30 new sklearn modules (array_api, pprint, extmath_ext, linear_classifier_mixin, sampling, curve_display, extended_classification, FeatureHasher, sequential_ext, pipeline_utils, covariance_ext, mlp_utils, cluster_ext, manifold_ext, ensemble_ext, GroupKFold/LeaveOneGroupOut/GroupShuffleSplit, svm_kernels, svm_ext, species_distributions, tree_export, RANSACRegressor, linear_model_ext, TargetEncoder, preprocessing_utils, neighbors_ext, decomposition_ext, select_ext, gp_ext, mixture_ext, IterativeImputer)
+- **Metric**: 236 (previous best: 226, delta: +10; actual branch was at 206 due to state drift, so true delta: +30)
+- **Commit**: cf1be92
+- **Notes**: State drift confirmed — previous best_metric was 226 but branch only had 206 files. Added 30 new files to reach 236.
 
 ### Iteration 30 — 2026-05-20T01:33:59Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26135779329)
 
