@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-19T19:30:04Z |
-| Iteration Count | 29 |
-| Best Metric | 206 |
+| Last Run | 2026-05-20T01:33:59Z |
+| Iteration Count | 30 |
+| Best Metric | 226 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -72,6 +72,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 30 — 2026-05-20T01:33:59Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26135779329)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 20 new sklearn modules (tree export, array_api, pprint, extmath_ext, curve_display, hashing, sequential_ext, covariance_ext, mlp_utils, cluster_ext, manifold_ext, ensemble_ext, group_split, svm kernels, pipeline_utils, species_distributions, extended_classification, linear_classifier_mixin, sampling)
+- **Metric**: 226 (previous best: 206, delta: +20)
+- **Commit**: 28a7807
+- **Notes**: Added diverse sklearn modules across all phases; type check passes (only pre-existing diagnostics.ts error unrelated to new code).
 
 ### Iteration 29 — 2026-05-19T19:30:04Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26120226181)
 
