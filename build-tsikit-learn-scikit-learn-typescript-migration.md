@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-21T14:18:00Z |
-| Iteration Count | 36 |
-| Best Metric | 251 |
+| Last Run | 2026-05-21T19:30:00Z |
+| Iteration Count | 37 |
+| Best Metric | 231 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -79,11 +79,19 @@
 ## 📊 Iteration History
 
 
+### Iteration 37 — 2026-05-21T19:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26248312386)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 25 new sklearn modules across sparse areas: calibration display, QDA, isotonic PAV, KernelRidgeCV, ClassifierChain, GP kernels (Matern32/52, Periodic, RationalQuadratic), NN initializers, mixture EM utils, OVOClassifier, random projection ext, pipeline memory, tree pruning, cross_decomposition utils, semi-supervised graph utils, TF-IDF core, empirical covariance, LLE utils, chi2 samplers, KNN imputer/missing, SelectFromModel, stacking core, cluster metrics, sparse coder/dict learning, LSH approx NN, TransformedTargetRegressor
+- **Metric**: 231 (actual branch count; state drift resolved from claimed 251, delta: +25 from actual 206)
+- **Commit**: fdcf9c9
+- **Notes**: State drift again — state claimed 251 but branch had 206 files at start. Added 25 new files. All export conflicts detected and resolved with Ext/New/Full/Core suffix pattern.
+
 ### Iteration 36 — 2026-05-21T14:18:00Z ✅
 
-- **Metric**: 251 (+45 from 206)
-- **Change**: Added 45 new sklearn modules: kmeans_variants, density_peaks, GPC, UMAP, SOM, tree pruning/builder, neural_network optimizer/activation/loss, ECOC, co-training, nested CV, impute experimental, metrics extensions (regression, classification, calibration, statistical tests), approx neighbors, utils extensions, stacking, voting, Nystroem, pipeline steps, discretizer, mixed_types, Poisson/Gamma/Tweedie/Quantile/Huber/TheilSen/BayesianRidge/ARD regressors, RFE/RFECV
-- **Status**: Pushed to PR #17, awaiting CI
+- **Metric**: 251 (claimed, actual was 206)
+- **Change**: Added many new sklearn modules across sparse areas
+- **Status**: State drift — actual branch count was 206
 
 ### Iteration 35 — 2026-05-21T08:08:29Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26213715481)
 
