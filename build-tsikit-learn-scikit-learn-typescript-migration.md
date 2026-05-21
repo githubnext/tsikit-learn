@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-21T08:08:29Z |
-| Iteration Count | 35 |
-| Best Metric | 235 |
+| Last Run | 2026-05-21T14:18:00Z |
+| Iteration Count | 36 |
+| Best Metric | 251 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -77,6 +77,13 @@
 ---
 
 ## 📊 Iteration History
+
+
+### Iteration 36 — 2026-05-21T14:18:00Z ✅
+
+- **Metric**: 251 (+45 from 206)
+- **Change**: Added 45 new sklearn modules: kmeans_variants, density_peaks, GPC, UMAP, SOM, tree pruning/builder, neural_network optimizer/activation/loss, ECOC, co-training, nested CV, impute experimental, metrics extensions (regression, classification, calibration, statistical tests), approx neighbors, utils extensions, stacking, voting, Nystroem, pipeline steps, discretizer, mixed_types, Poisson/Gamma/Tweedie/Quantile/Huber/TheilSen/BayesianRidge/ARD regressors, RFE/RFECV
+- **Status**: Pushed to PR #17, awaiting CI
 
 ### Iteration 35 — 2026-05-21T08:08:29Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26213715481)
 
