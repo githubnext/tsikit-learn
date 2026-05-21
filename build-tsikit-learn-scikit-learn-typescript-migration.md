@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-21T01:33:44Z |
-| Iteration Count | 34 |
-| Best Metric | 231 |
+| Last Run | 2026-05-21T08:08:29Z |
+| Iteration Count | 35 |
+| Best Metric | 235 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -77,6 +77,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 35 — 2026-05-21T08:08:29Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26213715481)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 29 new sklearn modules across sparse areas: RDA, RegressorChain, tree visualization/pruning, GP acquisitions/classifier/kernels_ext, neural_network activations/initializers, calibration display, matrix_sketching, multi_kernel_ridge, PAV utils, DBSCAN/BIRCH, neighbor voronoi/metric_learning, text_utils, cluster_validity metrics, repeated_cv/diagnostics, target_encoder/scaler_utils, SVD utils, StackingRegressor, linear online learners, mixture EM utils, semi-supervised graph utils
+- **Metric**: 235 (previous best: 231, delta: +4; branch was at 206 before this iteration due to state drift again — added 29 files to reach 235)
+- **Commit**: 2de465e
+- **Notes**: State drift pattern continues — started with 206 actual files despite state claiming 231. Added 29 new files across sparse modules. No export conflicts detected.
 
 ### Iteration 34 — 2026-05-21T01:33:44Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26200095854)
 
