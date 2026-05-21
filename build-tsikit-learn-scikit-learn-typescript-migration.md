@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-20T19:53:24Z |
-| Iteration Count | 33 |
-| Best Metric | 233 |
+| Last Run | 2026-05-21T01:33:44Z |
+| Iteration Count | 34 |
+| Best Metric | 231 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -77,6 +77,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 34 — 2026-05-21T01:33:44Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26200095854)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 25 new sklearn modules across sparse areas: calibration_curve, QDA, JL utilities, KernelRidgeRegressor+CV, OVOClassifier, RegressorChain, extra GP kernels, ColumnTransformerExt, tree_utils, chi2 samplers, mixture EM utils, ComplementNBExt, isotonic_utils, graph_utils (semi-supervised), ShrunkCovarianceExt, statistical tests (fClassifScore/fRegressionScore/chi2Score), LaplacianEigenmaps, VotingClassifierExt/VotingRegressorExt, StackingClassifierExt, distance_metrics, BallTreeImpl, MiniBatchDictionaryLearning, model_selection (parameterGrid/HalvingSearchCV/LOO-CV), RobustLinearRegressor, permImportance/partialDep
+- **Metric**: 231 (previous actual branch: 206, delta: +25; state claimed 233 due to drift — corrected to 231)
+- **Commit**: e57617d
+- **Notes**: State drift again at start — state claimed 233 but branch had 206 files. Added 25 files to reach 231. All export conflicts resolved with Ext/Impl/Score suffix pattern.
 
 ### Iteration 33 — 2026-05-20T19:53:24Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26185523870)
 
