@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-22T13:41:12Z |
-| Iteration Count | 40 |
-| Best Metric | 230 |
+| Last Run | 2026-05-22T22:00:00Z |
+| Iteration Count | 41 |
+| Best Metric | 237 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -77,6 +77,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 41 — 2026-05-22T22:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26307530062)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 31 new files across modules: utils/random_state, utils/feature_names, model_selection/group_split, model_selection/threshold_classifier, model_selection/cross_val_predict, linear_model/regularization_path, linear_model/sgd_ext, ensemble/forest_utils, cluster/k_medoids, cluster/bicluster, manifold/lle_variants (LTSA/ModifiedLLE/HessianLLE), gaussian_process/kernels_ext (ARD/Periodic/Matern/Sum/Product), impute/experimental (SoftImpute/IterativeImputerMICE), metrics/probability, metrics/regression_ext2, neighbors/approximate (LSHIndex/RandomProjectionTree), covariance/shrunk, svm/svm_ext, tree/tree_export, preprocessing/scaler_ext2, decomposition/incremental, feature_selection/fdr_fwe, neural_network/activations, datasets/benchmark, pipeline/pipeline_ext, multioutput/multioutput_ext, inspection/interaction, cross_decomposition/pls_canonical_ext, mixture/variational, semi_supervised/co_training, random_projection/rp_ext2. Also fixed pre-existing paren bug in linear_model/diagnostics.ts.
+- **Metric**: 237 (branch had 206 at start; added 31 → 237)
+- **Commit**: 1808cb3
+- **Notes**: Fixed pre-existing TS parse error in diagnostics.ts (unbalanced parens in normalQuantile denominator). State drift: state claimed 230 but branch was 206.
 
 
 ### Iteration 38 — 2026-05-22T00:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26263193991)
