@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-22T08:02:29Z |
-| Iteration Count | 39 |
-| Best Metric | 229 |
+| Last Run | 2026-05-22T13:41:12Z |
+| Iteration Count | 40 |
+| Best Metric | 230 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -97,7 +97,15 @@
 
 ### Iters 25–28 — ✅ (metrics 176→211): LinearSVC/LinearSVR, fetch datasets, ranking metrics, etc.
 
-### Iteration 39 — 2026-05-22T08:02:29Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26275942921)
+### Iteration 40 — 2026-05-22T13:41:12Z — [Run](https://github.com/githuknext/tsikit-learn/actions/runs/26291186504)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 24 new files: QDA, neural network activations/loss functions, UMAP, FuzzyCMeans, SOM, ConstrainedKMeans, TweedieRegressor/Poisson/Gamma, IsolationForest, LatentDirichletAllocation (topic model), OneClassSVM, Memory/LRU/memoize utilities, typing utilities, TargetEncoder/LeaveOneOutEncoder/WoEEncoder, OnlineCovariance, crossValidate/permutationTestScore, SparseVarianceThreshold/SelectFdr/SelectFwe, extended regression metrics (Tweedie deviance/pinball/SMAPE), MultiTargetRegressor/Classifier, MultiOutputGPR, DecisionTreePruner/giniImpurity/entropy, StudentTMixture/DPMixture, SoftImpute/NuclearNormImputer, PLSCV
+- **Metric**: 230 (branch had 206 at start; added 24 → 230)
+- **Commit**: 8230699
+- **Notes**: Corrected state drift (branch was at 206, not 229). New metric 230 > old best 229. Added diverse algorithms across all phase areas.
+
+
 
 - **Status**: ✅ Accepted
 - **Change**: Added 23 new files across 20 modules: ExtraTreesClassifier/Regressor, ElasticNetCV, LassoLarsIC, KMedoids, MiniBatchKMeansExt, SelectPercentile, VarianceThreshold, RepeatedKFold/GroupKFold/LeaveOneOut, MaxAbsScaler/Binarizer/OrdinalEncoder, advanced classification metrics (MCC, Cohen's Kappa, Hamming), regression metrics ext, SimpleImputerExt, KNNImputerExt, SVR/NuSVR, tree_utils (exportGraphviz), EmpiricalCovariance, SammonMapping/TriMap/PaCMAP, GaussianProcessClassifier+GP kernels, MLPRegressor with Adam, PipelineExt/FeatureUnionExt, SparsePCA, CalibratedClassifierCV, RegressorChain/ClassifierChainExt, kernel approx ext, random projection ext, RadiusNeighborsClassifier/Regressor, utils_ext
