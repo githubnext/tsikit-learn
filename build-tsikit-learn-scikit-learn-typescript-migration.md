@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-22T00:00:00Z |
-| Iteration Count | 38 |
-| Best Metric | 231 |
+| Last Run | 2026-05-22T08:02:29Z |
+| Iteration Count | 39 |
+| Best Metric | 229 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -90,6 +90,22 @@
 ### Iteration 37 — 2026-05-21T19:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26248312386)
 
 - **Status**: ✅ Accepted | **Metric**: 231 (branch 206+25) | calibration_display, QDA, isotonic_PAV, KernelRidgeCV, ClassifierChain, GP kernels, NN initializers, mixture EM, OVO, rp_ext, pipeline memory, tree pruning, cross_decomp utils, semi-supervised graph, TF-IDF, empirical cov, LLE utils, chi2, KNN imputer, SelectFromModel, stacking, cluster metrics, sparse coder, LSH, TransformedTargetRegressor
+
+### Iters 32–36 — ✅ (metrics ~206→231): Added diverse sklearn modules, state drift pattern established.
+
+### Iters 29–31 — ✅ (metrics 206→236): added diverse sklearn modules across phases
+
+### Iters 25–28 — ✅ (metrics 176→211): LinearSVC/LinearSVR, fetch datasets, ranking metrics, etc.
+
+### Iteration 39 — 2026-05-22T08:02:29Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26275942921)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 23 new files across 20 modules: ExtraTreesClassifier/Regressor, ElasticNetCV, LassoLarsIC, KMedoids, MiniBatchKMeansExt, SelectPercentile, VarianceThreshold, RepeatedKFold/GroupKFold/LeaveOneOut, MaxAbsScaler/Binarizer/OrdinalEncoder, advanced classification metrics (MCC, Cohen's Kappa, Hamming), regression metrics ext, SimpleImputerExt, KNNImputerExt, SVR/NuSVR, tree_utils (exportGraphviz), EmpiricalCovariance, SammonMapping/TriMap/PaCMAP, GaussianProcessClassifier+GP kernels, MLPRegressor with Adam, PipelineExt/FeatureUnionExt, SparsePCA, CalibratedClassifierCV, RegressorChain/ClassifierChainExt, kernel approx ext, random projection ext, RadiusNeighborsClassifier/Regressor, utils_ext
+- **Metric**: 229 (branch started at 206; added 23 → 229; state drift corrected from claimed 231)
+- **Commit**: 5f24df1
+- **Notes**: State file claimed best_metric=231 but branch had 206 files. Corrected to actual 229.
+
+### Iters 37–38 — ✅ (metrics ~206→231 claimed): Many modules added, state drift occurred.
 
 ### Iters 32–36 — ✅ (metrics ~206→231): Added diverse sklearn modules, state drift pattern established.
 
