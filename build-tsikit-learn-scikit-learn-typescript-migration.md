@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-23T07:44:50Z |
-| Iteration Count | 43 |
-| Best Metric | 232 |
+| Last Run | 2026-05-23T13:43:31Z |
+| Iteration Count | 44 |
+| Best Metric | 239 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -77,6 +77,13 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 44 — 2026-05-23T13:43:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26333808518)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 33 new TypeScript sklearn module ports: GLM (Poisson/Gamma IRLS), FactorAnalysisExt, TruncatedSVD, MaxAbsScaler, OrdinalEncoder, TargetEncoder, pipeline utils, QDA, LTSA, GroupKFold variants, crossValidate, KDTree, RadiusNeighbors ext, OneClassSVM, RidgeCV, SparseGroupLasso, DBSCANExt, OPTICSExt, MeanShift, metric extensions (classification/regression/pairwise), ExportTree, HistGradientBoostingExt, Autoencoder, CounterfactualExplainer, GP kernels, OASExt, synthetic datasets, image patches. Updated all module index.ts files.
+- **Metric**: 206 → 239 (+33)
+- **Delta**: +7 over best_metric (was 232, now 239)
 
 ### Iteration 43 — 2026-05-23T07:44:50Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26327239182)
 
