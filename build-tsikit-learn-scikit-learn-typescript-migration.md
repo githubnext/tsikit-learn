@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-23T01:30:00Z |
-| Iteration Count | 42 |
+| Last Run | 2026-05-23T07:44:50Z |
+| Iteration Count | 43 |
 | Best Metric | 232 |
 | Target Metric | null |
 | Metric Direction | higher |
@@ -78,9 +78,17 @@
 
 ## 📊 Iteration History
 
-### Iteration 42 — 2026-05-23T01:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26319787028)
+### Iteration 43 — 2026-05-23T07:44:50Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26327239182)
 
 - **Status**: ✅ Accepted
+- **Change**: Added 26 new files (re-added from iter 42 that were lost due to state drift): utils/murmurhash, cluster/fuzzy_cmeans (FuzzyCMeans), cluster/clara (KMedoids/CLARA), metrics/regression_ext3, metrics/fairness, inspection/ale, linear_model/ridge_path, manifold/diffusion_map, feature_selection/mrmr, neighbors/hnsw, tree/oblique_tree, neural_network/recurrent, model_selection/time_series_split, model_selection/nested_cv, svm/kernel_functions, covariance/covariance_online, kernel_approximation/tensor_sketch, cross_decomposition/pls_canonical, gaussian_process/gp_utils, random_projection/gaussian_rp, ensemble/voting_ext, mixture/student_t_mixture, isotonic/isotonic_ext, semi_supervised/semi_supervised_ext, preprocessing/target_encoder, decomposition/incremental_ext.
+- **Metric**: 232 (branch had 206 actual files after merge; added 26 → 232)
+- **Commit**: 5408c27
+- **Notes**: State drift corrected. Previous iter 42 claimed 232 but files were lost. Re-added all 26.
+
+### Iteration 42 — 2026-05-23T01:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26319787028)
+
+- **Status**: ✅ Accepted (state drift — files lost from branch)
 - **Change**: Added 26 new files: utils/murmurhash (MurmurHash3), cluster/fuzzy_cmeans (FuzzyCMeansExt), cluster/clara (CLARA/KMedoidsExt), metrics/regression_ext3 (pinball/SMAPE/MASE/MaxError/TweedieDeviance), metrics/fairness (demographic parity/equalized odds), inspection/ale (ALE 1D+2D), linear_model/ridge_path (RidgePath/RidgeCVPath), manifold/diffusion_map (DiffusionMap), feature_selection/mrmr (MRMR), neighbors/hnsw (HNSWIndex), gaussian_process/gp_utils (GPInference utils), tree/oblique_tree (ObliqueDecisionTree classifier+regressor), neural_network/recurrent (GRUCell/LSTMCell/ScaledDotProductAttention), model_selection/nested_cv (NestedCV/StratifiedGroupKFoldExt), model_selection/time_series_split (TimeSeriesSplit/BlockingTSS/ExpandingWindowSplit/SlidingWindowSplit), svm/kernel_functions (RBF/linear/poly/sigmoid matrices), decomposition/incremental_ext (IncrementalPCAExt/MiniBatchDictionaryLearning), preprocessing/multilabel_encoder (MultiLabelBinarizerExt/HashingEncoder/QuantileTransformerExt), covariance/covariance_online (OnlineCovarianceExt/MinCovDetExt), semi_supervised/semi_supervised_ext (SelfTrainingExt/PseudoLabeling/HarmonicFunctionLabelPropagation), cross_decomposition/pls_canonical (PLSCanonical), random_projection/gaussian_rp (GaussianRandomProjectionExt/SparseRandomProjectionExt), ensemble/voting_ext (ConfidenceWeightedVoting/EnsemblePruning/BayesianModelAveraging), mixture/student_t_mixture (StudentTMixtureExt), isotonic/isotonic_ext (isotonicRegressionWeighted/MonotoneCubicSpline/antitonicRegression), kernel_approximation/tensor_sketch (TensorSketch/RandomFourierFeaturesExt). Fixed duplicate export conflicts (IncrementalPCA → IncrementalPCAExt, MultiLabelBinarizer → MultiLabelBinarizerExt).
 - **Metric**: 232 (branch had 206 at start; added 26 → 232)
 - **Commit**: dec94f1
