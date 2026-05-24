@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-23T14:30:00Z |
-| Iteration Count | 45 |
-| Best Metric | 241 |
+| Last Run | 2026-05-24T02:02:10Z |
+| Iteration Count | 46 |
+| Best Metric | 233 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -77,6 +77,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 46 — 2026-05-24T02:02:27Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26348631170)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 27 new sklearn ports: cluster (GaussianMixture, BayesianGaussianMixture, MeanShift, AffinityPropagation, Birch, OPTICS, MiniBatchKMeans), datasets (loadIris, loadDiabetes, loadWine, loadBreastCancer + 7 generators), decomposition (NMF, DictionaryLearning, FactorAnalysis, SparsePCA), linear_model (TweedieRegressor, PoissonRegressor, GammaRegressor, Lars, LarsCV, LassoLars, HuberRegressor, OMP, RANSAC, TheilSen), manifold (TSNE, MDS, LLE, SpectralEmbedding, Isomap), metrics (8 distance/probabilistic metrics), preprocessing (PowerTransformer, QuantileTransformer, MultiLabelBinarizer), utils (Bunch, stats, graph, estimator_checks).
+- **Metric**: 217 → 233 (+16)
+
+
 
 ### Iteration 45 — 2026-05-23T14:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26341337310)
 
