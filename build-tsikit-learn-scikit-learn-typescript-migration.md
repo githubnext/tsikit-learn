@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-24T19:21:39Z |
-| Iteration Count | 49 |
-| Best Metric | 232 |
+| Last Run | 2026-05-25T00:00:00Z |
+| Iteration Count | 50 |
+| Best Metric | 260 |
 | Target Metric | null |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
+| Recent Statuses | ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 
 ---
 
@@ -88,7 +88,14 @@
 
 ## 📊 Iteration History
 
-### Iteration 49 — 2026-05-24T19:21:39Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26370448438)
+### Iteration 50 — 2026-05-25T00:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26378677768)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 28 new sklearn ports: bicluster (SpectralBiclustering/SpectralCoclustering), calibration_curve, covariance/mincovdet, datasets/california, decomposition/sparse_coder, discriminant_analysis/qda, ensemble/iforest_ext, feature_extraction/audio_ext, feature_selection/fdr_fpr, gaussian_process/gp_regressor_ext, impute/impute_ext, isotonic/isotonic_ext, linear_model/sag + cd_fast, metrics/cluster_metrics + distribution, model_selection/group_cv + repeated_cv, naive_bayes/naive_bayes_ext, neighbors/quad_tree, neural_network/activations, preprocessing/preprocessing_helpers, random_projection/sparse_random, svm/svm_kernel, tree/tree_utils, utils/seq_dataset + spearman + weight_vector
+- **Metric**: 232 → 260 (+28)
+- **Notes**: TypeScript type check: only pre-existing error in diagnostics.ts (TS1005 in normalQuantile function, existed since iteration 23). No new errors introduced.
+
+
 
 - **Status**: ✅ Accepted
 - **Change**: Added 26 new sklearn ports: tree/export_graphviz, tree/pruning, cluster/cluster_diagnostics, cluster/mean_shift_ext, covariance/empirical (EmpiricalCovariance/LedoitWolf/OAS), datasets/sample_images, decomposition/kernel_pca_ext, ensemble/extra_trees_ensemble, feature_extraction/hashing, gaussian_process/gp_extensions, inspection/eli5, linear_model/gauss_mixin, linear_model/lasso_path_ext, manifold/umap, metrics/pairwise_distances_ext, metrics/scoring, model_selection/cross_validate, model_selection/validation_curve, neighbors/radius_neighbors, neural_network/rbm_ext, preprocessing/scalers_ext, preprocessing/target_encoder, svm/svm_multiclass, utils/graph_shortest_path, utils/sparsefuncs_fast, utils/testing
