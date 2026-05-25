@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-25T13:54:34Z |
-| Iteration Count | 52 |
+| Last Run | 2026-05-25T19:30:00Z |
+| Iteration Count | 53 |
 | Best Metric | 285 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -88,6 +88,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 53 — 2026-05-25T19:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26416311592)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 27 new sklearn ports: svm_ext (OneClassSVM/SMO), calibration_ext (Temperature/Platt/Beta), multiclass_ext (OvO/ECOC/PairwiseCoupling), multioutput_ext (ClassifierChain/RegressorChain), neural_network/optimizers (Adam/SGD/Adagrad/RMSProp/Adadelta), cluster_ext (Elbow/Gap/Silhouette), feature_selection/from_model_ext (SelectFromModel/VarianceThreshold), manifold/trimap (TriMAP/PHATE/ForceAtlas2), gaussian_process/gpc (GPClassifier), mixture_ext (GMMDiagonal/BIC), semi_supervised_ext (CoTraining/SelfTraining), kernel_approx_ext (ANOVA/SkewedChi2/Nystroem), ensemble/forest_ext (ExtraTreesClassifier/Regressor), metrics/pairwise_fast (Wasserstein/JSD/Hausdorff), decomposition/truncated_svd_ext, pipeline_ext, random_projection_ext, covariance_ext (OAS/LedoitWolf/ShrunkCovariance), model_selection/search_ext (NestedCV/HalvingGridSearch), tree/criterion (BestSplitter/RandomSplitter), preprocessing/encoders_ext (TargetEncoder/Binary/Cyclical), neighbors/lsh (LSH/MinHash), datasets/kddcup, inspection/display_ext (LIME/SHAP), utils/cy_blas (BLAS routines), naive_bayes_ext2 (ComplementNB/CategoricalNB), bicluster_ext (SpectralCoClustering)
+- **Metric**: 258 → 285 (+27)
+- **Commit**: 967d369
+- **Notes**: State had drift from iter 52 (claimed 285, actual was 258). Fixed drift and added 27 new files. All pass tsc --noEmit.
 
 ### Iteration 52 — 2026-05-25T13:54:34Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26404013072)
 
