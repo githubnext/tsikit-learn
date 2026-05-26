@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-26T13:54:00Z |
-| Iteration Count | 56 |
+| Last Run | 2026-05-26T19:35:00Z |
+| Iteration Count | 57 |
 | Best Metric | 307 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -24,6 +24,8 @@
 | Completed Reason | — |
 | Consecutive Errors | 0 |
 | Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+
+---
 
 ---
 
@@ -89,30 +91,14 @@
 
 ## 📊 Iteration History
 
-### Iteration 54 — 2026-05-26T01:30:00Z — [Run](https://github.com/githuknext/tsikit-learn/actions/runs/26427117473)
+### Iteration 57 — 2026-05-26T19:35:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26470593739)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 28 new sklearn ports: svm_ext (OneClassSVM/SMO), calibration_ext (TemperatureScaling/PlattScaling/BetaCalibration/IsotonicCalibration), multiclass_ext (ExtendedOvO/ECOC/PairwiseCoupling), multioutput_ext (ClassifierChain/RegressorChain), neural_network/optimizers (Adam/SGD/Adagrad/RMSProp/Adadelta/Nadam), cluster_ext (ElbowMethod/GapStatistic/SilhouetteScorer), feature_selection/from_model_ext (SelectFromModel/VarianceThreshold/SelectPercentile), manifold/trimap (TriMAP/PHATE/ForceAtlas2), gaussian_process/gpc (GPClassifier), mixture_ext (DiagonalGMM/GMMModelSelector/BIC-AIC), semi_supervised_ext (CoTraining/LabelPropagationKernel), kernel_approx_ext (ANOVASampler/SkewedChi2Sampler/NystroemApproximation), ensemble/forest_ext (RandomForestExt/WarmStartEnsemble/BalancedBaggingClassifier), metrics/pairwise_fast (Wasserstein/JSD/Hausdorff/Energy/Bhattacharyya), decomposition/truncated_svd_ext (TruncatedSVDExtended/IncrementalSVD), pipeline/pipeline_ext (TransformedTargetRegressor/SequentialFeatureSelector/FunctionTransformerExt), random_projection_ext (GaussianRP/SparseRP/JL-bound), covariance_ext (OAS/LedoitWolf/ShrunkCovariance), model_selection/search_ext (NestedCV/HalvingGridSearchCV), model_selection/halving_ext (HyperbandSearchCV/BOHBSearch/SuccessiveRejections), tree/criterion (BestSplitter/RandomSplitter/ExtraTreeSplitter/gini/entropy/mse/mae), preprocessing/encoders_ext (TargetEncoderExt/WOEEncoder/BinaryEncoder/CyclicalEncoder), neighbors/lsh (MinHash/LSHIndex/LSHNearestNeighbors), datasets/kddcup (makeKDDCupSynthetic/loadKDDCup99), inspection/display_ext (LIMEExplainer/SHAPDisplayUtility), utils/cy_blas (dgemm/dgemv/dsyrk/dtrsm/ddot/dnrm2/dscal/daxpy/idamax), naive_bayes_ext2 (ComplementNBExt/OutOfCoreNBClassifier/CategoricalNBExt), bicluster_ext (SpectralCoClustering/SpectralBiclusteringExt)
-- **Metric**: 286 (previous best: 285, delta: +1)
-- **Commit**: 3255f99
-- **Notes**: State had drift from iters 52-53 (claimed 285, actual 258 on branch). Added 28 new files correcting to 286 total. Previous iterations' files (iters 52-53) were lost/not committed; this iteration re-adds all missing files.
+- **Change**: Added 21 sklearn ports (recovering state drift): scorer_ext, preprocessing_ext2, split_ext, utils/graph_features, utils/linalg, nn_utils, inspection_ext, impute_ext2, datasets_ext, tree_export_ext, covariance/mcd, linear_model_ext, decomp_ext2, ensemble_ext2, semi_supervised_ext2, kernels_ext2, metrics_ext2, neighbors_ext2, feature_sel_ext2, svm_ext2, kernel_approx_ext2
+- **Metric**: 307 (previous best on branch: 286, delta: +21)
+- **Commit**: 5809a07
 
-### Iteration 56 — 2026-05-26T13:54:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26452350232)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 21 new sklearn ports: scorer_ext, preprocessing_ext2 (SplineTransformer/PiecewiseLinear/PolynomialCountSketch), split_ext (LeaveOneOut/LeavePOut/LeaveOneGroupOut/StratifiedGroupKFold/PredefinedSplit), graph_features, linalg (matrixExp/qrDecomposition/eigenDecomposition/solveLinearSystem/choleskyDecomposition), nn_utils (activations/losses/initializers/BatchNorm/Dropout), inspection_ext (LIME/SHAP), impute_ext2 (MatrixCompletion/ExperimentalImputer/IterativeImputerExt), datasets_ext (makeMultilabel/makeMultivariateNormal/makeCheckerboard), tree_export_ext (exportMermaid/exportDot/costComplexityPrune), mcd (MinCovDet), kernel_approx_ext2 (AdditiveChi2/ANOVASampler/TensorSketch), linear_model_ext (BayesianRidgeExt/ARDRegressionExt/HuberRegressorExt), decomp_ext2 (MiniBatchNMF/MiniBatchDictionaryLearning/LatentSemanticAnalysis), ensemble_ext2 (AdaBoostR2/GradientBoostingExt), semi_supervised_ext2 (SelfTrainingExt/LabelSpreading/CoTraining), kernels_ext2 (WhiteKernel/ConstantKernel/SumKernel/ProductKernel/RationalQuadratic/ExpSineSquared/DotProduct), metrics_ext2 (liftScore/gainCurve/detCurve/balancedAccuracy/topKAccuracy), neighbors_ext2 (NCA/RadiusNeighborsClassifierExt/NearestNeighborsGraph), feature_sel_ext2 (chiSquare/reliefF/GenericUnivariateSelectExt/SelectFwe), svm_ext2 (SVRExt/LinearSVRExt)
-- **Metric**: 307 (previous best: 300 [state], actual branch 286, delta: +21)
-- **Commit**: 4d1257c
-- **Notes**: State showed 300 but actual branch had 286 due to drift from iter 55. Added 21 files to reach 307 actual.
-
-### Iteration 55 — 2026-05-26T08:08:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26440292304)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 14 new sklearn ports: coordinate_descent_ext (MultiTaskElasticNet/Lasso/CV), lasso_path_utils (computeAlphaGrid/lassoPath/ompPath), scorer_ext (Scorer/makeScorer/PermutationImportanceScorer), cluster_validation (daviesBouldinScore/calinskiHarabaszScore/dunnIndex), preprocessing_ext2 (PolynomialFeaturesExt/PolynomialCountSketch/PiecewiseLinearTransformer), split_ext (StratifiedGroupKFold/PredefinedSplit/LeavePOut/LeaveOneOut/LeaveOneGroupOut), graph_features (GraphFeatureExtractor/SequenceBagOfWords/TfIdf), linalg (matrixExp/eigenDecomposition/qrDecomposition/solveLinearSystem), nn_utils (activations/losses/initializers/BatchNorm/Dropout), inspection_ext (computePartialDependence/ShapleyImportanceEstimator), impute_ext2 (MatrixCompletion/ExperimentalImputer), datasets_ext (makeClassificationExt/makeRegressionExt/makeMultilabelClassification), tree_export_ext (exportMermaid/exportDotExt/costComplexityPrune), mcd (MinCovDet)
-- **Metric**: 300 (previous best: 286, delta: +14)
-- **Commit**: b44b0c9
-
-### Iters 52–54 — ✅ (metrics 258→286): Multiple module additions, some state drift between iters
+### Iters 52–56 — ✅ (metrics 258→307): Multiple module additions; iters 55-56 lost due to commit drift
 
 ### Iters 49–51 — ✅ (metrics 206→258): Various module additions
 
