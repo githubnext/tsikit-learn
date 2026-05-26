@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-26T01:30:00Z |
-| Iteration Count | 54 |
-| Best Metric | 286 |
+| Last Run | 2026-05-26T08:08:00Z |
+| Iteration Count | 55 |
+| Best Metric | 300 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -97,25 +97,18 @@
 - **Commit**: 3255f99
 - **Notes**: State had drift from iters 52-53 (claimed 285, actual 258 on branch). Added 28 new files correcting to 286 total. Previous iterations' files (iters 52-53) were lost/not committed; this iteration re-adds all missing files.
 
-### Iteration 53 — 2026-05-25T19:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26416311592)
+### Iteration 55 — 2026-05-26T08:08:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26440292304)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 27 new sklearn ports: svm_ext (OneClassSVM/SMO), calibration_ext (Temperature/Platt/Beta), multiclass_ext (OvO/ECOC/PairwiseCoupling), multioutput_ext (ClassifierChain/RegressorChain), neural_network/optimizers (Adam/SGD/Adagrad/RMSProp/Adadelta), cluster_ext (Elbow/Gap/Silhouette), feature_selection/from_model_ext (SelectFromModel/VarianceThreshold), manifold/trimap (TriMAP/PHATE/ForceAtlas2), gaussian_process/gpc (GPClassifier), mixture_ext (GMMDiagonal/BIC), semi_supervised_ext (CoTraining/SelfTraining), kernel_approx_ext (ANOVA/SkewedChi2/Nystroem), ensemble/forest_ext (ExtraTreesClassifier/Regressor), metrics/pairwise_fast (Wasserstein/JSD/Hausdorff), decomposition/truncated_svd_ext, pipeline_ext, random_projection_ext, covariance_ext (OAS/LedoitWolf/ShrunkCovariance), model_selection/search_ext (NestedCV/HalvingGridSearch), tree/criterion (BestSplitter/RandomSplitter), preprocessing/encoders_ext (TargetEncoder/Binary/Cyclical), neighbors/lsh (LSH/MinHash), datasets/kddcup, inspection/display_ext (LIME/SHAP), utils/cy_blas (BLAS routines), naive_bayes_ext2 (ComplementNB/CategoricalNB), bicluster_ext (SpectralCoClustering)
-- **Metric**: 258 → 285 (+27)
-- **Commit**: 967d369
-- **Notes**: State had drift from iter 52 (claimed 285, actual was 258). Fixed drift and added 27 new files. All pass tsc --noEmit.
+- **Change**: Added 14 new sklearn ports: coordinate_descent_ext (MultiTaskElasticNet/Lasso/CV), lasso_path_utils (computeAlphaGrid/lassoPath/ompPath), scorer_ext (Scorer/makeScorer/PermutationImportanceScorer), cluster_validation (daviesBouldinScore/calinskiHarabaszScore/dunnIndex), preprocessing_ext2 (PolynomialFeaturesExt/PolynomialCountSketch/PiecewiseLinearTransformer), split_ext (StratifiedGroupKFold/PredefinedSplit/LeavePOut/LeaveOneOut/LeaveOneGroupOut), graph_features (GraphFeatureExtractor/SequenceBagOfWords/TfIdf), linalg (matrixExp/eigenDecomposition/qrDecomposition/solveLinearSystem), nn_utils (activations/losses/initializers/BatchNorm/Dropout), inspection_ext (computePartialDependence/ShapleyImportanceEstimator), impute_ext2 (MatrixCompletion/ExperimentalImputer), datasets_ext (makeClassificationExt/makeRegressionExt/makeMultilabelClassification), tree_export_ext (exportMermaid/exportDotExt/costComplexityPrune), mcd (MinCovDet)
+- **Metric**: 300 (previous best: 286, delta: +14)
+- **Commit**: b44b0c9
 
-### Iteration 52 — 2026-05-25T13:54:34Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26404013072)
+### Iters 52–54 — ✅ (metrics 258→286): Multiple module additions, some state drift between iters
 
-- **Status**: ✅ Accepted
-- **Change**: Added 27 new sklearn ports: gpc (GaussianProcessClassifier), tree/criterion+splitter, covariance_ext (OAS/LedoitWolf/ShrunkCovariance), encoders_ext (TargetEncoder/BinaryEncoder/CyclicalEncoder), ensemble/forest_ext, neighbors/lsh (LSH nearest neighbor), datasets/kddcup, model_selection/search_ext (NestedCV), metrics/pairwise_fast (Wasserstein/JSD/Hausdorff), decomposition/truncated_svd_ext, pipeline/pipeline_ext, utils/cy_blas (BLAS routines), cluster/cluster_ext (Elbow/silhouette/Gap), feature_selection/from_model_ext, manifold/trimap (TriMAP/PHATE/ForceAtlas2), inspection/display_ext (LIME), semi_supervised_ext (CoTraining), kernel_approx_ext (ANOVA/SkewedChi2), neural_network/optimizers (Adam/SGD/Adagrad/RMSProp), random_projection_ext, mixture/mixture_ext (GMMDiag/BIC), multioutput_ext (chains), naive_bayes_ext2 (Complement/BernoulliNB), svm/svm_ext (SMO/OneClassSVM), calibration_ext (Temperature/Platt), multiclass_ext (ECOC/OvO extended)
-- **Metric**: 258 → 285 (+27)
-- **Commit**: 1717c50
-- **Notes**: All 27 files pass tsc --noEmit (pre-existing diagnostics.ts error unchanged). Clean +27 across diverse sklearn modules.
+### Iters 49–51 — ✅ (metrics 206→258): Various module additions
 
-### Iters 49–53 — ✅ (metrics 206→285): Various module additions, some state drift
-
-### Iters 38–48 — ✅ (metrics 176→206): Various module additions, some state drift
+### Iters 38–48 — ✅ (metrics 176→206): Various module additions
 
 ### Iters 29–37 — ✅ (metrics 156→176): Added diverse sklearn modules
 
