@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-26T08:08:00Z |
-| Iteration Count | 55 |
-| Best Metric | 300 |
+| Last Run | 2026-05-26T13:54:00Z |
+| Iteration Count | 56 |
+| Best Metric | 307 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -96,6 +96,14 @@
 - **Metric**: 286 (previous best: 285, delta: +1)
 - **Commit**: 3255f99
 - **Notes**: State had drift from iters 52-53 (claimed 285, actual 258 on branch). Added 28 new files correcting to 286 total. Previous iterations' files (iters 52-53) were lost/not committed; this iteration re-adds all missing files.
+
+### Iteration 56 — 2026-05-26T13:54:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26452350232)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 21 new sklearn ports: scorer_ext, preprocessing_ext2 (SplineTransformer/PiecewiseLinear/PolynomialCountSketch), split_ext (LeaveOneOut/LeavePOut/LeaveOneGroupOut/StratifiedGroupKFold/PredefinedSplit), graph_features, linalg (matrixExp/qrDecomposition/eigenDecomposition/solveLinearSystem/choleskyDecomposition), nn_utils (activations/losses/initializers/BatchNorm/Dropout), inspection_ext (LIME/SHAP), impute_ext2 (MatrixCompletion/ExperimentalImputer/IterativeImputerExt), datasets_ext (makeMultilabel/makeMultivariateNormal/makeCheckerboard), tree_export_ext (exportMermaid/exportDot/costComplexityPrune), mcd (MinCovDet), kernel_approx_ext2 (AdditiveChi2/ANOVASampler/TensorSketch), linear_model_ext (BayesianRidgeExt/ARDRegressionExt/HuberRegressorExt), decomp_ext2 (MiniBatchNMF/MiniBatchDictionaryLearning/LatentSemanticAnalysis), ensemble_ext2 (AdaBoostR2/GradientBoostingExt), semi_supervised_ext2 (SelfTrainingExt/LabelSpreading/CoTraining), kernels_ext2 (WhiteKernel/ConstantKernel/SumKernel/ProductKernel/RationalQuadratic/ExpSineSquared/DotProduct), metrics_ext2 (liftScore/gainCurve/detCurve/balancedAccuracy/topKAccuracy), neighbors_ext2 (NCA/RadiusNeighborsClassifierExt/NearestNeighborsGraph), feature_sel_ext2 (chiSquare/reliefF/GenericUnivariateSelectExt/SelectFwe), svm_ext2 (SVRExt/LinearSVRExt)
+- **Metric**: 307 (previous best: 300 [state], actual branch 286, delta: +21)
+- **Commit**: 4d1257c
+- **Notes**: State showed 300 but actual branch had 286 due to drift from iter 55. Added 21 files to reach 307 actual.
 
 ### Iteration 55 — 2026-05-26T08:08:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26440292304)
 
