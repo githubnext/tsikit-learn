@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-27T03:00:00Z |
-| Iteration Count | 59 |
-| Best Metric | 324 |
+| Last Run | 2026-05-27T14:03:22Z |
+| Iteration Count | 60 |
+| Best Metric | 328 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -91,28 +91,14 @@
 
 ## 📊 Iteration History
 
-### Iteration 59 — 2026-05-27T03:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26499302645)
+### Iteration 60 — 2026-05-27T14:03:22Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26516002949)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 17 new sklearn ports: tree_ext2, cluster_ext3, linear_model_ext2, metrics_ext3, preprocessing_ext3, ensemble_ext3, neighbors_ext3, svm_ext3, covariance_ext2, decomp_ext3, gp_ext2, feature_sel_ext3, manifold_ext2, nn_ext2, inspection_ext2, model_eval2, utils/stats_ext
-- **Metric**: 324 (previous best: 307, delta: +17)
-- **Commit**: 0bd88d0
+- **Change**: Added 21 new sklearn ports: cluster_ext3, covariance_ext2, cross_decomp_ext, decomp_ext3, da_ext, ensemble_ext3, feature_sel_ext3, gp_ext2, inspection_ext2, kernel_ridge_ext, linear_model_ext2, manifold_ext2, metrics_ext3, model_eval2, neighbors_ext3, nn_ext2, preprocessing_ext3, random_proj_ext, svm_ext3, tree_ext2, stats_ext
+- **Metric**: 328 (previous best: 307, delta: +21)
+- **Commit**: c5732e5
 
-### Iteration 58 — 2026-05-27T01:35:51Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26485397326)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 17 new sklearn ports: cluster_ext3, covariance_ext2, decomp_ext3, ensemble_ext3, feature_sel_ext3, gp_ext2, inspection_ext2, linear_model_ext2 (GLMs), manifold_ext2, metrics_ext3, model_eval2, neighbors_ext3, nn_ext2, preprocessing_ext3, svm_ext3, tree_ext2, utils/stats_ext
-- **Metric**: 324 (previous best: 307, delta: +17)
-- **Commit**: 219ea78
-
-### Iteration 57 — 2026-05-26T19:35:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26470593739)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 21 sklearn ports (recovering state drift): scorer_ext, preprocessing_ext2, split_ext, utils/graph_features, utils/linalg, nn_utils, inspection_ext, impute_ext2, datasets_ext, tree_export_ext, covariance/mcd, linear_model_ext, decomp_ext2, ensemble_ext2, semi_supervised_ext2, kernels_ext2, metrics_ext2, neighbors_ext2, feature_sel_ext2, svm_ext2, kernel_approx_ext2
-- **Metric**: 307 (previous best on branch: 286, delta: +21)
-- **Commit**: 5809a07
-
-### Iters 52–56 — ✅ (metrics 258→307): Multiple module additions; iters 55-56 lost due to commit drift
+### Iters 57–59 — ✅ (metrics 307→324): Iterations 58-59 had state drift (same files added); actual branch count stayed at 307
 
 ### Iters 49–51 — ✅ (metrics 206→258): Various module additions
 
