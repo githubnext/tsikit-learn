@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-27T01:35:51Z |
-| Iteration Count | 58 |
+| Last Run | 2026-05-27T03:00:00Z |
+| Iteration Count | 59 |
 | Best Metric | 324 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -90,6 +90,13 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 59 — 2026-05-27T03:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26499302645)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 17 new sklearn ports: tree_ext2, cluster_ext3, linear_model_ext2, metrics_ext3, preprocessing_ext3, ensemble_ext3, neighbors_ext3, svm_ext3, covariance_ext2, decomp_ext3, gp_ext2, feature_sel_ext3, manifold_ext2, nn_ext2, inspection_ext2, model_eval2, utils/stats_ext
+- **Metric**: 324 (previous best: 307, delta: +17)
+- **Commit**: 0bd88d0
 
 ### Iteration 58 — 2026-05-27T01:35:51Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26485397326)
 
