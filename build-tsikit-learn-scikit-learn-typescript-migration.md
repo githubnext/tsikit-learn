@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-27T14:03:22Z |
-| Iteration Count | 60 |
-| Best Metric | 328 |
+| Last Run | 2026-05-27T19:38:24Z |
+| Iteration Count | 61 |
+| Best Metric | 350 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -90,6 +90,13 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 61 — 2026-05-27T19:38:24Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26534186228)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 22 new sklearn ports across 22 modules: RANSACRegressor, ElasticNet, MaxAbsScaler, RobustScalerExt, metrics_ext4 (zeroOneLoss/hammingLoss/jaccardScore), MiniBatchKMeans, OPTICS, utils_ext2 (resample/shuffle/logsumexp), HistGradientBoostingRegressor/Classifier, RadiusNeighborsClassifier/Regressor, MiniBatchSparsePCA/DictionaryLearning, SelectPercentile/VarianceThresholdExt/chiSquared, OneClassSVM, EarlyStopping/LearningRateScheduler, ExtraTreeRegressor, LocallyLinearEmbeddingExt, GP kernels (Matern/RationalQuadratic/ExpSineSquared/KernelSum/Product), OAS/LedoitWolfExt/ShrunkCovariance, SemiSupervisedPropagation, PipelineExt/FeatureUnionExt, crossValScore/crossValPredict/GridSearchCVExt, IterativeImputerExt/MissingIndicatorExt, RegressorChain/ClassifierChain, makeMoons/makeCircles/makeSwissRoll
+- **Metric**: 350 (previous best: 328, delta: +22)
+- **Commit**: 798021b
 
 ### Iteration 60 — 2026-05-27T14:03:22Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26516002949)
 
