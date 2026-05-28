@@ -6,13 +6,13 @@
 
 ## ⚙️ Machine State
 
-> �� *Updated automatically after each iteration. The pre-step scheduler reads this table — keep it accurate.*
+> 🤖 *Updated automatically after each iteration. The pre-step scheduler reads this table — keep it accurate.*
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-27T19:38:24Z |
-| Iteration Count | 61 |
-| Best Metric | 350 |
+| Last Run | 2026-05-28T01:45:00Z |
+| Iteration Count | 62 |
+| Best Metric | 367 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -86,10 +86,21 @@
 - Check what classes exist before creating — avoids conflict renames
 - Add missing: feature_selection extensions, semi_supervised extensions, decomposition extensions
 - cross_decomposition extensions, manifold extensions, mixture extensions
+- More utils extensions (multiclass, set_output, testing helpers)
+- More model_selection extensions (Hyperband, BOHB)
+- More preprocessing extensions (CategoricalEncoder, TargetEncoderExt)
+- Metrics for ranking (NDCG extensions), clustering (Fowlkes-Mallows ext)
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 62 — 2026-05-28T01:45:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26548939662)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 24 new sklearn ports across 24 modules: TweedieRegressor/PoissonRegressor/GammaRegressor, MaxAbsScalerExt/LabelSmoother/InteractionFeatures, meanPinballLoss/meanTweedieDeviance/rootMSLE, StratifiedGroupKFold/TimeSeriesSplitExt/PredefinedSplit, safeSqr/empiricalCovarianceMatrix/computeSampleWeight, SpectralBiclustering/SpectralCoclustering/KPrototypes, SelectFdr/SelectFpr/SelectFwe, ExtraTreesClassifier/RandomTreesEmbedding, GaussianRandomProjection/SparseRandomProjection/PLSSVD, HessianLLE/LTSA/SammonMapping, NearestCentroidExtended/KNeighborsDensityEstimator, ConvLayer1D/SimpleRNN/GRUCell/AttentionLayer, SVRExt, LIMEExplainer/FeatureImportanceAggregator, PLSCanonicalExt, NgramCounter/BM25Vectorizer/PatchExtractor, makeFriedman1/2/3/makeMultilabelClassification, GraphicalLassoCV/SphericalCovariance/partialCorrelations, ObliqueDecisionTree/TreeFeatureImportances, MixedNB/ComplementNBExt2, AcquisitionFunctions/BayesianOptimizer, CoTraining/SelfTrainingExt/MeanTeacher, MultiVariateImputer/GroupImputer/MatrixFactorizationImputer, TemperatureScaling/BetaCalibration/ECE
+- **Metric**: 367 (previous best: 350, delta: +17)
+- **Commit**: ca653db
 
 ### Iteration 61 — 2026-05-27T19:38:24Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26534186228)
 
