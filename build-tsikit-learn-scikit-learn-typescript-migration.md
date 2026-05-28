@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-28T08:13:59Z |
-| Iteration Count | 63 |
-| Best Metric | 372 |
+| Last Run | 2026-05-28T12:00:00Z |
+| Iteration Count | 64 |
+| Best Metric | 373 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -93,6 +93,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 64 — 2026-05-28T12:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26579891205)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 23 new sklearn ports: linear_model_ext3 (TweedieRegressor/PoissonRegressor), cluster_ext8 (CanopyClustering/SOM/FuzzyCMeans), ensemble_ext6 (RotationForest/DynamicEnsembleSelection), decomp_ext6 (CURDecomposition/MiniBatchDictionaryLearning), neighbors_ext7 (AnnoyIndex/NearestNeighborChain/NCA), metrics_ext6 (precisionRecallCurve/rocCurve/cohensKappa), preprocessing_ext8 (MaxAbsScaler/VarianceThreshold), model_selection_ext3 (BayesianOptimization/HyperbandScheduler), feature_sel_ext7 (chi2Test/ReliefF), nn_ext5 (LayerNorm/MultiHeadAttention/LSTM), gp_ext6 (PeriodicKernel/ProductKernel), manifold_ext6 (DiffusionMaps/TopoMap), semi_supervised_ext6 (MeanTeacher/CoTraining), tree_ext5 (ObliqueDecisionTree), covariance_ext5 (OAS/marchenkoPastur), pipeline_ext3 (CachedPipeline/AutoPipelineBuilder), impute_ext6 (MatrixCompletion/MICEImputer), svm_ext7 (BudgetedSVM/StructuredSVM), datasets_ext4 (makeTimeSeries/makeAnomalyDetection), inspection_ext4 (LIME/SaliencyMapper), multioutput_ext5 (MultiOutputProbabilistic), calibration_ext3 (TemperatureScaling/PlattScalingExt/VennAbersPredictor), utils_ext3 (sparseMatrix/SMOTE/validation)
+- **Metric**: 373 (previous best: 372, delta: +1)
+- **Commit**: 7da1ba1
+- **Notes**: 23 files added across diverse sklearn modules; metric 350→373 on branch (state drift resolved)
 
 ### Iteration 63 — 2026-05-28T08:13:59Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26563001601)
 
