@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-28T12:00:00Z |
-| Iteration Count | 64 |
-| Best Metric | 373 |
+| Last Run | 2026-05-28T14:00:00Z |
+| Iteration Count | 65 |
+| Best Metric | 372 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -93,6 +93,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 65 — 2026-05-28T14:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26598061677)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 22 new sklearn ports: linear_model_ext3 (TweedieRegressor/PoissonRegressor/GammaRegressor), cluster_ext8 (SOM/FuzzyCMeans/GaussianMixtureExt), ensemble_ext6 (RotationForestClassifier), decomp_ext6 (CURDecomposition/MiniBatchDictionaryLearning), metrics_ext6 (averagePrecisionScore/cohensKappa/balancedAccuracy), preprocessing_ext8 (MaxAbsScaler/KBinsDiscretizerExt), model_selection_ext3 (BayesianOptimizationCV/SuccessiveHalving), feature_sel_ext7 (ReliefF/MRMR/Boruta), nn_ext5 (LayerNorm/MultiHeadAttention/LSTM/GRU/Transformer), pipeline_ext3 (CachedPipeline/TransformerPipeline), impute_ext6 (IterativeImputer/MatrixCompletion/KNNImputerExt), datasets_ext4 (makeTimeSeries/makeAnomalyDetection), inspection_ext4 (LIME/integratedGradients/SHAP), multioutput_ext5 (MultiOutputRegressorExt/ClassifierChain), calibration_ext3 (TemperatureScaling/BetaCalibration), utils_ext3 (shuffle/resample/sparse utils), manifold_ext6 (DiffusionMaps/ForceDirected/SphericalMDS), svm_ext7 (SVRKernel/RankingSVM), semi_supervised_ext6 (MeanTeacher/TemporalEnsembling), gp_ext6 (SpectralMixture/NNKernel), neighbors_ext7 (ANN/ProductQuantizer/NearestCentroid), tree_ext5 (ObliqueDecisionTree/PatchExtractor/RandomPatches)
+- **Metric**: 372 (previous best: 350 actual on branch, delta: +22)
+- **Commit**: 6491099
+- **Notes**: State drift from iters 62-64 resolved; actual branch count was 350, now 372
 
 ### Iteration 64 — 2026-05-28T12:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26579891205)
 
