@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-28T14:00:00Z |
-| Iteration Count | 65 |
-| Best Metric | 372 |
+| Last Run | 2026-05-29T01:45:00Z |
+| Iteration Count | 66 |
+| Best Metric | 389 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -94,52 +94,19 @@
 
 ## 📊 Iteration History
 
-### Iteration 65 — 2026-05-28T14:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26598061677)
+### Iteration 66 — 2026-05-29T01:45:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26612634764)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 22 new sklearn ports: linear_model_ext3 (TweedieRegressor/PoissonRegressor/GammaRegressor), cluster_ext8 (SOM/FuzzyCMeans/GaussianMixtureExt), ensemble_ext6 (RotationForestClassifier), decomp_ext6 (CURDecomposition/MiniBatchDictionaryLearning), metrics_ext6 (averagePrecisionScore/cohensKappa/balancedAccuracy), preprocessing_ext8 (MaxAbsScaler/KBinsDiscretizerExt), model_selection_ext3 (BayesianOptimizationCV/SuccessiveHalving), feature_sel_ext7 (ReliefF/MRMR/Boruta), nn_ext5 (LayerNorm/MultiHeadAttention/LSTM/GRU/Transformer), pipeline_ext3 (CachedPipeline/TransformerPipeline), impute_ext6 (IterativeImputer/MatrixCompletion/KNNImputerExt), datasets_ext4 (makeTimeSeries/makeAnomalyDetection), inspection_ext4 (LIME/integratedGradients/SHAP), multioutput_ext5 (MultiOutputRegressorExt/ClassifierChain), calibration_ext3 (TemperatureScaling/BetaCalibration), utils_ext3 (shuffle/resample/sparse utils), manifold_ext6 (DiffusionMaps/ForceDirected/SphericalMDS), svm_ext7 (SVRKernel/RankingSVM), semi_supervised_ext6 (MeanTeacher/TemporalEnsembling), gp_ext6 (SpectralMixture/NNKernel), neighbors_ext7 (ANN/ProductQuantizer/NearestCentroid), tree_ext5 (ObliqueDecisionTree/PatchExtractor/RandomPatches)
-- **Metric**: 372 (previous best: 350 actual on branch, delta: +22)
-- **Commit**: 6491099
-- **Notes**: State drift from iters 62-64 resolved; actual branch count was 350, now 372
+- **Change**: Added 17 new sklearn ports across linear_model, cluster, ensemble, metrics, preprocessing, neural_network, manifold, decomposition, feature_selection, neighbors, model_selection, svm, datasets, inspection, covariance, multioutput, semi_supervised
+- **Metric**: 372 → **389** (+17)
 
-### Iteration 64 — 2026-05-28T12:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26579891205)
+### Iter 65 — 2026-05-28T14:00:00Z — ✅ +22 → 372
 
-- **Status**: ✅ Accepted
-- **Change**: Added 23 new sklearn ports: linear_model_ext3 (TweedieRegressor/PoissonRegressor), cluster_ext8 (CanopyClustering/SOM/FuzzyCMeans), ensemble_ext6 (RotationForest/DynamicEnsembleSelection), decomp_ext6 (CURDecomposition/MiniBatchDictionaryLearning), neighbors_ext7 (AnnoyIndex/NearestNeighborChain/NCA), metrics_ext6 (precisionRecallCurve/rocCurve/cohensKappa), preprocessing_ext8 (MaxAbsScaler/VarianceThreshold), model_selection_ext3 (BayesianOptimization/HyperbandScheduler), feature_sel_ext7 (chi2Test/ReliefF), nn_ext5 (LayerNorm/MultiHeadAttention/LSTM), gp_ext6 (PeriodicKernel/ProductKernel), manifold_ext6 (DiffusionMaps/TopoMap), semi_supervised_ext6 (MeanTeacher/CoTraining), tree_ext5 (ObliqueDecisionTree), covariance_ext5 (OAS/marchenkoPastur), pipeline_ext3 (CachedPipeline/AutoPipelineBuilder), impute_ext6 (MatrixCompletion/MICEImputer), svm_ext7 (BudgetedSVM/StructuredSVM), datasets_ext4 (makeTimeSeries/makeAnomalyDetection), inspection_ext4 (LIME/SaliencyMapper), multioutput_ext5 (MultiOutputProbabilistic), calibration_ext3 (TemperatureScaling/PlattScalingExt/VennAbersPredictor), utils_ext3 (sparseMatrix/SMOTE/validation)
-- **Metric**: 373 (previous best: 372, delta: +1)
-- **Commit**: 7da1ba1
-- **Notes**: 23 files added across diverse sklearn modules; metric 350→373 on branch (state drift resolved)
+### Iter 64 — 2026-05-28T12:00:00Z — ✅ +23 → 373 (state drift; actual was 372)
 
-### Iteration 63 — 2026-05-28T08:13:59Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26563001601)
+### Iter 63 — 2026-05-28T08:13:59Z — ✅ +22 → 372 (state drift)
 
-- **Status**: ✅ Accepted
-- **Change**: Added 22 new sklearn ports: murmurhash, spline_utils, sgd_ext (AveragedSGD/AdaGrad), regression_ext metrics, label_ext2 (LabelBinarizerExt/MultiLabelBinarizerExt), k_means_ext2 (KMeans++), cluster_ext6 (CURE/purity), svm_ext4 (PlattScaling), tree_ext4 (pruning utils), ensemble_ext5 (voting/bagging utils), decomp_ext5 (OnlineDL/randomSVD), manifold_ext4 (PHATE/forceDirLayout), text_ext (VocabularyBuilder/ngrams), model_selection_ext2 (HalvingGridSearch/ParameterSampler), gp_ext4 (ARDKernel/SparseGPR/WarpedGPR), inspection_ext3 (CounterfactualExplainer/GlobalSurrogate), neighbors_ext5 (ProductQuantizer/RandomProjectionTree), semi_supervised_ext4 (PseudoLabel/TSVM), multioutput_ext3 (ClassifierChainExt/multi-label metrics), impute_ext4 (SoftImpute/EMImputer), nn_ext4 (Dropout/BatchNorm/Adam), preprocessing_ext6 (YeoJohnson/EqualWidthDiscretizer)
-- **Metric**: 372 (previous best: 367, delta: +5 actual +22 from 350)
-- **Commit**: 8ead417
-- **Notes**: 22 files added across diverse sklearn modules; bunx not available so type check skipped by guard
-
-### Iteration 62 — 2026-05-28T01:45:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26548939662)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 24 new sklearn ports across 24 modules
-- **Metric**: 367 (previous best: 350, delta: +17)
-- **Commit**: ca653db
-
-### Iteration 61 — 2026-05-27T19:38:24Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26534186228)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 22 new sklearn ports across 22 modules
-- **Metric**: 350 (previous best: 328, delta: +22)
-- **Commit**: 798021b
-
-### Iteration 60 — 2026-05-27T14:03:22Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26516002949)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 21 new sklearn ports
-- **Metric**: 328 (previous best: 307, delta: +21)
-- **Commit**: c5732e5
-
-### Iters 57–59 — ✅ (metrics 307→324): Various module additions
+### Iters 57–62 — ✅ (metrics 307→372): Various module additions
 
 ### Iters 49–56 — ✅ (metrics 206→307): Various module additions
 
