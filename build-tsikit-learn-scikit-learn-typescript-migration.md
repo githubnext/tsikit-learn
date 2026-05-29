@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-29T08:12:31Z |
-| Iteration Count | 67 |
-| Best Metric | 397 |
+| Last Run | 2026-05-29T15:30:00Z |
+| Iteration Count | 68 |
+| Best Metric | 403 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -93,6 +93,12 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 68 — 2026-05-29T15:30:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26641275831)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 31 new sklearn ports across bicluster, calibration, cluster, covariance, cross_decomposition, datasets, decomposition, discriminant_analysis, ensemble, feature_selection, gaussian_process, impute, inspection, isotonic, linear_model, manifold, metrics, mixture, model_selection, multioutput, neighbors, neural_network, pipeline, preprocessing, random_projection, semi_supervised, svm, tree, utils
+- **Metric**: 372 → **403** (+31)
 
 ### Iteration 67 — 2026-05-29T08:12:31Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26626088311)
 
