@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-29T19:43:17Z |
-| Iteration Count | 69 |
-| Best Metric | 435 |
+| Last Run | 2026-05-30T01:31:26Z |
+| Iteration Count | 70 |
+| Best Metric | 433 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -94,6 +94,12 @@
 
 ## 📊 Iteration History
 
+### Iteration 70 — 2026-05-30T01:31:26Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26670710378)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 30 new sklearn ports: MultiTaskLasso/ElasticNet, TweedieRegressor/Poisson/Gamma, LDA, MiniBatchNMF, VariationalGMM, AdaBoost, ObliqueDecisionTree, LIME/anchor/integrated-gradients, BayesSearchCV, KernelDensityNB, PlattScaling, TemperatureScaling, ECE, ECOC, ClassifierChainExt, IsotonicSpline, and more
+- **Metric**: 403 → **433** (+30)
+
 ### Iteration 69 — 2026-05-29T19:43:17Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26658410473)
 
 - **Status**: ✅ Accepted
@@ -106,25 +112,7 @@
 - **Change**: Added 31 new sklearn ports across bicluster, calibration, cluster, covariance, cross_decomposition, datasets, decomposition, discriminant_analysis, ensemble, feature_selection, gaussian_process, impute, inspection, isotonic, linear_model, manifold, metrics, mixture, model_selection, multioutput, neighbors, neural_network, pipeline, preprocessing, random_projection, semi_supervised, svm, tree, utils
 - **Metric**: 372 → **403** (+31)
 
-### Iteration 67 — 2026-05-29T08:12:31Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26626088311)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 25 new sklearn ports across utils, linear_model, preprocessing, metrics, cluster, decomposition, feature_selection, neighbors, svm, ensemble, gaussian_process, tree, model_selection, inspection, neural_network, semi_supervised, manifold, multioutput, pipeline, calibration, covariance, cross_decomposition, random_projection, discriminant_analysis
-- **Metric**: 397 (previous best: 389, delta: +8 net from recorded; +25 actual new files from 372)
-
-### Iteration 66 — 2026-05-29T01:45:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26612634764)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 17 new sklearn ports across linear_model, cluster, ensemble, metrics, preprocessing, neural_network, manifold, decomposition, feature_selection, neighbors, model_selection, svm, datasets, inspection, covariance, multioutput, semi_supervised
-- **Metric**: 372 → **389** (+17)
-
-### Iter 65 — 2026-05-28T14:00:00Z — ✅ +22 → 372
-
-### Iter 64 — 2026-05-28T12:00:00Z — ✅ +23 → 373 (state drift; actual was 372)
-
-### Iter 63 — 2026-05-28T08:13:59Z — ✅ +22 → 372 (state drift)
-
-### Iters 57–62 — ✅ (metrics 307→372): Various module additions
+### Iters 57–67 — ✅ (metrics 307→403): Various module additions across all sklearn modules
 
 ### Iters 49–56 — ✅ (metrics 206→307): Various module additions
 
