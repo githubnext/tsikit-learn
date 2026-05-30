@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-30T01:31:26Z |
-| Iteration Count | 70 |
-| Best Metric | 433 |
+| Last Run | 2026-05-30T07:48:42Z |
+| Iteration Count | 71 |
+| Best Metric | 422 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -93,6 +93,12 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 71 — 2026-05-30T07:48:42Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26678453086)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 19 new files: IRLSRegressor, PolynomialRidge, OnlineGDRegressor, AdamLinearRegressor, OrthoMatchingPursuitFull, FuzzyCMeans, stability/MRMR/sequential feature selection, SVDD, MultiClassSVM, time-series CV, RobustPCA/DictionaryLearning, RandomProjectionANN/CosineLSH, HotDeckImputer/MICEImputer, WeightedFeatureUnion/CachedPipeline, LTSAEmbedding/DiffusionMaps, TylerScatter/GerberStatistic, OPLS, SparseGPRegressor/kernels, Conv1D/BatchNorm/Dropout/ResidualBlock, BoxCoxTransformer/InteractionFeatures/TargetMeanEncoder, and more metrics
+- **Metric**: 403 → **422** (+19)
 
 ### Iteration 70 — 2026-05-30T01:31:26Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26670710378)
 
