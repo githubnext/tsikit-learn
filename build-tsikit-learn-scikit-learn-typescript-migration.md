@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-30T07:48:42Z |
-| Iteration Count | 71 |
-| Best Metric | 422 |
+| Last Run | 2026-05-30T13:40:06Z |
+| Iteration Count | 72 |
+| Best Metric | 429 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -93,6 +93,12 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 72 — 2026-05-30T13:40:06Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26684872585)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 26 new sklearn ports: TheilSenRegressor/RANSACRegressor, QuantileTransformerExt/RobustScalerExt/MaxAbsScaler, balancedAccuracy/topKAccuracy/hammingLoss/zeroOneLoss/jaccardScore/cohensKappa/brierScore/d2Tweedie, silhouetteScoreExt/calinskiHarabasz/daviesBouldin/GapStatistic, FactorAnalysis/LDA, HalvingGridSearchCV/PermutationImportance, chi2Ext/SelectFwe/VarianceThresholdExt, NearestNeighborsGraph/LocalOutlierFactorExt/RadiusNeighborsClassifierExt, OneClassSVM/SVCExt, IsolationForestExt/StackingClassifierExt, attention/MultiHeadAttention/LayerNorm, PHATE/TopoMap, SpectralMixture/ArcCosine/DeepGPRegressor, OASCovariance/LedoitWolfExt/MinCovDetExt, ChainedEquationImputer/SoftImpute, SelectivePipeline/HeterogeneousEnsemblePipeline, TSVM/FlexCon, ObliqueDecisionTreeExt/costComplexityPruning, MultiLabelClassifier/RegressorChainExt, ICE/partialDep2D/shapInteraction/Counterfactual, computeSampleWeightExt/bsplineBasis/multivariateNormal/RunningStats, OnlineMultinomialNB/NegationNB, NIPALS/CCAExt, pava/monotoneCubicInterpolant/SplineIsotonicRegression, StudentTMixture, OutputCodeClassifierExt/OneVsOneClassifierExt. Note: CI pre-existing failure (diagnostics.ts syntax error unrelated to our changes).
+- **Metric**: 403 → **429** (+26)
 
 ### Iteration 71 — 2026-05-30T07:48:42Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26678453086)
 
