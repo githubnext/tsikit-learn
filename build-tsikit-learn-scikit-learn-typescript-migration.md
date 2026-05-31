@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-30T17:00:00Z |
-| Iteration Count | 73 |
-| Best Metric | 451 |
+| Last Run | 2026-05-30T20:00:00Z |
+| Iteration Count | 74 |
+| Best Metric | 447 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -93,6 +93,12 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 74 — 2026-05-30T20:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26700106454)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 18 new sklearn port files across all modules: preprocessing (SplineTransformerMultivariate, TargetMeanEncoder, WoEEncoder), neural network (Conv1DLayer, MaxPooling1D, GlobalAveragePooling1D, SpatialDropout1D, FlattenLayer, DenseLayer), metrics (dPrime, sensitivitySpecificity, matthewsCorrCoef2, topKAccuracy, gMean, youdenJ, hingeLoss, meanPoissonDeviance, meanGammaDeviance), feature selection (ReliefF, CMIMSelector, JMISelector), decomposition (PLSDiscriminantAnalysis, NonnegativeMatrixFactorizationMU), semi-supervised (PseudoLabelClassifier, FlexibleMixedLabelPropagation), neighbors (ApproximateNearestNeighbors, CoverTree, NeighborhoodComponentsAnalysis), covariance (OASCovariance, ScaledRobustCovariance, LedoitWolfLemma), manifold (DiffusionMap, CurvilinearComponentAnalysis, SampledMDS), inspection (IntegratedGradients, SAGEValues, ModelEffectsAnalyzer), calibration (TemperatureScaling, HistogramBinningCalibration, DirichletCalibration, VennABERSCalibrator), cluster (MiniBatchDBSCAN, ConstrainedKMeans, FORELClustering), linear_model (SplineRegression, GompertzRegression, RobustLinearRegression, StepwiseRegression), model_selection (HalvingRandomSearchCV, StratifiedShuffleSplit, PredefinedSplit), mixture (CategoricalMixture, MultinomialMixture, VonMisesMixture), datasets (makeMultilabelClassification, makeFriedman1/2/3, makeLowRankMatrix, makeBiclusters)
+- **Metric**: 429 → **447** (+18)
 
 ### Iteration 73 — 2026-05-30T17:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26692681552)
 
