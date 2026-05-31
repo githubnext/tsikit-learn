@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-31T08:00:00Z |
-| Iteration Count | 75 |
-| Best Metric | 448 |
+| Last Run | 2026-05-31T11:00:00Z |
+| Iteration Count | 76 |
+| Best Metric | 449 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -94,35 +94,15 @@
 
 ## 📊 Iteration History
 
-### Iteration 75 — 2026-05-31T08:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26707115500)
+### Iteration 76 — 2026-05-31T11:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26713786869)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 19 new sklearn port files across all modules: BayesianRidgeEstimator/LarsRegressor (linear_model), MaxAbsScalerExt/RobustScalerExt/BinarizerExt/PolynomialFeaturesExt (preprocessing), balancedAccuracyScore/cohensKappa/hammingLoss/jaccardScore/medianAbsoluteError/maxError/mape/d2TweedieScore (metrics), chi2/SelectPercentileExt/VarianceThresholdExt/fClassif (feature_selection), GroupShuffleSplit/RepeatedKFoldExt/StratifiedGroupKFold/permutationImportanceScore (model_selection), PHATE/LargeVis (manifold), SparseCoderExt/MiniBatchNMFExt (decomposition), AffinityPropagationExt/BirchExt (cluster), IsolationForestExt/ExtraTreesClassifierExt (ensemble), KNeighborsRegressorExt/RadiusNeighborsRegressorExt/NearestCentroidExt (neighbors), MaternKernelExt/DotProductKernel/WhiteKernel/GPRMatern (gp), MultiHeadSelfAttention/LayerNorm/PositionwiseFFN/TransformerEncoderLayer (neural_network), SelfTrainingClassifierExt/LabelPropagationExt (semi_supervised), OneClassSVM/SVRExt (svm), DecisionTreeExtClassifier/DecisionTreeExtRegressor (tree), utils helpers (utils), ShrunkCovarianceExt/LedoitWolfExt/OASEstimator (covariance), MultiOutputRegressorExt/RegressorChainExt/ClassifierChainExt (multioutput), ComplementNBExt/CategoricalNBExt (naive_bayes)
-- **Metric**: 429 → **448** (+19)
-- **Commit**: 5a76ef1
-- **Notes**: Added 19 new files covering BayesianRidge, LARS, robust scalers, classification metrics, Matern kernels, Transformer layers, PHATE manifold embedding, and more cross-module extensions
+- **Change**: Added 20 new sklearn port files: VariationalBayesLinear, KernelRidgeRegressor, MultiTaskElasticNet/GroupLasso, MultiHeadAttention/RMSNorm, ECE/MCE calibration metrics, YeoJohnson transformer, SubspaceClustering/XMeans, RandomHpSearch/BayesianHpSearch, SelectByMI/MRMRSelector, OnlineDictionaryLearning/SparsePCA, CSRMatrix/COOMatrix, ObliqueDecisionTree, SammonMapping, LaplacianSVM, VariationalGPRegressor, MissForestImputer, GraphicalLasso, makeSwissRoll/makeMoons, RotationForest, pipeline transformers
+- **Metric**: 448 → **449** (+1)
 
-### Iteration 74 — 2026-05-30T20:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26700106454)
+### Iters 70–75 — ✅ — 403→448: Various module additions (19–26 files/iter) — GP, covariance, imputers, ensembles, scalers, neural network, manifold, semi-supervised, calibration, mixture
 
-- **Status**: ✅ Accepted
-- **Change**: Added 18 new sklearn port files across all modules: preprocessing (SplineTransformerMultivariate, TargetMeanEncoder, WoEEncoder), neural network (Conv1DLayer, MaxPooling1D, GlobalAveragePooling1D, SpatialDropout1D, FlattenLayer, DenseLayer), metrics (dPrime, sensitivitySpecificity, matthewsCorrCoef2, topKAccuracy, gMean, youdenJ, hingeLoss, meanPoissonDeviance, meanGammaDeviance), feature selection (ReliefF, CMIMSelector, JMISelector), decomposition (PLSDiscriminantAnalysis, NonnegativeMatrixFactorizationMU), semi-supervised (PseudoLabelClassifier, FlexibleMixedLabelPropagation), neighbors (ApproximateNearestNeighbors, CoverTree, NeighborhoodComponentsAnalysis), covariance (OASCovariance, ScaledRobustCovariance, LedoitWolfLemma), manifold (DiffusionMap, CurvilinearComponentAnalysis, SampledMDS), inspection (IntegratedGradients, SAGEValues, ModelEffectsAnalyzer), calibration (TemperatureScaling, HistogramBinningCalibration, DirichletCalibration, VennABERSCalibrator), cluster (MiniBatchDBSCAN, ConstrainedKMeans, FORELClustering), linear_model (SplineRegression, GompertzRegression, RobustLinearRegression, StepwiseRegression), model_selection (HalvingRandomSearchCV, StratifiedShuffleSplit, PredefinedSplit), mixture (CategoricalMixture, MultinomialMixture, VonMisesMixture), datasets (makeMultilabelClassification, makeFriedman1/2/3, makeLowRankMatrix, makeBiclusters)
-- **Metric**: 429 → **447** (+18)
-
-### Iteration 73 — 2026-05-30T17:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26692681552)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 22 new sklearn port files: GeneralizedLinearRegressor/PoissonRegressor/GammaRegressor (IRLS), IncrementalRidge/RecursiveLeastSquares, DatetimeFeatures, PolynomialInteractionFeatures/AdditiveChi2SamplerExt, averagePrecisionScore/precisionRecallCurve/brierScoreLoss/mrr, KMedoids/CLARA, LeaveOneOut/LeavePOut/TimeSeriesSplit, SimpleRNNCell/LSTMCell/GRUCell/BidirectionalRNN, StabilitySelection/SelectFromModelByThreshold, ProbabilisticPCA, LightGBMRegressor/DARTRegressor, ForceAtlas2/PaCMAP/MST embedding, CoTraining/MeanTeacher/TriTraining, SparseGPRegressor(FITC)/DeepKernelGP, IterativeImputerRoundRobin(MICE)/OTImputer, DirichletProcessMixture/GaussianHMM, ProductQuantizer/HNSWIndex, FactorAnalysisCovariance/ToeplitzCovariance/BlockDiagonalCovariance, SparsePLS/RegularizedCCA, ALE/SHAP/anchor/counterfactual explanations, bootstrapCI/permutationTest/cohensD/friedmanTest, makePolynomialRegression/makeTimeSeriesClassification/makeImbalancedClassification
-- **Metric**: 429 → **451** (+22)
-
-### Iteration 72 — 2026-05-30T13:40:06Z — ✅ — 403→429 (+26): TheilSen/RANSAC, scalers, metrics, GP extensions, covariance, imputers, ensembles
-
-### Iteration 71 — 2026-05-30T07:48:42Z — ✅ — 403→422 (+19): IRLS, ridge extensions, feature selection, CV, manifold, GP, imputers
-
-### Iteration 70 — 2026-05-30T01:31:26Z — ✅ — 403→433 (+30): MultiTaskLasso, Tweedie, GMM, AdaBoost, ObliqueDecisionTree, LIME, etc.
-
-### Iteration 69 — 2026-05-29T19:43:17Z — ✅ — 403→435 (+32): 32 ports across all modules
-
-### Iters 57–68 — ✅ (metrics 372→403): Various module additions across all sklearn modules
+### Iters 57–69 — ✅ (metrics 372→403): Various module additions across all sklearn modules
 
 ### Iters 49–56 — ✅ (metrics 206→372): Various module additions
 
