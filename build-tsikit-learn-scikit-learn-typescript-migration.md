@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-05-30T20:00:00Z |
-| Iteration Count | 74 |
-| Best Metric | 447 |
+| Last Run | 2026-05-31T08:00:00Z |
+| Iteration Count | 75 |
+| Best Metric | 448 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -93,6 +93,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 75 — 2026-05-31T08:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26707115500)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 19 new sklearn port files across all modules: BayesianRidgeEstimator/LarsRegressor (linear_model), MaxAbsScalerExt/RobustScalerExt/BinarizerExt/PolynomialFeaturesExt (preprocessing), balancedAccuracyScore/cohensKappa/hammingLoss/jaccardScore/medianAbsoluteError/maxError/mape/d2TweedieScore (metrics), chi2/SelectPercentileExt/VarianceThresholdExt/fClassif (feature_selection), GroupShuffleSplit/RepeatedKFoldExt/StratifiedGroupKFold/permutationImportanceScore (model_selection), PHATE/LargeVis (manifold), SparseCoderExt/MiniBatchNMFExt (decomposition), AffinityPropagationExt/BirchExt (cluster), IsolationForestExt/ExtraTreesClassifierExt (ensemble), KNeighborsRegressorExt/RadiusNeighborsRegressorExt/NearestCentroidExt (neighbors), MaternKernelExt/DotProductKernel/WhiteKernel/GPRMatern (gp), MultiHeadSelfAttention/LayerNorm/PositionwiseFFN/TransformerEncoderLayer (neural_network), SelfTrainingClassifierExt/LabelPropagationExt (semi_supervised), OneClassSVM/SVRExt (svm), DecisionTreeExtClassifier/DecisionTreeExtRegressor (tree), utils helpers (utils), ShrunkCovarianceExt/LedoitWolfExt/OASEstimator (covariance), MultiOutputRegressorExt/RegressorChainExt/ClassifierChainExt (multioutput), ComplementNBExt/CategoricalNBExt (naive_bayes)
+- **Metric**: 429 → **448** (+19)
+- **Commit**: 5a76ef1
+- **Notes**: Added 19 new files covering BayesianRidge, LARS, robust scalers, classification metrics, Matern kernels, Transformer layers, PHATE manifold embedding, and more cross-module extensions
 
 ### Iteration 74 — 2026-05-30T20:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26700106454)
 
