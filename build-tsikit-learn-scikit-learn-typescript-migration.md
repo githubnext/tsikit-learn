@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-03T08:36:00Z |
-| Iteration Count | 79 |
-| Best Metric | 469 |
+| Last Run | 2026-06-03T14:49:26Z |
+| Iteration Count | 80 |
+| Best Metric | 490 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -94,6 +94,13 @@
 
 ## 📊 Iteration History
 
+### Iteration 80 — 2026-06-03T15:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26891143315)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 21 new sklearn port files across multiple modules: cluster (cluster_ext12: SOMClustering/CanopyClustering, cluster_ext13: OPTICS/MeanShift/AffinityPropagation), datasets (datasets_ext8: makeCheckerboard/makeSpirals/makeTimeSeries), decomposition (decomposition_ext2: FastICA/SparseCoder, decomposition_ext3: NMFMultiplicative/PLSA/OnlineLDA), ensemble (ensemble_ext11: AdaBoostStump, ensemble_ext12: XGBoostRegressor/XGBoostClassifier), feature_selection (feature_sel_ext12: ReliefF/CMIM), inspection (inspection_ext10: FeatureCorrelationAnalyzer/ALEPlot), linear_model (linear_model_ext9: TweedieRegressor/PoissonRegressor, linear_model_ext10: BayesianRidgeRegression/ElasticNetCD/HuberRegressor), manifold (manifold_ext11: LaplacianEigenmaps/SammonMapping), model_selection (model_selection_ext2: RepeatedKFold/ShuffleSplit/GroupKFold), multioutput (multioutput_ext9: StackingRegressorExt/VotingRegressorExt), naive_bayes (naive_bayes_ext5: CategoricalNaiveBayes/OutOfCoreGaussianNB), neural_network (neural_network_ext3: Autoencoder/ResidualAutoencoder), preprocessing (preprocessing_ext13: MaxAbsScaler/RobustScalerExt, preprocessing_ext14: KBinsDiscretizer/PowerTransformer/QuantileTransformer), semi_supervised (semi_supervised_ext9: LabelSpreadingExt/SelfTrainingClassifierExt), utils (utils_ext8: entropy/klDivergence/chiSquaredTest, utils_ext9: giniCoefficient/rollingMean/pairwiseCosineSimilarity)
+- **Metric**: 469 → **490** (+21)
+- **Commit**: 4cefa87
+
 ### Iteration 79 — 2026-06-03T08:36:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26873327267)
 
 - **Status**: ✅ Accepted
@@ -101,26 +108,7 @@
 - **Metric**: 445 → **469** (+24)
 - **Commit**: dc52897
 
-### Iteration 78 — 2026-06-03T01:46:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26858686060)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 16 new sklearn port files across 12 modules: bicluster (PlaidBiclustering, FABIABiclustering, DeltaBiclustering), calibration (HistogramBinning, DirichletCalibration, reliabilityDiagram), compose (ColumnDropper, HorizontalConcatenator, LambdaTransformer, SetOutputMixin), covariance (Toeplitz, Banded, HeteroscedasticNoise, NodewisePrecision), cross_decomposition (RegularizedCCA, PLSDiscriminantAnalysis), discriminant_analysis (RegularizedLDA, FlexibleQDA), inspection (hStatistic, ALE), isotonic (WeightedIsotonic, AntitonicRegression), kernel_approximation (TensorSketch, MaternRF), kernel_ridge (MultiOutputKernelRidge, NystromKernelRidge), mixture (VonMisesMixture, PoissonMixture, SkewNormalMixture), multiclass (ECOC, TournamentClassifier, multiclassRocAuc), multioutput (EnsembleRegressorChain), pipeline (MemorizedPipeline, SequentialFeatureSelector, PipelineGridSearch), random_projection (VerySparsePure, CountSketch, RandomFourierFeatures, CirculantBinaryEmbedding)
-- **Metric**: 429 → **445** (+16) *(note: state drift; best_metric was 451 but actual branch had 429)*
-- **Commit**: 6e1678f
-
-### Iteration 77 — 2026-06-03T00:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26722060236)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 22 new sklearn port files across 20+ modules (cluster, datasets, decomposition, ensemble, feature_selection, gaussian_process, impute, inspection, linear_model, manifold, metrics, model_selection, multiclass, multioutput, naive_bayes, neighbors, pipeline, preprocessing, semi_supervised, svm, tree, utils)
-- **Metric**: 429 → **451** (+22) *(note: state drift from 449→429 on branch at start)*
-
-### Iteration 76 — 2026-05-31T11:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26713786869)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 20 new sklearn port files: VariationalBayesLinear, KernelRidgeRegressor, MultiTaskElasticNet/GroupLasso, MultiHeadAttention/RMSNorm, ECE/MCE calibration metrics, YeoJohnson transformer, SubspaceClustering/XMeans, RandomHpSearch/BayesianHpSearch, SelectByMI/MRMRSelector, OnlineDictionaryLearning/SparsePCA, CSRMatrix/COOMatrix, ObliqueDecisionTree, SammonMapping, LaplacianSVM, VariationalGPRegressor, MissForestImputer, GraphicalLasso, makeSwissRoll/makeMoons, RotationForest, pipeline transformers
-- **Metric**: 448 → **449** (+1)
-
-### Iters 70–75 — ✅ — 403→448: Various module additions (19–26 files/iter) — GP, covariance, imputers, ensembles, scalers, neural network, manifold, semi-supervised, calibration, mixture
+### Iters 70–78 — ✅ (metrics 403→469): Various module additions (+10 to +24 files/iter) — bicluster, calibration, compose, covariance, cross_decomposition, discriminant_analysis, GP, imputers, ensembles, scalers, neural network, manifold, semi-supervised, mixture, multiclass, multioutput, pipeline
 
 ### Iters 57–69 — ✅ (metrics 372→403): Various module additions across all sklearn modules
 
