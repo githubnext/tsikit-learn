@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-03T01:46:00Z |
-| Iteration Count | 78 |
-| Best Metric | 445 |
+| Last Run | 2026-06-03T08:36:00Z |
+| Iteration Count | 79 |
+| Best Metric | 469 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -93,6 +93,13 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 79 — 2026-06-03T08:36:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26873327267)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 24 new sklearn port files across 24 modules: cluster (FuzzyCMeans, KMedoids), covariance (FactorModelCovariance, SparseInverseCovariance, IsotropicCovariance), datasets (makeARTimeSeries, makeFriedman1, makeFriedman2, makeHastie10_2), decomposition (RobustPCA, ArchetypalAnalysis, nnls), ensemble (EarlyStoppingGBM, RandomSubspaceEnsemble, WeightedVotingClassifier), feature_selection (StabilitySelection, informationGain, gainRatio), gaussian_process (StudentTProcess, SparseGP, PeriodicKernel), inspection (counterfactualExplanation, anchorExplanation, IntegratedGradients), linear_model (LassoLars, OrthoMatchingPursuit, elasticNetPath), manifold (DiffusionMap, LargeVis), metrics (expectedCalibrationError, demographicParityDifference, equalizedOddsDifference, balancedAccuracyScore), model_selection (StratifiedShuffleSplit, TimeSeriesSplit, permutationImportance), multiclass (DAGClassifier, RandomECOC, NestedDichotomies), multioutput (MonteCarloClassifierChain, MultiTargetGP), naive_bayes (ComplementNB, MixedNB, CalibratedBernoulliNB), neighbors (RandomProjectionANN, CentroidClassifier, knnDensityEstimate), neural_network (BatchNorm, LayerNorm, scaledDotProductAttention, Dropout), pipeline (FeatureUnionExt, ValidatedFunctionTransformer, ColumnSelector), preprocessing (QuantileTransformerExt, ClippingTransformer, InteractionFeatures), random_projection (SRHTProjection, RandomKitchenSinks, TernarySparseProjection), semi_supervised (CoTraining, PseudoLabeling, MeanTeacher), svm (SVMRBF, PlattScaling, hingeLoss), tree (ObliqueDecisionTree, treeShapValues), utils (cohensD, tTest2Sample, mannWhitneyU, bootstrapCI, spearmanRho)
+- **Metric**: 445 → **469** (+24)
+- **Commit**: dc52897
 
 ### Iteration 78 — 2026-06-03T01:46:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26858686060)
 
