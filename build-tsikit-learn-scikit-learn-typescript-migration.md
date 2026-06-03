@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-03T00:00:00Z |
-| Iteration Count | 77 |
-| Best Metric | 451 |
+| Last Run | 2026-06-03T01:46:00Z |
+| Iteration Count | 78 |
+| Best Metric | 445 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -93,6 +93,13 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 78 — 2026-06-03T01:46:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26858686060)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 16 new sklearn port files across 12 modules: bicluster (PlaidBiclustering, FABIABiclustering, DeltaBiclustering), calibration (HistogramBinning, DirichletCalibration, reliabilityDiagram), compose (ColumnDropper, HorizontalConcatenator, LambdaTransformer, SetOutputMixin), covariance (Toeplitz, Banded, HeteroscedasticNoise, NodewisePrecision), cross_decomposition (RegularizedCCA, PLSDiscriminantAnalysis), discriminant_analysis (RegularizedLDA, FlexibleQDA), inspection (hStatistic, ALE), isotonic (WeightedIsotonic, AntitonicRegression), kernel_approximation (TensorSketch, MaternRF), kernel_ridge (MultiOutputKernelRidge, NystromKernelRidge), mixture (VonMisesMixture, PoissonMixture, SkewNormalMixture), multiclass (ECOC, TournamentClassifier, multiclassRocAuc), multioutput (EnsembleRegressorChain), pipeline (MemorizedPipeline, SequentialFeatureSelector, PipelineGridSearch), random_projection (VerySparsePure, CountSketch, RandomFourierFeatures, CirculantBinaryEmbedding)
+- **Metric**: 429 → **445** (+16) *(note: state drift; best_metric was 451 but actual branch had 429)*
+- **Commit**: 6e1678f
 
 ### Iteration 77 — 2026-06-03T00:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26722060236)
 
