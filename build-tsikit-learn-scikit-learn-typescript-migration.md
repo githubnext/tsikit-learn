@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-03T14:49:26Z |
-| Iteration Count | 80 |
-| Best Metric | 490 |
+| Last Run | 2026-06-03T20:04:30Z |
+| Iteration Count | 81 |
+| Best Metric | 485 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -93,6 +93,13 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 81 — 2026-06-03T20:04:30Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26909769037)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 16 new sklearn port files across 16 underrepresented modules: kernel_ridge (NystromKernelRidgeCV), bicluster (PlaidModel, ChengChurch), calibration (TemperatureScalingExt, BetaCalibrationExt, ECE/MCE), compose (HeterogeneousFeatureUnion, WeightedColumnTransformer), discriminant_analysis (RegularizedLDAExt, QuadraticDiscriminantAnalysisExt), mixture (DirichletProcessMixture, VonMisesMixtureExt), multiclass (ClassHierarchyClassifier, EnsembleOVR), cross_decomposition (KernelCCA, MultiviewCCA), impute (IterativeImputerExt, GAINImputer), multioutput (MultiOutputEnsembleRegressor, ConditionalClassifierChain), feature_extraction (TfidfVectorizerExt with n-grams, BM25Vectorizer), random_projection (CountSketch, Fastfood), naive_bayes (NegativeBinomialNB, OnlineBernoulliNB), pipeline (CachedPipeline, BranchingPipeline, ConditionalTransformer), isotonic (MultiDimensionalIsotonic, IsotonicRegressionCV), kernel_approximation (OrthogonalRandomFeatures, PolynomialCountSketch, LaplacianKernelSampler)
+- **Metric**: 469 → **485** (+16)
+- **Commit**: 55d468a
 
 ### Iteration 80 — 2026-06-03T15:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26891143315)
 
