@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-03T20:04:30Z |
-| Iteration Count | 81 |
-| Best Metric | 485 |
+| Last Run | 2026-06-04T01:48:08Z |
+| Iteration Count | 82 |
+| Best Metric | 483 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -94,26 +94,15 @@
 
 ## 📊 Iteration History
 
-### Iteration 81 — 2026-06-03T20:04:30Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26909769037)
+### Iteration 82 — 2026-06-04T01:48:08Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26924902459)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 16 new sklearn port files across 16 underrepresented modules: kernel_ridge (NystromKernelRidgeCV), bicluster (PlaidModel, ChengChurch), calibration (TemperatureScalingExt, BetaCalibrationExt, ECE/MCE), compose (HeterogeneousFeatureUnion, WeightedColumnTransformer), discriminant_analysis (RegularizedLDAExt, QuadraticDiscriminantAnalysisExt), mixture (DirichletProcessMixture, VonMisesMixtureExt), multiclass (ClassHierarchyClassifier, EnsembleOVR), cross_decomposition (KernelCCA, MultiviewCCA), impute (IterativeImputerExt, GAINImputer), multioutput (MultiOutputEnsembleRegressor, ConditionalClassifierChain), feature_extraction (TfidfVectorizerExt with n-grams, BM25Vectorizer), random_projection (CountSketch, Fastfood), naive_bayes (NegativeBinomialNB, OnlineBernoulliNB), pipeline (CachedPipeline, BranchingPipeline, ConditionalTransformer), isotonic (MultiDimensionalIsotonic, IsotonicRegressionCV), kernel_approximation (OrthogonalRandomFeatures, PolynomialCountSketch, LaplacianKernelSampler)
-- **Metric**: 469 → **485** (+16)
-- **Commit**: 55d468a
+- **Change**: Added 14 new sklearn port files and fixed 150+ orphaned module exports not referenced in index.ts files: kernel_ridge (NystromKernelRidgeExt, LocalKernelRegressor, OnlineKernelRidge), bicluster (ConsensusBiclustering, bicluster evaluation metrics), calibration (VennPredictor, SplitConformalRegressor), compose (TargetEncoderTransformer, FeatureAgglomerationTransformer), isotonic (PiecewiseIsotonicRegressor, antitonicRegression), discriminant_analysis (OASLDAClassifier, FlexibleDiscriminantAnalysis), cross_decomp (RegularizedPLS, SIMPLSRegressor), mixture (ExponentialMixture, GammaMixture), multioutput (MultiOutputQuantileRegressor), pipeline (DebugPipelineStep, TypedPipeline, VariabilityThresholdStep), semi_supervised (EntropyRegularization, TriTraining)
+- **Metric**: 469 → **483** (+14)
+- **Commit**: 596900f
+- **Notes**: Also fixed many index files that were missing exports for existing files, enabling proper module re-export.
 
-### Iteration 80 — 2026-06-03T15:00:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26891143315)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 21 new sklearn port files across multiple modules: cluster (cluster_ext12: SOMClustering/CanopyClustering, cluster_ext13: OPTICS/MeanShift/AffinityPropagation), datasets (datasets_ext8: makeCheckerboard/makeSpirals/makeTimeSeries), decomposition (decomposition_ext2: FastICA/SparseCoder, decomposition_ext3: NMFMultiplicative/PLSA/OnlineLDA), ensemble (ensemble_ext11: AdaBoostStump, ensemble_ext12: XGBoostRegressor/XGBoostClassifier), feature_selection (feature_sel_ext12: ReliefF/CMIM), inspection (inspection_ext10: FeatureCorrelationAnalyzer/ALEPlot), linear_model (linear_model_ext9: TweedieRegressor/PoissonRegressor, linear_model_ext10: BayesianRidgeRegression/ElasticNetCD/HuberRegressor), manifold (manifold_ext11: LaplacianEigenmaps/SammonMapping), model_selection (model_selection_ext2: RepeatedKFold/ShuffleSplit/GroupKFold), multioutput (multioutput_ext9: StackingRegressorExt/VotingRegressorExt), naive_bayes (naive_bayes_ext5: CategoricalNaiveBayes/OutOfCoreGaussianNB), neural_network (neural_network_ext3: Autoencoder/ResidualAutoencoder), preprocessing (preprocessing_ext13: MaxAbsScaler/RobustScalerExt, preprocessing_ext14: KBinsDiscretizer/PowerTransformer/QuantileTransformer), semi_supervised (semi_supervised_ext9: LabelSpreadingExt/SelfTrainingClassifierExt), utils (utils_ext8: entropy/klDivergence/chiSquaredTest, utils_ext9: giniCoefficient/rollingMean/pairwiseCosineSimilarity)
-- **Metric**: 469 → **490** (+21)
-- **Commit**: 4cefa87
-
-### Iteration 79 — 2026-06-03T08:36:00Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26873327267)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 24 new sklearn port files across 24 modules: cluster (FuzzyCMeans, KMedoids), covariance (FactorModelCovariance, SparseInverseCovariance, IsotropicCovariance), datasets (makeARTimeSeries, makeFriedman1, makeFriedman2, makeHastie10_2), decomposition (RobustPCA, ArchetypalAnalysis, nnls), ensemble (EarlyStoppingGBM, RandomSubspaceEnsemble, WeightedVotingClassifier), feature_selection (StabilitySelection, informationGain, gainRatio), gaussian_process (StudentTProcess, SparseGP, PeriodicKernel), inspection (counterfactualExplanation, anchorExplanation, IntegratedGradients), linear_model (LassoLars, OrthoMatchingPursuit, elasticNetPath), manifold (DiffusionMap, LargeVis), metrics (expectedCalibrationError, demographicParityDifference, equalizedOddsDifference, balancedAccuracyScore), model_selection (StratifiedShuffleSplit, TimeSeriesSplit, permutationImportance), multiclass (DAGClassifier, RandomECOC, NestedDichotomies), multioutput (MonteCarloClassifierChain, MultiTargetGP), naive_bayes (ComplementNB, MixedNB, CalibratedBernoulliNB), neighbors (RandomProjectionANN, CentroidClassifier, knnDensityEstimate), neural_network (BatchNorm, LayerNorm, scaledDotProductAttention, Dropout), pipeline (FeatureUnionExt, ValidatedFunctionTransformer, ColumnSelector), preprocessing (QuantileTransformerExt, ClippingTransformer, InteractionFeatures), random_projection (SRHTProjection, RandomKitchenSinks, TernarySparseProjection), semi_supervised (CoTraining, PseudoLabeling, MeanTeacher), svm (SVMRBF, PlattScaling, hingeLoss), tree (ObliqueDecisionTree, treeShapValues), utils (cohensD, tTest2Sample, mannWhitneyU, bootstrapCI, spearmanRho)
-- **Metric**: 445 → **469** (+24)
-- **Commit**: dc52897
+### Iters 79–81 — ✅ (metrics 445→485): Various module additions (+16 to +24 files/iter)
 
 ### Iters 70–78 — ✅ (metrics 403→469): Various module additions (+10 to +24 files/iter) — bicluster, calibration, compose, covariance, cross_decomposition, discriminant_analysis, GP, imputers, ensembles, scalers, neural network, manifold, semi-supervised, mixture, multiclass, multioutput, pipeline
 
