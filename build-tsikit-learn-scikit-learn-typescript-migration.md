@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-04T13:54:15Z |
-| Iteration Count | 84 |
-| Best Metric | 483 |
+| Last Run | 2026-06-04T19:38:01Z |
+| Iteration Count | 85 |
+| Best Metric | 501 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -94,10 +94,18 @@
 
 ## 📊 Iteration History
 
+### Iteration 85 — 2026-06-04T19:38:01Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26974938162)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 18 new sklearn port files across 18 modules: linear_model_ext11 (LocallyWeightedRegression, PolynomialRegressionExt, AdaptiveRidgeExt), utils_ext10 (rolling/expanding stats, autocorrelation, EWM, lag features), preprocessing_ext15 (DatetimeFeatureExtractor, Log1pTransformerExt, SqrtTransformerExt, ClipTransformerExt, InteractionFeaturesExt), metrics_ext14 (quadraticWeightedKappa, tweedieMeanDeviance, geometricMeanError, ksTwoSampleStatistic, giniCoefficient, d2PinballScoreExt), ensemble_ext13 (SnapshotEnsembleExt, FeatureWeightedStackingExt, BlendingEnsembleExt), cluster_ext14 (KMedoidsExt, FuzzyCMeansExt, SelfOrganizingMapExt), feature_sel_ext14 (StabilitySelectionExt, CMIMSelectorExt, CorrelationSelectorExt), nn_ext11 (ResNetBlockExt, WideAndDeepExt), model_selection_ext9 (nestedCVScore, permutationTestScoreExt, ThresholdOptimizerExt), datasets_ext10 (makeMultilabelClassificationExt, makeTemporalClustersExt, makeCountRegressionDataExt, makeInteractionDataset), manifold_ext13 (PHATEExt, EncoderManifoldExt), inspection_ext12 (accumulatedLocalEffectsExt, computeICECurvesExt, complexityCurve), decomp_ext12 (OnlineNMFExt, SparseDictionaryLearningExt), neighbors_ext12 (CoverTreeKNNExt, MetricKNNExt, WeightedKNNRegressorExt), svm_ext12 (SVDDExt, PrecomputedKernelSVMExt), covariance_ext9 (SteinShrinkageExt, MinimumVariancePortfolioExt, RegularizedPrecisionExt), impute_ext9 (ModeImputerExt, ForwardFillImputerExt, InterpolationImputerExt, MICEColumnImputerExt), pipeline_ext8 (CachedTransformerExt, ValidationStepExt, LoggingTransformerExt, FeatureExtractionPipelineExt)
+- **Metric**: 483 → **501** (+18)
+- **Commit**: eb0aa02
+- **Notes**: All 18 new files type-check clean (only pre-existing diagnostics.ts error). Resolved naming conflicts with existing exports.
+
 ### Iteration 84 — 2026-06-04T13:54:15Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26956151306)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 14 new sklearn port files across 14 modules: linear_model_ext10 (BayesianRidgeExt, OrthogonalMatchingPursuitCVExt, MultiTaskElasticNetCVExt), utils_ext9 (bootstrapCI, permutationTest, mannWhitneyU, wilcoxonSignedRankTest, kruskalWallis, friedmanTest, leveneTest, cohenD), preprocessing_ext14 (TargetEncoderExt, BinaryEncoderExt, CyclicalEncoderExt, TimeSeriesScalerExt, HashingEncoderExt, PolynomialFeaturesExt), metrics_ext13 (averagePrecisionScore, rocAucScore, precisionRecallCurve, brierScore, concordanceIndex, topKAccuracy, balancedAccuracyScore), ensemble_ext12 (ExtraTreesClassifierExt, ExtraTreesRegressorExt, permutationImportance), cluster_ext13 (SpectralBiClusteringExt, CLARAClusteringExt, OnlineKMeansExt), decomp_ext11 (RobustPCAExt, SparseNMFExt, KernelPCASpectralExt), nn_ext10 (MultiHeadAttentionExt, TransformerEncoderLayerExt, CapsuleLayerExt, SelfNormalizingNetworkExt), feature_sel_ext13 (mrmrSelection, gainRatioSelection, informationValueFeatures, chiSquareFeatureSelection), model_selection_ext8 (BayesianOptimizationExt, timeSeriesSplit, groupTimeSeriesSplit, learningCurve), datasets_ext9 (makeConcentricCircles, makeSpirals, makeCheckerboard, makeAnomalyDataset, makeFriedman1, makeFriedman2, makeLowRankMatrix), inspection_ext11 (kernelSHAPExt, ICE plots, PDP 2D, hStatisticExt, globalSurrogateModel), neighbors_ext (BallTreeExt, LSHApproximateNN, computeDistance), manifold_ext12 (LaplacianEigenmapsExt, ForceDirectedLayoutExt, TriMapExt)
+- **Change**: Added 14 new sklearn port files across 14 modules: linear_model_ext10, utils_ext9, preprocessing_ext14, metrics_ext13, ensemble_ext12, cluster_ext13, decomp_ext11, nn_ext10, feature_sel_ext13, model_selection_ext8, datasets_ext9, inspection_ext11, neighbors_ext, manifold_ext12
 - **Metric**: 469 → **483** (+14) *(Note: state drift corrected — branch baseline was 469)*
 - **Commit**: 4b764ce
 - **Notes**: All 14 new files are type-error-free (only pre-existing diagnostics.ts error excluded).
@@ -105,20 +113,12 @@
 ### Iteration 83 — 2026-06-04T08:22:28Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26939927337)
 
 - **Status**: ✅ Accepted
-- **Change**: Added 12 new sklearn port files: utils_ext8 (array ops), linear_model_ext9 (GLMs: Gamma/Poisson/Tweedie), preprocessing_ext13 (MaxAbsScalerExt, InteractionTransformer, BucketTransformer, GroupMeanEncoder, Winsorizer), metrics_ext12 (MAPE/SMAPE, Huber, Pinball, Tweedie deviance, concordance index), nn_ext9 (Conv1D, LSTM/GRU cells V2, attention), cluster_ext12 (AffinityPropagationExt, SilhouetteAnalyzer, DensityPeaks), ensemble_ext11 (EnsembleSelector, DiversityMeasures, bootstrap CI), decomp_ext10 (MatrixSketchSVD, GradNMF, IncrementalPCAExt), feature_sel_ext12 (ReliefFSelector, FeatureCorrFilter, Gini/Hoyer sparsity), datasets_ext8 (survival, Poisson, graph, time-series data), manifold_ext11 (DiffusionMapsV2, LargeVisExt, PacMapExt), inspection_ext10 (conformal prediction, H-statistic interactions, Sobol sensitivity)
-- **Metric**: 469 → **481** (+12) *(Note: state drift corrected — actual branch baseline was 469, not 483)*
+- **Change**: Added 12 new sklearn port files: utils_ext8, linear_model_ext9, preprocessing_ext13, metrics_ext12, nn_ext9, cluster_ext12, ensemble_ext11, decomp_ext10, feature_sel_ext12, datasets_ext8, manifold_ext11, inspection_ext10
+- **Metric**: 469 → **481** (+12) *(Note: state drift corrected)*
 - **Commit**: aa25a75
-- **Notes**: State drift detected and corrected; actual branch file count was 469 before this iteration.
+- **Notes**: State drift detected and corrected.
 
-### Iteration 82 — 2026-06-04T01:48:08Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26924902459)
-
-- **Status**: ✅ Accepted
-- **Change**: Added 14 new sklearn port files and fixed 150+ orphaned module exports not referenced in index.ts files: kernel_ridge (NystromKernelRidgeExt, LocalKernelRegressor, OnlineKernelRidge), bicluster (ConsensusBiclustering, bicluster evaluation metrics), calibration (VennPredictor, SplitConformalRegressor), compose (TargetEncoderTransformer, FeatureAgglomerationTransformer), isotonic (PiecewiseIsotonicRegressor, antitonicRegression), discriminant_analysis (OASLDAClassifier, FlexibleDiscriminantAnalysis), cross_decomp (RegularizedPLS, SIMPLSRegressor), mixture (ExponentialMixture, GammaMixture), multioutput (MultiOutputQuantileRegressor), pipeline (DebugPipelineStep, TypedPipeline, VariabilityThresholdStep), semi_supervised (EntropyRegularization, TriTraining)
-- **Metric**: 469 → **483** (+14)
-- **Commit**: 596900f
-- **Notes**: Also fixed many index files that were missing exports for existing files, enabling proper module re-export.
-
-### Iters 79–81 — ✅ (metrics 445→485): Various module additions (+16 to +24 files/iter)
+### Iters 79–82 — ✅ (metrics 445→483): Various module additions (+14 to +24 files/iter)
 
 ### Iters 70–78 — ✅ (metrics 403→469): Various module additions (+10 to +24 files/iter) — bicluster, calibration, compose, covariance, cross_decomposition, discriminant_analysis, GP, imputers, ensembles, scalers, neural network, manifold, semi-supervised, mixture, multiclass, multioutput, pipeline
 
