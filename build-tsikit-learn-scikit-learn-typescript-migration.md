@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-04T19:38:01Z |
-| Iteration Count | 85 |
+| Last Run | 2026-06-05T01:37:20Z |
+| Iteration Count | 86 |
 | Best Metric | 501 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -93,6 +93,14 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 86 — 2026-06-05T01:37:20Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26990050840)
+
+- **Status**: ✅ Accepted
+- **Change**: Added 18 new sklearn port files across 18 modules: linear_model_ext11 (LocallyWeightedRegression, PolynomialRidgeRegression, AdaptiveRidge), utils_ext10 (rolling stats, ewmMean, autocorrelation, lagFeatures, expandingMean/Std), preprocessing_ext15 (DatetimeFeatureExtractor, Log1pTransformer, SqrtTransformer, ClipTransformer, InteractionFeatures), metrics_ext14 (quadraticWeightedKappa, tweedieMeanDeviance, geometricMeanError, ksTwoSample, giniCoeff, d2Pinball), ensemble_ext13 (SnapshotEnsemble, FeatureWeightedStacking, BlendingEnsemble), cluster_ext14 (KMedoids, FuzzyCMeans, SOM), feature_sel_ext14 (StabilitySelection, CMIMSelector, CorrelationSelector), nn_ext11 (ResNetBlock, WideAndDeep, AttentionLayer), model_selection_ext9 (nestedCV, permutationTest, ThresholdOptimizer), datasets_ext10 (makeMultilabel, makeTemporal, makeCountRegression, makeInteraction), manifold_ext13 (PHATEExt, EncoderManifold), inspection_ext12 (ALE, ICE curves, complexityCurve), decomp_ext12 (OnlineNMF, SparseDictionaryLearning), neighbors_ext12 (CoverTreeKNN, MetricKNN, WeightedKNNRegressor), svm_ext12 (SVDDExt, PrecomputedKernelSVM), covariance_ext9 (SteinShrinkage, MinVariancePortfolio, RegPrecision), impute_ext9 (ModeImputer, ForwardFill, Interpolation, MICEColumn), pipeline_ext8 (CachedTransformer, ValidationStep, LoggingTransformer, FeatExtractionPipeline)
+- **Metric**: 483 → **501** (+18)
+- **Commit**: ff97175
+- **Notes**: State drift corrected — branch baseline was 483. All 18 new files type-check clean.
 
 ### Iteration 85 — 2026-06-04T19:38:01Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/26974938162)
 
