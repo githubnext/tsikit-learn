@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-07T20:00:00Z |
-| Iteration Count | 95 |
-| Best Metric | 534 |
+| Last Run | 2026-06-08T00:30:00Z |
+| Iteration Count | 96 |
+| Best Metric | 559 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -95,6 +95,10 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 96 — 2026-06-08T00:30:00Z — [Run §27111255056](https://github.com/githubnext/tsikit-learn/actions/runs/27111255056)
+- **Status**: ✅ Accepted | **Metric**: 534 → **559** (best 534→559, +25) | **Commit**: 7fdf11b
+- **Change**: 25 new files across 11 modules: datasets (ext10: time series; ext11: multi-label/SMOTE), utils (ext11: quadrature/orthogonal polynomials; ext12: hypothesis testing), covariance (ext9: Tyler M-estimator; ext10: Wishart/factor/Toeplitz), metrics (ext15: IoU/mAP/nDCG; ext16: concordance/Brier/ECE), preprocessing (ext11: target/count encoding; ext13: time-series; ext15: NLP/TF-IDF; ext16: patch/HOG/DCT), feature_selection (ext10: correlation/Relief/IG; ext12: stability/Lasso/FDR), cluster (ext12: constrained KMeans; ext14: DTW KMeans; ext15: agglomerative/fuzzy c-means/density peaks), decomposition (ext10: prob PCA/sparse RP; ext12: semi/convex NMF), manifold (ext13: diffusion maps; ext14: landmark MDS), neural_network (ext12: residual/dense nets; ext13: VAE/normalizing flows), inspection (ext13: global surrogate/concept-based/SmoothGrad), tree (ext10: gradient boosted trees/extra trees)
 
 ### Iteration 95 — 2026-06-07T20:00:00Z — [Run §27102303143](https://github.com/githubnext/tsikit-learn/actions/runs/27102303143)
 - **Status**: ✅ Accepted | **Metric**: 483 → **534** (best 533→534, +1) | **Commit**: 7989f67
