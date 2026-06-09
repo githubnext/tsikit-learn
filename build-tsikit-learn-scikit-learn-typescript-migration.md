@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-08T14:40:23Z |
-| Iteration Count | 98 |
-| Best Metric | 572 |
+| Last Run | 2026-06-09T08:00:00Z |
+| Iteration Count | 99 |
+| Best Metric | 574 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -95,6 +95,11 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 99 — 2026-06-09T08:00:00Z — [Run §27178044286](https://github.com/githubnext/tsikit-learn/actions/runs/27178044286)
+- **Status**: ✅ Accepted | **Metric**: 534 → **574** (best 572→574, +2 net) | **Commit**: b0f0b21
+- **Change**: 40 new files across 10 modules: feature_extraction (PolynomialFeatureInteraction, CharNGram, BM25, FeatureCrossing, EmbeddingAggregator), bicluster (biclustersConsensusScore, SubspaceCluster, BiclusterMSR, ISA/LAS), calibration (TemperatureScaling, BetaCalibration, SplitConformalPredictor, CrossCalibratedClassifier), compose (PassthroughTransformer, WeightedFeatureUnion, ConditionalTransformer, RegressorChainExt), multiclass (ECOCClassifier, RejectOptionClassifier, MulticlassCalibrationScorer, PluralityVotingClassifier), random_projection (SparseRandomProjection, JohnsonLindenstrauss, CrossPolytopeLSH, SRHTProjection), kernel_ridge (KernelRidgeCV, NystromKernelRidge, MultipleKernelRidge, RecursiveKernelRidge), mixture (DirichletProcessGMM, MixtureOfExperts, DiscreteHMM, SphericalGMM), semi_supervised (S3VMClassifier, LapSVMClassifier, CoTrainingClassifier, MultiViewAgreementClassifier), cluster (KernelKMeans, FuzzyCMeans, DensityPeaksClustering, ConsensusCluster)
+- **Note**: State drift correction again (branch was 534, state claimed 572); 40 new files bring total to 574
 
 ### Iteration 98 — 2026-06-08T14:40:23Z — [Run §27144056111](https://github.com/githubnext/tsikit-learn/actions/runs/27144056111)
 - **Status**: ✅ Accepted | **Metric**: 534 → **572** (best 563→572, +9 net) | **Commit**: 3ef959f
