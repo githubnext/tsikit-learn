@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-15T01:42:42Z |
-| Iteration Count | 114 |
-| Best Metric | 721 |
+| Last Run | 2026-06-15T09:15:00Z |
+| Iteration Count | 115 |
+| Best Metric | 751 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -98,6 +98,11 @@
 ---
 
 ## 📊 Iteration History
+
+### Iteration 115 — 2026-06-15T09:15:00Z — [Run §27534965480](https://github.com/githubnext/tsikit-learn/actions/runs/27534965480)
+- **Status**: ✅ Accepted | **Metric**: 721 → **751** (+30) | **Commit**: 582c26e
+- **Change**: Added 30 new sklearn extension files across 6 modules: cross_decomposition ext8-12 (PLS-DA, CCA diagnostics, multiblock PLS, NIPALS CV, O2PLS), impute ext5/9-12 (hot-deck, EM imputer, iterative regression, group/decay/random imputers), pipeline ext9-13 (cached, branching, parallel, meta, sparse-aware pipelines), semi_supervised ext5/9/12-14 (GMM-EM, contrastive, MixMatch, pseudo-label, VAT), gaussian_process ext5/9/11-13 (warped GP, sparse GP, multi-task GP, Bayesian opt, kernel extensions), kernel_ridge ext15-19 (local KR, regularization path, multi-output KR, online KR, RFF/Nyström KR).
+- **Notes**: Clean iteration (no drift). Filled gaps in modules with fewer extension files.
 
 ### Iteration 114 — 2026-06-15T01:42:42Z — [Run §27519082306](https://github.com/githubnext/tsikit-learn/actions/runs/27519082306)
 - **Status**: ✅ Accepted | **Metric**: 591 → **721** (+130 net; drift recovery) | **Commit**: 2bb8487
