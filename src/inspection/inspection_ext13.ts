@@ -102,7 +102,7 @@ export class LIMEExplainer implements Explainer {
       // Compute kernel weights based on distance
       const weights = perturbedX.map(px => {
         const dist = Math.sqrt(px.reduce((s, v, j) => s + (v - (x[j] ?? 0)) ** 2, 0));
-        return Math.exp(-dist ** 2 / this.kernelWidth ** 2);
+        return Math.exp(-(dist ** 2) / this.kernelWidth ** 2);
       });
       // Weighted linear regression
       const W = new Float64Array(this.nSamples).map((_, i) => weights[i] ?? 0);
