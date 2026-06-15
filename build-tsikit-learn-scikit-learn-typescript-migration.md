@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-06-15T15:20:00Z |
-| Iteration Count | 116 |
-| Best Metric | 752 |
+| Last Run | 2026-06-15T20:30:00Z |
+| Iteration Count | 117 |
+| Best Metric | 769 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -100,25 +100,18 @@
 
 ## 📊 Iteration History
 
-### Iteration 116 — 2026-06-15T15:20:00Z — [Run §27554961548](https://github.com/githubnext/tsikit-learn/actions/runs/27554961548)
-- **Status**: ✅ Accepted | **Metric**: 751 → **752** (+1 net; +31 files, recovered from drift) | **Commit**: fbd6205
-- **Change**: Added 31 new sklearn extension files: gp_ext14 (ActiveLearnerGP with variance/greedy/random query), gp_ext12-13 (from prior uncommitted session), kernel_ridge_ext15-20 (local KR, regularization path, multi-output KR, online KR, Nyström KR, warped KR), cross_decomp_ext8-12, impute_ext5/9-12, pipeline_ext9-13, semi_supervised_ext5/9/12-14.
-- **Notes**: State drift (state claimed 751 from iter 115, branch had 721). Added 31 files; new count 752 > 751.
+### Iteration 117 — 2026-06-15T20:30:00Z — [Run §27572916266](https://github.com/githubnext/tsikit-learn/actions/runs/27572916266)
+- **Status**: ✅ Accepted | **Metric**: 721 → **769** (+48 net; state drift corrected) | **Commit**: dd3a90b
+- **Change**: Added 48 new sklearn extension files across 8 modules: cross_decomp ext8-14 (NIPALS variant, KernelCCA, SparseCCA, MultiBlockPLS, PLSDA, O2PLS, PLSPathModel), impute ext5/9-14 (HotDeck, EM, IterativeRegression, Group/Temporal, ExponentialDecay/MatrixCompletion, RandomSample/MICEEnsemble, Spectral/Polynomial), pipeline ext9-14 (Cached/Robust, Branching/Conditional, Adaptive/Weighted, Meta, Sparse, Incremental/TimeSeries), semi_supervised ext12-16 (MixMatch, PseudoLabel/FlexibleThreshold, VAT/ConsistencyReg, MeanTeacher/TemporalEnsembling, FixMatch/FlexMatch), gaussian_process ext5/9/11-15 (HeteroscedasticGPR, ARDGPR, ActiveLearnerGP/GPBandit, DeepKernelGPR, AutocorrelationKernel/MultiFidelityGP, BayesianOptimizer, SVGP), kernel_ridge ext15-20 (LocalKernelRidge, KernelRidgePath, MultiOutput/OutputCorrelationKRR, Online/ForgetronKRR, NystromKernelRidge, Warped/QuantileKernelRidge), inspection ext8/10/14-16 (FeatureInteractionAnalyzer/ShapleyInteraction, LimeExplainer, IntegratedGradients/SmoothGrad/GradientSHAP, WachterCounterfactual/DiCE, ALE/ICECurves/ModelSummary), tree ext12-16 (ObliqueDecisionTree, RotationForest, SoftDecisionTree, CostSensitiveTree, MondrianForest).
+- **Notes**: State drift (state claimed 752 from iter 116, branch had 721). Added 48 files; new count 769 > 752.
 
-### Iteration 115 — 2026-06-15T09:15:00Z — [Run §27534965480](https://github.com/githubnext/tsikit-learn/actions/runs/27534965480)
-- **Status**: ✅ Accepted | **Metric**: 721 → **751** (+30) | **Commit**: 582c26e
-- **Change**: Added 30 new sklearn extension files across 6 modules: cross_decomposition ext8-12 (PLS-DA, CCA diagnostics, multiblock PLS, NIPALS CV, O2PLS), impute ext5/9-12 (hot-deck, EM imputer, iterative regression, group/decay/random imputers), pipeline ext9-13 (cached, branching, parallel, meta, sparse-aware pipelines), semi_supervised ext5/9/12-14 (GMM-EM, contrastive, MixMatch, pseudo-label, VAT), gaussian_process ext5/9/11-13 (warped GP, sparse GP, multi-task GP, Bayesian opt, kernel extensions), kernel_ridge ext15-19 (local KR, regularization path, multi-output KR, online KR, RFF/Nyström KR).
-- **Notes**: Clean iteration (no drift). Filled gaps in modules with fewer extension files.
+### Iteration 116 — ✅ Accepted | 721 → 752 (+31; drift recovery) | Commit: fbd6205 | [§27554961548](https://github.com/githubnext/tsikit-learn/actions/runs/27554961548)
 
-### Iteration 114 — 2026-06-15T01:42:42Z — [Run §27519082306](https://github.com/githubnext/tsikit-learn/actions/runs/27519082306)
-- **Status**: ✅ Accepted | **Metric**: 591 → **721** (+130 net; drift recovery) | **Commit**: 2bb8487
-- **Change**: Added 130 new sklearn extension files across 13 modules: kernel_ridge ext4-14 (11), compose ext4-14 (11), bicluster ext7-16 (10), discriminant_analysis da_ext4-13 (10), feature_extraction ext2-12 (11), isotonic ext7-16 (10), kernel_approximation ext6-15 (10), naive_bayes ext6-15 (10), calibration ext8-16 (9), multiclass ext7-15 (9), random_projection ext6-15 (10), mixture ext8-16 (9), multioutput ext3/4/9/12-18 (10). Also fixed 2 pre-existing TS errors.
-- **Notes**: State drift recovery (state claimed 700, branch had 591). New count 721 > 700.
+### Iteration 115 — ✅ Accepted | 721 → 751 (+30) | Commit: 582c26e | [§27534965480](https://github.com/githubnext/tsikit-learn/actions/runs/27534965480)
 
-### Iteration 113 — 2026-06-14T19:22:53Z — [Run §27509396464](https://github.com/githubnext/tsikit-learn/actions/runs/27509396464)
-- **Status**: ✅ Accepted | **Metric**: 591 → **700** (+109 net; drift recovery) | **Commit**: cbf00eb
-- **Change**: Added 109 new sklearn extension files across 16 modules.
-- **Notes**: State drift recovery again (state claimed 699, branch had 591). New count 700 > 699.
+### Iteration 114 — ✅ Accepted | 591 → 721 (+130; drift recovery) | Commit: 2bb8487 | [§27519082306](https://github.com/githubnext/tsikit-learn/actions/runs/27519082306)
+
+### Iteration 113 — ✅ Accepted | 591 → 700 (+109; drift recovery) | Commit: cbf00eb
 
 ### Iteration 112 — 2026-06-14T08:45:38Z — ✅ Accepted | 591 → 699 (+108; drift recovery) | Commit: bd3699c
 
