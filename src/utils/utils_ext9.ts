@@ -159,7 +159,7 @@ export function leveneTest(groups: Float64Array[]): { statistic: number; pValue:
   const N = groups.reduce((s, g) => s + g.length, 0);
   const means = groups.map(g => g.reduce((s, v) => s + v, 0) / g.length);
   const W = groups.map((g, i) => g.map(v => Math.abs(v - (means[i] ?? 0))));
-  const grandMean = W.flat().reduce((s, v) => s + v, 0) / N;
+  const grandMean = W.reduce((s, wi) => s + wi.reduce((ss, v) => ss + v, 0), 0) / N;
   const Wmeans = W.map(wi => wi.reduce((s, v) => s + v, 0) / wi.length);
   let numerator = 0;
   for (let i = 0; i < k; i++) numerator += W[i]!.length * ((Wmeans[i]! - grandMean) ** 2);
@@ -239,7 +239,8 @@ export function cohenD(x: Float64Array, y: Float64Array): number {
 }
 
 export function etaSquared(groups: Float64Array[]): number {
-  const allValues = groups.flat();
+  const allValues: number[] = [];
+  for (const g of groups) for (const v of g) allValues.push(v);
   const grandMean = allValues.reduce((s, v) => s + v, 0) / allValues.length;
   const ssBetween = groups.reduce((s, g) => {
     const gm = g.reduce((ss, v) => ss + v, 0) / g.length;

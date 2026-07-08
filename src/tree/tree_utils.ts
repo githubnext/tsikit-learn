@@ -141,7 +141,7 @@ export function findBestSplit(
 		const counts = new Float64Array(classSet.length);
 		for (let i = 0; i < n; i++) {
 			const ci = classSet.indexOf((y as Int32Array)[i]!);
-			if (ci >= 0) counts[ci]++;
+			if (ci >= 0) counts[ci] = (counts[ci] ?? 0) + 1;
 		}
 		parentImpurity = criterion === "gini" ? giniImpurity(counts) : entropyImpurity(counts);
 	} else {
@@ -166,8 +166,8 @@ export function findBestSplit(
 			for (let i = 0; i < n; i++) {
 				const ci = classSet.indexOf((y as Int32Array)[i]!);
 				if (ci < 0) continue;
-				if (leftMask[i]) leftCounts[ci]++;
-				else rightCounts[ci]++;
+				if (leftMask[i]) leftCounts[ci] = (leftCounts[ci] ?? 0) + 1;
+				else rightCounts[ci] = (rightCounts[ci] ?? 0) + 1;
 			}
 			leftImpurity = criterion === "gini" ? giniImpurity(leftCounts) : entropyImpurity(leftCounts);
 			rightImpurity = criterion === "gini" ? giniImpurity(rightCounts) : entropyImpurity(rightCounts);
@@ -203,7 +203,7 @@ export function computeFeatureImportances(
 				(tree.nodes[node.leftChild]?.nNodeSamples ?? 0);
 			const rightImpurity = (tree.nodes[node.rightChild]?.impurity ?? 0) *
 				(tree.nodes[node.rightChild]?.nNodeSamples ?? 0);
-			importances[node.feature] += improvement - leftImpurity - rightImpurity;
+			importances[node.feature] = (importances[node.feature] ?? 0) + improvement - leftImpurity - rightImpurity;
 		}
 	}
 	const total = importances.reduce((s, v) => s + v, 0);

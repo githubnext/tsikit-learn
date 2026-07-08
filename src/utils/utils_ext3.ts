@@ -141,7 +141,7 @@ export function computeClassWeight(
     const weights = new Float64Array(nClasses);
     const counts = new Float64Array(nClasses);
     const classArr = Array.from(classes);
-    for (const label of y) counts[classArr.indexOf(label as number)]++;
+    for (const label of y) counts[classArr.indexOf(label as number)] = (counts[classArr.indexOf(label as number)] ?? 0) + 1;
     for (let k = 0; k < nClasses; k++) weights[k] = n / (nClasses * ((counts[k] ?? 1) + 1e-15));
     return weights;
   }

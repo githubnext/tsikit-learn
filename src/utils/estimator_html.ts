@@ -29,7 +29,7 @@ function formatValue(v: unknown): string {
  */
 export function estimatorHtmlRepr(estimator: BaseEstimator): string {
   const name = estimator.constructor.name;
-  const params = estimator.getParams(false) as Params;
+  const params = estimator.get_params(false) as Params;
   const paramStr = Object.entries(params)
     .map(([k, v]) => `<span class="sk-param">${escapeHtml(k)}=${formatValue(v)}</span>`)
     .join(", ");
@@ -45,7 +45,7 @@ export function estimatorHtmlRepr(estimator: BaseEstimator): string {
  */
 export function estimatorRepr(estimator: BaseEstimator, nCharMax: number = 700): string {
   const name = estimator.constructor.name;
-  const params = estimator.getParams(false) as Params;
+  const params = estimator.get_params(false) as Params;
   const paramStr = Object.entries(params)
     .map(([k, v]) => `${k}=${formatValue(v)}`)
     .join(", ");
@@ -85,7 +85,7 @@ export function checkParamsDefaultConstructible(
   estimator: BaseEstimator,
 ): boolean {
   try {
-    const params = estimator.getParams(false) as Params;
+    const params = estimator.get_params(false) as Params;
     return params !== null && typeof params === "object";
   } catch {
     return false;

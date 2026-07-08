@@ -115,7 +115,7 @@ export class AveragedWeightVector {
 		const t = this.nUpdates;
 		// Polyak-Ruppert averaging: a_t = a_{t-1} + (w_t - a_{t-1}) / t
 		for (let j = 0; j < this.nFeatures; j++) {
-			this.average[j] += ((curr[j] ?? 0) - this.average[j]!) / t;
+			this.average[j] = (this.average[j] ?? 0) + ((curr[j] ?? 0) - (this.average[j] ?? 0)) / t;
 		}
 	}
 
