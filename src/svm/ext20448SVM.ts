@@ -1,0 +1,1 @@
+export const ext20448SVM = "sklearn.svm.ext20448" as const;

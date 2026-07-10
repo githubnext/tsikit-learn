@@ -1,0 +1,1 @@
+export const ext20247LM = "sklearn.linear_model.ext20247" as const;

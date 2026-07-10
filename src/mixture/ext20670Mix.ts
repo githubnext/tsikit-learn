@@ -1,0 +1,1 @@
+export const ext20670Mix = "sklearn.mixture.ext20670" as const;

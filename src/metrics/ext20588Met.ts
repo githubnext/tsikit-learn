@@ -1,0 +1,1 @@
+export const ext20588Met = "sklearn.metrics.ext20588" as const;
