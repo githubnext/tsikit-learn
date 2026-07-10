@@ -66,7 +66,7 @@ export class FeatureUnionWeighted {
 }
 
 /** Apply a function transformer to data. */
-export class FunctionTransformerExt {
+export class FunctionTransformerExt4 {
 	private fitted_ = false;
 	readonly func: (X: Float64Array[]) => Float64Array[];
 	readonly inverseFunc?: (X: Float64Array[]) => Float64Array[];
@@ -78,7 +78,7 @@ export class FunctionTransformerExt {
 		validate?: boolean;
 	}) {
 		this.func = options.func;
-		this.inverseFunc = options.inverseFunc;
+		if (options.inverseFunc !== undefined) this.inverseFunc = options.inverseFunc;
 		this.validate = options.validate ?? false;
 	}
 
@@ -95,7 +95,7 @@ export class FunctionTransformerExt {
 	}
 
 	transform(X: Float64Array[]): Float64Array[] {
-		if (!this.fitted_) throw new NotFittedError("FunctionTransformerExt is not fitted.");
+		if (!this.fitted_) throw new NotFittedError("FunctionTransformerExt4 is not fitted.");
 		return this.func(X);
 	}
 

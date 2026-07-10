@@ -3,7 +3,7 @@
  * tree introspection, and sklearn-compatible export utilities.
  */
 
-import { checkIsFitted } from "../base.js";
+import { checkIsFitted } from "../utils/estimator_checks.js";
 import type { DecisionTreeClassifier, DecisionTreeRegressor } from "./decision_tree.js";
 
 export interface CCPAlphaPath {

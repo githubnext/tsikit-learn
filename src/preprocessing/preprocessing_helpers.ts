@@ -37,7 +37,7 @@ export function computeColumnStats(X: Float64Array[]): ColumnStats {
 	for (const x of X) {
 		for (let j = 0; j < d; j++) {
 			const v = x[j] ?? 0;
-			mean[j] += v / n;
+			mean[j] = (mean[j] ?? 0) + v / n;
 			if (v < min[j]!) min[j] = v;
 			if (v > max[j]!) max[j] = v;
 		}
@@ -46,7 +46,7 @@ export function computeColumnStats(X: Float64Array[]): ColumnStats {
 	const std = new Float64Array(d);
 	for (const x of X) {
 		for (let j = 0; j < d; j++) {
-			std[j] += ((x[j] ?? 0) - mean[j]!) ** 2 / n;
+			std[j] = (std[j] ?? 0) + ((x[j] ?? 0) - mean[j]!) ** 2 / n;
 		}
 	}
 	for (let j = 0; j < d; j++) std[j] = Math.sqrt(std[j]!);
@@ -139,14 +139,14 @@ export function meanAndStd(
 	const n = X.length;
 
 	if (withMean && mean) {
-		for (const x of X) for (let j = 0; j < d; j++) mean[j] += (x[j] ?? 0) / n;
+		for (const x of X) for (let j = 0; j < d; j++) mean[j] = (mean[j] ?? 0) + (x[j] ?? 0) / n;
 	}
 
 	if (withStd && std) {
 		for (const x of X) {
 			for (let j = 0; j < d; j++) {
 				const v = (x[j] ?? 0) - (mean ? mean[j]! : 0);
-				std[j] += v * v / n;
+				std[j] = (std[j] ?? 0) + v * v / n;
 			}
 		}
 		for (let j = 0; j < d; j++) std[j] = Math.sqrt(std[j]!);

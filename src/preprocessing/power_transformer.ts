@@ -158,7 +158,7 @@ export class PowerTransformer {
  * Transform features using quantile information (maps to uniform or normal distribution).
  * Mirrors sklearn.preprocessing.QuantileTransformer.
  */
-export class QuantileTransformer {
+export class QuantileTransformerV2 {
   nQuantiles: number;
   outputDistribution: "uniform" | "normal";
   subsample: number;
@@ -277,7 +277,7 @@ export class QuantileTransformer {
  * Binarize data (set feature values to 0 or 1) according to a threshold.
  * Mirrors sklearn.preprocessing.Binarizer.
  */
-export class Binarizer {
+export class BinarizerV2 {
   threshold: number;
 
   constructor(options: { threshold?: number } = {}) {
@@ -306,7 +306,7 @@ export class Binarizer {
  * Constructs a transformer from an arbitrary callable.
  * Mirrors sklearn.preprocessing.FunctionTransformer.
  */
-export class FunctionTransformer {
+export class FunctionTransformerV2 {
   func: ((X: Float64Array[]) => Float64Array[]) | null;
   inverseFunc: ((X: Float64Array[]) => Float64Array[]) | null;
   validate: boolean;

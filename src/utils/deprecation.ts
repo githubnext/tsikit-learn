@@ -103,7 +103,7 @@ export function deprecatedClass(options: DeprecationOptions = {}) {
   return <T extends new (...args: unknown[]) => object>(Base: T, ctx?: { name?: string }): T => {
     const name = ctx?.name ?? Base.name;
     return class extends Base {
-      constructor(...args: unknown[]) {
+      constructor(...args: any[]) {
         super(...args);
         warn(name, options);
       }

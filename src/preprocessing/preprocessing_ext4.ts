@@ -172,8 +172,8 @@ export class VarianceThresholdExt {
     const p = X[0]?.length ?? 0;
     this.variances_ = new Float64Array(p);
     const means = new Float64Array(p);
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) means[j] += (X[i]?.[j] ?? 0) / n;
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) this.variances_[j] += ((X[i]?.[j] ?? 0) - (means[j] ?? 0)) ** 2 / n;
+    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) means[j] = (means[j] ?? 0) + (X[i]?.[j] ?? 0) / n;
+    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) this.variances_[j] = (this.variances_[j] ?? 0) + ((X[i]?.[j] ?? 0) - (means[j] ?? 0)) ** 2 / n;
     this.supportMask_ = new Uint8Array(p).map((_, j) => (this.variances_?.[j] ?? 0) > this.threshold ? 1 : 0);
     return this;
   }

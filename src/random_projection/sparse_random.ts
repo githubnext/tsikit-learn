@@ -18,7 +18,7 @@ export interface SparseRandomProjectionParams {
  * Uses the Achlioptas random sparse matrix.
  * Port of sklearn.random_projection.SparseRandomProjection
  */
-export class SparseRandomProjection {
+export class SparseRandomProjectionBase {
 	nComponents: number | "auto";
 	density: number | "auto";
 	epsSparse: number;
@@ -111,7 +111,7 @@ export interface GaussianRandomProjectionParams {
  * Reduce dimensionality through Gaussian random projection.
  * Port of sklearn.random_projection.GaussianRandomProjection
  */
-export class GaussianRandomProjection {
+export class GaussianRandomProjectionBase {
 	nComponents: number | "auto";
 	eps: number;
 	randomState: number | null;
@@ -183,7 +183,7 @@ export class GaussianRandomProjection {
  * Johnson-Lindenstrauss lemma: minimum number of components.
  * Port of sklearn.random_projection.johnson_lindenstrauss_min_dim
  */
-export function johnsonLindenstraussMinDim(nSamples: number, eps = 0.1): number {
+export function johnsonLindenstraussMinDimBase(nSamples: number, eps = 0.1): number {
 	const denominator = eps ** 2 / 2 - eps ** 3 / 3;
 	if (denominator <= 0) throw new Error("eps must be in (0, 1)");
 	return Math.ceil(4 * Math.log(nSamples) / denominator);

@@ -3,7 +3,7 @@
  * Mirrors sklearn.pipeline.FeatureUnion.
  */
 
-import { checkIsFitted } from "../base.js";
+import { checkIsFitted } from "../utils/estimator_checks.js";
 
 export interface TransformerStep {
   name: string;

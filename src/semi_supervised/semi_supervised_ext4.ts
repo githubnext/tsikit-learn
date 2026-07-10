@@ -90,7 +90,7 @@ export class LabelPropagationExt {
         for (let j = 0; j < n; j++) {
           const tij = (T[i] as Float64Array)[j] ?? 0;
           for (let c = 0; c < this.nClasses; c++) {
-            (Fnew[i] as Float64Array)[c] += tij * ((F[j] as Float64Array)[c] ?? 0);
+            (Fnew[i] as Float64Array)[c] = ((Fnew[i] as Float64Array)[c] ?? 0) + tij * ((F[j] as Float64Array)[c] ?? 0);
           }
         }
       }
@@ -135,15 +135,15 @@ export class LabelPropagationExt {
 }
 
 export class SelfTrainingClassifier {
-  baseEstimator: { fit(X: Float64Array[], y: Int32Array): this; predict(X: Float64Array[]): Int32Array; predictProba?: (X: Float64Array[]) => Float64Array[] };
+  baseEstimator: { fit(X: Float64Array[], y: Int32Array): unknown; predict(X: Float64Array[]): Int32Array; predictProba?: (X: Float64Array[]) => Float64Array[] };
   threshold: number;
   maxIter: number;
   nClasses: number;
-  baseEstimator_: { fit(X: Float64Array[], y: Int32Array): this; predict(X: Float64Array[]): Int32Array; predictProba?: (X: Float64Array[]) => Float64Array[] } | null = null;
+  baseEstimator_: { fit(X: Float64Array[], y: Int32Array): unknown; predict(X: Float64Array[]): Int32Array; predictProba?: (X: Float64Array[]) => Float64Array[] } | null = null;
   nIter_: number = 0;
 
   constructor(
-    baseEstimator: { fit(X: Float64Array[], y: Int32Array): this; predict(X: Float64Array[]): Int32Array; predictProba?: (X: Float64Array[]) => Float64Array[] },
+    baseEstimator: { fit(X: Float64Array[], y: Int32Array): unknown; predict(X: Float64Array[]): Int32Array; predictProba?: (X: Float64Array[]) => Float64Array[] },
     threshold = 0.75,
     maxIter = 10,
     nClasses = 2,

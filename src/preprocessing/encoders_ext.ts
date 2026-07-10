@@ -90,7 +90,7 @@ export class WOEEncoder {
 
 export class BinaryEncoder {
   private nBits_: number[] = [];
-  private categoryMaps_: Map<number, Map<number, number>>[] = [];
+  private categoryMaps_: Map<number, number>[] = [];
 
   fit(X: Int32Array[]): this {
     const nF = X[0]?.length ?? 0;

@@ -17,7 +17,7 @@ interface ObliqueNode {
 
 function giniImpurityArr(labels: number[], nClasses: number): number {
   const counts = new Int32Array(nClasses);
-  for (const l of labels) counts[Math.min(l, nClasses - 1)]++;
+  for (const l of labels) counts[Math.min(l, nClasses - 1)] = (counts[Math.min(l, nClasses - 1)] ?? 0) + 1;
   let g = 1;
   const n = labels.length;
   for (let k = 0; k < nClasses; k++) g -= ((counts[k] ?? 0) / n) ** 2;
@@ -36,7 +36,7 @@ function buildObliqueTree(
   const n = X.length;
   if (n === 0) return { isLeaf: true, value: 0, classProbs: new Float64Array(nClasses) };
   const counts = new Int32Array(nClasses);
-  for (let i = 0; i < n; i++) counts[y[i] ?? 0]++;
+  for (let i = 0; i < n; i++) counts[y[i] ?? 0] = (counts[y[i] ?? 0] ?? 0) + 1;
   let majority = 0;
   for (let k = 0; k < nClasses; k++) if ((counts[k] ?? 0) > (counts[majority] ?? 0)) majority = k;
   const classProbs = Float64Array.from({ length: nClasses }, (_, k) => (counts[k] ?? 0) / n);

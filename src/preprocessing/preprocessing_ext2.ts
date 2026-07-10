@@ -133,7 +133,7 @@ export class PolynomialCountSketch {
       for (let i = 0; i < row.length; i++) {
         const w = weights[i] ?? 1;
         const b = bits[i] ?? 0;
-        sketch[b] += w * (row[i] ?? 0);
+        sketch[b] = (sketch[b] ?? 0) + w * (row[i] ?? 0);
       }
       return sketch;
     });

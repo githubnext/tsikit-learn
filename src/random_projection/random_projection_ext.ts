@@ -3,7 +3,7 @@
  * JohnsonLindenstrauss lemma utilities.
  */
 
-export function johnsonLindenstraussMinDim(nSamples: number, eps = 0.1): number {
+export function johnsonLindenstraussMinDimExt(nSamples: number, eps = 0.1): number {
   return Math.ceil(4 * Math.log(nSamples) / (eps ** 2 / 2 - eps ** 3 / 3));
 }
 

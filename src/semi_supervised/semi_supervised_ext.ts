@@ -114,7 +114,7 @@ export class LabelPropagationKernel {
     const W = this._buildAffinity(X);
     // Initialize label matrix
     const F: Float64Array[] = Array.from({ length: n }, () => new Float64Array(nClasses));
-    const isLabeled = y.map((v) => v >= 0);
+    const isLabeled = Array.from(y, (v) => v >= 0);
     for (let i = 0; i < n; i++) {
       if (isLabeled[i]) {
         const ci = classes.indexOf(y[i]!);

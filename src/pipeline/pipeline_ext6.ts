@@ -55,7 +55,7 @@ export class MemorizedPipeline {
 /**
  * Sequential feature selector pipeline step.
  */
-export class SequentialFeatureSelector {
+export class SequentialFeatureSelectorExt6 {
   private nFeatures: number;
   private direction: "forward" | "backward";
   private selectedFeatures_: number[] = [];

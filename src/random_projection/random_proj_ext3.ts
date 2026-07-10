@@ -56,7 +56,7 @@ export class VerySparsePureRandomProjection {
 /**
  * Johnson-Lindenstrauss lemma: estimate minimum number of components.
  */
-export function johnsonLindenstraussMinDim(
+export function johnsonLindenstraussMinDimV3(
   nSamples: number,
   eps: number,
 ): number {
