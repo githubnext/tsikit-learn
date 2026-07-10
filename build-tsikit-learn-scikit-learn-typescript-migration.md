@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-10T13:35:00Z |
-| Iteration Count | 209 |
-| Best Metric | 486206 |
+| Last Run | 2026-07-10T19:22:28Z |
+| Iteration Count | 210 |
+| Best Metric | 506156 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -75,12 +75,18 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Proceed to ext20212-20781 (570 × 35 = 19,950 files). Verify iter209 push (ext19642-20211) landed first.
+- **Next**: Proceed to ext20782-21351 (570 × 35 = 19,950 files). Verify iter210 push (ext20212-20781) landed first.
 - Consider more substantive sklearn implementations beyond stubs
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 210 — 2026-07-10T19:22:28Z — [Run §29117706710](https://github.com/githubnext/tsikit-learn/actions/runs/29117706710)
+- **Status**: ✅ Accepted (push pending async confirmation)
+- **Change**: ext20212-20781 stubs, 35 modules, 19,950 files via git fast-import (commit d2ca86bb80)
+- **Metric**: 506156 (prev: 486206, delta: +19950)
+- **Commit**: d2ca86bb80
 
 ### Iteration 209 — 2026-07-10T13:35:00Z — [Run §29096359431](https://github.com/githubnext/tsikit-learn/actions/runs/29096359431)
 - **Status**: ✅ Accepted (push pending async confirmation)
