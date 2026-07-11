@@ -15,7 +15,8 @@ function clusterMean(points: Float64Array[]): Float64Array {
   if (points.length === 0) return new Float64Array(0);
   const p = (points[0] ?? new Float64Array(0)).length;
   const m = new Float64Array(p);
-  for (const pt of points) for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (pt[j] ?? 0);
+  for (const pt of points)
+    for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (pt[j] ?? 0);
   for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) / points.length;
   return m;
 }
@@ -23,7 +24,8 @@ function clusterMean(points: Float64Array[]): Float64Array {
 function clusterSSE(points: Float64Array[], center: Float64Array): number {
   let s = 0;
   for (const pt of points) {
-    for (let j = 0; j < pt.length; j++) s += ((pt[j] ?? 0) - (center[j] ?? 0)) ** 2;
+    for (let j = 0; j < pt.length; j++)
+      s += ((pt[j] ?? 0) - (center[j] ?? 0)) ** 2;
   }
   return s;
 }
@@ -38,21 +40,33 @@ function bisect(
   const p = (points[0] ?? new Float64Array(0)).length;
 
   if (n <= 1) {
-    return { labels: new Int32Array(n), centers: [clusterMean(points), new Float64Array(p)] };
+    return {
+      labels: new Int32Array(n),
+      centers: [clusterMean(points), new Float64Array(p)],
+    };
   }
 
   // Init: pick 2 random centers
   const i0 = Math.abs(rng) % n;
   const i1 = (Math.abs(rng) + 1) % n;
-  let centers = [new Float64Array(points[i0] ?? new Float64Array(p)), new Float64Array(points[i1] ?? new Float64Array(p))];
+  let centers = [
+    new Float64Array(points[i0] ?? new Float64Array(p)),
+    new Float64Array(points[i1] ?? new Float64Array(p)),
+  ];
   let labels = new Int32Array(n);
 
   for (let iter = 0; iter < maxIter; iter++) {
     // Assign
     const newLabels = new Int32Array(n);
     for (let i = 0; i < n; i++) {
-      const d0 = euclidean(points[i] ?? new Float64Array(p), centers[0] ?? new Float64Array(p));
-      const d1 = euclidean(points[i] ?? new Float64Array(p), centers[1] ?? new Float64Array(p));
+      const d0 = euclidean(
+        points[i] ?? new Float64Array(p),
+        centers[0] ?? new Float64Array(p),
+      );
+      const d1 = euclidean(
+        points[i] ?? new Float64Array(p),
+        centers[1] ?? new Float64Array(p),
+      );
       newLabels[i] = d1 < d0 ? 1 : 0;
     }
 
@@ -60,19 +74,29 @@ function bisect(
     const c0 = points.filter((_, i) => newLabels[i] === 0);
     const c1 = points.filter((_, i) => newLabels[i] === 1);
     const newCenters = [
-      c0.length > 0 ? clusterMean(c0) : centers[0] ?? new Float64Array(p),
-      c1.length > 0 ? clusterMean(c1) : centers[1] ?? new Float64Array(p),
+      c0.length > 0 ? clusterMean(c0) : (centers[0] ?? new Float64Array(p)),
+      c1.length > 0 ? clusterMean(c1) : (centers[1] ?? new Float64Array(p)),
     ];
 
     // Check convergence
     let changed = false;
-    for (let i = 0; i < n; i++) if (newLabels[i] !== labels[i]) { changed = true; break; }
+    for (let i = 0; i < n; i++)
+      if (newLabels[i] !== labels[i]) {
+        changed = true;
+        break;
+      }
     labels = newLabels;
     centers = newCenters;
     if (!changed) break;
   }
 
-  return { labels, centers: [centers[0] ?? new Float64Array(p), centers[1] ?? new Float64Array(p)] };
+  return {
+    labels,
+    centers: [
+      centers[0] ?? new Float64Array(p),
+      centers[1] ?? new Float64Array(p),
+    ],
+  };
 }
 
 /**
@@ -111,7 +135,7 @@ export class BisectingKMeans {
     const k = Math.min(this.nClusters, n);
 
     // Start: all points in one cluster
-    let clusterLabels = new Int32Array(n);
+    const clusterLabels = new Int32Array(n);
     const clusterCenters: Float64Array[] = [clusterMean(X)];
     let nClusters = 1;
 
@@ -125,14 +149,22 @@ export class BisectingKMeans {
       for (let c = 0; c < nClusters; c++) {
         const pts = X.filter((_, i) => clusterLabels[i] === c);
         if (pts.length <= 1) continue;
-        const crit = this.bisectingStrategy === "biggest_inertia"
-          ? clusterSSE(pts, clusterCenters[c] ?? new Float64Array(p))
-          : pts.length;
-        if (crit > bestCrit) { bestCrit = crit; targetCluster = c; }
+        const crit =
+          this.bisectingStrategy === "biggest_inertia"
+            ? clusterSSE(pts, clusterCenters[c] ?? new Float64Array(p))
+            : pts.length;
+        if (crit > bestCrit) {
+          bestCrit = crit;
+          targetCluster = c;
+        }
       }
 
-      const targetPoints = X.filter((_, i) => clusterLabels[i] === targetCluster);
-      const targetIndices = Array.from({ length: n }, (_, i) => i).filter((i) => clusterLabels[i] === targetCluster);
+      const targetPoints = X.filter(
+        (_, i) => clusterLabels[i] === targetCluster,
+      );
+      const targetIndices = Array.from({ length: n }, (_, i) => i).filter(
+        (i) => clusterLabels[i] === targetCluster,
+      );
 
       if (targetPoints.length <= 1) break;
 
@@ -148,8 +180,11 @@ export class BisectingKMeans {
       // Recompute centers for the two new clusters
       const c0pts = X.filter((_, i) => clusterLabels[i] === targetCluster);
       const c1pts = X.filter((_, i) => clusterLabels[i] === nClusters);
-      clusterCenters[targetCluster] = c0pts.length > 0 ? clusterMean(c0pts) : new Float64Array(p);
-      clusterCenters.push(c1pts.length > 0 ? clusterMean(c1pts) : new Float64Array(p));
+      clusterCenters[targetCluster] =
+        c0pts.length > 0 ? clusterMean(c0pts) : new Float64Array(p);
+      clusterCenters.push(
+        c1pts.length > 0 ? clusterMean(c1pts) : new Float64Array(p),
+      );
       nClusters++;
       this.nIter_++;
     }
@@ -163,24 +198,31 @@ export class BisectingKMeans {
       const c = clusterLabels[i] ?? 0;
       const center = clusterCenters[c] ?? new Float64Array(p);
       const xi = X[i] ?? new Float64Array(p);
-      for (let j = 0; j < p; j++) inertia += ((xi[j] ?? 0) - (center[j] ?? 0)) ** 2;
+      for (let j = 0; j < p; j++)
+        inertia += ((xi[j] ?? 0) - (center[j] ?? 0)) ** 2;
     }
     this.inertia_ = inertia;
     return this;
   }
 
   predict(X: Float64Array[]): Int32Array {
-    if (this.clusterCenters_ === null) throw new NotFittedError("BisectingKMeans");
+    if (this.clusterCenters_ === null)
+      throw new NotFittedError("BisectingKMeans");
     const centers = this.clusterCenters_;
-    return new Int32Array(X.map((xi) => {
-      let bestC = 0;
-      let bestD = Number.POSITIVE_INFINITY;
-      for (let c = 0; c < centers.length; c++) {
-        const d = euclidean(xi, centers[c] ?? new Float64Array(0));
-        if (d < bestD) { bestD = d; bestC = c; }
-      }
-      return bestC;
-    }));
+    return new Int32Array(
+      X.map((xi) => {
+        let bestC = 0;
+        let bestD = Number.POSITIVE_INFINITY;
+        for (let c = 0; c < centers.length; c++) {
+          const d = euclidean(xi, centers[c] ?? new Float64Array(0));
+          if (d < bestD) {
+            bestD = d;
+            bestC = c;
+          }
+        }
+        return bestC;
+      }),
+    );
   }
 
   fitPredict(X: Float64Array[]): Int32Array {
@@ -189,7 +231,8 @@ export class BisectingKMeans {
   }
 
   score(X: Float64Array[]): number {
-    if (this.clusterCenters_ === null) throw new NotFittedError("BisectingKMeans");
+    if (this.clusterCenters_ === null)
+      throw new NotFittedError("BisectingKMeans");
     const labels = this.predict(X);
     const centers = this.clusterCenters_;
     let inertia = 0;
@@ -197,7 +240,8 @@ export class BisectingKMeans {
       const c = labels[i] ?? 0;
       const center = centers[c] ?? new Float64Array(0);
       const xi = X[i] ?? new Float64Array(0);
-      for (let j = 0; j < xi.length; j++) inertia += ((xi[j] ?? 0) - (center[j] ?? 0)) ** 2;
+      for (let j = 0; j < xi.length; j++)
+        inertia += ((xi[j] ?? 0) - (center[j] ?? 0)) ** 2;
     }
     return -inertia;
   }

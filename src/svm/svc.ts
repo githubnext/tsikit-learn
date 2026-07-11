@@ -6,11 +6,7 @@
 
 import { NotFittedError } from "../exceptions.js";
 
-function rbfKernel(
-  a: Float64Array,
-  b: Float64Array,
-  gamma: number,
-): number {
+function rbfKernel(a: Float64Array, b: Float64Array, gamma: number): number {
   let dist2 = 0;
   for (let i = 0; i < a.length; i++) {
     dist2 += ((a[i] ?? 0) - (b[i] ?? 0)) ** 2;
@@ -78,14 +74,17 @@ export class SVC {
 
   private _kernelFn(a: Float64Array, b: Float64Array): number {
     if (this.kernel === "linear") return linearKernel(a, b);
-    if (this.kernel === "poly") return polyKernel(a, b, this.degree, this.coef0);
+    if (this.kernel === "poly")
+      return polyKernel(a, b, this.degree, this.coef0);
     return rbfKernel(a, b, this._gamma);
   }
 
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
 
     // Compute gamma
@@ -93,11 +92,13 @@ export class SVC {
       let varSum = 0;
       for (let j = 0; j < p; j++) {
         let mean = 0;
-        for (let i = 0; i < n; i++) mean += (X[i] ?? new Float64Array(p))[j] ?? 0;
+        for (let i = 0; i < n; i++)
+          mean += (X[i] ?? new Float64Array(p))[j] ?? 0;
         mean /= n;
-        for (let i = 0; i < n; i++) varSum += ((X[i] ?? new Float64Array(p))[j] ?? 0 - mean) ** 2;
+        for (let i = 0; i < n; i++)
+          varSum += ((X[i] ?? new Float64Array(p))[j] ?? 0 - mean) ** 2;
       }
-      this._gamma = p > 0 && varSum > 0 ? 1 / (p * varSum / (n * p)) : 1;
+      this._gamma = p > 0 && varSum > 0 ? 1 / ((p * varSum) / (n * p)) : 1;
     } else if (this.gamma === "auto") {
       this._gamma = p > 0 ? 1 / p : 1;
     } else {
@@ -134,7 +135,8 @@ export class SVC {
         // Compute decision value
         let fi = -b;
         for (let k = 0; k < n; k++) {
-          fi += (alpha[k] ?? 0) * (yLabels[k] ?? 0) * ((K[i] as number[])[k] ?? 0);
+          fi +=
+            (alpha[k] ?? 0) * (yLabels[k] ?? 0) * ((K[i] as number[])[k] ?? 0);
         }
         const Ei = fi - (yLabels[i] ?? 0);
 
@@ -148,7 +150,10 @@ export class SVC {
 
           let fj = -b;
           for (let k = 0; k < n; k++) {
-            fj += (alpha[k] ?? 0) * (yLabels[k] ?? 0) * ((K[j] as number[])[k] ?? 0);
+            fj +=
+              (alpha[k] ?? 0) *
+              (yLabels[k] ?? 0) *
+              ((K[j] as number[])[k] ?? 0);
           }
           const Ej = fj - (yLabels[j] ?? 0);
 
@@ -173,7 +178,7 @@ export class SVC {
             ((K[j] as number[])[j] ?? 0);
           if (eta >= 0) continue;
 
-          let alphaJNew = alphaJOld - (yLabels[j] ?? 0) * (Ei - Ej) / eta;
+          let alphaJNew = alphaJOld - ((yLabels[j] ?? 0) * (Ei - Ej)) / eta;
           alphaJNew = Math.min(H, Math.max(L, alphaJNew));
           if (Math.abs(alphaJNew - alphaJOld) < 1e-5) continue;
 
@@ -186,13 +191,21 @@ export class SVC {
           const b1 =
             b +
             Ei +
-            (yLabels[i] ?? 0) * ((alpha[i] ?? 0) - alphaIOld) * ((K[i] as number[])[i] ?? 0) +
-            (yLabels[j] ?? 0) * ((alpha[j] ?? 0) - alphaJOld) * ((K[i] as number[])[j] ?? 0);
+            (yLabels[i] ?? 0) *
+              ((alpha[i] ?? 0) - alphaIOld) *
+              ((K[i] as number[])[i] ?? 0) +
+            (yLabels[j] ?? 0) *
+              ((alpha[j] ?? 0) - alphaJOld) *
+              ((K[i] as number[])[j] ?? 0);
           const b2 =
             b +
             Ej +
-            (yLabels[i] ?? 0) * ((alpha[i] ?? 0) - alphaIOld) * ((K[i] as number[])[j] ?? 0) +
-            (yLabels[j] ?? 0) * ((alpha[j] ?? 0) - alphaJOld) * ((K[j] as number[])[j] ?? 0);
+            (yLabels[i] ?? 0) *
+              ((alpha[i] ?? 0) - alphaIOld) *
+              ((K[i] as number[])[j] ?? 0) +
+            (yLabels[j] ?? 0) *
+              ((alpha[j] ?? 0) - alphaJOld) *
+              ((K[j] as number[])[j] ?? 0);
 
           if ((alpha[i] ?? 0) > 0 && (alpha[i] ?? 0) < this.C) b = b1;
           else if ((alpha[j] ?? 0) > 0 && (alpha[j] ?? 0) < this.C) b = b2;
@@ -297,7 +310,8 @@ export class SVR {
 
   private _kernelFn(a: Float64Array, b: Float64Array): number {
     if (this.kernel === "linear") return linearKernel(a, b);
-    if (this.kernel === "poly") return polyKernel(a, b, this.degree, this.coef0);
+    if (this.kernel === "poly")
+      return polyKernel(a, b, this.degree, this.coef0);
     return rbfKernel(a, b, this._gamma);
   }
 
@@ -309,9 +323,11 @@ export class SVR {
       let varSum = 0;
       for (let j = 0; j < p; j++) {
         let mean = 0;
-        for (let i = 0; i < n; i++) mean += (X[i] ?? new Float64Array(p))[j] ?? 0;
+        for (let i = 0; i < n; i++)
+          mean += (X[i] ?? new Float64Array(p))[j] ?? 0;
         mean /= n;
-        for (let i = 0; i < n; i++) varSum += (((X[i] ?? new Float64Array(p))[j] ?? 0) - mean) ** 2;
+        for (let i = 0; i < n; i++)
+          varSum += (((X[i] ?? new Float64Array(p))[j] ?? 0) - mean) ** 2;
       }
       this._gamma = p > 0 && varSum > 0 ? n / varSum : 1;
     } else if (this.gamma === "auto") {

@@ -69,8 +69,8 @@ function blockCoordinateDescent(
       }
 
       // L1/L2 regularization
-      const l1 = alpha * l1Ratio / normXj * n;
-      const l2 = alpha * (1 - l1Ratio) / normXj * n;
+      const l1 = ((alpha * l1Ratio) / normXj) * n;
+      const l2 = ((alpha * (1 - l1Ratio)) / normXj) * n;
       const newWj = softThresholdVec(candidate, l1);
       const norm2 = Math.sqrt(newWj.reduce((s, v) => s + v ** 2, 0));
       const scale = norm2 > 0 ? Math.max(0, 1 - l2 / norm2) : 0;
@@ -115,7 +115,14 @@ function cvScore(
     const trainY = Y.filter((_, i) => i < start || i >= end);
     const testX = X.slice(start, end);
     const testY = Y.slice(start, end);
-    const W = blockCoordinateDescent(trainX, trainY, alpha, l1Ratio, maxIter, tol);
+    const W = blockCoordinateDescent(
+      trainX,
+      trainY,
+      alpha,
+      l1Ratio,
+      maxIter,
+      tol,
+    );
     const q = Y[0]?.length ?? 0;
     let ss_res = 0;
     for (let i = 0; i < testX.length; i++) {
@@ -160,24 +167,28 @@ export class MultiTaskLassoCV extends BaseEstimator {
 
   fit(X: Float64Array[], Y: Float64Array[]): this {
     const n = X.length;
-    let Xfit = X;
+    const Xfit = X;
     let interceptMeans: Float64Array | null = null;
+    let Yfit = Y;
 
     if (this.fitIntercept) {
       const p = Y[0]?.length ?? 0;
       interceptMeans = new Float64Array(p);
-      for (const y of Y) for (let k = 0; k < p; k++) interceptMeans[k] = (interceptMeans[k] ?? 0) + (y[k] ?? 0);
-      for (let k = 0; k < (interceptMeans.length); k++) interceptMeans[k] = (interceptMeans[k] ?? 0) / n;
-      const Yc = Y.map((y) => {
+      for (const y of Y)
+        for (let k = 0; k < p; k++)
+          interceptMeans[k] = (interceptMeans[k] ?? 0) + (y[k] ?? 0);
+      for (let k = 0; k < interceptMeans.length; k++)
+        interceptMeans[k] = (interceptMeans[k] ?? 0) / n;
+      Yfit = Y.map((y) => {
         const out = new Float64Array(y);
-        for (let k = 0; k < out.length; k++) out[k] = (out[k] ?? 0) - (interceptMeans![k] ?? 0);
+        for (let k = 0; k < out.length; k++)
+          out[k] = (out[k] ?? 0) - (interceptMeans![k] ?? 0);
         return out;
       });
-      Y = Yc;
     }
 
     // Generate alpha path
-    const alphas = this.alphas ?? this._alphaGrid(Xfit, Y);
+    const alphas = this.alphas ?? this._alphaGrid(Xfit, Yfit);
     this.alphasPath_ = alphas;
 
     // CV over alphas
@@ -185,16 +196,34 @@ export class MultiTaskLassoCV extends BaseEstimator {
     let bestAlpha = alphas[0] ?? 1;
     const scores = new Float64Array(alphas.length);
     for (let ai = 0; ai < alphas.length; ai++) {
-      const score = cvScore(Xfit, Y, alphas[ai] ?? 1, 1, this.cv, this.maxIter, this.tol);
+      const score = cvScore(
+        Xfit,
+        Yfit,
+        alphas[ai] ?? 1,
+        1,
+        this.cv,
+        this.maxIter,
+        this.tol,
+      );
       scores[ai] = score;
-      if (score > bestScore) { bestScore = score; bestAlpha = alphas[ai] ?? 1; }
+      if (score > bestScore) {
+        bestScore = score;
+        bestAlpha = alphas[ai] ?? 1;
+      }
     }
     this.msePathCV_ = scores;
     this.alpha_ = bestAlpha;
 
     // Refit on full data
-    this.coef_ = blockCoordinateDescent(Xfit, Y, bestAlpha, 1, this.maxIter, this.tol);
-    this.intercept_ = interceptMeans ?? new Float64Array(Y[0]?.length ?? 0);
+    this.coef_ = blockCoordinateDescent(
+      Xfit,
+      Yfit,
+      bestAlpha,
+      1,
+      this.maxIter,
+      this.tol,
+    );
+    this.intercept_ = interceptMeans ?? new Float64Array(Yfit[0]?.length ?? 0);
     return this;
   }
 
@@ -216,7 +245,9 @@ export class MultiTaskLassoCV extends BaseEstimator {
     const alphaMin = alphaMax * this.eps;
     const alphas = new Float64Array(this.nAlphas);
     for (let i = 0; i < this.nAlphas; i++) {
-      alphas[i] = alphaMax * Math.exp((Math.log(alphaMin / alphaMax) * i) / (this.nAlphas - 1));
+      alphas[i] =
+        alphaMax *
+        Math.exp((Math.log(alphaMin / alphaMax) * i) / (this.nAlphas - 1));
     }
     return alphas;
   }
@@ -229,7 +260,8 @@ export class MultiTaskLassoCV extends BaseEstimator {
       const pred = new Float64Array(q);
       for (let k = 0; k < q; k++) pred[k] = this.intercept_![k] ?? 0;
       for (let j = 0; j < W.length; j++) {
-        for (let k = 0; k < q; k++) pred[k] = (pred[k] ?? 0) + (row[j] ?? 0) * (W[j]![k] ?? 0);
+        for (let k = 0; k < q; k++)
+          pred[k] = (pred[k] ?? 0) + (row[j] ?? 0) * (W[j]![k] ?? 0);
       }
       return pred;
     });
@@ -245,7 +277,9 @@ export class MultiTaskElasticNetCV extends MultiTaskLassoCV {
   }
 
   override fit(X: Float64Array[], Y: Float64Array[]): this {
-    const l1Ratios = Array.isArray(this.l1Ratio) ? this.l1Ratio : [this.l1Ratio];
+    const l1Ratios = Array.isArray(this.l1Ratio)
+      ? this.l1Ratio
+      : [this.l1Ratio];
     const n = X.length;
     const alphas = this.alphas ?? this._alphaGridPublic(X, Y);
     this.alphasPath_ = alphas;
@@ -256,13 +290,32 @@ export class MultiTaskElasticNetCV extends MultiTaskLassoCV {
 
     for (const l1 of l1Ratios) {
       for (let ai = 0; ai < alphas.length; ai++) {
-        const score = cvScore(X, Y, alphas[ai] ?? 1, l1, this.cv, this.maxIter, this.tol);
-        if (score > bestScore) { bestScore = score; bestAlpha = alphas[ai] ?? 1; bestL1 = l1; }
+        const score = cvScore(
+          X,
+          Y,
+          alphas[ai] ?? 1,
+          l1,
+          this.cv,
+          this.maxIter,
+          this.tol,
+        );
+        if (score > bestScore) {
+          bestScore = score;
+          bestAlpha = alphas[ai] ?? 1;
+          bestL1 = l1;
+        }
       }
     }
 
     this.alpha_ = bestAlpha;
-    this.coef_ = blockCoordinateDescent(X, Y, bestAlpha, bestL1, this.maxIter, this.tol);
+    this.coef_ = blockCoordinateDescent(
+      X,
+      Y,
+      bestAlpha,
+      bestL1,
+      this.maxIter,
+      this.tol,
+    );
     this.intercept_ = new Float64Array(Y[0]?.length ?? 0);
     return this;
   }

@@ -48,7 +48,9 @@ export function validationCurve(
     const foldTrain: number[] = [];
     const foldTest: number[] = [];
     for (const [trainIdx, testIdx] of kFoldSplit(X.length, cv)) {
-      const XTrain = Array.from(trainIdx).map((i) => X[i] ?? new Float64Array(0));
+      const XTrain = Array.from(trainIdx).map(
+        (i) => X[i] ?? new Float64Array(0),
+      );
       const yTrain = subsetLabels(y, trainIdx);
       const XTest = Array.from(testIdx).map((i) => X[i] ?? new Float64Array(0));
       const yTest = subsetLabels(y, testIdx);
@@ -111,10 +113,12 @@ function* kFoldSplit(n: number, k: number): Iterable<[Int32Array, Int32Array]> {
   for (let fold = 0; fold < k; fold++) {
     const start = fold * foldSize;
     const end = fold === k - 1 ? n : start + foldSize;
-    const testIdx = Int32Array.from({ length: end - start }, (_, i) => start + i);
-    const trainIdx = Int32Array.from(
-      { length: n - testIdx.length },
-      (_, i) => (i < start ? i : i + testIdx.length),
+    const testIdx = Int32Array.from(
+      { length: end - start },
+      (_, i) => start + i,
+    );
+    const trainIdx = Int32Array.from({ length: n - testIdx.length }, (_, i) =>
+      i < start ? i : i + testIdx.length,
     );
     yield [trainIdx, testIdx];
   }

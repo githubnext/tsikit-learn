@@ -41,7 +41,7 @@ export class Perceptron {
 
     const w = new Float64Array(p);
     let b = 0;
-    const posClass = (this.classes_[this.classes_.length - 1]) ?? 1;
+    const posClass = this.classes_[this.classes_.length - 1] ?? 1;
 
     for (let iter = 0; iter < this.maxIter; iter++) {
       let errors = 0;
@@ -81,7 +81,9 @@ export class Perceptron {
         for (let j = 0; j < xi.length; j++) {
           dot += (coef[j] ?? 0) * (xi[j] ?? 0);
         }
-        return dot >= 0 ? (classes[classes.length - 1] ?? 1) : (classes[0] ?? 0);
+        return dot >= 0
+          ? (classes[classes.length - 1] ?? 1)
+          : (classes[0] ?? 0);
       }),
     );
   }

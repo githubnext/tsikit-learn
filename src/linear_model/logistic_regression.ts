@@ -105,7 +105,9 @@ export class LogisticRegression {
     const proba = this.predictProba(X);
     const classes = this.classes_ as Float64Array;
     return new Float64Array(
-      proba.map((p) => ((p[1] ?? 0) >= 0.5 ? (classes[1] ?? 1) : (classes[0] ?? 0))),
+      proba.map((p) =>
+        (p[1] ?? 0) >= 0.5 ? (classes[1] ?? 1) : (classes[0] ?? 0),
+      ),
     );
   }
 

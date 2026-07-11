@@ -6,7 +6,11 @@
 import { NotFittedError } from "../exceptions.js";
 
 export interface SHEstimator {
-  fit(X: Float64Array[], y: Float64Array | Int32Array, sampleWeight?: Float64Array): this;
+  fit(
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+    sampleWeight?: Float64Array,
+  ): this;
   score(X: Float64Array[], y: Float64Array | Int32Array): number;
   getParams(): Record<string, unknown>;
   setParams(params: Record<string, unknown>): this;
@@ -58,7 +62,7 @@ function crossValScore(
   X: Float64Array[],
   y: Float64Array | Int32Array,
   cv: number,
-  nSamples: number
+  nSamples: number,
 ): number {
   const foldSize = Math.floor(nSamples / cv);
   const scores: number[] = [];
@@ -93,7 +97,7 @@ function crossValScore(
 }
 
 function expandParamGrid(
-  paramGrid: Record<string, unknown[]>
+  paramGrid: Record<string, unknown[]>,
 ): Record<string, unknown>[] {
   const keys = Object.keys(paramGrid);
   if (keys.length === 0) return [{}];
@@ -142,21 +146,17 @@ export class HalvingGridSearchCV {
     this.randomState = options.randomState ?? 0;
   }
 
-  fit(
-    X: Float64Array[],
-    y: Float64Array | Int32Array
-  ): this {
+  fit(X: Float64Array[], y: Float64Array | Int32Array): this {
     const nSamples = X.length;
-    const maxRes =
-      this.maxResources === "auto" ? nSamples : this.maxResources;
+    const maxRes = this.maxResources === "auto" ? nSamples : this.maxResources;
     const allCandidates = expandParamGrid(this.paramGrid);
-    let nCandidates = allCandidates.length;
+    const nCandidates = allCandidates.length;
 
     // Compute min resources (floor to make halving divide evenly)
     const nIterations = Math.ceil(
-      Math.log(nCandidates) / Math.log(this.factor)
+      Math.log(nCandidates) / Math.log(this.factor),
     );
-    let minRes =
+    const minRes =
       this.minResources === "exhaust"
         ? Math.max(1, Math.floor(maxRes / this.factor ** nIterations))
         : this.minResources;
@@ -187,10 +187,17 @@ export class HalvingGridSearchCV {
         cloned.setParams(params);
         const useN = Math.min(currentRes, nSamples);
         const xSub = X.slice(0, useN);
-        const ySub = y instanceof Int32Array
-          ? new Int32Array(y.buffer, 0, useN)
-          : new Float64Array(y.buffer, 0, useN);
-        const score = crossValScore(cloned, xSub, ySub, Math.min(this.cv, useN), useN);
+        const ySub =
+          y instanceof Int32Array
+            ? new Int32Array(y.buffer, 0, useN)
+            : new Float64Array(y.buffer, 0, useN);
+        const score = crossValScore(
+          cloned,
+          xSub,
+          ySub,
+          Math.min(this.cv, useN),
+          useN,
+        );
         scores.push({ idx: ci, score });
         allResults.push({
           params,
@@ -203,7 +210,7 @@ export class HalvingGridSearchCV {
       scores.sort((a, b) => b.score - a.score);
       const nKeep = Math.max(
         1,
-        Math.floor(currentCandidates.length / this.factor)
+        Math.floor(currentCandidates.length / this.factor),
       );
       currentCandidates = scores
         .slice(0, nKeep)
@@ -213,7 +220,7 @@ export class HalvingGridSearchCV {
 
     // Rank results
     const sorted = [...allResults].sort(
-      (a, b) => b.meanTestScore - a.meanTestScore
+      (a, b) => b.meanTestScore - a.meanTestScore,
     );
     for (let i = 0; i < sorted.length; i++) sorted[i]!.rank = i + 1;
     this.cvResults_ = sorted;
@@ -290,10 +297,8 @@ export class HalvingRandomSearchCV {
 
   fit(X: Float64Array[], y: Float64Array | Int32Array): this {
     const nSamples = X.length;
-    const maxRes =
-      this.maxResources === "auto" ? nSamples : this.maxResources;
-    const nCands =
-      this.nCandidates === "exhaust" ? 20 : this.nCandidates;
+    const maxRes = this.maxResources === "auto" ? nSamples : this.maxResources;
+    const nCands = this.nCandidates === "exhaust" ? 20 : this.nCandidates;
 
     const candidates: Record<string, unknown>[] = [];
     for (let i = 0; i < nCands; i++) {
@@ -315,23 +320,40 @@ export class HalvingRandomSearchCV {
         cloned.setParams(params);
         const useN = Math.min(currentRes, nSamples);
         const xSub = X.slice(0, useN);
-        const ySub = y instanceof Int32Array
-          ? new Int32Array(y.buffer, 0, useN)
-          : new Float64Array(y.buffer, 0, useN);
-        const score = crossValScore(cloned, xSub, ySub, Math.min(this.cv, useN), useN);
+        const ySub =
+          y instanceof Int32Array
+            ? new Int32Array(y.buffer, 0, useN)
+            : new Float64Array(y.buffer, 0, useN);
+        const score = crossValScore(
+          cloned,
+          xSub,
+          ySub,
+          Math.min(this.cv, useN),
+          useN,
+        );
         scores.push({ idx: ci, score });
-        allResults.push({ params, meanTestScore: score, stdTestScore: 0, rank: 0 });
+        allResults.push({
+          params,
+          meanTestScore: score,
+          stdTestScore: 0,
+          rank: 0,
+        });
       }
 
       scores.sort((a, b) => b.score - a.score);
-      const nKeep = Math.max(1, Math.floor(currentCandidates.length / this.factor));
+      const nKeep = Math.max(
+        1,
+        Math.floor(currentCandidates.length / this.factor),
+      );
       currentCandidates = scores
         .slice(0, nKeep)
         .map((s) => currentCandidates[s.idx]!);
       currentRes = Math.min(currentRes * this.factor, maxRes);
     }
 
-    const sorted = [...allResults].sort((a, b) => b.meanTestScore - a.meanTestScore);
+    const sorted = [...allResults].sort(
+      (a, b) => b.meanTestScore - a.meanTestScore,
+    );
     for (let i = 0; i < sorted.length; i++) sorted[i]!.rank = i + 1;
     this.cvResults_ = sorted;
     this.bestParams_ = sorted[0]?.params ?? {};

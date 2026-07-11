@@ -241,7 +241,8 @@ export class BaggingRegressor {
         return r;
       });
       const p = this.estimators_[e]!.predict(Xf);
-      for (let i = 0; i < X.length; i++) preds[i]! += (p[i] ?? 0) / this.nEstimators;
+      for (let i = 0; i < X.length; i++)
+        preds[i]! += (p[i] ?? 0) / this.nEstimators;
     }
     return preds;
   }

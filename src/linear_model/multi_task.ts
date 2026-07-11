@@ -66,12 +66,22 @@ export class MultiTaskLasso {
     if (this.fitIntercept) {
       xMeans = new Float64Array(p);
       yMeans = new Float64Array(t);
-      for (const xi of X) for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0);
+      for (const xi of X)
+        for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0);
       for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) / n;
-      for (const yi of Y) for (let k = 0; k < t; k++) yMeans[k] = (yMeans[k] ?? 0) + (yi[k] ?? 0);
+      for (const yi of Y)
+        for (let k = 0; k < t; k++) yMeans[k] = (yMeans[k] ?? 0) + (yi[k] ?? 0);
       for (let k = 0; k < t; k++) yMeans[k] = (yMeans[k] ?? 0) / n;
-      Xc = X.map((xi) => { const r = new Float64Array(p); for (let j = 0; j < p; j++) r[j] = (xi[j] ?? 0) - (xMeans[j] ?? 0); return r; });
-      Yc = Y.map((yi) => { const r = new Float64Array(t); for (let k = 0; k < t; k++) r[k] = (yi[k] ?? 0) - (yMeans[k] ?? 0); return r; });
+      Xc = X.map((xi) => {
+        const r = new Float64Array(p);
+        for (let j = 0; j < p; j++) r[j] = (xi[j] ?? 0) - (xMeans[j] ?? 0);
+        return r;
+      });
+      Yc = Y.map((yi) => {
+        const r = new Float64Array(t);
+        for (let k = 0; k < t; k++) r[k] = (yi[k] ?? 0) - (yMeans[k] ?? 0);
+        return r;
+      });
     }
 
     // Initialize coefficients: p x t matrix stored as rows (p rows of length t)
@@ -80,12 +90,19 @@ export class MultiTaskLasso {
 
     // Precompute X'X diagonal and X'Y
     const xColNormSq = new Float64Array(p);
-    for (const xi of Xc) for (let j = 0; j < p; j++) xColNormSq[j] = (xColNormSq[j] ?? 0) + (xi[j] ?? 0) ** 2;
+    for (const xi of Xc)
+      for (let j = 0; j < p; j++)
+        xColNormSq[j] = (xColNormSq[j] ?? 0) + (xi[j] ?? 0) ** 2;
 
     const xtY: Float64Array[] = [];
     for (let j = 0; j < p; j++) {
       const v = new Float64Array(t);
-      for (let i = 0; i < n; i++) for (let k = 0; k < t; k++) v[k] = (v[k] ?? 0) + ((Xc[i] ?? new Float64Array(0))[j] ?? 0) * ((Yc[i] ?? new Float64Array(0))[k] ?? 0);
+      for (let i = 0; i < n; i++)
+        for (let k = 0; k < t; k++)
+          v[k] =
+            (v[k] ?? 0) +
+            ((Xc[i] ?? new Float64Array(0))[j] ?? 0) *
+              ((Yc[i] ?? new Float64Array(0))[k] ?? 0);
       xtY.push(v);
     }
 
@@ -98,12 +115,18 @@ export class MultiTaskLasso {
 
         // Compute residual correlation for feature j
         const rho = new Float64Array(t);
-        for (let k = 0; k < t; k++) rho[k] = (xtY[j] ?? new Float64Array(0))[k] ?? 0;
+        for (let k = 0; k < t; k++)
+          rho[k] = (xtY[j] ?? new Float64Array(0))[k] ?? 0;
         for (let j2 = 0; j2 < p; j2++) {
           if (j2 === j) continue;
           for (let i = 0; i < n; i++) {
-            const xij2 = ((Xc[i] ?? new Float64Array(0))[j] ?? 0) * ((Xc[i] ?? new Float64Array(0))[j2] ?? 0);
-            for (let k = 0; k < t; k++) rho[k] = (rho[k] ?? 0) - xij2 * ((coef[j2] ?? new Float64Array(0))[k] ?? 0);
+            const xij2 =
+              ((Xc[i] ?? new Float64Array(0))[j] ?? 0) *
+              ((Xc[i] ?? new Float64Array(0))[j2] ?? 0);
+            for (let k = 0; k < t; k++)
+              rho[k] =
+                (rho[k] ?? 0) -
+                xij2 * ((coef[j2] ?? new Float64Array(0))[k] ?? 0);
           }
         }
         for (let k = 0; k < t; k++) rho[k] = (rho[k] ?? 0) / colNorm;
@@ -126,7 +149,8 @@ export class MultiTaskLasso {
     this.coef_ = [];
     for (let k = 0; k < t; k++) {
       const row = new Float64Array(p);
-      for (let j = 0; j < p; j++) row[j] = (coef[j] ?? new Float64Array(0))[k] ?? 0;
+      for (let j = 0; j < p; j++)
+        row[j] = (coef[j] ?? new Float64Array(0))[k] ?? 0;
       this.coef_.push(row);
     }
 
@@ -134,7 +158,9 @@ export class MultiTaskLasso {
       this.intercept_ = new Float64Array(t);
       for (let k = 0; k < t; k++) {
         let s = yMeans[k] ?? 0;
-        for (let j = 0; j < p; j++) s -= ((this.coef_[k] ?? new Float64Array(0))[j] ?? 0) * (xMeans[j] ?? 0);
+        for (let j = 0; j < p; j++)
+          s -=
+            ((this.coef_[k] ?? new Float64Array(0))[j] ?? 0) * (xMeans[j] ?? 0);
         this.intercept_[k] = s;
       }
     } else {
@@ -145,13 +171,15 @@ export class MultiTaskLasso {
   }
 
   predict(X: Float64Array[]): Float64Array[] {
-    if (!this.coef_) throw new NotFittedError("MultiTaskLasso is not fitted yet.");
+    if (!this.coef_)
+      throw new NotFittedError("MultiTaskLasso is not fitted yet.");
     const t = this.coef_.length;
     return X.map((xi) => {
       const pred = new Float64Array(t);
       for (let k = 0; k < t; k++) {
         let s = this.intercept_![k] ?? 0;
-        for (let j = 0; j < xi.length; j++) s += ((this.coef_![k] ?? new Float64Array(0))[j] ?? 0) * (xi[j] ?? 0);
+        for (let j = 0; j < xi.length; j++)
+          s += ((this.coef_![k] ?? new Float64Array(0))[j] ?? 0) * (xi[j] ?? 0);
         pred[k] = s;
       }
       return pred;
@@ -191,28 +219,45 @@ export class MultiTaskElasticNet {
 
     let Xc = X;
     let Yc = Y;
-    let xMeans = new Float64Array(p);
-    let yMeans = new Float64Array(t);
+    const xMeans = new Float64Array(p);
+    const yMeans = new Float64Array(t);
 
     if (this.fitIntercept) {
-      for (const xi of X) for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0);
+      for (const xi of X)
+        for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0);
       for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) / n;
-      for (const yi of Y) for (let k = 0; k < t; k++) yMeans[k] = (yMeans[k] ?? 0) + (yi[k] ?? 0);
+      for (const yi of Y)
+        for (let k = 0; k < t; k++) yMeans[k] = (yMeans[k] ?? 0) + (yi[k] ?? 0);
       for (let k = 0; k < t; k++) yMeans[k] = (yMeans[k] ?? 0) / n;
-      Xc = X.map((xi) => { const r = new Float64Array(p); for (let j = 0; j < p; j++) r[j] = (xi[j] ?? 0) - (xMeans[j] ?? 0); return r; });
-      Yc = Y.map((yi) => { const r = new Float64Array(t); for (let k = 0; k < t; k++) r[k] = (yi[k] ?? 0) - (yMeans[k] ?? 0); return r; });
+      Xc = X.map((xi) => {
+        const r = new Float64Array(p);
+        for (let j = 0; j < p; j++) r[j] = (xi[j] ?? 0) - (xMeans[j] ?? 0);
+        return r;
+      });
+      Yc = Y.map((yi) => {
+        const r = new Float64Array(t);
+        for (let k = 0; k < t; k++) r[k] = (yi[k] ?? 0) - (yMeans[k] ?? 0);
+        return r;
+      });
     }
 
     const coef: Float64Array[] = [];
     for (let j = 0; j < p; j++) coef.push(new Float64Array(t));
 
     const xColNormSq = new Float64Array(p);
-    for (const xi of Xc) for (let j = 0; j < p; j++) xColNormSq[j] = (xColNormSq[j] ?? 0) + (xi[j] ?? 0) ** 2;
+    for (const xi of Xc)
+      for (let j = 0; j < p; j++)
+        xColNormSq[j] = (xColNormSq[j] ?? 0) + (xi[j] ?? 0) ** 2;
 
     const xtY: Float64Array[] = [];
     for (let j = 0; j < p; j++) {
       const v = new Float64Array(t);
-      for (let i = 0; i < n; i++) for (let k = 0; k < t; k++) v[k] = (v[k] ?? 0) + ((Xc[i] ?? new Float64Array(0))[j] ?? 0) * ((Yc[i] ?? new Float64Array(0))[k] ?? 0);
+      for (let i = 0; i < n; i++)
+        for (let k = 0; k < t; k++)
+          v[k] =
+            (v[k] ?? 0) +
+            ((Xc[i] ?? new Float64Array(0))[j] ?? 0) *
+              ((Yc[i] ?? new Float64Array(0))[k] ?? 0);
       xtY.push(v);
     }
 
@@ -223,12 +268,18 @@ export class MultiTaskElasticNet {
         if (colNorm === 0) continue;
 
         const rho = new Float64Array(t);
-        for (let k = 0; k < t; k++) rho[k] = (xtY[j] ?? new Float64Array(0))[k] ?? 0;
+        for (let k = 0; k < t; k++)
+          rho[k] = (xtY[j] ?? new Float64Array(0))[k] ?? 0;
         for (let j2 = 0; j2 < p; j2++) {
           if (j2 === j) continue;
           for (let i = 0; i < n; i++) {
-            const xij2 = ((Xc[i] ?? new Float64Array(0))[j] ?? 0) * ((Xc[i] ?? new Float64Array(0))[j2] ?? 0);
-            for (let k = 0; k < t; k++) rho[k] = (rho[k] ?? 0) - xij2 * ((coef[j2] ?? new Float64Array(0))[k] ?? 0);
+            const xij2 =
+              ((Xc[i] ?? new Float64Array(0))[j] ?? 0) *
+              ((Xc[i] ?? new Float64Array(0))[j2] ?? 0);
+            for (let k = 0; k < t; k++)
+              rho[k] =
+                (rho[k] ?? 0) -
+                xij2 * ((coef[j2] ?? new Float64Array(0))[k] ?? 0);
           }
         }
         for (let k = 0; k < t; k++) rho[k] = (rho[k] ?? 0) / colNorm;
@@ -250,7 +301,8 @@ export class MultiTaskElasticNet {
     this.coef_ = [];
     for (let k = 0; k < t; k++) {
       const row = new Float64Array(p);
-      for (let j = 0; j < p; j++) row[j] = (coef[j] ?? new Float64Array(0))[k] ?? 0;
+      for (let j = 0; j < p; j++)
+        row[j] = (coef[j] ?? new Float64Array(0))[k] ?? 0;
       this.coef_.push(row);
     }
 
@@ -258,7 +310,9 @@ export class MultiTaskElasticNet {
       this.intercept_ = new Float64Array(t);
       for (let k = 0; k < t; k++) {
         let s = yMeans[k] ?? 0;
-        for (let j = 0; j < p; j++) s -= ((this.coef_[k] ?? new Float64Array(0))[j] ?? 0) * (xMeans[j] ?? 0);
+        for (let j = 0; j < p; j++)
+          s -=
+            ((this.coef_[k] ?? new Float64Array(0))[j] ?? 0) * (xMeans[j] ?? 0);
         this.intercept_[k] = s;
       }
     } else {
@@ -269,13 +323,15 @@ export class MultiTaskElasticNet {
   }
 
   predict(X: Float64Array[]): Float64Array[] {
-    if (!this.coef_) throw new NotFittedError("MultiTaskElasticNet is not fitted yet.");
+    if (!this.coef_)
+      throw new NotFittedError("MultiTaskElasticNet is not fitted yet.");
     const t = this.coef_.length;
     return X.map((xi) => {
       const pred = new Float64Array(t);
       for (let k = 0; k < t; k++) {
         let s = this.intercept_![k] ?? 0;
-        for (let j = 0; j < xi.length; j++) s += ((this.coef_![k] ?? new Float64Array(0))[j] ?? 0) * (xi[j] ?? 0);
+        for (let j = 0; j < xi.length; j++)
+          s += ((this.coef_![k] ?? new Float64Array(0))[j] ?? 0) * (xi[j] ?? 0);
         pred[k] = s;
       }
       return pred;

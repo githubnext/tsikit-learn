@@ -51,17 +51,24 @@ export class MDS {
       const row = new Float64Array(n);
       for (let j = 0; j < n; j++) {
         let s = 0;
-        for (let k = 0; k < p; k++) s += ((X[i]![k] ?? 0) - (X[j]![k] ?? 0)) ** 2;
+        for (let k = 0; k < p; k++)
+          s += ((X[i]![k] ?? 0) - (X[j]![k] ?? 0)) ** 2;
         row[j]! = Math.sqrt(s);
       }
       return row;
     });
   }
 
-  private _smacof(D: Float64Array[], n: number): { embedding: Float64Array[]; stress: number; nIter: number } {
+  private _smacof(
+    D: Float64Array[],
+    n: number,
+  ): { embedding: Float64Array[]; stress: number; nIter: number } {
     const k = this.nComponents;
     let rng = this.randomState;
-    const nextRng = () => { rng = (rng * 1664525 + 1013904223) >>> 0; return (rng / 4294967296) * 2 - 1; };
+    const nextRng = () => {
+      rng = (rng * 1664525 + 1013904223) >>> 0;
+      return (rng / 4294967296) * 2 - 1;
+    };
 
     // Initialize embedding randomly
     let X: Float64Array[] = Array.from({ length: n }, () => {
@@ -78,7 +85,8 @@ export class MDS {
         const row = new Float64Array(n);
         for (let j = 0; j < n; j++) {
           let s = 0;
-          for (let kk = 0; kk < k; kk++) s += ((X[i]![kk] ?? 0) - (X[j]![kk] ?? 0)) ** 2;
+          for (let kk = 0; kk < k; kk++)
+            s += ((X[i]![kk] ?? 0) - (X[j]![kk] ?? 0)) ** 2;
           row[j]! = Math.sqrt(s);
         }
         return row;
@@ -100,7 +108,10 @@ export class MDS {
       prevStress = stress;
 
       // SMACOF update (B matrix)
-      const Xnew: Float64Array[] = Array.from({ length: n }, () => new Float64Array(k));
+      const Xnew: Float64Array[] = Array.from(
+        { length: n },
+        () => new Float64Array(k),
+      );
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < n; j++) {
           if (i === j) continue;
@@ -119,7 +130,8 @@ export class MDS {
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
         let s = 0;
-        for (let kk = 0; kk < k; kk++) s += ((X[i]![kk] ?? 0) - (X[j]![kk] ?? 0)) ** 2;
+        for (let kk = 0; kk < k; kk++)
+          s += ((X[i]![kk] ?? 0) - (X[j]![kk] ?? 0)) ** 2;
         const dij = Math.sqrt(s);
         const diff = dij - (D[i]![j] ?? 0);
         finalStress += diff * diff;
@@ -130,7 +142,8 @@ export class MDS {
 
   fitTransform(X: Float64Array[]): Float64Array[] {
     const n = X.length;
-    const D = this.dissimilarity === "precomputed" ? X : this._euclideanDissim(X);
+    const D =
+      this.dissimilarity === "precomputed" ? X : this._euclideanDissim(X);
 
     let bestStress = Number.POSITIVE_INFINITY;
     let bestEmbedding: Float64Array[] = [];

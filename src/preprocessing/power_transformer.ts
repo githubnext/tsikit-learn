@@ -49,10 +49,13 @@ export class PowerTransformer {
     for (const lam of lambdas) {
       try {
         const transformed = Float64Array.from(col, (x) =>
-          this.method === "box-cox" ? this._boxcox(x, lam) : this._yeojohnson(x, lam),
+          this.method === "box-cox"
+            ? this._boxcox(x, lam)
+            : this._yeojohnson(x, lam),
         );
         let mean = 0;
-        for (let i = 0; i < transformed.length; i++) mean += transformed[i] ?? 0;
+        for (let i = 0; i < transformed.length; i++)
+          mean += transformed[i] ?? 0;
         mean /= transformed.length;
         let variance = 0;
         for (let i = 0; i < transformed.length; i++) {
@@ -61,8 +64,13 @@ export class PowerTransformer {
         variance /= transformed.length;
         // Log-likelihood proxy: -variance
         const score = -(variance || 1e-15);
-        if (score > bestScore) { bestScore = score; bestLam = lam; }
-      } catch { /* skip */ }
+        if (score > bestScore) {
+          bestScore = score;
+          bestLam = lam;
+        }
+      } catch {
+        /* skip */
+      }
     }
     return bestLam;
   }
@@ -80,7 +88,9 @@ export class PowerTransformer {
       if (this.standardize) {
         const lam = this.lambdas_[j] ?? 0;
         const t = Float64Array.from(col, (x) =>
-          this.method === "box-cox" ? this._boxcox(x, lam) : this._yeojohnson(x, lam),
+          this.method === "box-cox"
+            ? this._boxcox(x, lam)
+            : this._yeojohnson(x, lam),
         );
         let mean = 0;
         for (let i = 0; i < n; i++) mean += t[i] ?? 0;
@@ -102,9 +112,10 @@ export class PowerTransformer {
       const out = new Float64Array(p);
       for (let j = 0; j < p; j++) {
         const lam = this.lambdas_![j] ?? 0;
-        let val = this.method === "box-cox"
-          ? this._boxcox(xi[j] ?? 0, lam)
-          : this._yeojohnson(xi[j] ?? 0, lam);
+        let val =
+          this.method === "box-cox"
+            ? this._boxcox(xi[j] ?? 0, lam)
+            : this._yeojohnson(xi[j] ?? 0, lam);
         if (this.standardize) {
           val = (val - (this.means_![j] ?? 0)) / ((this.stds_![j] ?? 1) || 1);
         }
@@ -200,28 +211,45 @@ export class QuantileTransformerV2 {
     const pHigh = 1 - pLow;
     if (p < pLow) {
       const q = Math.sqrt(-2 * Math.log(p));
-      return (((((c[0]! * q + c[1]!) * q + c[2]!) * q + c[3]!) * q + c[4]!) * q + c[5]!) /
-        ((((d[0]! * q + d[1]!) * q + d[2]!) * q + d[3]!) * q + 1);
+      return (
+        (((((c[0]! * q + c[1]!) * q + c[2]!) * q + c[3]!) * q + c[4]!) * q +
+          c[5]!) /
+        ((((d[0]! * q + d[1]!) * q + d[2]!) * q + d[3]!) * q + 1)
+      );
     }
     if (p <= pHigh) {
       const q = p - 0.5;
       const r = q * q;
-      return (((((a[0]! * r + a[1]!) * r + a[2]!) * r + a[3]!) * r + a[4]!) * r + a[5]!) * q /
-        (((((b[0]! * r + b[1]!) * r + b[2]!) * r + b[3]!) * r + b[4]!) * r + 1);
+      return (
+        ((((((a[0]! * r + a[1]!) * r + a[2]!) * r + a[3]!) * r + a[4]!) * r +
+          a[5]!) *
+          q) /
+        (((((b[0]! * r + b[1]!) * r + b[2]!) * r + b[3]!) * r + b[4]!) * r + 1)
+      );
     }
     const q = Math.sqrt(-2 * Math.log(1 - p));
-    return -(((((c[0]! * q + c[1]!) * q + c[2]!) * q + c[3]!) * q + c[4]!) * q + c[5]!) /
-      ((((d[0]! * q + d[1]!) * q + d[2]!) * q + d[3]!) * q + 1);
+    return (
+      -(
+        ((((c[0]! * q + c[1]!) * q + c[2]!) * q + c[3]!) * q + c[4]!) * q +
+        c[5]!
+      ) /
+      ((((d[0]! * q + d[1]!) * q + d[2]!) * q + d[3]!) * q + 1)
+    );
   }
 
   fit(X: Float64Array[]): this {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
     const nQ = Math.min(this.nQuantiles, n);
-    this.referenceQuantiles_ = Float64Array.from({ length: nQ }, (_, i) => i / (nQ - 1));
+    this.referenceQuantiles_ = Float64Array.from(
+      { length: nQ },
+      (_, i) => i / (nQ - 1),
+    );
     this.quantiles_ = [];
     for (let j = 0; j < p; j++) {
-      const col = Array.from({ length: n }, (_, i) => X[i]![j] ?? 0).sort((a, b) => a - b);
+      const col = Array.from({ length: n }, (_, i) => X[i]![j] ?? 0).sort(
+        (a, b) => a - b,
+      );
       const quants = new Float64Array(nQ);
       for (let q = 0; q < nQ; q++) {
         const pos = (q / (nQ - 1)) * (n - 1);
@@ -292,7 +320,8 @@ export class BinarizerV2 {
     const p = (X[0] ?? new Float64Array(0)).length;
     return X.map((xi) => {
       const out = new Float64Array(p);
-      for (let j = 0; j < p; j++) out[j] = (xi[j] ?? 0) > this.threshold ? 1 : 0;
+      for (let j = 0; j < p; j++)
+        out[j] = (xi[j] ?? 0) > this.threshold ? 1 : 0;
       return out;
     });
   }

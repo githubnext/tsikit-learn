@@ -59,7 +59,8 @@ export function makeFriedman1(
   noise = 0.0,
   randomState = 0,
 ): SamplesDatasetResult {
-  if (nFeatures < 5) throw new Error("makeFriedman1 requires at least 5 features");
+  if (nFeatures < 5)
+    throw new Error("makeFriedman1 requires at least 5 features");
   const rng = makeRng(randomState);
   const X: Float64Array[] = Array.from({ length: nSamples }, () => {
     const row = new Float64Array(nFeatures);
@@ -93,7 +94,12 @@ export function makeFriedman2(
   randomState = 0,
 ): SamplesDatasetResult {
   const rng = makeRng(randomState);
-  const bounds: [number, number][] = [[0, 100], [40 * Math.PI, 560 * Math.PI], [0, 1], [1, 11]];
+  const bounds: [number, number][] = [
+    [0, 100],
+    [40 * Math.PI, 560 * Math.PI],
+    [0, 1],
+    [1, 11],
+  ];
   const X: Float64Array[] = Array.from({ length: nSamples }, () => {
     const row = new Float64Array(4);
     for (let j = 0; j < 4; j++) {
@@ -108,7 +114,9 @@ export function makeFriedman2(
     const x2 = row[2]! ?? 0;
     const x3 = Math.max(row[3]! ?? 1, 1e-6);
     const inner = x1 * x2 - 1 / (x1 * x3);
-    return Math.sqrt(x0 ** 2 + inner ** 2) + (noise > 0 ? noise * randn(rng) : 0);
+    return (
+      Math.sqrt(x0 ** 2 + inner ** 2) + (noise > 0 ? noise * randn(rng) : 0)
+    );
   });
   return { X, y };
 }
@@ -123,7 +131,12 @@ export function makeFriedman3(
   randomState = 0,
 ): SamplesDatasetResult {
   const rng = makeRng(randomState);
-  const bounds: [number, number][] = [[0, 100], [40 * Math.PI, 560 * Math.PI], [0, 1], [1, 11]];
+  const bounds: [number, number][] = [
+    [0, 100],
+    [40 * Math.PI, 560 * Math.PI],
+    [0, 1],
+    [1, 11],
+  ];
   const X: Float64Array[] = Array.from({ length: nSamples }, () => {
     const row = new Float64Array(4);
     for (let j = 0; j < 4; j++) {
@@ -184,7 +197,7 @@ export function makeMultilabelClassification(
 ): { X: Float64Array[]; y: Int32Array[] } {
   const rng = makeRng(randomState);
   const X: Float64Array[] = Array.from({ length: nSamples }, () =>
-    Float64Array.from({ length: nFeatures }, () => rng() > 0.5 ? 1 : 0),
+    Float64Array.from({ length: nFeatures }, () => (rng() > 0.5 ? 1 : 0)),
   );
   const y: Int32Array[] = Array.from({ length: nSamples }, () => {
     const row = new Int32Array(nClasses);
@@ -219,7 +232,7 @@ export function makeCheckerboard(
   const data: Float64Array[] = Array.from({ length: nRows }, (_, i) => {
     const row = new Float64Array(nCols);
     for (let j = 0; j < nCols; j++) {
-      const match = (rowLabels[i]! % 2) === (colLabels[j]! % 2);
+      const match = rowLabels[i]! % 2 === colLabels[j]! % 2;
       row[j]! = (match ? 1 : 0) + noise * randn(rng);
     }
     return row;

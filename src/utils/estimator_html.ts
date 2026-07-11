@@ -3,7 +3,7 @@
  * Mirrors sklearn.utils.estimator_html_repr.
  */
 
-import { BaseEstimator } from "../base.js";
+import type { BaseEstimator } from "../base.js";
 
 type Params = Record<string, unknown>;
 
@@ -31,7 +31,10 @@ export function estimatorHtmlRepr(estimator: BaseEstimator): string {
   const name = estimator.constructor.name;
   const params = estimator.get_params(false) as Params;
   const paramStr = Object.entries(params)
-    .map(([k, v]) => `<span class="sk-param">${escapeHtml(k)}=${formatValue(v)}</span>`)
+    .map(
+      ([k, v]) =>
+        `<span class="sk-param">${escapeHtml(k)}=${formatValue(v)}</span>`,
+    )
     .join(", ");
 
   return `<div class="sk-estimator">
@@ -43,14 +46,17 @@ export function estimatorHtmlRepr(estimator: BaseEstimator): string {
  * Pretty-print a text representation of an estimator.
  * Mirrors sklearn.base.BaseEstimator.__repr__.
  */
-export function estimatorRepr(estimator: BaseEstimator, nCharMax: number = 700): string {
+export function estimatorRepr(
+  estimator: BaseEstimator,
+  nCharMax: number = 700,
+): string {
   const name = estimator.constructor.name;
   const params = estimator.get_params(false) as Params;
   const paramStr = Object.entries(params)
     .map(([k, v]) => `${k}=${formatValue(v)}`)
     .join(", ");
   const full = `${name}(${paramStr})`;
-  return full.length > nCharMax ? full.slice(0, nCharMax - 3) + "..." : full;
+  return full.length > nCharMax ? `${full.slice(0, nCharMax - 3)}...` : full;
 }
 
 /**

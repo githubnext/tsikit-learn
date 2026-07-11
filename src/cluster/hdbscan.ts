@@ -54,7 +54,8 @@ export class HDBSCAN {
     }
     if (this.metric === "chebyshev") {
       let s = 0;
-      for (let j = 0; j < p; j++) s = Math.max(s, Math.abs((a[j] ?? 0) - (b[j] ?? 0)));
+      for (let j = 0; j < p; j++)
+        s = Math.max(s, Math.abs((a[j] ?? 0) - (b[j] ?? 0)));
       return s;
     }
     let s = 0;
@@ -67,7 +68,10 @@ export class HDBSCAN {
     this.nFeatures_ = X[0]?.length ?? 0;
 
     // Compute pairwise distances
-    const dists: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+    const dists: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(n),
+    );
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
         const d = this._dist(X[i]!, X[j]!);
@@ -80,12 +84,17 @@ export class HDBSCAN {
     const k = Math.min(this.minSamples, n - 1);
     const coreDists = new Float64Array(n);
     for (let i = 0; i < n; i++) {
-      const sorted = Array.from(dists[i]!).filter((_, j) => j !== i).sort((a, b) => a - b);
+      const sorted = Array.from(dists[i]!)
+        .filter((_, j) => j !== i)
+        .sort((a, b) => a - b);
       coreDists[i]! = sorted[k - 1] ?? 0;
     }
 
     // Mutual reachability distances
-    const mrd: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+    const mrd: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(n),
+    );
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
         if (i === j) continue;
@@ -103,14 +112,18 @@ export class HDBSCAN {
     for (let step = 0; step < n; step++) {
       let u = -1;
       for (let i = 0; i < n; i++) {
-        if (!inMST[i] && (u < 0 || (minEdge[i] ?? 0) < (minEdge[u] ?? 0))) u = i;
+        if (!inMST[i] && (u < 0 || (minEdge[i] ?? 0) < (minEdge[u] ?? 0)))
+          u = i;
       }
       if (u < 0) break;
       inMST[u]! = 1;
       if (parent[u]! >= 0) edges.push([parent[u]!, u, mrd[parent[u]!]![u]!]);
       for (let v = 0; v < n; v++) {
-        if (!inMST[v] && (mrd[u]![v]! < (minEdge[v] ?? Number.POSITIVE_INFINITY))) {
-          minEdge[v]! = mrd[u]![v]!;
+        if (
+          !inMST[v] &&
+          mrd[u]![v]! < (minEdge[v] ?? Number.POSITIVE_INFINITY)
+        ) {
+          minEdge[v]! = mrd[u]![v];
           parent[v]! = u;
         }
       }
@@ -122,20 +135,22 @@ export class HDBSCAN {
     // Build hierarchy via single-linkage (union-find)
     const uf = Array.from({ length: n }, (_, i) => i);
     const find = (x: number): number => {
-      while (uf[x] !== x) {
-        uf[x]! = uf[uf[x]!]!;
-        x = uf[x]!;
+      let cur = x;
+      while (uf[cur] !== cur) {
+        uf[cur]! = uf[uf[cur]!];
+        cur = uf[cur]!;
       }
-      return x;
+      return cur;
     };
     const clusterSizes = new Int32Array(n).fill(1);
     const labels = new Int32Array(n).fill(-1);
 
     // Simplified flat clustering: use density-based approach
     // Group points where edge weight <= threshold
-    const threshold = this.clusterSelectionEpsilon > 0
-      ? this.clusterSelectionEpsilon
-      : (edges[Math.floor(edges.length * 0.5)]?.[2] ?? 0);
+    const threshold =
+      this.clusterSelectionEpsilon > 0
+        ? this.clusterSelectionEpsilon
+        : (edges[Math.floor(edges.length * 0.5)]?.[2] ?? 0);
 
     for (const [u, v, w] of edges) {
       if (w <= threshold) {
@@ -162,7 +177,7 @@ export class HDBSCAN {
       const sz = clusterSizes[root] ?? 1;
       if (sz >= this.minClusterSize) {
         if (!rootToCluster.has(root)) rootToCluster.set(root, nextCluster++);
-        labels[i]! = rootToCluster.get(root)!;
+        labels[i]! = rootToCluster.get(root);
       }
     }
 

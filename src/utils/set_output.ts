@@ -57,7 +57,9 @@ const instanceOutputTypes = new WeakMap<object, OutputType>();
 /**
  * Add set_output capability to a transformer instance.
  */
-export function augmentWithSetOutput<T extends object>(instance: T): T & SetOutputMixin {
+export function augmentWithSetOutput<T extends object>(
+  instance: T,
+): T & SetOutputMixin {
   const augmented = instance as T & SetOutputMixin;
   augmented.setOutput = function (config: SetOutputConfig) {
     if (config.transform !== undefined) {

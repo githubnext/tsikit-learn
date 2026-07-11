@@ -17,10 +17,9 @@ export function maxabsScale(X: Float64Array[]): Float64Array[] {
       const v = Math.abs(xi[j] ?? 0);
       if (v > (maxAbs[j] ?? 0)) maxAbs[j] = v;
     }
-  return X.map(xi => {
+  return X.map((xi) => {
     const out = new Float64Array(p);
-    for (let j = 0; j < p; j++)
-      out[j] = (xi[j] ?? 0) / ((maxAbs[j] ?? 0) || 1);
+    for (let j = 0; j < p; j++) out[j] = (xi[j] ?? 0) / ((maxAbs[j] ?? 0) || 1);
     return out;
   });
 }
@@ -29,27 +28,42 @@ export function maxabsScale(X: Float64Array[]): Float64Array[] {
  * Binarize a data matrix by threshold.
  * Mirrors sklearn.preprocessing.binarize (functional form).
  */
-export function binarize(X: Float64Array[], threshold: number = 0): Float64Array[] {
-  return X.map(xi => new Float64Array(xi.map(v => (v > threshold ? 1 : 0))));
+export function binarize(
+  X: Float64Array[],
+  threshold: number = 0,
+): Float64Array[] {
+  return X.map(
+    (xi) => new Float64Array(xi.map((v) => (v > threshold ? 1 : 0))),
+  );
 }
 
 /**
  * Quantize features to a fixed number of decimal places.
  */
-export function quantizeFeatures(X: Float64Array[], decimals: number = 2): Float64Array[] {
-  const factor = Math.pow(10, decimals);
-  return X.map(xi => new Float64Array(xi.map(v => Math.round(v * factor) / factor)));
+export function quantizeFeatures(
+  X: Float64Array[],
+  decimals: number = 2,
+): Float64Array[] {
+  const factor = 10 ** decimals;
+  return X.map(
+    (xi) => new Float64Array(xi.map((v) => Math.round(v * factor) / factor)),
+  );
 }
 
 /**
  * Center the data matrix by subtracting the column means.
  */
-export function centerData(X: Float64Array[]): { Xc: Float64Array[]; mean: Float64Array } {
+export function centerData(X: Float64Array[]): {
+  Xc: Float64Array[];
+  mean: Float64Array;
+} {
   const n = X.length;
   const p = (X[0] ?? new Float64Array(0)).length;
   const mean = new Float64Array(p);
   for (const xi of X) for (let j = 0; j < p; j++) mean[j]! += (xi[j] ?? 0) / n;
-  const Xc = X.map(xi => new Float64Array(p).map((_, j) => (xi[j] ?? 0) - (mean[j] ?? 0)));
+  const Xc = X.map((xi) =>
+    new Float64Array(p).map((_, j) => (xi[j] ?? 0) - (mean[j] ?? 0)),
+  );
   return { Xc, mean };
 }
 
@@ -62,8 +76,7 @@ export function clipData(
   low: number = 0,
   high: number = 1,
 ): Float64Array[] {
-  return X.map(xi =>
-    new Float64Array(xi.map(v => Math.max(low, Math.min(high, v)))),
+  return X.map(
+    (xi) => new Float64Array(xi.map((v) => Math.max(low, Math.min(high, v)))),
   );
 }
-

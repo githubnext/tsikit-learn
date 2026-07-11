@@ -43,30 +43,55 @@ export class PLSSVDExt {
     // Center (and optionally scale)
     this.xMean_ = new Float64Array(nFeatures);
     this.yMean_ = new Float64Array(nTargets);
-    for (const row of X) for (let j = 0; j < nFeatures; j++) this.xMean_[j] = (this.xMean_[j] ?? 0) + (row[j] ?? 0);
-    for (const row of Y) for (let j = 0; j < nTargets; j++) this.yMean_[j] = (this.yMean_[j] ?? 0) + (row[j] ?? 0);
-    for (let j = 0; j < nFeatures; j++) this.xMean_[j] = (this.xMean_[j] ?? 0) / nSamples;
-    for (let j = 0; j < nTargets; j++) this.yMean_[j] = (this.yMean_[j] ?? 0) / nSamples;
+    for (const row of X)
+      for (let j = 0; j < nFeatures; j++)
+        this.xMean_[j] = (this.xMean_[j] ?? 0) + (row[j] ?? 0);
+    for (const row of Y)
+      for (let j = 0; j < nTargets; j++)
+        this.yMean_[j] = (this.yMean_[j] ?? 0) + (row[j] ?? 0);
+    for (let j = 0; j < nFeatures; j++)
+      this.xMean_[j] = (this.xMean_[j] ?? 0) / nSamples;
+    for (let j = 0; j < nTargets; j++)
+      this.yMean_[j] = (this.yMean_[j] ?? 0) / nSamples;
 
     this.xStd_ = new Float64Array(nFeatures).fill(1);
     this.yStd_ = new Float64Array(nTargets).fill(1);
     if (this.scale) {
-      for (const row of X) for (let j = 0; j < nFeatures; j++) {
-        this.xStd_[j] = (this.xStd_[j] ?? 0) + ((row[j] ?? 0) - (this.xMean_[j] ?? 0)) ** 2;
-      }
-      for (let j = 0; j < nFeatures; j++) this.xStd_[j] = Math.sqrt((this.xStd_[j] ?? 0) / (nSamples - 1)) || 1;
-      for (const row of Y) for (let j = 0; j < nTargets; j++) {
-        this.yStd_[j] = (this.yStd_[j] ?? 0) + ((row[j] ?? 0) - (this.yMean_[j] ?? 0)) ** 2;
-      }
-      for (let j = 0; j < nTargets; j++) this.yStd_[j] = Math.sqrt((this.yStd_[j] ?? 0) / (nSamples - 1)) || 1;
+      for (const row of X)
+        for (let j = 0; j < nFeatures; j++) {
+          this.xStd_[j] =
+            (this.xStd_[j] ?? 0) + ((row[j] ?? 0) - (this.xMean_[j] ?? 0)) ** 2;
+        }
+      for (let j = 0; j < nFeatures; j++)
+        this.xStd_[j] = Math.sqrt((this.xStd_[j] ?? 0) / (nSamples - 1)) || 1;
+      for (const row of Y)
+        for (let j = 0; j < nTargets; j++) {
+          this.yStd_[j] =
+            (this.yStd_[j] ?? 0) + ((row[j] ?? 0) - (this.yMean_[j] ?? 0)) ** 2;
+        }
+      for (let j = 0; j < nTargets; j++)
+        this.yStd_[j] = Math.sqrt((this.yStd_[j] ?? 0) / (nSamples - 1)) || 1;
     }
 
     // Center and scale X, Y
-    const Xc = X.map(row => new Float64Array(nFeatures).map((_, j) => ((row[j] ?? 0) - (this.xMean_![j] ?? 0)) / (this.xStd_![j] ?? 1)));
-    const Yc = Y.map(row => new Float64Array(nTargets).map((_, j) => ((row[j] ?? 0) - (this.yMean_![j] ?? 0)) / (this.yStd_![j] ?? 1)));
+    const Xc = X.map((row) =>
+      new Float64Array(nFeatures).map(
+        (_, j) =>
+          ((row[j] ?? 0) - (this.xMean_![j] ?? 0)) / (this.xStd_![j] ?? 1),
+      ),
+    );
+    const Yc = Y.map((row) =>
+      new Float64Array(nTargets).map(
+        (_, j) =>
+          ((row[j] ?? 0) - (this.yMean_![j] ?? 0)) / (this.yStd_![j] ?? 1),
+      ),
+    );
 
     // Compute cross-covariance matrix C = X^T Y
-    const C: Float64Array[] = Array.from({ length: nFeatures }, () => new Float64Array(nTargets));
+    const C: Float64Array[] = Array.from(
+      { length: nFeatures },
+      () => new Float64Array(nTargets),
+    );
     for (let i = 0; i < nSamples; i++) {
       for (let j = 0; j < nFeatures; j++) {
         for (let k = 0; k < nTargets; k++) {
@@ -94,29 +119,37 @@ export class PLSSVDExt {
 
       for (let iter = 0; iter < 10; iter++) {
         // v = C^T u
-        let v = new Float64Array(nTargets);
-        for (let j = 0; j < nFeatures; j++) for (let l = 0; l < nTargets; l++) v[l] += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
-        let normV = Math.sqrt(v.reduce((s, v2) => s + v2 ** 2, 0)) || 1;
+        const v = new Float64Array(nTargets);
+        for (let j = 0; j < nFeatures; j++)
+          for (let l = 0; l < nTargets; l++)
+            v[l] += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
+        const normV = Math.sqrt(v.reduce((s, v2) => s + v2 ** 2, 0)) || 1;
         for (let l = 0; l < nTargets; l++) v[l] = (v[l] ?? 0) / normV;
 
         // u = C v
-        let uNew = new Float64Array(nFeatures);
-        for (let j = 0; j < nFeatures; j++) for (let l = 0; l < nTargets; l++) uNew[j] += (C[j]?.[l] ?? 0) * (v[l] ?? 0);
+        const uNew = new Float64Array(nFeatures);
+        for (let j = 0; j < nFeatures; j++)
+          for (let l = 0; l < nTargets; l++)
+            uNew[j] += (C[j]?.[l] ?? 0) * (v[l] ?? 0);
 
         // Orthogonalize against previous
         for (const pu of xWeights) {
           let dot = 0;
-          for (let j = 0; j < nFeatures; j++) dot += (uNew[j] ?? 0) * (pu[j] ?? 0);
-          for (let j = 0; j < nFeatures; j++) uNew[j] = (uNew[j] ?? 0) - dot * (pu[j] ?? 0);
+          for (let j = 0; j < nFeatures; j++)
+            dot += (uNew[j] ?? 0) * (pu[j] ?? 0);
+          for (let j = 0; j < nFeatures; j++)
+            uNew[j] = (uNew[j] ?? 0) - dot * (pu[j] ?? 0);
         }
 
         normU = Math.sqrt(uNew.reduce((s, v2) => s + v2 ** 2, 0)) || 1;
-        u = new Float64Array(uNew.map(v2 => v2 / normU));
+        u = new Float64Array(uNew.map((v2) => v2 / normU));
       }
 
       // Final v
       const v = new Float64Array(nTargets);
-      for (let j = 0; j < nFeatures; j++) for (let l = 0; l < nTargets; l++) v[l] += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
+      for (let j = 0; j < nFeatures; j++)
+        for (let l = 0; l < nTargets; l++)
+          v[l] += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
       const normV = Math.sqrt(v.reduce((s, v2) => s + v2 ** 2, 0)) || 1;
       for (let l = 0; l < nTargets; l++) v[l] = (v[l] ?? 0) / normV;
 
@@ -128,42 +161,79 @@ export class PLSSVDExt {
     this.yWeights_ = yWeights;
 
     // Compute scores
-    this.xScores_ = Xc.map(row => new Float64Array(xWeights.map(w => {
-      let dot = 0;
-      for (let j = 0; j < nFeatures; j++) dot += (row[j] ?? 0) * (w[j] ?? 0);
-      return dot;
-    })));
-    this.yScores_ = Yc.map(row => new Float64Array(yWeights.map(w => {
-      let dot = 0;
-      for (let j = 0; j < nTargets; j++) dot += (row[j] ?? 0) * (w[j] ?? 0);
-      return dot;
-    })));
+    this.xScores_ = Xc.map(
+      (row) =>
+        new Float64Array(
+          xWeights.map((w) => {
+            let dot = 0;
+            for (let j = 0; j < nFeatures; j++)
+              dot += (row[j] ?? 0) * (w[j] ?? 0);
+            return dot;
+          }),
+        ),
+    );
+    this.yScores_ = Yc.map(
+      (row) =>
+        new Float64Array(
+          yWeights.map((w) => {
+            let dot = 0;
+            for (let j = 0; j < nTargets; j++)
+              dot += (row[j] ?? 0) * (w[j] ?? 0);
+            return dot;
+          }),
+        ),
+    );
 
     return this;
   }
 
-  transform(X: Float64Array[], Y?: Float64Array[]): { xScores: Float64Array[]; yScores?: Float64Array[] } {
-    if (!this.xWeights_ || !this.xMean_) throw new Error("PLSSVDExt not fitted");
+  transform(
+    X: Float64Array[],
+    Y?: Float64Array[],
+  ): { xScores: Float64Array[]; yScores?: Float64Array[] } {
+    if (!this.xWeights_ || !this.xMean_)
+      throw new Error("PLSSVDExt not fitted");
     const nFeatures = this.nFeaturesFit_;
-    const xScores = X.map(row => new Float64Array(this.xWeights_!.map(w => {
-      let dot = 0;
-      for (let j = 0; j < nFeatures; j++) dot += ((row[j] ?? 0) - (this.xMean_![j] ?? 0)) / (this.xStd_![j] ?? 1) * (w[j] ?? 0);
-      return dot;
-    })));
+    const xScores = X.map(
+      (row) =>
+        new Float64Array(
+          this.xWeights_!.map((w) => {
+            let dot = 0;
+            for (let j = 0; j < nFeatures; j++)
+              dot +=
+                (((row[j] ?? 0) - (this.xMean_![j] ?? 0)) /
+                  (this.xStd_![j] ?? 1)) *
+                (w[j] ?? 0);
+            return dot;
+          }),
+        ),
+    );
 
     if (Y) {
       const nTargets = this.nTargetsFit_;
-      const yScores = Y.map(row => new Float64Array(this.yWeights_!.map(w => {
-        let dot = 0;
-        for (let j = 0; j < nTargets; j++) dot += ((row[j] ?? 0) - (this.yMean_![j] ?? 0)) / (this.yStd_![j] ?? 1) * (w[j] ?? 0);
-        return dot;
-      })));
+      const yScores = Y.map(
+        (row) =>
+          new Float64Array(
+            this.yWeights_!.map((w) => {
+              let dot = 0;
+              for (let j = 0; j < nTargets; j++)
+                dot +=
+                  (((row[j] ?? 0) - (this.yMean_![j] ?? 0)) /
+                    (this.yStd_![j] ?? 1)) *
+                  (w[j] ?? 0);
+              return dot;
+            }),
+          ),
+      );
       return { xScores, yScores };
     }
     return { xScores };
   }
 
-  fitTransform(X: Float64Array[], Y: Float64Array[]): { xScores: Float64Array[]; yScores: Float64Array[] } {
+  fitTransform(
+    X: Float64Array[],
+    Y: Float64Array[],
+  ): { xScores: Float64Array[]; yScores: Float64Array[] } {
     this.fit(X, Y);
     return { xScores: this.xScores_!, yScores: this.yScores_! };
   }

@@ -15,7 +15,7 @@
 export function d2TweedieScore(
   yTrue: Float64Array,
   yPred: Float64Array,
-  power = 0
+  power = 0,
 ): number {
   const n = yTrue.length;
 
@@ -28,7 +28,11 @@ export function d2TweedieScore(
         dev += (yi - mui) ** 2;
       } else if (power === 1) {
         // Poisson: 2*(y*log(y/mu) - (y - mu))
-        const term = yi > 0 ? yi * Math.log(Math.max(yi / Math.max(mui, 1e-300), 1e-300)) - (yi - mui) : -yi + mui;
+        const term =
+          yi > 0
+            ? yi * Math.log(Math.max(yi / Math.max(mui, 1e-300), 1e-300)) -
+              (yi - mui)
+            : -yi + mui;
         dev += 2 * term;
       } else if (power === 2) {
         // Gamma: 2*(log(mu/y) + y/mu - 1)
@@ -41,9 +45,9 @@ export function d2TweedieScore(
         const muSafe = Math.max(mui, 1e-300);
         dev +=
           2 *
-          ((Math.pow(Math.max(yi, 0), 2 - p) / ((1 - p) * (2 - p))) -
-            (yi * Math.pow(muSafe, 1 - p)) / (1 - p) +
-            Math.pow(muSafe, 2 - p) / (2 - p));
+          (Math.max(yi, 0) ** (2 - p) / ((1 - p) * (2 - p)) -
+            (yi * muSafe ** (1 - p)) / (1 - p) +
+            muSafe ** (2 - p) / (2 - p));
       }
     }
     return dev / n;
@@ -78,7 +82,7 @@ export function d2TweedieScore(
 export function meanTweedieDeviance(
   yTrue: Float64Array,
   yPred: Float64Array,
-  power = 0
+  power = 0,
 ): number {
   const n = yTrue.length;
   let dev = 0;
@@ -88,7 +92,11 @@ export function meanTweedieDeviance(
     if (power === 0) {
       dev += (yi - mui) ** 2;
     } else if (power === 1) {
-      const term = yi > 0 ? yi * Math.log(Math.max(yi / Math.max(mui, 1e-300), 1e-300)) - (yi - mui) : -yi + mui;
+      const term =
+        yi > 0
+          ? yi * Math.log(Math.max(yi / Math.max(mui, 1e-300), 1e-300)) -
+            (yi - mui)
+          : -yi + mui;
       dev += 2 * term;
     } else if (power === 2) {
       const muSafe = Math.max(mui, 1e-300);
@@ -99,9 +107,9 @@ export function meanTweedieDeviance(
       const muSafe = Math.max(mui, 1e-300);
       dev +=
         2 *
-        ((Math.pow(Math.max(yi, 0), 2 - p) / ((1 - p) * (2 - p))) -
-          (yi * Math.pow(muSafe, 1 - p)) / (1 - p) +
-          Math.pow(muSafe, 2 - p) / (2 - p));
+        (Math.max(yi, 0) ** (2 - p) / ((1 - p) * (2 - p)) -
+          (yi * muSafe ** (1 - p)) / (1 - p) +
+          muSafe ** (2 - p) / (2 - p));
     }
   }
   return dev / n;
@@ -113,7 +121,7 @@ export function meanTweedieDeviance(
  */
 export function meanPoissonDeviance(
   yTrue: Float64Array,
-  yPred: Float64Array
+  yPred: Float64Array,
 ): number {
   return meanTweedieDeviance(yTrue, yPred, 1);
 }
@@ -124,7 +132,7 @@ export function meanPoissonDeviance(
  */
 export function meanGammaDeviance(
   yTrue: Float64Array,
-  yPred: Float64Array
+  yPred: Float64Array,
 ): number {
   return meanTweedieDeviance(yTrue, yPred, 2);
 }
@@ -138,7 +146,7 @@ export function meanGammaDeviance(
  */
 export function d2AbsoluteErrorScore(
   yTrue: Float64Array,
-  yPred: Float64Array
+  yPred: Float64Array,
 ): number {
   const n = yTrue.length;
   const sorted = Array.from(yTrue).sort((a, b) => a - b);
@@ -166,7 +174,7 @@ export function d2AbsoluteErrorScore(
 export function d2PinballScore(
   yTrue: Float64Array,
   yPred: Float64Array,
-  alpha = 0.5
+  alpha = 0.5,
 ): number {
   const n = yTrue.length;
 
@@ -196,14 +204,14 @@ export function d2PinballScore(
  */
 export function meanAbsolutePercentageError(
   yTrue: Float64Array,
-  yPred: Float64Array
+  yPred: Float64Array,
 ): number {
   const n = yTrue.length;
   let s = 0;
   for (let i = 0; i < n; i++) {
     const yi = yTrue[i] ?? 0;
     if (yi === 0) continue;
-    s += Math.abs(((yi - (yPred[i] ?? 0)) / yi));
+    s += Math.abs((yi - (yPred[i] ?? 0)) / yi);
   }
   return s / n;
 }

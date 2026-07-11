@@ -11,24 +11,30 @@ export class GaussianProcessClassifier {
   constructor(
     private readonly lengthScale = 1.0,
     private readonly noiseLevel = 1e-8,
-    private readonly maxIter = 100
+    private readonly maxIter = 100,
   ) {}
 
   private _rbfKernel(X1: Float64Array[], X2: Float64Array[]): Float64Array[] {
-    const K: Float64Array[] = Array.from({ length: X1.length }, () => new Float64Array(X2.length));
+    const K: Float64Array[] = Array.from(
+      { length: X1.length },
+      () => new Float64Array(X2.length),
+    );
     for (let i = 0; i < X1.length; i++) {
       for (let j = 0; j < X2.length; j++) {
         let d = 0;
         const xi = X1[i]!;
         const xj = X2[j]!;
-        for (let f = 0; f < xi.length; f++) d += ((xi[f] ?? 0) - (xj[f] ?? 0)) ** 2;
+        for (let f = 0; f < xi.length; f++)
+          d += ((xi[f] ?? 0) - (xj[f] ?? 0)) ** 2;
         K[i]![j] = Math.exp(-d / (2 * this.lengthScale ** 2));
       }
     }
     return K;
   }
 
-  private _sigmoid(x: number): number { return 1 / (1 + Math.exp(-x)); }
+  private _sigmoid(x: number): number {
+    return 1 / (1 + Math.exp(-x));
+  }
 
   fit(X: Float64Array[], y: Int32Array): this {
     this.XTrain_ = X;
@@ -66,7 +72,8 @@ export class GaussianProcessClassifier {
     const K = this._rbfKernel(X, this.XTrain_);
     return K.map((kRow) => {
       let fStar = 0;
-      for (let j = 0; j < this.XTrain_.length; j++) fStar += (kRow[j] ?? 0) * (this.alpha_[j] ?? 0);
+      for (let j = 0; j < this.XTrain_.length; j++)
+        fStar += (kRow[j] ?? 0) * (this.alpha_[j] ?? 0);
       const p1 = this._sigmoid(fStar);
       return new Float64Array([1 - p1, p1]);
     });
@@ -74,7 +81,11 @@ export class GaussianProcessClassifier {
 
   predict(X: Float64Array[]): Int32Array {
     const proba = this.predictProba(X);
-    return new Int32Array(proba.map((p) => ((p[1] ?? 0) >= 0.5 ? this.classes_[1] : this.classes_[0]) ?? 0));
+    return new Int32Array(
+      proba.map(
+        (p) => ((p[1] ?? 0) >= 0.5 ? this.classes_[1] : this.classes_[0]) ?? 0,
+      ),
+    );
   }
 
   score(X: Float64Array[], y: Int32Array): number {

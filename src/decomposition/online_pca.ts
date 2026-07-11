@@ -63,18 +63,22 @@ export class IncrementalPCAOnline {
     }
 
     // Center data
-    const Xc = X.map(row => {
+    const Xc = X.map((row) => {
       const r = new Float64Array(row);
-      for (let j = 0; j < nFeatures; j++) r[j] = (r[j] ?? 0) - (this.mean_![j] ?? 0);
+      for (let j = 0; j < nFeatures; j++)
+        r[j] = (r[j] ?? 0) - (this.mean_![j] ?? 0);
       return r;
     });
 
     // Augment with existing components
     const augmented = this.components_
-      ? [...Xc, ...this.components_.map(c => {
-          const sv = this.singularValues_?.[0] ?? 1;
-          return new Float64Array(c.map(v => v * sv));
-        })]
+      ? [
+          ...Xc,
+          ...this.components_.map((c) => {
+            const sv = this.singularValues_?.[0] ?? 1;
+            return new Float64Array(c.map((v) => v * sv));
+          }),
+        ]
       : Xc;
 
     // Truncated SVD on augmented matrix (power iteration)
@@ -104,17 +108,21 @@ export class IncrementalPCAOnline {
         // A^T A v
         const u = new Float64Array(rows);
         for (let i = 0; i < rows; i++) {
-          for (let j = 0; j < cols; j++) u[i] += (augmented[i]?.[j] ?? 0) * (V[c]?.[j] ?? 0);
+          for (let j = 0; j < cols; j++)
+            u[i] += (augmented[i]?.[j] ?? 0) * (V[c]?.[j] ?? 0);
         }
         const vNew = new Float64Array(cols);
         for (let i = 0; i < rows; i++) {
-          for (let j = 0; j < cols; j++) vNew[j] += (augmented[i]?.[j] ?? 0) * (u[i] ?? 0);
+          for (let j = 0; j < cols; j++)
+            vNew[j] += (augmented[i]?.[j] ?? 0) * (u[i] ?? 0);
         }
         // Orthogonalize against previous
         for (let p = 0; p < c; p++) {
           let dot = 0;
-          for (let j = 0; j < cols; j++) dot += (vNew[j] ?? 0) * (V[p]?.[j] ?? 0);
-          for (let j = 0; j < cols; j++) vNew[j] = (vNew[j] ?? 0) - dot * (V[p]?.[j] ?? 0);
+          for (let j = 0; j < cols; j++)
+            dot += (vNew[j] ?? 0) * (V[p]?.[j] ?? 0);
+          for (let j = 0; j < cols; j++)
+            vNew[j] = (vNew[j] ?? 0) - dot * (V[p]?.[j] ?? 0);
         }
         let norm = 0;
         for (let j = 0; j < cols; j++) norm += (vNew[j] ?? 0) ** 2;
@@ -132,7 +140,8 @@ export class IncrementalPCAOnline {
       let sv = 0;
       for (let i = 0; i < rows; i++) {
         let proj = 0;
-        for (let j = 0; j < cols; j++) proj += (augmented[i]?.[j] ?? 0) * (V[c]?.[j] ?? 0);
+        for (let j = 0; j < cols; j++)
+          proj += (augmented[i]?.[j] ?? 0) * (V[c]?.[j] ?? 0);
         sv += proj ** 2;
       }
       this.singularValues_[c] = Math.sqrt(sv);
@@ -140,7 +149,9 @@ export class IncrementalPCAOnline {
     }
 
     const totalVar = this.explainedVariance_.reduce((s, v) => s + v, 0);
-    this.explainedVarianceRatio_ = new Float64Array(this.explainedVariance_.map(v => v / (totalVar || 1)));
+    this.explainedVarianceRatio_ = new Float64Array(
+      this.explainedVariance_.map((v) => v / (totalVar || 1)),
+    );
     this.nBatches_++;
     return this;
   }
@@ -159,17 +170,20 @@ export class IncrementalPCAOnline {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.components_ || !this.mean_) throw new Error("IncrementalPCA not fitted");
+    if (!this.components_ || !this.mean_)
+      throw new Error("IncrementalPCA not fitted");
     const k = this.components_.length;
     const nFeatures = this.nFeatures_;
 
-    return X.map(row => {
+    return X.map((row) => {
       const xc = new Float64Array(row);
-      for (let j = 0; j < nFeatures; j++) xc[j] = (xc[j] ?? 0) - (this.mean_![j] ?? 0);
+      for (let j = 0; j < nFeatures; j++)
+        xc[j] = (xc[j] ?? 0) - (this.mean_![j] ?? 0);
       const out = new Float64Array(k);
       for (let c = 0; c < k; c++) {
         let dot = 0;
-        for (let j = 0; j < nFeatures; j++) dot += (xc[j] ?? 0) * (this.components_![c]?.[j] ?? 0);
+        for (let j = 0; j < nFeatures; j++)
+          dot += (xc[j] ?? 0) * (this.components_![c]?.[j] ?? 0);
         if (this.whiten) dot /= (this.singularValues_?.[c] ?? 1) + 1e-10;
         out[c] = dot;
       }
@@ -185,12 +199,19 @@ export class IncrementalPCAOnline {
     if (!this.components_) throw new Error("IncrementalPCA not fitted");
     const nFeatures = this.nFeatures_;
     const k = this.components_.length;
-    const cov: Float64Array[] = Array.from({ length: nFeatures }, () => new Float64Array(nFeatures));
+    const cov: Float64Array[] = Array.from(
+      { length: nFeatures },
+      () => new Float64Array(nFeatures),
+    );
     for (let c = 0; c < k; c++) {
-      const sv2 = (this.explainedVariance_?.[c] ?? 0);
+      const sv2 = this.explainedVariance_?.[c] ?? 0;
       for (let i = 0; i < nFeatures; i++) {
         for (let j = 0; j < nFeatures; j++) {
-          cov[i]![j] = (cov[i]![j] ?? 0) + sv2 * (this.components_[c]?.[i] ?? 0) * (this.components_[c]?.[j] ?? 0);
+          cov[i]![j] =
+            (cov[i]![j] ?? 0) +
+            sv2 *
+              (this.components_[c]?.[i] ?? 0) *
+              (this.components_[c]?.[j] ?? 0);
         }
       }
     }

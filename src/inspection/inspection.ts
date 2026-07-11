@@ -18,7 +18,10 @@ export interface PermutationImportanceResult {
   importancesStd: Float64Array;
 }
 
-function accuracyScore(preds: Int32Array | Float64Array, y: Int32Array | Float64Array): number {
+function accuracyScore(
+  preds: Int32Array | Float64Array,
+  y: Int32Array | Float64Array,
+): number {
   let correct = 0;
   for (let i = 0; i < y.length; i++) if (preds[i] === y[i]) correct++;
   return correct / y.length;
@@ -56,7 +59,10 @@ export function permutationImportance(
     ? accuracyScore(basePreds, y)
     : r2Score(basePreds as Float64Array, y as Float64Array);
 
-  const importances: Float64Array[] = Array.from({ length: d }, () => new Float64Array(nRepeats));
+  const importances: Float64Array[] = Array.from(
+    { length: d },
+    () => new Float64Array(nRepeats),
+  );
 
   let rngSeed = seedInit;
   const rand = () => {
@@ -70,7 +76,7 @@ export function permutationImportance(
       for (let i = n - 1; i > 0; i--) {
         const j = Math.floor(rand() * (i + 1));
         const tmp = indices[i]!;
-        indices[i]! = indices[j]!;
+        indices[i]! = indices[j];
         indices[j]! = tmp;
       }
 
@@ -126,7 +132,10 @@ export function partialDependence(
     const unique = [...new Set(vals)];
     if (unique.length <= gridResolution) return Float64Array.from(unique);
     const step = (unique.length - 1) / (gridResolution - 1);
-    return Float64Array.from({ length: gridResolution }, (_, i) => unique[Math.round(i * step)] ?? 0);
+    return Float64Array.from(
+      { length: gridResolution },
+      (_, i) => unique[Math.round(i * step)] ?? 0,
+    );
   });
 
   const average: Float64Array[] = features.map((f, fi) => {

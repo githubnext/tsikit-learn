@@ -10,7 +10,8 @@ function colMeans(X: Float64Array[]): Float64Array {
   const p = (X[0] ?? new Float64Array(0)).length;
   const m = new Float64Array(p);
   const n = X.length;
-  for (const xi of X) for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (xi[j] ?? 0);
+  for (const xi of X)
+    for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (xi[j] ?? 0);
   for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) / n;
   return m;
 }
@@ -46,13 +47,17 @@ function matTrace(M: Float64Array[]): number {
 
 function matFrobSq(M: Float64Array[]): number {
   let s = 0;
-  for (const row of M) for (let j = 0; j < row.length; j++) s += (row[j] ?? 0) ** 2;
+  for (const row of M)
+    for (let j = 0; j < row.length; j++) s += (row[j] ?? 0) ** 2;
   return s;
 }
 
 /** Invert diagonal of a matrix (for precision). */
 function invertDiag(M: Float64Array[]): Float64Array[] {
-  return M.map((row, i) => new Float64Array(row.map((v, j) => i === j && v > 0 ? 1 / v : 0)));
+  return M.map(
+    (row, i) =>
+      new Float64Array(row.map((v, j) => (i === j && v > 0 ? 1 / v : 0))),
+  );
 }
 
 /**
@@ -77,7 +82,9 @@ export function ledoitWolf(
       let fourth = 0;
       for (let t = 0; t < n; t++) {
         const xt = X[t] ?? new Float64Array(p);
-        fourth += ((xt[i] ?? 0) - (location[i] ?? 0)) ** 2 * ((xt[k] ?? 0) - (location[k] ?? 0)) ** 2;
+        fourth +=
+          ((xt[i] ?? 0) - (location[i] ?? 0)) ** 2 *
+          ((xt[k] ?? 0) - (location[k] ?? 0)) ** 2;
       }
       fourth /= n;
       delta += fourth - (S[i]![k] ?? 0) ** 2;
@@ -86,13 +93,20 @@ export function ledoitWolf(
   delta /= n;
 
   const delta2 = trS2 - trSsq / p;
-  const shrinkage = delta2 > 0
-    ? Math.min(1, Math.max(0, (delta + ((n - 2) / n) * delta2) / ((n + 2) * delta2)))
-    : 0;
+  const shrinkage =
+    delta2 > 0
+      ? Math.min(
+          1,
+          Math.max(0, (delta + ((n - 2) / n) * delta2) / ((n + 2) * delta2)),
+        )
+      : 0;
 
   const mu = trS / p;
-  const covariance = S.map((row, i) =>
-    new Float64Array(row.map((v, j) => (1 - shrinkage) * v + shrinkage * (i === j ? mu : 0))),
+  const covariance = S.map(
+    (row, i) =>
+      new Float64Array(
+        row.map((v, j) => (1 - shrinkage) * v + shrinkage * (i === j ? mu : 0)),
+      ),
   );
   return { covariance, shrinkage };
 }
@@ -118,8 +132,11 @@ export function oas(
   const shrinkage = denom > 0 ? Math.min(1, Math.max(0, num / denom)) : 0;
 
   const mu = trS / p;
-  const covariance = S.map((row, i) =>
-    new Float64Array(row.map((v, j) => (1 - shrinkage) * v + shrinkage * (i === j ? mu : 0))),
+  const covariance = S.map(
+    (row, i) =>
+      new Float64Array(
+        row.map((v, j) => (1 - shrinkage) * v + shrinkage * (i === j ? mu : 0)),
+      ),
   );
   return { covariance, shrinkage };
 }
@@ -130,9 +147,12 @@ export function oas(
  */
 export function covToCorr(covariance: Float64Array[]): Float64Array[] {
   const p = covariance.length;
-  const std = new Float64Array(p).map((_, i) => Math.sqrt(Math.max(covariance[i]![i] ?? 0, 1e-12)));
-  return covariance.map((row, i) =>
-    new Float64Array(row.map((v, j) => v / ((std[i] ?? 1) * (std[j] ?? 1)))),
+  const std = new Float64Array(p).map((_, i) =>
+    Math.sqrt(Math.max(covariance[i]![i] ?? 0, 1e-12)),
+  );
+  return covariance.map(
+    (row, i) =>
+      new Float64Array(row.map((v, j) => v / ((std[i] ?? 1) * (std[j] ?? 1)))),
   );
 }
 
@@ -154,11 +174,15 @@ export function gaussianLogLikelihood(
     for (let j = 0; j <= i; j++) {
       let s = covariance[i]![j] ?? 0;
       for (let k = 0; k < j; k++) s -= (L[i]![k] ?? 0) * (L[j]![k] ?? 0);
-      L[i]![j] = i === j ? Math.sqrt(Math.max(s, 1e-12)) : s / Math.max(L[j]![j] ?? 1, 1e-12);
+      L[i]![j] =
+        i === j
+          ? Math.sqrt(Math.max(s, 1e-12))
+          : s / Math.max(L[j]![j] ?? 1, 1e-12);
     }
   }
   let logDet = 0;
-  for (let i = 0; i < p; i++) logDet += Math.log(Math.max(L[i]![i] ?? 1e-12, 1e-12));
+  for (let i = 0; i < p; i++)
+    logDet += Math.log(Math.max(L[i]![i] ?? 1e-12, 1e-12));
   logDet *= 2;
 
   // trace(S * precision) where S = empirical covariance of X
@@ -201,11 +225,16 @@ export class SparsePrecision {
     // Simple diagonal precision estimate with soft-thresholding
     const P = invertDiag(S);
     // Soft-threshold off-diagonal elements
-    this.precision_ = P.map((row, i) =>
-      new Float64Array(row.map((v, j) => {
-        if (i === j) return v;
-        return Math.abs(v) > this.threshold ? v - Math.sign(v) * this.threshold : 0;
-      })),
+    this.precision_ = P.map(
+      (row, i) =>
+        new Float64Array(
+          row.map((v, j) => {
+            if (i === j) return v;
+            return Math.abs(v) > this.threshold
+              ? v - Math.sign(v) * this.threshold
+              : 0;
+          }),
+        ),
     );
     return this;
   }
@@ -217,14 +246,17 @@ export class SparsePrecision {
     const P = this.precision_;
     const mu = this.location_;
     const p = mu.length;
-    return new Float64Array(X.map((xi) => {
-      let d = 0;
-      for (let j = 0; j < p; j++) {
-        let pRow = 0;
-        for (let k = 0; k < p; k++) pRow += (P[j]![k] ?? 0) * ((xi[k] ?? 0) - (mu[k] ?? 0));
-        d += ((xi[j] ?? 0) - (mu[j] ?? 0)) * pRow;
-      }
-      return d;
-    }));
+    return new Float64Array(
+      X.map((xi) => {
+        let d = 0;
+        for (let j = 0; j < p; j++) {
+          let pRow = 0;
+          for (let k = 0; k < p; k++)
+            pRow += (P[j]![k] ?? 0) * ((xi[k] ?? 0) - (mu[k] ?? 0));
+          d += ((xi[j] ?? 0) - (mu[j] ?? 0)) * pRow;
+        }
+        return d;
+      }),
+    );
   }
 }

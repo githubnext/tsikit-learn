@@ -52,18 +52,27 @@ export class BayesianRidge {
     // Center if fitting intercept
     let Xfit = X;
     let yfit = y;
-    let xMean = new Float64Array(d);
+    const xMean = new Float64Array(d);
     let yMean = 0;
 
     if (this.fitIntercept) {
-      for (const xi of X) for (let j = 0; j < d; j++) xMean[j]! += (xi[j] ?? 0) / n;
+      for (const xi of X)
+        for (let j = 0; j < d; j++) xMean[j]! += (xi[j] ?? 0) / n;
       for (let i = 0; i < n; i++) yMean += (y[i] ?? 0) / n;
-      Xfit = X.map((xi) => Float64Array.from({ length: d }, (_, j) => (xi[j] ?? 0) - (xMean[j] ?? 0)));
+      Xfit = X.map((xi) =>
+        Float64Array.from(
+          { length: d },
+          (_, j) => (xi[j] ?? 0) - (xMean[j] ?? 0),
+        ),
+      );
       yfit = Float64Array.from(y, (v) => v - yMean);
     }
 
     // Gram matrix X^T X
-    const XtX: Float64Array[] = Array.from({ length: d }, () => new Float64Array(d));
+    const XtX: Float64Array[] = Array.from(
+      { length: d },
+      () => new Float64Array(d),
+    );
     for (const xi of Xfit) {
       for (let i = 0; i < d; i++) {
         for (let j = i; j < d; j++) {
@@ -92,7 +101,8 @@ export class BayesianRidge {
       // Approximate: gamma = d - alpha * trace(Sigma)
       const residuals = Float64Array.from({ length: n }, (_, i) => {
         let pred = 0;
-        for (let j = 0; j < d; j++) pred += (coef[j] ?? 0) * ((Xfit[i] as Float64Array)[j] ?? 0);
+        for (let j = 0; j < d; j++)
+          pred += (coef[j] ?? 0) * ((Xfit[i] as Float64Array)[j] ?? 0);
         return (yfit[i] ?? 0) - pred;
       });
 
@@ -102,7 +112,10 @@ export class BayesianRidge {
       alpha = (this.alpha1 + n / 2) / (this.alpha2 + ssRes / 2);
       lambda = (this.lambda1 + d / 2) / (this.lambda2 + ssCoef / 2);
 
-      if (Math.abs(alpha - alphaOld) < this.tol && Math.abs(lambda - lambdaOld) < this.tol) {
+      if (
+        Math.abs(alpha - alphaOld) < this.tol &&
+        Math.abs(lambda - lambdaOld) < this.tol
+      ) {
         this.alpha_ = alpha;
         this.lambda_ = lambda;
         this.coef_ = coef;
@@ -115,18 +128,25 @@ export class BayesianRidge {
 
     if (this.fitIntercept) {
       let intercept = yMean;
-      for (let j = 0; j < d; j++) intercept -= (this.coef_![j] ?? 0) * (xMean[j] ?? 0);
+      for (let j = 0; j < d; j++)
+        intercept -= (this.coef_![j] ?? 0) * (xMean[j] ?? 0);
       this.intercept_ = intercept;
     }
 
     return this;
   }
 
-  private xtYDot(X: Float64Array[], y: Float64Array, d: number, lambda: number): Float64Array {
+  private xtYDot(
+    X: Float64Array[],
+    y: Float64Array,
+    d: number,
+    lambda: number,
+  ): Float64Array {
     const xty = new Float64Array(d);
     for (let i = 0; i < X.length; i++) {
       const xi = X[i] as Float64Array;
-      for (let j = 0; j < d; j++) xty[j]! += lambda * (xi[j] ?? 0) * (y[i] ?? 0);
+      for (let j = 0; j < d; j++)
+        xty[j]! += lambda * (xi[j] ?? 0) * (y[i] ?? 0);
     }
     return xty;
   }
@@ -143,10 +163,13 @@ export class BayesianRidge {
       let maxVal = Math.abs((aug[col] as Float64Array)[col] ?? 0);
       for (let row = col + 1; row < n; row++) {
         const v = Math.abs((aug[row] as Float64Array)[col] ?? 0);
-        if (v > maxVal) { maxVal = v; maxRow = row; }
+        if (v > maxVal) {
+          maxVal = v;
+          maxRow = row;
+        }
       }
       const tmp = aug[col]!;
-      aug[col]! = aug[maxRow]!;
+      aug[col]! = aug[maxRow];
       aug[maxRow]! = tmp;
 
       const pivot = (aug[col] as Float64Array)[col] ?? 1;
@@ -155,7 +178,8 @@ export class BayesianRidge {
         if (row === col) continue;
         const factor = ((aug[row] as Float64Array)[col] ?? 0) / pivot;
         for (let j = col; j <= n; j++) {
-          (aug[row] as Float64Array)[j]! -= factor * ((aug[col] as Float64Array)[j] ?? 0);
+          (aug[row] as Float64Array)[j]! -=
+            factor * ((aug[col] as Float64Array)[j] ?? 0);
         }
       }
     }
@@ -171,7 +195,8 @@ export class BayesianRidge {
     if (!this.coef_) throw new NotFittedError("BayesianRidge");
     return Float64Array.from(X, (xi) => {
       let pred = this.intercept_;
-      for (let j = 0; j < xi.length; j++) pred += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
+      for (let j = 0; j < xi.length; j++)
+        pred += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
       return pred;
     });
   }
@@ -239,9 +264,15 @@ export class ARDRegression {
     let yMean = 0;
 
     if (this.fitIntercept) {
-      for (const xi of X) for (let j = 0; j < d; j++) xMean[j]! += (xi[j] ?? 0) / n;
+      for (const xi of X)
+        for (let j = 0; j < d; j++) xMean[j]! += (xi[j] ?? 0) / n;
       for (let i = 0; i < n; i++) yMean += (y[i] ?? 0) / n;
-      Xfit = X.map((xi) => Float64Array.from({ length: d }, (_, j) => (xi[j] ?? 0) - (xMean[j] ?? 0)));
+      Xfit = X.map((xi) =>
+        Float64Array.from(
+          { length: d },
+          (_, j) => (xi[j] ?? 0) - (xMean[j] ?? 0),
+        ),
+      );
       yfit = Float64Array.from(y, (v) => v - yMean);
     }
 
@@ -250,7 +281,10 @@ export class ARDRegression {
 
     for (let iter = 0; iter < this.maxIter; iter++) {
       // Active features (lambda < threshold)
-      const active = Array.from({ length: d }, (_, j) => (lambda[j] ?? 0) < this.thresholdLambda);
+      const active = Array.from(
+        { length: d },
+        (_, j) => (lambda[j] ?? 0) < this.thresholdLambda,
+      );
 
       const coef = new Float64Array(d);
       // Solve for active features only (simplified: use diagonal approximation)
@@ -289,12 +323,16 @@ export class ARDRegression {
       alpha = (this.alpha1 + n / 2) / (this.alpha2 + ssRes / 2);
 
       for (let j = 0; j < d; j++) {
-        lambda[j]! = (this.lambda1 + 0.5) / (this.lambda2 + (coef[j] ?? 0) ** 2 / 2);
+        lambda[j]! =
+          (this.lambda1 + 0.5) / (this.lambda2 + (coef[j] ?? 0) ** 2 / 2);
       }
 
       let converged = Math.abs(alpha - alphaOld) < this.tol;
       for (let j = 0; j < d; j++) {
-        if (Math.abs((lambda[j] ?? 0) - (lambdaOld[j] ?? 0)) > this.tol) { converged = false; break; }
+        if (Math.abs((lambda[j] ?? 0) - (lambdaOld[j] ?? 0)) > this.tol) {
+          converged = false;
+          break;
+        }
       }
 
       this.coef_ = coef;
@@ -305,7 +343,8 @@ export class ARDRegression {
 
     if (this.fitIntercept) {
       let intercept = yMean;
-      for (let j = 0; j < d; j++) intercept -= (this.coef_![j] ?? 0) * (xMean[j] ?? 0);
+      for (let j = 0; j < d; j++)
+        intercept -= (this.coef_![j] ?? 0) * (xMean[j] ?? 0);
       this.intercept_ = intercept;
     }
 
@@ -316,7 +355,8 @@ export class ARDRegression {
     if (!this.coef_) throw new NotFittedError("ARDRegression");
     return Float64Array.from(X, (xi) => {
       let pred = this.intercept_;
-      for (let j = 0; j < xi.length; j++) pred += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
+      for (let j = 0; j < xi.length; j++)
+        pred += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
       return pred;
     });
   }

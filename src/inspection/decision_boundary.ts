@@ -111,8 +111,11 @@ export class DecisionBoundaryDisplay {
     let flatResponse: number[];
     if (responseMethod === "predict_proba" && estimator.predictProba) {
       const proba = estimator.predictProba(gridPoints);
-      flatResponse = proba.map(p => p[1] ?? 0);
-    } else if (responseMethod === "decision_function" && estimator.decisionFunction) {
+      flatResponse = proba.map((p) => p[1] ?? 0);
+    } else if (
+      responseMethod === "decision_function" &&
+      estimator.decisionFunction
+    ) {
       const df = estimator.decisionFunction(gridPoints);
       flatResponse = Array.from(df);
     } else {
@@ -121,8 +124,9 @@ export class DecisionBoundaryDisplay {
     }
 
     // Reshape to n x n
-    const response: Float64Array[] = Array.from({ length: n }, (_, i) =>
-      new Float64Array(flatResponse.slice(i * n, (i + 1) * n)),
+    const response: Float64Array[] = Array.from(
+      { length: n },
+      (_, i) => new Float64Array(flatResponse.slice(i * n, (i + 1) * n)),
     );
 
     return new DecisionBoundaryDisplay({ xx0, xx1, response, nGridPoints: n });

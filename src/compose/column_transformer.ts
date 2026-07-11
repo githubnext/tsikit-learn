@@ -49,7 +49,9 @@ export class ColumnTransformer {
       if (t === "passthrough") {
         this.transformers_.push([name, "passthrough", spec]);
       } else {
-        const Xsub = X.map((row) => new Float64Array(cols.map((c) => row[c] ?? 0)));
+        const Xsub = X.map(
+          (row) => new Float64Array(cols.map((c) => row[c] ?? 0)),
+        );
         t.fit(Xsub);
         this.transformers_.push([name, t, spec]);
       }
@@ -58,13 +60,16 @@ export class ColumnTransformer {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.transformers_.length === 0) throw new NotFittedError("ColumnTransformer");
+    if (this.transformers_.length === 0)
+      throw new NotFittedError("ColumnTransformer");
     const n = (X[0] ?? new Float64Array(0)).length;
     const parts: Float64Array[][] = [];
 
     for (const [, t, spec] of this.transformers_) {
       const cols = this._getCols(spec, n);
-      const Xsub = X.map((row) => new Float64Array(cols.map((c) => row[c] ?? 0)));
+      const Xsub = X.map(
+        (row) => new Float64Array(cols.map((c) => row[c] ?? 0)),
+      );
       if (t === "passthrough") {
         parts.push(Xsub);
       } else {
@@ -78,7 +83,11 @@ export class ColumnTransformer {
         if (!this._allCols.has(c)) remainderCols.push(c);
       }
       if (remainderCols.length > 0) {
-        parts.push(X.map((row) => new Float64Array(remainderCols.map((c) => row[c] ?? 0))));
+        parts.push(
+          X.map(
+            (row) => new Float64Array(remainderCols.map((c) => row[c] ?? 0)),
+          ),
+        );
       }
     }
 

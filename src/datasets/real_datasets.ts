@@ -24,16 +24,18 @@ export interface RealClassificationDataset extends RealDataset {
  * Features: MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup, Latitude, Longitude
  * Target: median house value (in $100k)
  */
-export function makeCaliforniaHousing(options: {
-  nSamples?: number;
-  noise?: number;
-  seed?: number;
-} = {}): RealDataset {
+export function makeCaliforniaHousing(
+  options: {
+    nSamples?: number;
+    noise?: number;
+    seed?: number;
+  } = {},
+): RealDataset {
   const { nSamples = 1000, noise = 0.1, seed = 42 } = options;
   let rng = seed;
   const rand = () => {
     rng = (rng * 1664525 + 1013904223) & 0xffffffff;
-    return ((rng >>> 0) / 0xffffffff);
+    return (rng >>> 0) / 0xffffffff;
   };
   const randn = () => {
     const u = rand() || 1e-10;
@@ -42,8 +44,14 @@ export function makeCaliforniaHousing(options: {
   };
 
   const featureNames = [
-    "MedInc", "HouseAge", "AveRooms", "AveBedrms",
-    "Population", "AveOccup", "Latitude", "Longitude",
+    "MedInc",
+    "HouseAge",
+    "AveRooms",
+    "AveBedrms",
+    "Population",
+    "AveOccup",
+    "Latitude",
+    "Longitude",
   ];
 
   const data: Float64Array[] = [];
@@ -60,23 +68,34 @@ export function makeCaliforniaHousing(options: {
     const longitude = -119.6 + randn() * 2.0;
 
     const row = new Float64Array([
-      medInc, houseAge, aveRooms, aveBedrms,
-      population, aveOccup, latitude, longitude,
+      medInc,
+      houseAge,
+      aveRooms,
+      aveBedrms,
+      population,
+      aveOccup,
+      latitude,
+      longitude,
     ]);
     data.push(row);
 
     // Approximate the California housing formula
-    target[i] = Math.max(0.15, Math.min(5.0,
-      0.4524 * medInc
-      - 0.0104 * houseAge
-      + 0.0 * aveRooms
-      - 0.0 * aveBedrms
-      - 0.0 * population / 1000
-      - 0.0 * aveOccup
-      - 0.042 * latitude
-      + 0.0 * longitude
-      + 2.1 + randn() * noise,
-    ));
+    target[i] = Math.max(
+      0.15,
+      Math.min(
+        5.0,
+        0.4524 * medInc -
+          0.0104 * houseAge +
+          0.0 * aveRooms -
+          0.0 * aveBedrms -
+          (0.0 * population) / 1000 -
+          0.0 * aveOccup -
+          0.042 * latitude +
+          0.0 * longitude +
+          2.1 +
+          randn() * noise,
+      ),
+    );
   }
 
   return {
@@ -93,15 +112,17 @@ export function makeCaliforniaHousing(options: {
  *
  * Returns integer class labels 1-7 for cover type.
  */
-export function makeCovtype(options: {
-  nSamples?: number;
-  seed?: number;
-} = {}): RealClassificationDataset {
+export function makeCovtype(
+  options: {
+    nSamples?: number;
+    seed?: number;
+  } = {},
+): RealClassificationDataset {
   const { nSamples = 500, seed = 42 } = options;
   let rng = seed;
   const rand = () => {
     rng = (rng * 1664525 + 1013904223) & 0xffffffff;
-    return ((rng >>> 0) / 0xffffffff);
+    return (rng >>> 0) / 0xffffffff;
   };
   const randn = () => {
     const u = rand() || 1e-10;
@@ -111,16 +132,29 @@ export function makeCovtype(options: {
 
   // 54 features: 10 continuous, 4 binary wilderness areas, 40 binary soil types
   const continuousFeatureNames = [
-    "Elevation", "Aspect", "Slope",
-    "Horizontal_Distance_To_Hydrology", "Vertical_Distance_To_Hydrology",
-    "Horizontal_Distance_To_Roadways", "Hillshade_9am", "Hillshade_Noon",
-    "Hillshade_3pm", "Horizontal_Distance_To_Fire_Points",
+    "Elevation",
+    "Aspect",
+    "Slope",
+    "Horizontal_Distance_To_Hydrology",
+    "Vertical_Distance_To_Hydrology",
+    "Horizontal_Distance_To_Roadways",
+    "Hillshade_9am",
+    "Hillshade_Noon",
+    "Hillshade_3pm",
+    "Horizontal_Distance_To_Fire_Points",
   ];
   const wildernessNames = [
-    "Wilderness_Area1", "Wilderness_Area2", "Wilderness_Area3", "Wilderness_Area4",
+    "Wilderness_Area1",
+    "Wilderness_Area2",
+    "Wilderness_Area3",
+    "Wilderness_Area4",
   ];
   const soilNames = Array.from({ length: 40 }, (_, i) => `Soil_Type${i + 1}`);
-  const featureNames = [...continuousFeatureNames, ...wildernessNames, ...soilNames];
+  const featureNames = [
+    ...continuousFeatureNames,
+    ...wildernessNames,
+    ...soilNames,
+  ];
 
   const data: Float64Array[] = [];
   const target = new Float64Array(nSamples);
@@ -138,7 +172,10 @@ export function makeCovtype(options: {
     const u = rand();
     let cls = 1;
     for (let c = 0; c < cdf.length; c++) {
-      if (u <= (cdf[c] ?? 1)) { cls = c + 1; break; }
+      if (u <= (cdf[c] ?? 1)) {
+        cls = c + 1;
+        break;
+      }
     }
     target[i] = cls;
 
@@ -165,9 +202,18 @@ export function makeCovtype(options: {
     s[sType] = 1;
 
     const row = new Float64Array([
-      elevation, aspect, slope, horizHydro, vertHydro,
-      horizRoad, hillshade9am, hillshadeNoon, hillshade3pm, horizFire,
-      ...w, ...s,
+      elevation,
+      aspect,
+      slope,
+      horizHydro,
+      vertHydro,
+      horizRoad,
+      hillshade9am,
+      hillshadeNoon,
+      hillshade3pm,
+      horizFire,
+      ...w,
+      ...s,
     ]);
     data.push(row);
   }
@@ -176,10 +222,18 @@ export function makeCovtype(options: {
     data,
     target,
     featureNames,
-    targetNames: ["Spruce/Fir", "Lodgepole Pine", "Ponderosa Pine",
-      "Cottonwood/Willow", "Aspen", "Douglas-fir", "Krummholz"],
+    targetNames: [
+      "Spruce/Fir",
+      "Lodgepole Pine",
+      "Ponderosa Pine",
+      "Cottonwood/Willow",
+      "Aspen",
+      "Douglas-fir",
+      "Krummholz",
+    ],
     classes,
-    description: "Synthetic Covertype dataset (sklearn-compatible, 7 classes, 54 features)",
+    description:
+      "Synthetic Covertype dataset (sklearn-compatible, 7 classes, 54 features)",
   };
 }
 
@@ -189,22 +243,20 @@ export function makeCovtype(options: {
  *
  * @param subset - 'SA' (small) or 'SF' (larger subset), or '10percent'
  */
-export function makeKddcup99(options: {
-  nSamples?: number;
-  subset?: "SA" | "SF" | "10percent";
-  percentAnomalies?: number;
-  seed?: number;
-} = {}): RealClassificationDataset {
-  const {
-    nSamples = 500,
-    percentAnomalies = 0.2,
-    seed = 42,
-  } = options;
+export function makeKddcup99(
+  options: {
+    nSamples?: number;
+    subset?: "SA" | "SF" | "10percent";
+    percentAnomalies?: number;
+    seed?: number;
+  } = {},
+): RealClassificationDataset {
+  const { nSamples = 500, percentAnomalies = 0.2, seed = 42 } = options;
 
   let rng = seed;
   const rand = () => {
     rng = (rng * 1664525 + 1013904223) & 0xffffffff;
-    return ((rng >>> 0) / 0xffffffff);
+    return (rng >>> 0) / 0xffffffff;
   };
   const randn = () => {
     const u = rand() || 1e-10;
@@ -213,20 +265,47 @@ export function makeKddcup99(options: {
   };
 
   const featureNames = [
-    "duration", "protocol_type", "service", "flag",
-    "src_bytes", "dst_bytes", "land", "wrong_fragment",
-    "urgent", "hot", "num_failed_logins", "logged_in",
-    "num_compromised", "root_shell", "su_attempted",
-    "num_root", "num_file_creations", "num_shells",
-    "num_access_files", "num_outbound_cmds", "is_host_login",
-    "is_guest_login", "count", "srv_count",
-    "serror_rate", "srv_serror_rate", "rerror_rate", "srv_rerror_rate",
-    "same_srv_rate", "diff_srv_rate", "srv_diff_host_rate",
-    "dst_host_count", "dst_host_srv_count",
-    "dst_host_same_srv_rate", "dst_host_diff_srv_rate",
-    "dst_host_same_src_port_rate", "dst_host_srv_diff_host_rate",
-    "dst_host_serror_rate", "dst_host_srv_serror_rate",
-    "dst_host_rerror_rate", "dst_host_srv_rerror_rate",
+    "duration",
+    "protocol_type",
+    "service",
+    "flag",
+    "src_bytes",
+    "dst_bytes",
+    "land",
+    "wrong_fragment",
+    "urgent",
+    "hot",
+    "num_failed_logins",
+    "logged_in",
+    "num_compromised",
+    "root_shell",
+    "su_attempted",
+    "num_root",
+    "num_file_creations",
+    "num_shells",
+    "num_access_files",
+    "num_outbound_cmds",
+    "is_host_login",
+    "is_guest_login",
+    "count",
+    "srv_count",
+    "serror_rate",
+    "srv_serror_rate",
+    "rerror_rate",
+    "srv_rerror_rate",
+    "same_srv_rate",
+    "diff_srv_rate",
+    "srv_diff_host_rate",
+    "dst_host_count",
+    "dst_host_srv_count",
+    "dst_host_same_srv_rate",
+    "dst_host_diff_srv_rate",
+    "dst_host_same_src_port_rate",
+    "dst_host_srv_diff_host_rate",
+    "dst_host_serror_rate",
+    "dst_host_srv_serror_rate",
+    "dst_host_rerror_rate",
+    "dst_host_srv_rerror_rate",
   ];
 
   const nAnomalies = Math.floor(nSamples * percentAnomalies);
@@ -292,16 +371,18 @@ let _: number;
  * Load a synthetic version of the Olivetti faces dataset.
  * 400 samples, 64x64 pixel face images (4096 features), 40 subjects.
  */
-export function makeOlivettiFaces(options: {
-  nSamples?: number;
-  nSubjects?: number;
-  seed?: number;
-} = {}): RealDataset {
+export function makeOlivettiFaces(
+  options: {
+    nSamples?: number;
+    nSubjects?: number;
+    seed?: number;
+  } = {},
+): RealDataset {
   const { nSamples = 400, nSubjects = 40, seed = 42 } = options;
   let rng = seed;
   const rand = () => {
     rng = (rng * 1664525 + 1013904223) & 0xffffffff;
-    return ((rng >>> 0) / 0xffffffff);
+    return (rng >>> 0) / 0xffffffff;
   };
   const randn = () => {
     const u = rand() || 1e-10;
@@ -312,7 +393,10 @@ export function makeOlivettiFaces(options: {
   const nFeatures = 4096; // 64x64
   const data: Float64Array[] = [];
   const target = new Float64Array(nSamples);
-  const featureNames = Array.from({ length: nFeatures }, (_, i) => `pixel_${i}`);
+  const featureNames = Array.from(
+    { length: nFeatures },
+    (_, i) => `pixel_${i}`,
+  );
 
   // Each subject has a "prototype" face
   const prototypes: Float64Array[] = Array.from({ length: nSubjects }, () => {

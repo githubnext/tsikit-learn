@@ -61,12 +61,14 @@ export class TransformedTargetRegressor {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (!this.regressor_) throw new NotFittedError("TransformedTargetRegressor");
+    if (!this.regressor_)
+      throw new NotFittedError("TransformedTargetRegressor");
     const predsTrans = this.regressor_.predict(X);
 
     if (this.inverseFunc) {
       return this.inverseFunc(predsTrans);
-    } else if (this.transformer_) {
+    }
+    if (this.transformer_) {
       return this.transformer_.inverseTransform(predsTrans);
     }
     return predsTrans;
@@ -109,7 +111,8 @@ function createDefaultRegressor(): FittableRegressor {
     predict(X: Float64Array[]) {
       return Float64Array.from(X, (xi) => {
         let pred = intercept;
-        for (let j = 0; j < xi.length; j++) pred += (coef![j] ?? 0) * (xi[j] ?? 0);
+        for (let j = 0; j < xi.length; j++)
+          pred += (coef![j] ?? 0) * (xi[j] ?? 0);
         return pred;
       });
     },

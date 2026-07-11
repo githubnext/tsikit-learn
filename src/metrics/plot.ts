@@ -25,8 +25,7 @@ export class ConfusionMatrixDisplay {
   constructor(options: ConfusionMatrixDisplayOptions) {
     this.confusionMatrix = options.confusionMatrix;
     this.displayLabels =
-      options.displayLabels ??
-      options.confusionMatrix.map((_, i) => String(i));
+      options.displayLabels ?? options.confusionMatrix.map((_, i) => String(i));
   }
 
   /**
@@ -36,7 +35,7 @@ export class ConfusionMatrixDisplay {
     estimator: { predict(X: Float64Array[]): Int32Array },
     X: Float64Array[],
     y: Int32Array,
-    labels?: number[]
+    labels?: number[],
   ): ConfusionMatrixDisplay {
     const yPred = estimator.predict(X);
     return ConfusionMatrixDisplay.fromPredictions(y, yPred, labels);
@@ -48,14 +47,16 @@ export class ConfusionMatrixDisplay {
   static fromPredictions(
     yTrue: Int32Array,
     yPred: Int32Array,
-    labels?: number[]
+    labels?: number[],
   ): ConfusionMatrixDisplay {
     const uniqueLabels =
-      labels ??
-      [...new Set([...yTrue, ...yPred])].sort((a, b) => a - b);
+      labels ?? [...new Set([...yTrue, ...yPred])].sort((a, b) => a - b);
     const n = uniqueLabels.length;
     const labelIdx = new Map(uniqueLabels.map((l, i) => [l, i]));
-    const cm = Array.from({ length: n }, () => new Array(n).fill(0) as number[]);
+    const cm = Array.from(
+      { length: n },
+      () => new Array(n).fill(0) as number[],
+    );
     for (let i = 0; i < yTrue.length; i++) {
       const ti = labelIdx.get(yTrue[i] ?? 0) ?? 0;
       const pi = labelIdx.get(yPred[i] ?? 0) ?? 0;
@@ -74,15 +75,15 @@ export class ConfusionMatrixDisplay {
     const n = this.confusionMatrix.length;
     const maxLen = Math.max(
       ...this.displayLabels.map((l) => l.length),
-      ...this.confusionMatrix.flat().map((v) => String(v).length)
+      ...this.confusionMatrix.flat().map((v) => String(v).length),
     );
     const pad = (s: string, w: number) => s.padStart(w);
-    const header = " ".repeat(maxLen + 2) +
+    const header =
+      " ".repeat(maxLen + 2) +
       this.displayLabels.map((l) => pad(l, maxLen + 1)).join("");
     const rows = this.confusionMatrix.map(
       (row, i) =>
-        pad(this.displayLabels[i] ?? String(i), maxLen) + " |" +
-        row.map((v) => pad(String(v), maxLen + 1)).join("")
+        `${pad(this.displayLabels[i] ?? String(i), maxLen)} |${row.map((v) => pad(String(v), maxLen + 1)).join("")}`,
     );
     return [header, ...rows].join("\n");
   }
@@ -119,7 +120,7 @@ export class RocCurveDisplay {
     estimator: { predictProba(X: Float64Array[]): Float64Array[] },
     X: Float64Array[],
     y: Int32Array,
-    posLabel = 1
+    posLabel = 1,
   ): RocCurveDisplay {
     const probas = estimator.predictProba(X);
     const scores = new Float64Array(probas.map((p) => p[posLabel] ?? 0));
@@ -132,7 +133,7 @@ export class RocCurveDisplay {
   static fromPredictions(
     yTrue: Int32Array,
     yScore: Float64Array,
-    posLabel = 1
+    posLabel = 1,
   ): RocCurveDisplay {
     const { fpr, tpr, auc } = computeRocCurve(yTrue, yScore, posLabel);
     return new RocCurveDisplay({ fpr, tpr, rocAuc: auc });
@@ -158,15 +159,16 @@ export class RocCurveDisplay {
 function computeRocCurve(
   yTrue: Int32Array,
   yScore: Float64Array,
-  posLabel: number
+  posLabel: number,
 ): { fpr: Float64Array; tpr: Float64Array; auc: number } {
   const n = yTrue.length;
   const indices = Array.from({ length: n }, (_, i) => i).sort(
-    (a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0)
+    (a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0),
   );
   const nPos = Array.from(yTrue).filter((v) => v === posLabel).length;
   const nNeg = n - nPos;
-  let tp = 0, fp = 0;
+  let tp = 0;
+  let fp = 0;
   const tpr: number[] = [0];
   const fpr: number[] = [0];
   let prevScore = Number.POSITIVE_INFINITY;
@@ -186,7 +188,7 @@ function computeRocCurve(
   // Compute AUC via trapezoidal rule
   let auc = 0;
   for (let i = 1; i < fpr.length; i++) {
-    auc += ((fpr[i]! - fpr[i - 1]!) * ((tpr[i]! + tpr[i - 1]!) / 2));
+    auc += (fpr[i]! - fpr[i - 1]!) * ((tpr[i]! + tpr[i - 1]!) / 2);
   }
 
   return { fpr: new Float64Array(fpr), tpr: new Float64Array(tpr), auc };
@@ -219,14 +221,15 @@ export class PrecisionRecallDisplay {
   static fromPredictions(
     yTrue: Int32Array,
     probaPos: Float64Array,
-    posLabel = 1
+    posLabel = 1,
   ): PrecisionRecallDisplay {
     const n = yTrue.length;
     const indices = Array.from({ length: n }, (_, i) => i).sort(
-      (a, b) => (probaPos[b] ?? 0) - (probaPos[a] ?? 0)
+      (a, b) => (probaPos[b] ?? 0) - (probaPos[a] ?? 0),
     );
     const nPos = Array.from(yTrue).filter((v) => v === posLabel).length;
-    let tp = 0, fp = 0;
+    let tp = 0;
+    let fp = 0;
     const prec: number[] = [];
     const rec: number[] = [];
     for (const idx of indices) {
@@ -289,7 +292,7 @@ export class DetCurveDisplay {
   static fromPredictions(
     yTrue: Int32Array,
     yScore: Float64Array,
-    posLabel = 1
+    posLabel = 1,
   ): DetCurveDisplay {
     const { fpr, tpr } = computeRocCurve(yTrue, yScore, posLabel);
     const fnr = new Float64Array(tpr.map((t) => 1 - t));
@@ -341,7 +344,7 @@ export class CalibrationDisplay {
     X: Float64Array[],
     y: Int32Array,
     nBins = 5,
-    posLabel = 1
+    posLabel = 1,
   ): CalibrationDisplay {
     const probas = estimator.predictProba(X);
     const scores = new Float64Array(probas.map((p) => p[posLabel] ?? 0));
@@ -352,7 +355,7 @@ export class CalibrationDisplay {
     yTrue: Int32Array,
     yProba: Float64Array,
     nBins = 5,
-    posLabel = 1
+    posLabel = 1,
   ): CalibrationDisplay {
     const binEdges = Array.from({ length: nBins + 1 }, (_, i) => i / nBins);
     const fracPos = new Float64Array(nBins);
@@ -361,10 +364,7 @@ export class CalibrationDisplay {
 
     for (let i = 0; i < yTrue.length; i++) {
       const p = yProba[i] ?? 0;
-      const binIdx = Math.min(
-        Math.floor(p * nBins),
-        nBins - 1
-      );
+      const binIdx = Math.min(Math.floor(p * nBins), nBins - 1);
       fracPos[binIdx]! += (yTrue[i] ?? 0) === posLabel ? 1 : 0;
       meanPred[binIdx]! += p;
       binCounts[binIdx]! += 1;
@@ -381,7 +381,11 @@ export class CalibrationDisplay {
       }
     }
 
-    return new CalibrationDisplay({ fractionOfPositives: fracPos, meanPredictedValue: meanPred, nBins });
+    return new CalibrationDisplay({
+      fractionOfPositives: fracPos,
+      meanPredictedValue: meanPred,
+      nBins,
+    });
   }
 
   toSvg(width = 300, height = 300): string {

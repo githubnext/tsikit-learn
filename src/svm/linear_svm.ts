@@ -173,7 +173,8 @@ export class LinearSVR {
         if (Math.abs(residual) > this.epsilon) {
           const sign = residual > 0 ? 1 : -1;
           for (let j = 0; j < nFeatures; j++) {
-            coef[j]! += lr * (sign * (xi[j] ?? 0) - 2 * lambda * (coef[j] ?? 0));
+            coef[j]! +=
+              lr * (sign * (xi[j] ?? 0) - 2 * lambda * (coef[j] ?? 0));
           }
           if (this.fitIntercept) {
             intercept += lr * sign;
@@ -303,7 +304,9 @@ export class OneClassSVM {
     for (let i = 0; i < nSamples; i++) {
       let kernelSum = 0;
       for (let s = 0; s < nSV; s++) {
-        kernelSum += (this.dualCoef_[s] ?? 0) * this.rbfKernel(X[i]!, this.supportVectors_![s]!);
+        kernelSum +=
+          (this.dualCoef_[s] ?? 0) *
+          this.rbfKernel(X[i]!, this.supportVectors_![s]!);
       }
       rhoSum += kernelSum;
     }
@@ -319,7 +322,9 @@ export class OneClassSVM {
     for (let i = 0; i < nSamples; i++) {
       let score = 0;
       for (let s = 0; s < nSV; s++) {
-        score += (this.dualCoef_[s] ?? 0) * this.rbfKernel(X[i]!, this.supportVectors_[s]!);
+        score +=
+          (this.dualCoef_[s] ?? 0) *
+          this.rbfKernel(X[i]!, this.supportVectors_[s]!);
       }
       scores[i] = score - this.rho_;
     }

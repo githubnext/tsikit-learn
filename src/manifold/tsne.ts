@@ -36,7 +36,10 @@ export class TSNE {
 
   private _pairwiseDistSq(X: Float64Array[]): Float64Array[] {
     const n = X.length;
-    const D: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+    const D: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(n),
+    );
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
         let d = 0;
@@ -70,7 +73,10 @@ export class TSNE {
     for (let iter = 0; iter < maxIter; iter++) {
       let sumP = 0;
       for (let j = 0; j < n; j++) {
-        if (j === i) { pi[j] = 0; continue; }
+        if (j === i) {
+          pi[j] = 0;
+          continue;
+        }
         pi[j] = Math.exp(-((di[j] ?? 0) * beta));
         sumP += pi[j] ?? 0;
       }
@@ -86,12 +92,19 @@ export class TSNE {
       if (Math.abs(hDiff) < tol) break;
       if (hDiff > 0) {
         betaMinL = beta;
-        beta = betaMaxL === Number.POSITIVE_INFINITY ? beta * 2 : (beta + betaMaxL) / 2;
+        beta =
+          betaMaxL === Number.POSITIVE_INFINITY
+            ? beta * 2
+            : (beta + betaMaxL) / 2;
       } else {
         betaMaxL = beta;
-        beta = betaMinL === Number.NEGATIVE_INFINITY ? beta / 2 : (beta + betaMinL) / 2;
+        beta =
+          betaMinL === Number.NEGATIVE_INFINITY
+            ? beta / 2
+            : (beta + betaMinL) / 2;
       }
-      void betaMin; void betaMax;
+      void betaMin;
+      void betaMax;
     }
     return pi;
   }
@@ -99,15 +112,25 @@ export class TSNE {
   fitTransform(X: Float64Array[]): Float64Array[] {
     const n = X.length;
     const d = this.nComponents;
-    const lr = this.learningRate === "auto" ? Math.max(n / (this.earlyExaggeration * 4), 50) : this.learningRate;
+    const lr =
+      this.learningRate === "auto"
+        ? Math.max(n / (this.earlyExaggeration * 4), 50)
+        : this.learningRate;
 
     // Compute pairwise distances
     const Dsq = this._pairwiseDistSq(X);
 
     // Compute P (symmetrized conditional probabilities)
-    const P: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+    const P: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(n),
+    );
     for (let i = 0; i < n; i++) {
-      const pi = this._binarySearchPerplexity(Dsq[i] as Float64Array, this.perplexity, i);
+      const pi = this._binarySearchPerplexity(
+        Dsq[i] as Float64Array,
+        this.perplexity,
+        i,
+      );
       for (let j = 0; j < n; j++) {
         (P[i] as Float64Array)[j] = pi[j] ?? 0;
       }
@@ -115,7 +138,9 @@ export class TSNE {
     // Symmetrize
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
-        const val = ((P[i] as Float64Array)[j] ?? 0 + ((P[j] as Float64Array)[i] ?? 0)) / (2 * n);
+        const val =
+          ((P[i] as Float64Array)[j] ?? 0 + ((P[j] as Float64Array)[i] ?? 0)) /
+          (2 * n);
         (P[i] as Float64Array)[j] = val;
         (P[j] as Float64Array)[i] = val;
       }
@@ -127,21 +152,30 @@ export class TSNE {
       for (let k = 0; k < d; k++) yi[k] = (Math.random() - 0.5) * 0.0001;
       return yi;
     });
-    const gains: Float64Array[] = Array.from({ length: n }, () => new Float64Array(d).fill(1));
-    const iY: Float64Array[] = Array.from({ length: n }, () => new Float64Array(d));
+    const gains: Float64Array[] = Array.from({ length: n }, () =>
+      new Float64Array(d).fill(1),
+    );
+    const iY: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(d),
+    );
 
     const exag = this.earlyExaggeration;
     for (let iter = 0; iter < this.nIter; iter++) {
       const pMult = iter < 250 ? exag : 1;
       // Compute Q
-      const num: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+      const num: Float64Array[] = Array.from(
+        { length: n },
+        () => new Float64Array(n),
+      );
       let sumQ = 0;
       for (let i = 0; i < n; i++) {
         for (let j = i + 1; j < n; j++) {
           let distSq = 0;
           const yi = Y[i] as Float64Array;
           const yj = Y[j] as Float64Array;
-          for (let k = 0; k < d; k++) distSq += ((yi[k] ?? 0) - (yj[k] ?? 0)) ** 2;
+          for (let k = 0; k < d; k++)
+            distSq += ((yi[k] ?? 0) - (yj[k] ?? 0)) ** 2;
           const v = 1 / (1 + distSq);
           (num[i] as Float64Array)[j] = v;
           (num[j] as Float64Array)[i] = v;
@@ -151,7 +185,10 @@ export class TSNE {
       if (sumQ === 0) sumQ = 1e-10;
 
       // Compute gradients
-      const dY: Float64Array[] = Array.from({ length: n }, () => new Float64Array(d));
+      const dY: Float64Array[] = Array.from(
+        { length: n },
+        () => new Float64Array(d),
+      );
       let klDiv = 0;
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < n; j++) {
@@ -177,7 +214,10 @@ export class TSNE {
         const iy = iY[i] as Float64Array;
         const yi = Y[i] as Float64Array;
         for (let k = 0; k < d; k++) {
-          const gNew = (Math.sign(dy[k] ?? 0) !== Math.sign(iy[k] ?? 0)) ? (g[k] ?? 1) + 0.2 : (g[k] ?? 1) * 0.8;
+          const gNew =
+            Math.sign(dy[k] ?? 0) !== Math.sign(iy[k] ?? 0)
+              ? (g[k] ?? 1) + 0.2
+              : (g[k] ?? 1) * 0.8;
           g[k] = Math.max(gNew, 0.01);
           iy[k] = 0.8 * (iy[k] ?? 0) - lr * (g[k] ?? 1) * (dy[k] ?? 0);
           yi[k] = (yi[k] ?? 0) + (iy[k] ?? 0);
@@ -198,8 +238,11 @@ export class TSNE {
   }
 
   transform(_X: Float64Array[]): Float64Array[] {
-    if (this.embedding_ === null) throw new NotFittedError("TSNE is not fitted.");
-    throw new Error("TSNE does not support transform on new data. Use fit_transform.");
+    if (this.embedding_ === null)
+      throw new NotFittedError("TSNE is not fitted.");
+    throw new Error(
+      "TSNE does not support transform on new data. Use fit_transform.",
+    );
   }
 }
 
@@ -238,7 +281,8 @@ export class MDS {
         let d = 0;
         const xi = X[i] ?? new Float64Array(0);
         const xj = X[j] ?? new Float64Array(0);
-        for (let k = 0; k < xi.length; k++) d += ((xi[k] ?? 0) - (xj[k] ?? 0)) ** 2;
+        for (let k = 0; k < xi.length; k++)
+          d += ((xi[k] ?? 0) - (xj[k] ?? 0)) ** 2;
         d = Math.sqrt(d);
         D[i * n + j] = d;
         D[j * n + i] = d;
@@ -270,7 +314,12 @@ export class MDS {
     const B = new Float64Array(n * n);
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
-        B[i * n + j] = -0.5 * ((D2[i * n + j] ?? 0) - (rowMean[i] ?? 0) - (colMean[j] ?? 0) + totalMean);
+        B[i * n + j] =
+          -0.5 *
+          ((D2[i * n + j] ?? 0) -
+            (rowMean[i] ?? 0) -
+            (colMean[j] ?? 0) +
+            totalMean);
       }
     }
 
@@ -284,7 +333,8 @@ export class MDS {
       for (let iter = 0; iter < 100; iter++) {
         const w = new Float64Array(n);
         for (let i = 0; i < n; i++) {
-          for (let j = 0; j < n; j++) w[i]! += (Bcopy[i * n + j] ?? 0) * (v[j] ?? 0);
+          for (let j = 0; j < n; j++)
+            w[i]! += (Bcopy[i * n + j] ?? 0) * (v[j] ?? 0);
         }
         let norm = 0;
         for (let i = 0; i < n; i++) norm += (w[i] ?? 0) ** 2;
@@ -307,7 +357,10 @@ export class MDS {
     }
 
     // Embedding: X_new[i][k] = sqrt(lambda_k) * v_k[i]
-    const Y: Float64Array[] = Array.from({ length: n }, () => new Float64Array(d));
+    const Y: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(d),
+    );
     for (let k = 0; k < d; k++) {
       const scale = Math.sqrt(Math.max(vals[k] ?? 0, 0));
       for (let i = 0; i < n; i++) {

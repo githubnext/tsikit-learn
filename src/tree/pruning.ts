@@ -44,18 +44,23 @@ function leafCount(node: PruningNode): number {
  * Compute the cost-complexity pruning path.
  * Returns the effective alpha values and impurity sums at each pruning step.
  */
-export function costComplexityPruningPath(tree: PruningNode): PruningPathResult {
+export function costComplexityPruningPath(
+  tree: PruningNode,
+): PruningPathResult {
   const alphas: number[] = [];
   const imps: number[] = [];
 
   const computeAlpha = (node: PruningNode): number => {
-    if (node.left === null && node.right === null) return Number.POSITIVE_INFINITY;
+    if (node.left === null && node.right === null)
+      return Number.POSITIVE_INFINITY;
     const subtreeImp = leafImpuritySum(node);
     const subtreeLeaves = leafCount(node);
     const nodeImp = node.impurity * node.nSamples;
     const alpha = (nodeImp - subtreeImp) / (subtreeLeaves - 1);
-    const leftAlpha = node.left !== null ? computeAlpha(node.left) : Number.POSITIVE_INFINITY;
-    const rightAlpha = node.right !== null ? computeAlpha(node.right) : Number.POSITIVE_INFINITY;
+    const leftAlpha =
+      node.left !== null ? computeAlpha(node.left) : Number.POSITIVE_INFINITY;
+    const rightAlpha =
+      node.right !== null ? computeAlpha(node.right) : Number.POSITIVE_INFINITY;
     return Math.min(alpha, leftAlpha, rightAlpha);
   };
 
@@ -66,7 +71,12 @@ export function costComplexityPruningPath(tree: PruningNode): PruningPathResult 
     const subtreeLeaves = leafCount(node);
     const nodeAlpha = (nodeImp - subtreeImp) / (subtreeLeaves - 1);
     if (nodeAlpha <= alpha) {
-      return { impurity: node.impurity, nSamples: node.nSamples, left: null, right: null };
+      return {
+        impurity: node.impurity,
+        nSamples: node.nSamples,
+        left: null,
+        right: null,
+      };
     }
     return {
       impurity: node.impurity,
@@ -82,7 +92,7 @@ export function costComplexityPruningPath(tree: PruningNode): PruningPathResult 
 
   while (leafCount(current) > 1) {
     const alpha = computeAlpha(current);
-    if (!isFinite(alpha)) break;
+    if (!Number.isFinite(alpha)) break;
     current = prune(current, alpha);
     alphas.push(alpha);
     imps.push(leafImpuritySum(current));
@@ -111,7 +121,12 @@ export function minimalCostComplexityPrune(
     const subtreeLeaves = leafCount(node);
     const alpha = (nodeImp - subtreeImp) / (subtreeLeaves - 1);
     if (alpha <= ccpAlpha) {
-      return { impurity: node.impurity, nSamples: node.nSamples, left: null, right: null };
+      return {
+        impurity: node.impurity,
+        nSamples: node.nSamples,
+        left: null,
+        right: null,
+      };
     }
     return {
       impurity: node.impurity,

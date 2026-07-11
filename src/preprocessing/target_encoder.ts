@@ -31,10 +31,7 @@ export class TargetEncoder {
     this.randomState = options.randomState ?? 42;
   }
 
-  fit(
-    X: Array<Array<string | number>>,
-    y: Float64Array,
-  ): this {
+  fit(X: Array<Array<string | number>>, y: Float64Array): this {
     const n = X.length;
     const nFeatures = X[0]?.length ?? 0;
     this._nFeatures = nFeatures;
@@ -62,7 +59,8 @@ export class TargetEncoder {
   }
 
   transform(X: Array<Array<string | number>>): Float64Array[] {
-    if (this._encodings === null) throw new Error("TargetEncoder must be fitted first");
+    if (this._encodings === null)
+      throw new Error("TargetEncoder must be fitted first");
     return X.map((row) =>
       Float64Array.from({ length: this._nFeatures }, (_, j) => {
         const cat = row[j] ?? "";
@@ -106,8 +104,12 @@ export class LeaveOneOutEncoder {
     return this;
   }
 
-  transformTrain(X: Array<Array<string | number>>, y: Float64Array): Float64Array[] {
-    if (this._encodings === null) throw new Error("LeaveOneOutEncoder must be fitted first");
+  transformTrain(
+    X: Array<Array<string | number>>,
+    y: Float64Array,
+  ): Float64Array[] {
+    if (this._encodings === null)
+      throw new Error("LeaveOneOutEncoder must be fitted first");
     return X.map((row, i) =>
       Float64Array.from({ length: this._nFeatures }, (_, j) => {
         const cat = row[j] ?? "";
@@ -121,12 +123,15 @@ export class LeaveOneOutEncoder {
   }
 
   transform(X: Array<Array<string | number>>): Float64Array[] {
-    if (this._encodings === null) throw new Error("LeaveOneOutEncoder must be fitted first");
+    if (this._encodings === null)
+      throw new Error("LeaveOneOutEncoder must be fitted first");
     return X.map((row) =>
       Float64Array.from({ length: this._nFeatures }, (_, j) => {
         const cat = row[j] ?? "";
         const catY = this._encodings![j]?.get(cat) ?? [];
-        return catY.length > 0 ? catY.reduce((s, v) => s + v, 0) / catY.length : this._globalMean;
+        return catY.length > 0
+          ? catY.reduce((s, v) => s + v, 0) / catY.length
+          : this._globalMean;
       }),
     );
   }

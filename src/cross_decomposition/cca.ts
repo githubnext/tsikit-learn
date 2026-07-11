@@ -59,7 +59,8 @@ function powerSVD(
       const v = new Float64Array(n);
       for (let i = 0; i < m; i++) {
         const row = Mdefl[i] ?? new Float64Array(n);
-        for (let j = 0; j < n; j++) v[j] = (v[j] ?? 0) + (u[i] ?? 0) * (row[j] ?? 0);
+        for (let j = 0; j < n; j++)
+          v[j] = (v[j] ?? 0) + (u[i] ?? 0) * (row[j] ?? 0);
       }
       // normalize v
       let vnorm = 0;
@@ -71,7 +72,8 @@ function powerSVD(
       const uNew = new Float64Array(m);
       for (let i = 0; i < m; i++) {
         const row = Mdefl[i] ?? new Float64Array(n);
-        for (let j = 0; j < n; j++) uNew[i] = (uNew[i] ?? 0) + (row[j] ?? 0) * (v[j] ?? 0);
+        for (let j = 0; j < n; j++)
+          uNew[i] = (uNew[i] ?? 0) + (row[j] ?? 0) * (v[j] ?? 0);
       }
       let unorm = 0;
       for (let i = 0; i < m; i++) unorm += (uNew[i] ?? 0) ** 2;
@@ -79,9 +81,17 @@ function powerSVD(
       if (unorm < 1e-10) break;
       const sigma = unorm;
       for (let i = 0; i < m; i++) uNew[i] = (uNew[i] ?? 0) / unorm;
-      const diff = Math.sqrt(Array.from({ length: m }, (_, i) => ((uNew[i] ?? 0) - (u[i] ?? 0)) ** 2).reduce((a, b) => a + b, 0));
+      const diff = Math.sqrt(
+        Array.from(
+          { length: m },
+          (_, i) => ((uNew[i] ?? 0) - (u[i] ?? 0)) ** 2,
+        ).reduce((a, b) => a + b, 0),
+      );
       u = uNew;
-      if (diff < 1e-8) { S.push(sigma); break; }
+      if (diff < 1e-8) {
+        S.push(sigma);
+        break;
+      }
       if (iter === maxIter - 1) S.push(sigma);
     }
 
@@ -90,7 +100,8 @@ function powerSVD(
     const v = new Float64Array(n);
     for (let i = 0; i < m; i++) {
       const row = Mdefl[i] ?? new Float64Array(n);
-      for (let j = 0; j < n; j++) v[j] = (v[j] ?? 0) + (u[i] ?? 0) * (row[j] ?? 0);
+      for (let j = 0; j < n; j++)
+        v[j] = (v[j] ?? 0) + (u[i] ?? 0) * (row[j] ?? 0);
     }
     let vnorm = 0;
     for (let j = 0; j < n; j++) vnorm += (v[j] ?? 0) ** 2;
@@ -159,14 +170,24 @@ export class CCA {
     if (this.scale) {
       const xStd = new Float64Array(p);
       const yStd = new Float64Array(q);
-      for (const xi of Xc) for (let j = 0; j < p; j++) xStd[j] = (xStd[j] ?? 0) + (xi[j] ?? 0) ** 2;
-      for (const yi of Yc) for (let j = 0; j < q; j++) yStd[j] = (yStd[j] ?? 0) + (yi[j] ?? 0) ** 2;
+      for (const xi of Xc)
+        for (let j = 0; j < p; j++)
+          xStd[j] = (xStd[j] ?? 0) + (xi[j] ?? 0) ** 2;
+      for (const yi of Yc)
+        for (let j = 0; j < q; j++)
+          yStd[j] = (yStd[j] ?? 0) + (yi[j] ?? 0) ** 2;
       for (let j = 0; j < p; j++) xStd[j] = Math.sqrt((xStd[j] ?? 0) / n);
       for (let j = 0; j < q; j++) yStd[j] = Math.sqrt((yStd[j] ?? 0) / n);
       this.xStd_ = xStd;
       this.yStd_ = yStd;
-      Xc = Xc.map((xi) => new Float64Array(xi.map((v, j) => v / Math.max(xStd[j] ?? 1, 1e-10))));
-      Yc = Yc.map((yi) => new Float64Array(yi.map((v, j) => v / Math.max(yStd[j] ?? 1, 1e-10))));
+      Xc = Xc.map(
+        (xi) =>
+          new Float64Array(xi.map((v, j) => v / Math.max(xStd[j] ?? 1, 1e-10))),
+      );
+      Yc = Yc.map(
+        (yi) =>
+          new Float64Array(yi.map((v, j) => v / Math.max(yStd[j] ?? 1, 1e-10))),
+      );
     }
 
     // CCA via SVD of X^T Y
@@ -182,12 +203,16 @@ export class CCA {
       const w = U[c] ?? new Float64Array(p);
       const t = new Float64Array(n);
       for (let i = 0; i < n; i++) {
-        for (let j = 0; j < p; j++) t[i] = (t[i] ?? 0) + ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (w[j] ?? 0);
+        for (let j = 0; j < p; j++)
+          t[i] =
+            (t[i] ?? 0) +
+            ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (w[j] ?? 0);
       }
       const load = new Float64Array(p);
       for (let j = 0; j < p; j++) {
         let cov = 0;
-        for (let i = 0; i < n; i++) cov += ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (t[i] ?? 0);
+        for (let i = 0; i < n; i++)
+          cov += ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (t[i] ?? 0);
         let tNorm = 0;
         for (let i = 0; i < n; i++) tNorm += (t[i] ?? 0) ** 2;
         load[j] = tNorm > 0 ? cov / tNorm : 0;
@@ -199,12 +224,16 @@ export class CCA {
       const w = Vt[c] ?? new Float64Array(q);
       const u = new Float64Array(n);
       for (let i = 0; i < n; i++) {
-        for (let j = 0; j < q; j++) u[i] = (u[i] ?? 0) + ((Yc[i] ?? new Float64Array(q))[j] ?? 0) * (w[j] ?? 0);
+        for (let j = 0; j < q; j++)
+          u[i] =
+            (u[i] ?? 0) +
+            ((Yc[i] ?? new Float64Array(q))[j] ?? 0) * (w[j] ?? 0);
       }
       const load = new Float64Array(q);
       for (let j = 0; j < q; j++) {
         let cov = 0;
-        for (let i = 0; i < n; i++) cov += ((Yc[i] ?? new Float64Array(q))[j] ?? 0) * (u[i] ?? 0);
+        for (let i = 0; i < n; i++)
+          cov += ((Yc[i] ?? new Float64Array(q))[j] ?? 0) * (u[i] ?? 0);
         let uNorm = 0;
         for (let i = 0; i < n; i++) uNorm += (u[i] ?? 0) ** 2;
         load[j] = uNorm > 0 ? cov / uNorm : 0;
@@ -215,20 +244,33 @@ export class CCA {
     return this;
   }
 
-  transform(X: Float64Array[], Y?: Float64Array[]): [Float64Array[], Float64Array[] | null] {
-    if (this.xWeights_ === null || this.xMean_ === null) throw new NotFittedError("CCA");
+  transform(
+    X: Float64Array[],
+    Y?: Float64Array[],
+  ): [Float64Array[], Float64Array[] | null] {
+    if (this.xWeights_ === null || this.xMean_ === null)
+      throw new NotFittedError("CCA");
     const xMean = this.xMean_;
     const xStd = this.xStd_;
     const k = this.nComponents;
 
-    let Xc = X.map((xi) => new Float64Array(xi.map((v, j) => v - (xMean[j] ?? 0))));
-    if (xStd) Xc = Xc.map((xi) => new Float64Array(xi.map((v, j) => v / Math.max(xStd[j] ?? 1, 1e-10))));
+    let Xc = X.map(
+      (xi) => new Float64Array(xi.map((v, j) => v - (xMean[j] ?? 0))),
+    );
+    if (xStd)
+      Xc = Xc.map(
+        (xi) =>
+          new Float64Array(xi.map((v, j) => v / Math.max(xStd[j] ?? 1, 1e-10))),
+      );
 
     const xScores = X.map((_, i) => {
       const scores = new Float64Array(k);
       for (let c = 0; c < k; c++) {
         const w = this.xWeights_![c] ?? new Float64Array(0);
-        for (let j = 0; j < w.length; j++) scores[c] = (scores[c] ?? 0) + ((Xc[i] ?? new Float64Array(0))[j] ?? 0) * (w[j] ?? 0);
+        for (let j = 0; j < w.length; j++)
+          scores[c] =
+            (scores[c] ?? 0) +
+            ((Xc[i] ?? new Float64Array(0))[j] ?? 0) * (w[j] ?? 0);
       }
       return scores;
     });
@@ -237,14 +279,23 @@ export class CCA {
 
     const yMean = this.yMean_!;
     const yStd = this.yStd_;
-    let Yc = Y.map((yi) => new Float64Array(yi.map((v, j) => v - (yMean[j] ?? 0))));
-    if (yStd) Yc = Yc.map((yi) => new Float64Array(yi.map((v, j) => v / Math.max(yStd[j] ?? 1, 1e-10))));
+    let Yc = Y.map(
+      (yi) => new Float64Array(yi.map((v, j) => v - (yMean[j] ?? 0))),
+    );
+    if (yStd)
+      Yc = Yc.map(
+        (yi) =>
+          new Float64Array(yi.map((v, j) => v / Math.max(yStd[j] ?? 1, 1e-10))),
+      );
 
     const yScores = Y.map((_, i) => {
       const scores = new Float64Array(k);
       for (let c = 0; c < k; c++) {
         const w = this.yWeights_![c] ?? new Float64Array(0);
-        for (let j = 0; j < w.length; j++) scores[c] = (scores[c] ?? 0) + ((Yc[i] ?? new Float64Array(0))[j] ?? 0) * (w[j] ?? 0);
+        for (let j = 0; j < w.length; j++)
+          scores[c] =
+            (scores[c] ?? 0) +
+            ((Yc[i] ?? new Float64Array(0))[j] ?? 0) * (w[j] ?? 0);
       }
       return scores;
     });
@@ -252,7 +303,10 @@ export class CCA {
     return [xScores, yScores];
   }
 
-  fitTransform(X: Float64Array[], Y: Float64Array[]): [Float64Array[], Float64Array[]] {
+  fitTransform(
+    X: Float64Array[],
+    Y: Float64Array[],
+  ): [Float64Array[], Float64Array[]] {
     this.fit(X, Y);
     const [xS, yS] = this.transform(X, Y);
     return [xS, yS!];

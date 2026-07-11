@@ -76,7 +76,10 @@ export function radiusNeighborsGraph(
     for (let j = 0; j < n; j++) {
       if (!includesSelf && i === j) continue;
       const d = euclidean(X[i]!, X[j]!);
-      if (d <= radius) { idxList.push(j); distList.push(d); }
+      if (d <= radius) {
+        idxList.push(j);
+        distList.push(d);
+      }
     }
     allIndices.push(idxList);
     allDists.push(distList);
@@ -116,4 +119,3 @@ export function sparseToDense(sparse: SparseMatrix): Float64Array[] {
   }
   return dense;
 }
-

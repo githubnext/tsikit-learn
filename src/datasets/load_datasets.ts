@@ -25,7 +25,7 @@ function seededRng(seed: number): () => number {
   let s = seed;
   return () => {
     s = (s * 1664525 + 1013904223) & 0xffffffff;
-    return ((s >>> 0) / 4294967296);
+    return (s >>> 0) / 4294967296;
   };
 }
 
@@ -41,7 +41,7 @@ export function loadIris(): Dataset {
   ];
   const stds = [
     [0.352, 0.379, 0.174, 0.105],
-    [0.516, 0.314, 0.470, 0.198],
+    [0.516, 0.314, 0.47, 0.198],
     [0.636, 0.322, 0.552, 0.275],
   ];
 
@@ -55,7 +55,8 @@ export function loadIris(): Dataset {
         // Box-Muller
         const u1 = rng();
         const u2 = rng();
-        const z = Math.sqrt(-2 * Math.log(u1 + 1e-10)) * Math.cos(2 * Math.PI * u2);
+        const z =
+          Math.sqrt(-2 * Math.log(u1 + 1e-10)) * Math.cos(2 * Math.PI * u2);
         row[j] = (means[cls]![j] ?? 0) + (stds[cls]![j] ?? 1) * z;
       }
       data.push(row);
@@ -87,9 +88,18 @@ export function loadWine(): Dataset {
 
   const classSizes = [59, 71, 48];
   const classMeans = [
-    [13.74, 2.01, 2.46, 17.0, 106.3, 2.84, 2.98, 0.29, 1.90, 5.53, 1.05, 3.33, 1115.7],
-    [12.28, 1.93, 2.24, 20.2, 94.5, 2.26, 2.08, 0.36, 1.47, 5.09, 0.99, 2.85, 519.5],
-    [13.15, 3.33, 2.44, 21.2, 99.3, 1.69, 0.78, 0.45, 1.15, 7.40, 0.68, 1.72, 629.9],
+    [
+      13.74, 2.01, 2.46, 17.0, 106.3, 2.84, 2.98, 0.29, 1.9, 5.53, 1.05, 3.33,
+      1115.7,
+    ],
+    [
+      12.28, 1.93, 2.24, 20.2, 94.5, 2.26, 2.08, 0.36, 1.47, 5.09, 0.99, 2.85,
+      519.5,
+    ],
+    [
+      13.15, 3.33, 2.44, 21.2, 99.3, 1.69, 0.78, 0.45, 1.15, 7.4, 0.68, 1.72,
+      629.9,
+    ],
   ];
 
   for (let cls = 0; cls < 3; cls++) {
@@ -107,9 +117,19 @@ export function loadWine(): Dataset {
   }
 
   const featureNames = [
-    "alcohol", "malic_acid", "ash", "alcalinity_of_ash", "magnesium",
-    "total_phenols", "flavanoids", "nonflavanoid_phenols", "proanthocyanins",
-    "color_intensity", "hue", "od280/od315_of_diluted_wines", "proline",
+    "alcohol",
+    "malic_acid",
+    "ash",
+    "alcalinity_of_ash",
+    "magnesium",
+    "total_phenols",
+    "flavanoids",
+    "nonflavanoid_phenols",
+    "proanthocyanins",
+    "color_intensity",
+    "hue",
+    "od280/od315_of_diluted_wines",
+    "proline",
   ];
 
   return {
@@ -132,12 +152,16 @@ export function loadBreastCancer(): Dataset {
   // 0=malignant (212), 1=benign (357)
   const classSizes = [212, 357];
   const classMeans = [
-    [17.46, 21.60, 115.4, 978.4, 0.103, 0.145, 0.161, 0.088, 0.192, 0.063,
-     0.609, 1.210, 4.324, 72.67, 0.007, 0.032, 0.042, 0.015, 0.020, 0.004,
-     21.13, 29.32, 141.4, 1422.3, 0.145, 0.374, 0.455, 0.182, 0.324, 0.091],
-    [12.15, 17.92, 78.1, 462.8, 0.092, 0.080, 0.046, 0.025, 0.174, 0.062,
-     0.284, 1.220, 2.001, 20.01, 0.007, 0.013, 0.014, 0.006, 0.021, 0.004,
-     13.38, 23.52, 87.0, 558.9, 0.124, 0.182, 0.167, 0.074, 0.271, 0.079],
+    [
+      17.46, 21.6, 115.4, 978.4, 0.103, 0.145, 0.161, 0.088, 0.192, 0.063,
+      0.609, 1.21, 4.324, 72.67, 0.007, 0.032, 0.042, 0.015, 0.02, 0.004, 21.13,
+      29.32, 141.4, 1422.3, 0.145, 0.374, 0.455, 0.182, 0.324, 0.091,
+    ],
+    [
+      12.15, 17.92, 78.1, 462.8, 0.092, 0.08, 0.046, 0.025, 0.174, 0.062, 0.284,
+      1.22, 2.001, 20.01, 0.007, 0.013, 0.014, 0.006, 0.021, 0.004, 13.38,
+      23.52, 87.0, 558.9, 0.124, 0.182, 0.167, 0.074, 0.271, 0.079,
+    ],
   ];
 
   for (let cls = 0; cls < 2; cls++) {
@@ -155,15 +179,36 @@ export function loadBreastCancer(): Dataset {
   }
 
   const featureNames = [
-    "mean radius", "mean texture", "mean perimeter", "mean area",
-    "mean smoothness", "mean compactness", "mean concavity",
-    "mean concave points", "mean symmetry", "mean fractal dimension",
-    "radius error", "texture error", "perimeter error", "area error",
-    "smoothness error", "compactness error", "concavity error",
-    "concave points error", "symmetry error", "fractal dimension error",
-    "worst radius", "worst texture", "worst perimeter", "worst area",
-    "worst smoothness", "worst compactness", "worst concavity",
-    "worst concave points", "worst symmetry", "worst fractal dimension",
+    "mean radius",
+    "mean texture",
+    "mean perimeter",
+    "mean area",
+    "mean smoothness",
+    "mean compactness",
+    "mean concavity",
+    "mean concave points",
+    "mean symmetry",
+    "mean fractal dimension",
+    "radius error",
+    "texture error",
+    "perimeter error",
+    "area error",
+    "smoothness error",
+    "compactness error",
+    "concavity error",
+    "concave points error",
+    "symmetry error",
+    "fractal dimension error",
+    "worst radius",
+    "worst texture",
+    "worst perimeter",
+    "worst area",
+    "worst smoothness",
+    "worst compactness",
+    "worst concavity",
+    "worst concave points",
+    "worst symmetry",
+    "worst fractal dimension",
   ];
 
   return {
@@ -196,23 +241,38 @@ export function makeSwissRoll(
     const height = 21 * rng();
     t[i] = ti;
 
-    const nx = noise > 0 ? (() => {
-      const u1 = Math.max(rng(), 1e-10);
-      const u2 = rng();
-      return noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-    })() : 0;
+    const nx =
+      noise > 0
+        ? (() => {
+            const u1 = Math.max(rng(), 1e-10);
+            const u2 = rng();
+            return (
+              noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+            );
+          })()
+        : 0;
 
-    const ny = noise > 0 ? (() => {
-      const u1 = Math.max(rng(), 1e-10);
-      const u2 = rng();
-      return noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-    })() : 0;
+    const ny =
+      noise > 0
+        ? (() => {
+            const u1 = Math.max(rng(), 1e-10);
+            const u2 = rng();
+            return (
+              noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+            );
+          })()
+        : 0;
 
-    const nz = noise > 0 ? (() => {
-      const u1 = Math.max(rng(), 1e-10);
-      const u2 = rng();
-      return noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-    })() : 0;
+    const nz =
+      noise > 0
+        ? (() => {
+            const u1 = Math.max(rng(), 1e-10);
+            const u2 = rng();
+            return (
+              noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+            );
+          })()
+        : 0;
 
     X.push(
       new Float64Array([
@@ -245,23 +305,38 @@ export function makeScurve(
     const height = 2 * rng();
     t[i] = ti;
 
-    const nx = noise > 0 ? (() => {
-      const u1 = Math.max(rng(), 1e-10);
-      const u2 = rng();
-      return noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-    })() : 0;
+    const nx =
+      noise > 0
+        ? (() => {
+            const u1 = Math.max(rng(), 1e-10);
+            const u2 = rng();
+            return (
+              noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+            );
+          })()
+        : 0;
 
-    const ny = noise > 0 ? (() => {
-      const u1 = Math.max(rng(), 1e-10);
-      const u2 = rng();
-      return noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-    })() : 0;
+    const ny =
+      noise > 0
+        ? (() => {
+            const u1 = Math.max(rng(), 1e-10);
+            const u2 = rng();
+            return (
+              noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+            );
+          })()
+        : 0;
 
-    const nz = noise > 0 ? (() => {
-      const u1 = Math.max(rng(), 1e-10);
-      const u2 = rng();
-      return noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-    })() : 0;
+    const nz =
+      noise > 0
+        ? (() => {
+            const u1 = Math.max(rng(), 1e-10);
+            const u2 = rng();
+            return (
+              noise * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+            );
+          })()
+        : 0;
 
     X.push(
       new Float64Array([

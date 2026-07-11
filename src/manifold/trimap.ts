@@ -11,7 +11,7 @@ export class TriMAP {
     private readonly nOutliers = 5,
     private readonly nRandom = 5,
     private readonly lr = 0.1,
-    private readonly nIter = 400
+    private readonly nIter = 400,
   ) {}
 
   fitTransform(X: Float64Array[]): Float64Array[] {
@@ -36,7 +36,8 @@ export class TriMAP {
         for (const j of neighbors) {
           const ej = embed[j]!;
           let d = 0;
-          for (let d2 = 0; d2 < nDims; d2++) d += ((ei[d2] ?? 0) - (ej[d2] ?? 0)) ** 2;
+          for (let d2 = 0; d2 < nDims; d2++)
+            d += ((ei[d2] ?? 0) - (ej[d2] ?? 0)) ** 2;
           const dist = Math.sqrt(d) + 1e-10;
           for (let d2 = 0; d2 < nDims; d2++) {
             const grad = ((ei[d2] ?? 0) - (ej[d2] ?? 0)) / (dist * (1 + dist));
@@ -52,12 +53,12 @@ export class TriMAP {
 
   private _computeKNN(X: Float64Array[], k: number): number[][] {
     return X.map((xi, i) => {
-      return X
-        .map((xj, j) => {
-          let d = 0;
-          for (let f = 0; f < xi.length; f++) d += ((xi[f] ?? 0) - (xj[f] ?? 0)) ** 2;
-          return { j, d };
-        })
+      return X.map((xj, j) => {
+        let d = 0;
+        for (let f = 0; f < xi.length; f++)
+          d += ((xi[f] ?? 0) - (xj[f] ?? 0)) ** 2;
+        return { j, d };
+      })
         .filter(({ j }) => j !== i)
         .sort((a, b) => a.d - b.d)
         .slice(0, k)
@@ -65,7 +66,9 @@ export class TriMAP {
     });
   }
 
-  getEmbedding(): Float64Array[] { return this.embedding_; }
+  getEmbedding(): Float64Array[] {
+    return this.embedding_;
+  }
 }
 
 export class PHATE {
@@ -75,7 +78,7 @@ export class PHATE {
     private readonly nComponents = 2,
     private readonly knn = 5,
     private readonly decay = 40,
-    private readonly nLandmark = 2000
+    private readonly nLandmark = 2000,
   ) {}
 
   fitTransform(X: Float64Array[]): Float64Array[] {
@@ -99,14 +102,17 @@ export class PHATE {
     const n = X.length;
     const nF = X[0]?.length ?? 1;
     // Compute kernel matrix
-    const K: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+    const K: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(n),
+    );
     for (let i = 0; i < n; i++) {
       for (let j = i; j < n; j++) {
         let d = 0;
         const xi = X[i]!;
         const xj = X[j]!;
         for (let f = 0; f < nF; f++) d += ((xi[f] ?? 0) - (xj[f] ?? 0)) ** 2;
-        const k = Math.exp(-d * this.decay / nF);
+        const k = Math.exp((-d * this.decay) / nF);
         K[i]![j] = k;
         K[j]![i] = k;
       }
@@ -118,7 +124,9 @@ export class PHATE {
     });
   }
 
-  getEmbedding(): Float64Array[] { return this.embedding_; }
+  getEmbedding(): Float64Array[] {
+    return this.embedding_;
+  }
   // nLandmark is stored but not used in simplified version
   private _nLandmark = this.nLandmark;
 }
@@ -130,15 +138,19 @@ export class ForceAtlas2 {
     private readonly nIter = 100,
     private readonly gravity = 1.0,
     private readonly scalingRatio = 2.0,
-    private readonly barnesHutTheta = 1.2
+    private readonly barnesHutTheta = 1.2,
   ) {}
 
   fit(edges: [number, number][], nNodes: number, weights?: Float64Array): this {
     void this.barnesHutTheta;
-    const pos = Array.from({ length: nNodes }, () => new Float64Array([
-      (Math.random() - 0.5) * 100,
-      (Math.random() - 0.5) * 100,
-    ]));
+    const pos = Array.from(
+      { length: nNodes },
+      () =>
+        new Float64Array([
+          (Math.random() - 0.5) * 100,
+          (Math.random() - 0.5) * 100,
+        ]),
+    );
 
     for (let iter = 0; iter < this.nIter; iter++) {
       const forces = Array.from({ length: nNodes }, () => new Float64Array(2));
@@ -159,8 +171,10 @@ export class ForceAtlas2 {
         // Gravity
         const pi = pos[i]!;
         const d = Math.sqrt((pi[0] ?? 0) ** 2 + (pi[1] ?? 0) ** 2) + 0.01;
-        forces[i]![0] = (forces[i]![0] ?? 0) - this.gravity * (pi[0] ?? 0) / d;
-        forces[i]![1] = (forces[i]![1] ?? 0) - this.gravity * (pi[1] ?? 0) / d;
+        forces[i]![0] =
+          (forces[i]![0] ?? 0) - (this.gravity * (pi[0] ?? 0)) / d;
+        forces[i]![1] =
+          (forces[i]![1] ?? 0) - (this.gravity * (pi[1] ?? 0)) / d;
       }
       // Attraction along edges
       for (let ei = 0; ei < edges.length; ei++) {
@@ -188,5 +202,7 @@ export class ForceAtlas2 {
     return this;
   }
 
-  getPositions(): Float64Array[] { return this.positions_; }
+  getPositions(): Float64Array[] {
+    return this.positions_;
+  }
 }

@@ -18,7 +18,8 @@ function rbfAffinity(X: Float64Array[], gamma: number): Float64Array[] {
     Float64Array.from(X, (xj, j) => {
       if (i === j) return 0;
       let d = 0;
-      for (let k = 0; k < xi.length; k++) d += ((xi[k] ?? 0) - ((xj as Float64Array)[k] ?? 0)) ** 2;
+      for (let k = 0; k < xi.length; k++)
+        d += ((xi[k] ?? 0) - ((xj as Float64Array)[k] ?? 0)) ** 2;
       return Math.exp(-gamma * d);
     }),
   );
@@ -29,7 +30,10 @@ function symmetricNormLaplacian(W: Float64Array[]): Float64Array[] {
   const D = W.map((row) => row.reduce((s, v) => s + v, 0));
   const Dinvhalf = D.map((d) => (d > 0 ? 1 / Math.sqrt(d) : 0));
   return W.map((row, i) =>
-    Float64Array.from(row, (w, j) => (Dinvhalf[i] ?? 0) * w * (Dinvhalf[j] ?? 0)),
+    Float64Array.from(
+      row,
+      (w, j) => (Dinvhalf[i] ?? 0) * w * (Dinvhalf[j] ?? 0),
+    ),
   );
 }
 

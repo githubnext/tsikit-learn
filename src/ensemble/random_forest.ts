@@ -4,7 +4,10 @@
  */
 
 import { NotFittedError } from "../exceptions.js";
-import { DecisionTreeClassifier, DecisionTreeRegressor } from "../tree/decision_tree.js";
+import {
+  DecisionTreeClassifier,
+  DecisionTreeRegressor,
+} from "../tree/decision_tree.js";
 
 function bootstrapSample(n: number): number[] {
   const indices: number[] = [];
@@ -39,8 +42,10 @@ export class RandomForestClassifier {
 
   private _getFeatureSubset(nFeatures: number): number[] {
     let k: number;
-    if (this.maxFeatures === "sqrt") k = Math.max(1, Math.round(Math.sqrt(nFeatures)));
-    else if (this.maxFeatures === "log2") k = Math.max(1, Math.round(Math.log2(nFeatures)));
+    if (this.maxFeatures === "sqrt")
+      k = Math.max(1, Math.round(Math.sqrt(nFeatures)));
+    else if (this.maxFeatures === "log2")
+      k = Math.max(1, Math.round(Math.log2(nFeatures)));
     else k = Math.min(nFeatures, this.maxFeatures as number);
 
     const indices = Array.from({ length: nFeatures }, (_, i) => i);
@@ -77,7 +82,8 @@ export class RandomForestClassifier {
       });
       tree.fit(XSub, ySub);
       // Store feature indices with tree
-      (tree as DecisionTreeClassifier & { featIdx_: number[] }).featIdx_ = featIdx;
+      (tree as DecisionTreeClassifier & { featIdx_: number[] }).featIdx_ =
+        featIdx;
       this.estimators_.push(tree);
     }
 
@@ -92,10 +98,12 @@ export class RandomForestClassifier {
     return new Float64Array(
       X.map((xi) => {
         const votes = new Map<number, number>();
-        for (const tree of this.estimators_ as (DecisionTreeClassifier & { featIdx_: number[] })[]) {
+        for (const tree of this.estimators_ as (DecisionTreeClassifier & {
+          featIdx_: number[];
+        })[]) {
           const featIdx = tree.featIdx_;
           const xSub = new Float64Array(featIdx.map((f) => xi[f] ?? 0));
-          const pred = (tree.predict([xSub]))[0] ?? 0;
+          const pred = tree.predict([xSub])[0] ?? 0;
           votes.set(pred, (votes.get(pred) ?? 0) + 1);
         }
         let bestClass = classes[0] ?? 0;
@@ -145,8 +153,10 @@ export class RandomForestRegressor {
 
   private _getFeatureSubset(nFeatures: number): number[] {
     let k: number;
-    if (this.maxFeatures === "sqrt") k = Math.max(1, Math.round(Math.sqrt(nFeatures)));
-    else if (this.maxFeatures === "log2") k = Math.max(1, Math.round(Math.log2(nFeatures)));
+    if (this.maxFeatures === "sqrt")
+      k = Math.max(1, Math.round(Math.sqrt(nFeatures)));
+    else if (this.maxFeatures === "log2")
+      k = Math.max(1, Math.round(Math.log2(nFeatures)));
     else k = Math.min(nFeatures, this.maxFeatures as number);
 
     const indices = Array.from({ length: nFeatures }, (_, i) => i);
@@ -179,7 +189,8 @@ export class RandomForestRegressor {
         minSamplesSplit: this.minSamplesSplit,
       });
       tree.fit(XSub, ySub);
-      (tree as DecisionTreeRegressor & { featIdx_: number[] }).featIdx_ = featIdx;
+      (tree as DecisionTreeRegressor & { featIdx_: number[] }).featIdx_ =
+        featIdx;
       this.estimators_.push(tree);
     }
 
@@ -187,14 +198,17 @@ export class RandomForestRegressor {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (this.estimators_ === null) throw new NotFittedError("RandomForestRegressor");
+    if (this.estimators_ === null)
+      throw new NotFittedError("RandomForestRegressor");
     return new Float64Array(
       X.map((xi) => {
         let sum = 0;
-        for (const tree of this.estimators_ as (DecisionTreeRegressor & { featIdx_: number[] })[]) {
+        for (const tree of this.estimators_ as (DecisionTreeRegressor & {
+          featIdx_: number[];
+        })[]) {
           const featIdx = tree.featIdx_;
           const xSub = new Float64Array(featIdx.map((f) => xi[f] ?? 0));
-          sum += (tree.predict([xSub]))[0] ?? 0;
+          sum += tree.predict([xSub])[0] ?? 0;
         }
         return sum / (this.estimators_?.length ?? 1);
       }),

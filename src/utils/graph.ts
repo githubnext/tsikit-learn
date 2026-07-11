@@ -22,11 +22,12 @@ export class UnionFind {
   }
 
   find(x: number): number {
-    while (this.parent[x] !== x) {
-      this.parent[x] = this.parent[this.parent[x] ?? x] ?? x;
-      x = this.parent[x] ?? x;
+    let cur = x;
+    while (this.parent[cur] !== cur) {
+      this.parent[cur] = this.parent[this.parent[cur] ?? cur] ?? cur;
+      cur = this.parent[cur] ?? cur;
     }
-    return x;
+    return cur;
   }
 
   union(x: number, y: number): boolean {
@@ -49,9 +50,10 @@ export class UnionFind {
  * Find connected components in an undirected graph.
  * Returns component label for each node (0-indexed component IDs).
  */
-export function connectedComponents(
-  adjacency: Float64Array[],
-): { nComponents: number; labels: Int32Array } {
+export function connectedComponents(adjacency: Float64Array[]): {
+  nComponents: number;
+  labels: Int32Array;
+} {
   const n = adjacency.length;
   const uf = new UnionFind(n);
   for (let i = 0; i < n; i++) {
@@ -102,7 +104,10 @@ export function minimumSpanningTree(
  * Single-source shortest paths via Dijkstra's algorithm.
  * Returns distances from source to all other nodes.
  */
-export function dijkstra(adjacency: Float64Array[], source: number): Float64Array {
+export function dijkstra(
+  adjacency: Float64Array[],
+  source: number,
+): Float64Array {
   const n = adjacency.length;
   const dist = new Float64Array(n).fill(Number.POSITIVE_INFINITY);
   dist[source] = 0;
@@ -140,17 +145,22 @@ export function dijkstra(adjacency: Float64Array[], source: number): Float64Arra
 export function shortestPaths(adjacency: Float64Array[]): Float64Array[] {
   const n = adjacency.length;
   // Initialize with adjacency (0 on diagonal, Infinity where no edge)
-  const dist = adjacency.map((row, i) =>
-    new Float64Array(row.map((v, j) => {
-      if (i === j) return 0;
-      return v > 0 ? v : Number.POSITIVE_INFINITY;
-    })),
+  const dist = adjacency.map(
+    (row, i) =>
+      new Float64Array(
+        row.map((v, j) => {
+          if (i === j) return 0;
+          return v > 0 ? v : Number.POSITIVE_INFINITY;
+        }),
+      ),
   );
 
   for (let k = 0; k < n; k++) {
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
-        const via = (dist[i]![k] ?? Number.POSITIVE_INFINITY) + (dist[k]![j] ?? Number.POSITIVE_INFINITY);
+        const via =
+          (dist[i]![k] ?? Number.POSITIVE_INFINITY) +
+          (dist[k]![j] ?? Number.POSITIVE_INFINITY);
         if (via < (dist[i]![j] ?? Number.POSITIVE_INFINITY)) dist[i]![j] = via;
       }
     }
@@ -191,8 +201,11 @@ export function graphLaplacian(
     const d = degree[i] ?? 0;
     return d > 0 ? 1 / Math.sqrt(d) : 0;
   });
-  return L.map((row, i) =>
-    new Float64Array(row.map((v, j) => v * (dInvSqrt[i] ?? 0) * (dInvSqrt[j] ?? 0))),
+  return L.map(
+    (row, i) =>
+      new Float64Array(
+        row.map((v, j) => v * (dInvSqrt[i] ?? 0) * (dInvSqrt[j] ?? 0)),
+      ),
   );
 }
 

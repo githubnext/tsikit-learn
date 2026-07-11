@@ -45,7 +45,11 @@ export class KernelCenterer extends BaseEstimator {
       for (let j = 0; j < nTrain; j++) rowMean += K[i]![j] ?? 0;
       rowMean /= nTrain;
       for (let j = 0; j < nTrain; j++) {
-        row[j] = (K[i]![j] ?? 0) - rowMean - (this.kFitRows_![j] ?? 0) + this.kFitAll_!;
+        row[j] =
+          (K[i]![j] ?? 0) -
+          rowMean -
+          (this.kFitRows_![j] ?? 0) +
+          this.kFitAll_!;
       }
       result.push(row);
     }

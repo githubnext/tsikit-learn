@@ -83,7 +83,8 @@ export class NDArray2D {
   /** Scalar multiply */
   scale(s: number): NDArray2D {
     const out = new NDArray2D(this.rows, this.cols);
-    for (let i = 0; i < this.data.length; i++) out.data[i] = (this.data[i] ?? 0) * s;
+    for (let i = 0; i < this.data.length; i++)
+      out.data[i] = (this.data[i] ?? 0) * s;
     return out;
   }
 

@@ -18,7 +18,11 @@ export class RBFSampler {
   randomOffset_: Float64Array | null = null;
 
   constructor(
-    options: { gamma?: number; nComponents?: number; randomState?: number } = {},
+    options: {
+      gamma?: number;
+      nComponents?: number;
+      randomState?: number;
+    } = {},
   ) {
     this.gamma = options.gamma ?? 1.0;
     this.nComponents = options.nComponents ?? 100;
@@ -147,7 +151,8 @@ export class Nystroem {
       Linv[i]![i] = 1 / ((L[i]![i] ?? 1e-12) || 1e-12);
       for (let j = i - 1; j >= 0; j--) {
         let s = 0;
-        for (let k = j + 1; k <= i; k++) s += (L[i]![k] ?? 0) * (Linv[k]![j] ?? 0);
+        for (let k = j + 1; k <= i; k++)
+          s += (L[i]![k] ?? 0) * (Linv[k]![j] ?? 0);
         Linv[i]![j] = -s / ((L[i]![i] ?? 1e-12) || 1e-12);
       }
     }
@@ -156,7 +161,8 @@ export class Nystroem {
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
         let s = 0;
-        for (let k = 0; k < n; k++) s += (Linv[k]![i] ?? 0) * (Linv[k]![j] ?? 0);
+        for (let k = 0; k < n; k++)
+          s += (Linv[k]![i] ?? 0) * (Linv[k]![j] ?? 0);
         out[i]![j] = s;
       }
     }
@@ -172,9 +178,12 @@ export class Nystroem {
     const used = new Set<number>();
     for (let i = 0; i < m; i++) {
       seed = (seed * 1664525 + 1013904223) & 0xffffffff;
-      let idx = ((seed >>> 0) % n);
+      let idx = (seed >>> 0) % n;
       let tries = 0;
-      while (used.has(idx) && tries < n) { idx = (idx + 1) % n; tries++; }
+      while (used.has(idx) && tries < n) {
+        idx = (idx + 1) % n;
+        tries++;
+      }
       used.add(idx);
       indices.push(idx);
     }
@@ -201,13 +210,17 @@ export class Nystroem {
     return X.map((xi) => {
       const kv = new Float64Array(m);
       for (let j = 0; j < m; j++) {
-        kv[j] = this._kernelFunc(xi, this.components_![j] ?? new Float64Array(0));
+        kv[j] = this._kernelFunc(
+          xi,
+          this.components_![j] ?? new Float64Array(0),
+        );
       }
       // out = kv @ normalizationMatrix_
       const out = new Float64Array(m);
       for (let j = 0; j < m; j++) {
         let s = 0;
-        for (let k = 0; k < m; k++) s += (kv[k] ?? 0) * (this.normalizationMatrix_![k]![j] ?? 0);
+        for (let k = 0; k < m; k++)
+          s += (kv[k] ?? 0) * (this.normalizationMatrix_![k]![j] ?? 0);
         out[j] = s;
       }
       return out;

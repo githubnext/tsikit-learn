@@ -16,12 +16,12 @@ export interface ElbowResult {
 
 export function elbowMethod(
   X: Float64Array[],
-  kRange: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10],
+  kRange: number[],
   KMeansClass: new (opts: { nClusters: number; randomState?: number }) => {
     fit(X: Float64Array[]): unknown;
     inertia_: number;
   },
-  randomState?: number
+  randomState?: number,
 ): ElbowResult {
   const inertias: number[] = [];
   for (const k of kRange) {
@@ -33,7 +33,7 @@ export function elbowMethod(
   // Find elbow using maximum curvature (second derivative)
   let optimalK = kRange[0] ?? 2;
   if (inertias.length >= 3) {
-    let maxCurvature = -Infinity;
+    let maxCurvature = Number.NEGATIVE_INFINITY;
     for (let i = 1; i < inertias.length - 1; i++) {
       const d1 = (inertias[i - 1] ?? 0) - (inertias[i] ?? 0);
       const d2 = (inertias[i] ?? 0) - (inertias[i + 1] ?? 0);
@@ -60,13 +60,13 @@ export interface GapStatisticResult {
 
 export function gapStatistic(
   X: Float64Array[],
-  kRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  kRange: number[],
   KMeansClass: new (opts: { nClusters: number; randomState?: number }) => {
     fit(X: Float64Array[]): unknown;
     inertia_: number;
   },
   nRefs = 10,
-  randomState = 42
+  randomState = 42,
 ): GapStatisticResult {
   const nSamples = X.length;
   const nFeatures = X[0]?.length ?? 0;
@@ -74,13 +74,13 @@ export function gapStatistic(
   // Compute bounding box of data
   const mins = new Float64Array(nFeatures);
   const maxs = new Float64Array(nFeatures);
-  mins.fill(Infinity);
-  maxs.fill(-Infinity);
+  mins.fill(Number.POSITIVE_INFINITY);
+  maxs.fill(Number.NEGATIVE_INFINITY);
   for (const row of X) {
     for (let j = 0; j < nFeatures; j++) {
       const v = row[j] ?? 0;
-      if (v < (mins[j] ?? Infinity)) mins[j] = v;
-      if (v > (maxs[j] ?? -Infinity)) maxs[j] = v;
+      if (v < (mins[j] ?? Number.POSITIVE_INFINITY)) mins[j] = v;
+      if (v > (maxs[j] ?? Number.NEGATIVE_INFINITY)) maxs[j] = v;
     }
   }
 
@@ -106,7 +106,8 @@ export function gapStatistic(
       for (let i = 0; i < nSamples; i++) {
         const row = new Float64Array(nFeatures);
         for (let j = 0; j < nFeatures; j++) {
-          row[j] = (mins[j] ?? 0) + randFloat() * ((maxs[j] ?? 1) - (mins[j] ?? 0));
+          row[j] =
+            (mins[j] ?? 0) + randFloat() * ((maxs[j] ?? 1) - (mins[j] ?? 0));
         }
         Xref.push(row);
       }
@@ -116,7 +117,8 @@ export function gapStatistic(
     }
 
     const meanRefLogW = refLogWs.reduce((s, v) => s + v, 0) / nRefs;
-    const variance = refLogWs.reduce((s, v) => s + (v - meanRefLogW) ** 2, 0) / nRefs;
+    const variance =
+      refLogWs.reduce((s, v) => s + (v - meanRefLogW) ** 2, 0) / nRefs;
     const sd = Math.sqrt(variance);
     const sk = sd * Math.sqrt(1 + 1 / nRefs);
 
@@ -140,8 +142,13 @@ export function gapStatistic(
  * Davies-Bouldin Index (lower is better).
  * Complements silhouette score for cluster validation.
  */
-export function daviesBouldinScore(X: Float64Array[], labels: Int32Array): number {
-  const uniqueLabels = Array.from(new Set(Array.from(labels))).sort((a, b) => a - b);
+export function daviesBouldinScore(
+  X: Float64Array[],
+  labels: Int32Array,
+): number {
+  const uniqueLabels = Array.from(new Set(Array.from(labels))).sort(
+    (a, b) => a - b,
+  );
   const k = uniqueLabels.length;
   if (k < 2) return 0;
 
@@ -190,15 +197,17 @@ export function daviesBouldinScore(X: Float64Array[], labels: Int32Array): numbe
   // Compute Davies-Bouldin index
   let dbSum = 0;
   for (let i = 0; i < k; i++) {
-    let maxR = -Infinity;
+    let maxR = Number.NEGATIVE_INFINITY;
     for (let j = 0; j < k; j++) {
       if (i === j) continue;
       let distCentroids = 0;
       for (let f = 0; f < nFeatures; f++) {
-        distCentroids += ((centroids[i]?.[f] ?? 0) - (centroids[j]?.[f] ?? 0)) ** 2;
+        distCentroids +=
+          ((centroids[i]?.[f] ?? 0) - (centroids[j]?.[f] ?? 0)) ** 2;
       }
       distCentroids = Math.sqrt(distCentroids);
-      const R = ((scatter[i] ?? 0) + (scatter[j] ?? 0)) / (distCentroids || 1e-10);
+      const R =
+        ((scatter[i] ?? 0) + (scatter[j] ?? 0)) / (distCentroids || 1e-10);
       if (R > maxR) maxR = R;
     }
     dbSum += maxR;
@@ -210,10 +219,15 @@ export function daviesBouldinScore(X: Float64Array[], labels: Int32Array): numbe
 /**
  * Calinski-Harabasz Index (higher is better).
  */
-export function calinskiHarabaszScore(X: Float64Array[], labels: Int32Array): number {
+export function calinskiHarabaszScore(
+  X: Float64Array[],
+  labels: Int32Array,
+): number {
   const nSamples = X.length;
   const nFeatures = X[0]?.length ?? 0;
-  const uniqueLabels = Array.from(new Set(Array.from(labels))).sort((a, b) => a - b);
+  const uniqueLabels = Array.from(new Set(Array.from(labels))).sort(
+    (a, b) => a - b,
+  );
   const k = uniqueLabels.length;
   if (k < 2 || nSamples <= k) return 0;
 
@@ -223,12 +237,17 @@ export function calinskiHarabaszScore(X: Float64Array[], labels: Int32Array): nu
   // Global centroid
   const globalCentroid = new Float64Array(nFeatures);
   for (const row of X) {
-    for (let j = 0; j < nFeatures; j++) globalCentroid[j] = (globalCentroid[j] ?? 0) + (row[j] ?? 0);
+    for (let j = 0; j < nFeatures; j++)
+      globalCentroid[j] = (globalCentroid[j] ?? 0) + (row[j] ?? 0);
   }
-  for (let j = 0; j < nFeatures; j++) globalCentroid[j] = (globalCentroid[j] ?? 0) / nSamples;
+  for (let j = 0; j < nFeatures; j++)
+    globalCentroid[j] = (globalCentroid[j] ?? 0) / nSamples;
 
   // Cluster centroids and counts
-  const centroids = Array.from({ length: k }, () => new Float64Array(nFeatures));
+  const centroids = Array.from(
+    { length: k },
+    () => new Float64Array(nFeatures),
+  );
   const counts = new Array(k).fill(0);
   for (let i = 0; i < nSamples; i++) {
     const ci = labelToIdx.get(labels[i] ?? 0) ?? 0;
@@ -264,5 +283,5 @@ export function calinskiHarabaszScore(X: Float64Array[], labels: Int32Array): nu
     wgss += d;
   }
 
-  return (bgss / (k - 1)) / ((wgss / (nSamples - k)) || 1e-10);
+  return bgss / (k - 1) / (wgss / (nSamples - k) || 1e-10);
 }

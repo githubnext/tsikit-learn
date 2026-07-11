@@ -4,7 +4,15 @@
  */
 
 export interface VotingRegressorOptions {
-  estimators: Array<[string, { fit(X: Float64Array[], y: Float64Array): unknown; predict(X: Float64Array[]): Float64Array }]>;
+  estimators: Array<
+    [
+      string,
+      {
+        fit(X: Float64Array[], y: Float64Array): unknown;
+        predict(X: Float64Array[]): Float64Array;
+      },
+    ]
+  >;
   weights?: Float64Array | null;
   nJobs?: number | null;
   verbose?: boolean;
@@ -15,7 +23,15 @@ export interface VotingRegressorOptions {
  * Returns the weighted average of predictions.
  */
 export class VotingRegressor {
-  estimators: Array<[string, { fit(X: Float64Array[], y: Float64Array): unknown; predict(X: Float64Array[]): Float64Array }]>;
+  estimators: Array<
+    [
+      string,
+      {
+        fit(X: Float64Array[], y: Float64Array): unknown;
+        predict(X: Float64Array[]): Float64Array;
+      },
+    ]
+  >;
   weights: Float64Array | null;
   verbose: boolean;
   private fitted_: boolean = false;
@@ -38,7 +54,9 @@ export class VotingRegressor {
     if (!this.fitted_) throw new Error("VotingRegressor not fitted");
     const nSamples = X.length;
     const nEst = this.estimators.length;
-    const allPreds: Float64Array[] = this.estimators.map(([, est]) => est.predict(X));
+    const allPreds: Float64Array[] = this.estimators.map(([, est]) =>
+      est.predict(X),
+    );
 
     const result = new Float64Array(nSamples);
     const totalWeight = this.weights
@@ -59,7 +77,8 @@ export class VotingRegressor {
   score(X: Float64Array[], y: Float64Array): number {
     const yPred = this.predict(X);
     const yMean = y.reduce((s, v) => s + v, 0) / y.length;
-    let ss_res = 0, ss_tot = 0;
+    let ss_res = 0;
+    let ss_tot = 0;
     for (let i = 0; i < y.length; i++) {
       ss_res += ((y[i] ?? 0) - (yPred[i] ?? 0)) ** 2;
       ss_tot += ((y[i] ?? 0) - yMean) ** 2;
@@ -112,9 +131,8 @@ export class IsolationForest {
     const nFeatures = X[0]?.length ?? 0;
     this.nSamplesFit_ = nSamples;
 
-    const sampleSize = this.maxSamples === "auto"
-      ? Math.min(256, nSamples)
-      : this.maxSamples;
+    const sampleSize =
+      this.maxSamples === "auto" ? Math.min(256, nSamples) : this.maxSamples;
     this.maxDepth_ = Math.ceil(Math.log2(sampleSize + 1));
 
     let seed = this.randomState ?? 42;
@@ -122,7 +140,9 @@ export class IsolationForest {
       seed = (seed * 1664525 + 1013904223) & 0xffffffff;
       return (seed >>> 0) / 0xffffffff;
     }
-    function randInt(n: number): number { return Math.floor(rand() * n); }
+    function randInt(n: number): number {
+      return Math.floor(rand() * n);
+    }
 
     this.trees_ = [];
     for (let t = 0; t < this.nEstimators; t++) {
@@ -134,16 +154,20 @@ export class IsolationForest {
         const perm = Array.from({ length: nSamples }, (_, i) => i);
         for (let i = nSamples - 1; i > 0; i--) {
           const j = randInt(i + 1);
-          const tmp = perm[i]!; perm[i] = perm[j]!; perm[j] = tmp;
+          const tmp = perm[i]!;
+          perm[i] = perm[j]!;
+          perm[j] = tmp;
         }
         idx.push(...perm.slice(0, sampleSize));
       }
-      const Xsub = idx.map(i => X[i]!);
+      const Xsub = idx.map((i) => X[i]!);
       this.trees_.push({ nodes: this._buildTree(Xsub, 0, nFeatures, rand) });
     }
 
     // Compute offset for contamination
-    const scores = Array.from({ length: nSamples }, (_, i) => this._scoreOne(X[i]!));
+    const scores = Array.from({ length: nSamples }, (_, i) =>
+      this._scoreOne(X[i]!),
+    );
     scores.sort((a, b) => a - b);
     if (this.contamination === "auto") {
       this.offset_ = -0.5;
@@ -155,15 +179,32 @@ export class IsolationForest {
     return this;
   }
 
-  private _buildTree(X: Float64Array[], depth: number, nFeatures: number, rand: () => number): IFNode[] {
+  private _buildTree(
+    X: Float64Array[],
+    depth: number,
+    nFeatures: number,
+    rand: () => number,
+  ): IFNode[] {
     const nodes: IFNode[] = [];
     this._buildNode(X, depth, nFeatures, rand, nodes);
     return nodes;
   }
 
-  private _buildNode(X: Float64Array[], depth: number, nFeatures: number, rand: () => number, nodes: IFNode[]): number {
+  private _buildNode(
+    X: Float64Array[],
+    depth: number,
+    nFeatures: number,
+    rand: () => number,
+    nodes: IFNode[],
+  ): number {
     const nodeIdx = nodes.length;
-    nodes.push({ feature: -1, threshold: 0, left: -1, right: -1, size: X.length });
+    nodes.push({
+      feature: -1,
+      threshold: 0,
+      left: -1,
+      right: -1,
+      size: X.length,
+    });
 
     if (X.length <= 1 || depth >= this.maxDepth_) {
       return nodeIdx;
@@ -184,11 +225,23 @@ export class IsolationForest {
     nodes[nodeIdx]!.feature = featureIdx;
     nodes[nodeIdx]!.threshold = threshold;
 
-    const left = X.filter(row => (row[featureIdx] ?? 0) < threshold);
-    const right = X.filter(row => (row[featureIdx] ?? 0) >= threshold);
+    const left = X.filter((row) => (row[featureIdx] ?? 0) < threshold);
+    const right = X.filter((row) => (row[featureIdx] ?? 0) >= threshold);
 
-    nodes[nodeIdx]!.left = this._buildNode(left, depth + 1, nFeatures, rand, nodes);
-    nodes[nodeIdx]!.right = this._buildNode(right, depth + 1, nFeatures, rand, nodes);
+    nodes[nodeIdx]!.left = this._buildNode(
+      left,
+      depth + 1,
+      nFeatures,
+      rand,
+      nodes,
+    );
+    nodes[nodeIdx]!.right = this._buildNode(
+      right,
+      depth + 1,
+      nFeatures,
+      rand,
+      nodes,
+    );
 
     return nodeIdx;
   }
@@ -204,7 +257,12 @@ export class IsolationForest {
     return -(2 ** (-avgPathLength / normFactor));
   }
 
-  private _pathLength(x: Float64Array, nodes: IFNode[], nodeIdx: number, depth: number): number {
+  private _pathLength(
+    x: Float64Array,
+    nodes: IFNode[],
+    nodeIdx: number,
+    depth: number,
+  ): number {
     const node = nodes[nodeIdx];
     if (!node || node.feature === -1 || node.left === -1 || node.right === -1) {
       return depth + _cFactor(node?.size ?? 1);
@@ -216,16 +274,16 @@ export class IsolationForest {
   }
 
   decisionFunction(X: Float64Array[]): Float64Array {
-    return new Float64Array(X.map(x => this._scoreOne(x) + this.offset_));
+    return new Float64Array(X.map((x) => this._scoreOne(x) + this.offset_));
   }
 
   predict(X: Float64Array[]): Int32Array {
     const scores = this.decisionFunction(X);
-    return new Int32Array(scores.map(s => s < 0 ? -1 : 1));
+    return new Int32Array(scores.map((s) => (s < 0 ? -1 : 1)));
   }
 
   scoreAnomalies(X: Float64Array[]): Float64Array {
-    return new Float64Array(X.map(x => this._scoreOne(x)));
+    return new Float64Array(X.map((x) => this._scoreOne(x)));
   }
 }
 
@@ -240,5 +298,5 @@ interface IFNode {
 function _cFactor(n: number): number {
   if (n <= 1) return 0;
   if (n === 2) return 1;
-  return 2 * (Math.log(n - 1) + 0.5772156649) - 2 * (n - 1) / n;
+  return 2 * (Math.log(n - 1) + 0.5772156649) - (2 * (n - 1)) / n;
 }

@@ -73,10 +73,13 @@ export class ElasticNet {
         for (let i = 0; i < n; i++) {
           let pred = 0;
           for (let k = 0; k < p; k++) pred += (X[i]?.[k] ?? 0) * (coef[k] ?? 0);
-          rj += (X[i]?.[j] ?? 0) * (yCenter[i] - pred + (X[i]?.[j] ?? 0) * oldCoefJ);
+          rj +=
+            (X[i]?.[j] ?? 0) *
+            (yCenter[i] - pred + (X[i]?.[j] ?? 0) * oldCoefJ);
         }
         const denom = (colNorm2[j] ?? 0) + alphaL2 * n;
-        coef[j] = denom !== 0 ? softThreshold(rj / n, alphaL1) * n / denom : 0;
+        coef[j] =
+          denom !== 0 ? (softThreshold(rj / n, alphaL1) * n) / denom : 0;
         maxChange = Math.max(maxChange, Math.abs((coef[j] ?? 0) - oldCoefJ));
       }
       this.nIter_ = iter + 1;

@@ -13,7 +13,7 @@ export type DelayedCall<T> = {
  * Usage: delayed(fn)(arg1, arg2)
  */
 export function delayed<T>(
-  fn: (...args: unknown[]) => T
+  fn: (...args: unknown[]) => T,
 ): (...args: unknown[]) => DelayedCall<T> {
   return (...args: unknown[]): DelayedCall<T> => ({ fn, args });
 }
@@ -44,7 +44,7 @@ export class Parallel<T> {
   call(calls: DelayedCall<T>[]): T[] {
     if (this.verbose > 0) {
       console.log(
-        `Parallel(n_jobs=${this.nJobs}): processing ${calls.length} tasks`
+        `Parallel(n_jobs=${this.nJobs}): processing ${calls.length} tasks`,
       );
     }
     return calls.map((c) => c.fn(...c.args));
@@ -76,7 +76,7 @@ export function effectiveNJobs(nJobs: number): number {
 export function parallelMap<In, Out>(
   items: In[],
   fn: (item: In) => Out,
-  _nJobs = 1
+  _nJobs = 1,
 ): Out[] {
   return items.map(fn);
 }

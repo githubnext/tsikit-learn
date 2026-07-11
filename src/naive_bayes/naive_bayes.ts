@@ -20,13 +20,21 @@ export class GaussianNB {
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     const nClasses = uniqueClasses.length;
     const classToIdx = new Map(uniqueClasses.map((c, i) => [c, i]));
 
-    const means: Float64Array[] = Array.from({ length: nClasses }, () => new Float64Array(p));
-    const vars: Float64Array[] = Array.from({ length: nClasses }, () => new Float64Array(p));
+    const means: Float64Array[] = Array.from(
+      { length: nClasses },
+      () => new Float64Array(p),
+    );
+    const vars: Float64Array[] = Array.from(
+      { length: nClasses },
+      () => new Float64Array(p),
+    );
     const counts = new Int32Array(nClasses);
 
     for (let i = 0; i < n; i++) {
@@ -85,14 +93,16 @@ export class GaussianNB {
       const logProba = new Float64Array(nClasses);
       for (let c = 0; c < nClasses; c++) {
         let logP = Math.log((this.classPrior_ as Float64Array)[c] ?? 1e-10);
-        const mean = (this.thetaMean_ as Float64Array[])[c] ?? new Float64Array(p);
-        const variance = (this.thetaVar_ as Float64Array[])[c] ?? new Float64Array(p);
+        const mean =
+          (this.thetaMean_ as Float64Array[])[c] ?? new Float64Array(p);
+        const variance =
+          (this.thetaVar_ as Float64Array[])[c] ?? new Float64Array(p);
         for (let j = 0; j < p; j++) {
           const xij = xi[j] ?? 0;
           const mu = mean[j] ?? 0;
           const sig2 = variance[j] ?? 1e-9;
           logP -= 0.5 * Math.log(2 * Math.PI * sig2);
-          logP -= ((xij - mu) ** 2) / (2 * sig2);
+          logP -= (xij - mu) ** 2 / (2 * sig2);
         }
         logProba[c] = logP;
       }
@@ -143,12 +153,17 @@ export class MultinomialNB {
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     const nClasses = uniqueClasses.length;
     const classToIdx = new Map(uniqueClasses.map((c, i) => [c, i]));
 
-    const counts: Float64Array[] = Array.from({ length: nClasses }, () => new Float64Array(p));
+    const counts: Float64Array[] = Array.from(
+      { length: nClasses },
+      () => new Float64Array(p),
+    );
     const classCounts = new Float64Array(nClasses);
 
     for (let i = 0; i < n; i++) {
@@ -166,8 +181,11 @@ export class MultinomialNB {
     );
 
     this.featureLogProb_ = counts.map((count) => {
-      const total = Array.from(count).reduce((a, b) => a + b, 0) + this.alpha * p;
-      return new Float64Array(count.map((c) => Math.log((c + this.alpha) / total)));
+      const total =
+        Array.from(count).reduce((a, b) => a + b, 0) + this.alpha * p;
+      return new Float64Array(
+        count.map((c) => Math.log((c + this.alpha) / total)),
+      );
     });
 
     return this;
@@ -185,7 +203,8 @@ export class MultinomialNB {
         let maxScore = Number.NEGATIVE_INFINITY;
         for (let c = 0; c < nClasses; c++) {
           let score = (this.classLogPrior_ as Float64Array)[c] ?? 0;
-          const flp = (this.featureLogProb_ as Float64Array[])[c] ?? new Float64Array(p);
+          const flp =
+            (this.featureLogProb_ as Float64Array[])[c] ?? new Float64Array(p);
           for (let j = 0; j < p; j++) {
             score += (xi[j] ?? 0) * (flp[j] ?? 0);
           }
@@ -227,12 +246,17 @@ export class BernoulliNB {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
     const threshold = this.binarize ?? 0.0;
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     const nClasses = uniqueClasses.length;
     const classToIdx = new Map(uniqueClasses.map((c, i) => [c, i]));
 
-    const counts: Float64Array[] = Array.from({ length: nClasses }, () => new Float64Array(p));
+    const counts: Float64Array[] = Array.from(
+      { length: nClasses },
+      () => new Float64Array(p),
+    );
     const classCounts = new Float64Array(nClasses);
 
     for (let i = 0; i < n; i++) {
@@ -251,11 +275,16 @@ export class BernoulliNB {
 
     this.featureLogProb_ = counts.map((count, c) => {
       const total = classCounts[c] ?? 1;
-      return new Float64Array(count.map((cnt) => Math.log((cnt + this.alpha) / (total + 2 * this.alpha))));
+      return new Float64Array(
+        count.map((cnt) =>
+          Math.log((cnt + this.alpha) / (total + 2 * this.alpha)),
+        ),
+      );
     });
 
-    this.featureLogNegProb_ = this.featureLogProb_.map((logProb) =>
-      new Float64Array(logProb.map((lp) => Math.log(1 - Math.exp(lp)))),
+    this.featureLogNegProb_ = this.featureLogProb_.map(
+      (logProb) =>
+        new Float64Array(logProb.map((lp) => Math.log(1 - Math.exp(lp)))),
     );
 
     return this;
@@ -274,8 +303,11 @@ export class BernoulliNB {
         let maxScore = Number.NEGATIVE_INFINITY;
         for (let c = 0; c < nClasses; c++) {
           let score = (this.classLogPrior_ as Float64Array)[c] ?? 0;
-          const flp = (this.featureLogProb_ as Float64Array[])[c] ?? new Float64Array(p);
-          const flnp = (this.featureLogNegProb_ as Float64Array[])[c] ?? new Float64Array(p);
+          const flp =
+            (this.featureLogProb_ as Float64Array[])[c] ?? new Float64Array(p);
+          const flnp =
+            (this.featureLogNegProb_ as Float64Array[])[c] ??
+            new Float64Array(p);
           for (let j = 0; j < p; j++) {
             score += (xi[j] ?? 0) > threshold ? (flp[j] ?? 0) : (flnp[j] ?? 0);
           }

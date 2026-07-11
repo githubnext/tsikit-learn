@@ -38,7 +38,11 @@ export class SplineTransformer {
     this.includeIntercept = options.includeIntercept ?? false;
   }
 
-  private _bsplineBasis(x: number, knots: Float64Array, degree: number): Float64Array {
+  private _bsplineBasis(
+    x: number,
+    knots: Float64Array,
+    degree: number,
+  ): Float64Array {
     const n = knots.length - degree - 1;
     const basis = new Float64Array(n);
 
@@ -52,7 +56,8 @@ export class SplineTransformer {
 
     // Degree 0
     for (let i = 0; i < n; i++) {
-      B[0]![i] = (t[i] ?? 0) <= x && x < (t[i + 1] ?? Number.POSITIVE_INFINITY) ? 1 : 0;
+      B[0]![i] =
+        (t[i] ?? 0) <= x && x < (t[i + 1] ?? Number.POSITIVE_INFINITY) ? 1 : 0;
     }
     // Handle right endpoint
     if (Math.abs(x - (t[t.length - 1] ?? 0)) < 1e-10 && n > 0) {
@@ -81,8 +86,7 @@ export class SplineTransformer {
         let right = 0;
         const denom2 = tid1 - ti1;
         if (Math.abs(denom2) > 1e-10) {
-          right =
-            ((tid1 - x) / denom2) * (B[d - 1]![i + 1] ?? 0);
+          right = ((tid1 - x) / denom2) * (B[d - 1]![i + 1] ?? 0);
         }
 
         B[d]![i] = left + right;
@@ -154,11 +158,12 @@ export class SplineTransformer {
         if (x < min || x > max) {
           if (this.extrapolation === "error") {
             throw new Error(`Value ${x} out of range [${min}, ${max}]`);
-          } else if (this.extrapolation === "constant") {
+          }
+          if (this.extrapolation === "constant") {
             x = Math.max(min, Math.min(max, x));
           } else if (this.extrapolation === "periodic") {
             const range = max - min;
-            x = min + ((x - min) % range + range) % range;
+            x = min + ((((x - min) % range) + range) % range);
           }
         }
 
@@ -200,10 +205,7 @@ export class TargetEncoder {
     this.targetType = options.targetType ?? "auto";
   }
 
-  fit(
-    X: (string | number)[][],
-    y: Float64Array | Int32Array,
-  ): this {
+  fit(X: (string | number)[][], y: Float64Array | Int32Array): this {
     const nSamples = X.length;
     const nFeatures = X[0]?.length ?? 0;
     this.nFeatures_ = nFeatures;

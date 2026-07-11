@@ -35,7 +35,10 @@ export class MinHash {
 
   private _seededRng(seed: number): () => number {
     let s = seed;
-    return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+    return () => {
+      s = (s * 1664525 + 1013904223) & 0xffffffff;
+      return (s >>> 0) / 0xffffffff;
+    };
   }
 }
 
@@ -45,7 +48,7 @@ export class LSHIndex {
 
   constructor(
     private readonly nHashFunctions = 128,
-    private readonly nBands = 16
+    private readonly nBands = 16,
   ) {}
 
   fit(X: Float64Array[]): this {
@@ -63,7 +66,10 @@ export class LSHIndex {
     });
     // Build hash tables (banding technique)
     const rowsPerBand = Math.floor(this.nHashFunctions / this.nBands);
-    this.tables = Array.from({ length: this.nBands }, () => new Map<string, number[]>());
+    this.tables = Array.from(
+      { length: this.nBands },
+      () => new Map<string, number[]>(),
+    );
     for (let i = 0; i < n; i++) {
       for (let band = 0; band < this.nBands; band++) {
         const start = band * rowsPerBand;
@@ -105,7 +111,7 @@ export class LSHNearestNeighbors {
   constructor(
     private readonly nNeighbors = 5,
     private readonly nHashFunctions = 128,
-    private readonly nBands = 16
+    private readonly nBands = 16,
   ) {}
 
   fit(X: Float64Array[]): this {
@@ -114,7 +120,10 @@ export class LSHNearestNeighbors {
     return this;
   }
 
-  kneighbors(X: Float64Array[]): { indices: Int32Array[]; distances: Float64Array[] } {
+  kneighbors(X: Float64Array[]): {
+    indices: Int32Array[];
+    distances: Float64Array[];
+  } {
     if (!this.index) throw new Error("Not fitted");
     const indices: Int32Array[] = [];
     const distances: Float64Array[] = [];
@@ -124,12 +133,16 @@ export class LSHNearestNeighbors {
         // Fall back to all points
         for (let i = 0; i < this.X_.length; i++) candidates.add(i);
       }
-      const scored = [...candidates].map((i) => {
-        let d = 0;
-        const xi = this.X_[i]!;
-        for (let f = 0; f < query.length; f++) d += ((query[f] ?? 0) - (xi[f] ?? 0)) ** 2;
-        return { i, d: Math.sqrt(d) };
-      }).sort((a, b) => a.d - b.d).slice(0, this.nNeighbors);
+      const scored = [...candidates]
+        .map((i) => {
+          let d = 0;
+          const xi = this.X_[i]!;
+          for (let f = 0; f < query.length; f++)
+            d += ((query[f] ?? 0) - (xi[f] ?? 0)) ** 2;
+          return { i, d: Math.sqrt(d) };
+        })
+        .sort((a, b) => a.d - b.d)
+        .slice(0, this.nNeighbors);
       indices.push(new Int32Array(scored.map((s) => s.i)));
       distances.push(new Float64Array(scored.map((s) => s.d)));
     }

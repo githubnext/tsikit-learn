@@ -53,50 +53,58 @@ export class ElasticNetCV {
     const nFeatures = X[0]?.length ?? 0;
 
     // Center X and y if fitIntercept
-    let xMean = new Float64Array(nFeatures);
+    const xMean = new Float64Array(nFeatures);
     let yMean = 0;
 
     if (this.fitIntercept) {
       for (const row of X) {
-        for (let j = 0; j < nFeatures; j++) xMean[j] = (xMean[j] ?? 0) + (row[j] ?? 0);
+        for (let j = 0; j < nFeatures; j++)
+          xMean[j] = (xMean[j] ?? 0) + (row[j] ?? 0);
       }
       for (let j = 0; j < nFeatures; j++) xMean[j] = (xMean[j] ?? 0) / nSamples;
       for (let i = 0; i < nSamples; i++) yMean += y[i] ?? 0;
       yMean /= nSamples;
     }
 
-    const Xc = X.map(row => {
+    const Xc = X.map((row) => {
       const r = new Float64Array(row);
       for (let j = 0; j < nFeatures; j++) r[j] = (r[j] ?? 0) - (xMean[j] ?? 0);
       return r;
     });
-    const yc = y.map(v => v - yMean);
+    const yc = y.map((v) => v - yMean);
 
     // Compute alpha path
-    const l1Ratios = Array.isArray(this.l1Ratio) ? this.l1Ratio : [this.l1Ratio];
+    const l1Ratios = Array.isArray(this.l1Ratio)
+      ? this.l1Ratio
+      : [this.l1Ratio];
     let bestAlpha = 1.0;
     let bestL1Ratio = l1Ratios[0] ?? 0.5;
-    let bestMse = Infinity;
+    let bestMse = Number.POSITIVE_INFINITY;
 
     for (const l1r of l1Ratios) {
       // Compute alpha max
       let alphaMax = 0;
       for (let j = 0; j < nFeatures; j++) {
         let corr = 0;
-        for (let i = 0; i < nSamples; i++) corr += (Xc[i]?.[j] ?? 0) * (yc[i] ?? 0);
+        for (let i = 0; i < nSamples; i++)
+          corr += (Xc[i]?.[j] ?? 0) * (yc[i] ?? 0);
         alphaMax = Math.max(alphaMax, Math.abs(corr) / nSamples);
       }
       alphaMax = alphaMax / Math.max(l1r, 1e-10);
 
-      const alphas = this.alphas ?? (() => {
-        const arr = new Float64Array(this.nAlphas);
-        const logMin = Math.log(alphaMax * this.eps);
-        const logMax = Math.log(alphaMax);
-        for (let i = 0; i < this.nAlphas; i++) {
-          arr[i] = Math.exp(logMax - (logMax - logMin) * i / (this.nAlphas - 1));
-        }
-        return arr;
-      })();
+      const alphas =
+        this.alphas ??
+        (() => {
+          const arr = new Float64Array(this.nAlphas);
+          const logMin = Math.log(alphaMax * this.eps);
+          const logMax = Math.log(alphaMax);
+          for (let i = 0; i < this.nAlphas; i++) {
+            arr[i] = Math.exp(
+              logMax - ((logMax - logMin) * i) / (this.nAlphas - 1),
+            );
+          }
+          return arr;
+        })();
 
       // Simple CV: split into cv folds
       const foldSize = Math.floor(nSamples / this.cv);
@@ -122,13 +130,20 @@ export class ElasticNetCV {
 
           // Fit ElasticNet on train fold using coordinate descent
           const coef = new Float64Array(nFeatures);
-          this._fitCoordDescent(trainX, new Float64Array(trainY), coef, alpha, l1r);
+          this._fitCoordDescent(
+            trainX,
+            new Float64Array(trainY),
+            coef,
+            alpha,
+            l1r,
+          );
 
           // Predict on test fold
           let mse = 0;
           for (let i = 0; i < testX.length; i++) {
             let pred = 0;
-            for (let j = 0; j < nFeatures; j++) pred += (testX[i]?.[j] ?? 0) * (coef[j] ?? 0);
+            for (let j = 0; j < nFeatures; j++)
+              pred += (testX[i]?.[j] ?? 0) * (coef[j] ?? 0);
             mse += (pred - (testY[i] ?? 0)) ** 2;
           }
           cvMse += testX.length > 0 ? mse / testX.length : 0;
@@ -147,11 +162,18 @@ export class ElasticNetCV {
 
     // Refit on all data
     this.coef_ = new Float64Array(nFeatures);
-    this._fitCoordDescent(Xc, new Float64Array(yc), this.coef_, bestAlpha, bestL1Ratio);
+    this._fitCoordDescent(
+      Xc,
+      new Float64Array(yc),
+      this.coef_,
+      bestAlpha,
+      bestL1Ratio,
+    );
 
     if (this.fitIntercept) {
       let intercept = yMean;
-      for (let j = 0; j < nFeatures; j++) intercept -= (this.coef_[j] ?? 0) * (xMean[j] ?? 0);
+      for (let j = 0; j < nFeatures; j++)
+        intercept -= (this.coef_[j] ?? 0) * (xMean[j] ?? 0);
       this.intercept_ = intercept;
     }
 
@@ -159,7 +181,11 @@ export class ElasticNetCV {
   }
 
   private _fitCoordDescent(
-    X: Float64Array[], y: Float64Array, coef: Float64Array, alpha: number, l1Ratio: number
+    X: Float64Array[],
+    y: Float64Array,
+    coef: Float64Array,
+    alpha: number,
+    l1Ratio: number,
   ): void {
     const nSamples = X.length;
     const nFeatures = coef.length;
@@ -182,12 +208,14 @@ export class ElasticNetCV {
 
         // Feature norm
         let norm = alphaL2;
-        for (let i = 0; i < nSamples; i++) norm += (X[i]?.[j] ?? 0) ** 2 / nSamples;
+        for (let i = 0; i < nSamples; i++)
+          norm += (X[i]?.[j] ?? 0) ** 2 / nSamples;
 
         // Soft threshold
         const oldCoef = coef[j] ?? 0;
         const sign = rho > 0 ? 1 : -1;
-        coef[j] = sign * Math.max(Math.abs(rho) - alphaL1, 0) / (norm || 1e-10);
+        coef[j] =
+          (sign * Math.max(Math.abs(rho) - alphaL1, 0)) / (norm || 1e-10);
 
         maxChange = Math.max(maxChange, Math.abs((coef[j] ?? 0) - oldCoef));
       }
@@ -198,11 +226,14 @@ export class ElasticNetCV {
   predict(X: Float64Array[]): Float64Array {
     if (!this.coef_) throw new Error("ElasticNetCV not fitted");
     const nFeatures = this.coef_.length;
-    return new Float64Array(X.map(row => {
-      let pred = this.intercept_;
-      for (let j = 0; j < nFeatures; j++) pred += (row[j] ?? 0) * (this.coef_![j] ?? 0);
-      return pred;
-    }));
+    return new Float64Array(
+      X.map((row) => {
+        let pred = this.intercept_;
+        for (let j = 0; j < nFeatures; j++)
+          pred += (row[j] ?? 0) * (this.coef_![j] ?? 0);
+        return pred;
+      }),
+    );
   }
 
   score(X: Float64Array[], y: Float64Array): number {

@@ -32,9 +32,10 @@ export class RANSACRegressor {
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
     const nFeatures = X[0]?.length ?? 0;
-    const minSamples = this.minSamples < 1
-      ? Math.max(2, Math.round(this.minSamples * n))
-      : Math.round(this.minSamples);
+    const minSamples =
+      this.minSamples < 1
+        ? Math.max(2, Math.round(this.minSamples * n))
+        : Math.round(this.minSamples);
 
     let bestInlierCount = 0;
     let bestCoef = new Float64Array(nFeatures);
@@ -70,7 +71,11 @@ export class RANSACRegressor {
       let inlierCount = 0;
       const mask = new Int8Array(n);
       for (let i = 0; i < n; i++) {
-        const pred = this._predict(X[i] ?? new Float64Array(nFeatures), coef, intercept);
+        const pred = this._predict(
+          X[i] ?? new Float64Array(nFeatures),
+          coef,
+          intercept,
+        );
         const residual = Math.abs((y[i] ?? 0) - pred);
         if (residual <= this.residualThreshold) {
           mask[i] = 1;
@@ -121,7 +126,8 @@ export class RANSACRegressor {
 
     const xMean = new Float64Array(nFeatures);
     for (const xi of X) {
-      for (let j = 0; j < nFeatures; j++) xMean[j] = (xMean[j] ?? 0) + (xi[j] ?? 0);
+      for (let j = 0; j < nFeatures; j++)
+        xMean[j] = (xMean[j] ?? 0) + (xi[j] ?? 0);
     }
     for (let j = 0; j < nFeatures; j++) xMean[j] = (xMean[j] ?? 0) / n;
 
@@ -148,12 +154,17 @@ export class RANSACRegressor {
     return s;
   }
 
-  private _predict(x: Float64Array, coef: Float64Array, intercept: number): number {
+  private _predict(
+    x: Float64Array,
+    coef: Float64Array,
+    intercept: number,
+  ): number {
     return this._dot(x, coef) + intercept;
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (!this.estimator_) throw new NotFittedError("RANSACRegressor is not fitted");
+    if (!this.estimator_)
+      throw new NotFittedError("RANSACRegressor is not fitted");
     const { coef_, intercept_ } = this.estimator_;
     const result = new Float64Array(X.length);
     for (let i = 0; i < X.length; i++) {

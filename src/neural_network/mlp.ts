@@ -33,7 +33,13 @@ function getActivation(name: string): [ActivationFn, ActivationDerivFn] {
   if (name === "tanh") return [Math.tanh, tanhDeriv];
   // logistic
   const sig = (x: number) => 1 / (1 + Math.exp(-x));
-  return [sig, (x: number) => { const s = sig(x); return s * (1 - s); }];
+  return [
+    sig,
+    (x: number) => {
+      const s = sig(x);
+      return s * (1 - s);
+    },
+  ];
 }
 
 interface LayerWeights {
@@ -134,7 +140,9 @@ export class MLPClassifier {
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
     const nFeatures = (X[0] ?? new Float64Array(0)).length;
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     const nClasses = uniqueClasses.length;
     this.nOutputs_ = nClasses;
@@ -177,7 +185,9 @@ export class MLPClassifier {
           for (let j = 0; j < z.length; j++) {
             let sum = 0;
             for (let k = 0; k < nextLayer.W.length; k++) {
-              sum += ((nextLayer.W[k] ?? new Float64Array(0))[j] ?? 0) * (nextDelta[k] ?? 0);
+              sum +=
+                ((nextLayer.W[k] ?? new Float64Array(0))[j] ?? 0) *
+                (nextDelta[k] ?? 0);
             }
             delta[j] = sum * activDeriv(z[j] ?? 0);
           }
@@ -194,9 +204,12 @@ export class MLPClassifier {
             for (let k = 0; k < prevA.length; k++) {
               wRow[k] =
                 (wRow[k] ?? 0) -
-                this.learningRate * ((delta[j] ?? 0) * (prevA[k] ?? 0) + this.alpha * (wRow[k] ?? 0));
+                this.learningRate *
+                  ((delta[j] ?? 0) * (prevA[k] ?? 0) +
+                    this.alpha * (wRow[k] ?? 0));
             }
-            layer.b[j] = (layer.b[j] ?? 0) - this.learningRate * (delta[j] ?? 0);
+            layer.b[j] =
+              (layer.b[j] ?? 0) - this.learningRate * (delta[j] ?? 0);
           }
         }
       }
@@ -212,7 +225,12 @@ export class MLPClassifier {
     if (this.coefs_ === null) throw new NotFittedError("MLPClassifier");
     const [activFn] = getActivation(this.activation);
     return X.map((xi) => {
-      const { activations } = this._forward(xi, this.coefs_ as LayerWeights[], activFn, true);
+      const { activations } = this._forward(
+        xi,
+        this.coefs_ as LayerWeights[],
+        activFn,
+        true,
+      );
       return activations[activations.length - 1] as Float64Array;
     });
   }
@@ -315,7 +333,9 @@ export class MLPRegressor {
       }
       zs.push(z);
       const isLast = l === weights.length - 1;
-      activations.push(isLast ? new Float64Array(z) : new Float64Array(z.map(activFn)));
+      activations.push(
+        isLast ? new Float64Array(z) : new Float64Array(z.map(activFn)),
+      );
     }
     return { activations, zs };
   }
@@ -333,7 +353,8 @@ export class MLPRegressor {
       for (let i = 0; i < n; i++) {
         const xi = X[i] ?? new Float64Array(nFeatures);
         const { activations, zs } = this._forward(xi, weights, activFn);
-        const output = (activations[activations.length - 1] as Float64Array)[0] ?? 0;
+        const output =
+          (activations[activations.length - 1] as Float64Array)[0] ?? 0;
         const err = output - (y[i] ?? 0);
         totalLoss += err ** 2;
 
@@ -348,7 +369,9 @@ export class MLPRegressor {
           for (let j = 0; j < z.length; j++) {
             let sum = 0;
             for (let k = 0; k < nextLayer.W.length; k++) {
-              sum += ((nextLayer.W[k] ?? new Float64Array(0))[j] ?? 0) * (nextDelta[k] ?? 0);
+              sum +=
+                ((nextLayer.W[k] ?? new Float64Array(0))[j] ?? 0) *
+                (nextDelta[k] ?? 0);
             }
             delta[j] = sum * activDeriv(z[j] ?? 0);
           }
@@ -364,9 +387,12 @@ export class MLPRegressor {
             for (let k = 0; k < prevA.length; k++) {
               wRow[k] =
                 (wRow[k] ?? 0) -
-                this.learningRate * ((delta[j] ?? 0) * (prevA[k] ?? 0) + this.alpha * (wRow[k] ?? 0));
+                this.learningRate *
+                  ((delta[j] ?? 0) * (prevA[k] ?? 0) +
+                    this.alpha * (wRow[k] ?? 0));
             }
-            layer.b[j] = (layer.b[j] ?? 0) - this.learningRate * (delta[j] ?? 0);
+            layer.b[j] =
+              (layer.b[j] ?? 0) - this.learningRate * (delta[j] ?? 0);
           }
         }
       }
@@ -382,7 +408,11 @@ export class MLPRegressor {
     const [activFn] = getActivation(this.activation);
     return new Float64Array(
       X.map((xi) => {
-        const { activations } = this._forward(xi, this.coefs_ as LayerWeights[], activFn);
+        const { activations } = this._forward(
+          xi,
+          this.coefs_ as LayerWeights[],
+          activFn,
+        );
         return (activations[activations.length - 1] as Float64Array)[0] ?? 0;
       }),
     );

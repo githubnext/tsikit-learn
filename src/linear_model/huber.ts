@@ -74,7 +74,7 @@ export class HuberRegressor {
         w[j]! -= lr * g;
         maxGrad = Math.max(maxGrad, Math.abs(g));
       }
-      if (this.fitIntercept) b -= lr * gradB / n;
+      if (this.fitIntercept) b -= (lr * gradB) / n;
 
       this.nIter_ = iter + 1;
       if (maxGrad < this.tol) break;
@@ -87,7 +87,7 @@ export class HuberRegressor {
     this.outliers_ = new Uint8Array(n);
     for (let i = 0; i < n; i++) {
       let pred = b;
-      for (let j = 0; j < p; j++) pred += (w[j] ?? 0) * ((X[i]![j]) ?? 0);
+      for (let j = 0; j < p; j++) pred += (w[j] ?? 0) * (X[i]![j] ?? 0);
       if (Math.abs((y[i] ?? 0) - pred) > this.epsilon) this.outliers_[i] = 1;
     }
 
@@ -176,7 +176,8 @@ export class Lars {
       for (let j = 0; j < p; j++) {
         if (active.includes(j)) continue;
         let corr = 0;
-        for (let i = 0; i < n; i++) corr += (Xc[i]![j] ?? 0) * (residual[i] ?? 0);
+        for (let i = 0; i < n; i++)
+          corr += (Xc[i]![j] ?? 0) * (residual[i] ?? 0);
         corr = Math.abs(corr / n);
         if (corr > maxCorr) {
           maxCorr = corr;
@@ -189,18 +190,22 @@ export class Lars {
 
       // Simple OLS step along active set direction
       // Use Gram-Schmidt on active set (simplified)
-      const XA = Xc.map((row) => new Float64Array(active.map((j) => row[j] ?? 0)));
+      const XA = Xc.map(
+        (row) => new Float64Array(active.map((j) => row[j] ?? 0)),
+      );
       const gram: number[][] = active.map((_, a) =>
         active.map((_, b) => {
           let dot = 0;
-          for (let i = 0; i < n; i++) dot += (XA[i]![a] ?? 0) * (XA[i]![b] ?? 0);
+          for (let i = 0; i < n; i++)
+            dot += (XA[i]![a] ?? 0) * (XA[i]![b] ?? 0);
           return dot / n;
         }),
       );
 
       const XAy = new Float64Array(active.length);
       for (let a = 0; a < active.length; a++) {
-        for (let i = 0; i < n; i++) XAy[a]! += (XA[i]![a] ?? 0) * (residual[i] ?? 0);
+        for (let i = 0; i < n; i++)
+          XAy[a]! += (XA[i]![a] ?? 0) * (residual[i] ?? 0);
         XAy[a]! /= n;
       }
 
@@ -229,7 +234,8 @@ export class Lars {
 
     this.coef_ = coef;
     this.intercept_ = this.fitIntercept
-      ? yMean - (() => {
+      ? yMean -
+        (() => {
           let sum = 0;
           for (let j = 0; j < p; j++) sum += (coef[j] ?? 0) * (xMeans[j] ?? 0);
           return sum;

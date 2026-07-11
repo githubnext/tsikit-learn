@@ -15,13 +15,12 @@ export interface EstimatorLike {
 }
 
 /** Check whether an object looks like a fitted estimator. */
-export function checkIsFitted(
-  estimator: object,
-  attributes?: string[],
-): void {
+export function checkIsFitted(estimator: object, attributes?: string[]): void {
   if (attributes) {
     const missing = attributes.filter(
-      (a) => !(a in estimator) || (estimator as Record<string, unknown>)[a] === undefined,
+      (a) =>
+        !(a in estimator) ||
+        (estimator as Record<string, unknown>)[a] === undefined,
     );
     if (missing.length > 0) {
       throw new Error(
@@ -89,7 +88,10 @@ export function checkEstimator(estimator: object): CheckResult {
     errors.push("Missing required method: fit()");
   }
 
-  if ("getParams" in estimator && typeof (estimator as EstimatorLike).getParams === "function") {
+  if (
+    "getParams" in estimator &&
+    typeof (estimator as EstimatorLike).getParams === "function"
+  ) {
     try {
       const params = (estimator as EstimatorLike).getParams?.() ?? {};
       if (typeof params !== "object") {
@@ -100,7 +102,10 @@ export function checkEstimator(estimator: object): CheckResult {
     }
   }
 
-  if ("setParams" in estimator && typeof (estimator as EstimatorLike).setParams === "function") {
+  if (
+    "setParams" in estimator &&
+    typeof (estimator as EstimatorLike).setParams === "function"
+  ) {
     const params = (estimator as EstimatorLike).getParams?.() ?? {};
     try {
       (estimator as EstimatorLike).setParams?.(params);
@@ -119,7 +124,11 @@ export function checkEstimator(estimator: object): CheckResult {
 export function parametrizeWithChecks(
   estimators: object[],
 ): Array<{ estimator: object; check: (est: object) => void; name: string }> {
-  const checks: Array<{ estimator: object; check: (est: object) => void; name: string }> = [];
+  const checks: Array<{
+    estimator: object;
+    check: (est: object) => void;
+    name: string;
+  }> = [];
   for (const est of estimators) {
     checks.push({
       estimator: est,
@@ -136,7 +145,10 @@ export function parametrizeWithChecks(
       name: `check_is_classifier_or_regressor_or_transformer[${est.constructor.name}]`,
       check: (e: object) => {
         const ok =
-          isClassifier(e) || isRegressor(e) || isTransformer(e) || isClusterer(e);
+          isClassifier(e) ||
+          isRegressor(e) ||
+          isTransformer(e) ||
+          isClusterer(e);
         if (!ok) {
           throw new Error(
             `${e.constructor.name} is not recognized as a classifier, regressor, transformer, or clusterer`,

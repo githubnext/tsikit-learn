@@ -1,9 +1,9 @@
+import { BaseEstimator } from "../base.js";
 /**
  * NeighborhoodComponentsAnalysis (NCA).
  * Mirrors sklearn.neighbors.NeighborhoodComponentsAnalysis.
  */
 import { NotFittedError } from "../exceptions.js";
-import { BaseEstimator } from "../base.js";
 
 export interface NCAOptions {
   nComponents?: number;
@@ -78,7 +78,7 @@ export class NeighborhoodComponentsAnalysis extends BaseEstimator {
     let iter = 0;
     const lr = 0.001;
     for (iter = 0; iter < this.maxIter; iter++) {
-      const Ax = X.map(x => this._transform(A, x));
+      const Ax = X.map((x) => this._transform(A, x));
       const { loss, grad } = this._lossGrad(Ax, y, A, X, n, nComp, d);
       // SGD step
       let maxGrad = 0;
@@ -89,7 +89,8 @@ export class NeighborhoodComponentsAnalysis extends BaseEstimator {
           if (Math.abs(g) > maxGrad) maxGrad = Math.abs(g);
         }
       }
-      if (this.verbose > 0) console.log(`NCA iter ${iter}, loss=${loss.toFixed(6)}`);
+      if (this.verbose > 0)
+        console.log(`NCA iter ${iter}, loss=${loss.toFixed(6)}`);
       if (maxGrad < this.tol) break;
     }
 
@@ -100,7 +101,7 @@ export class NeighborhoodComponentsAnalysis extends BaseEstimator {
 
   transform(X: Float64Array[]): Float64Array[] {
     if (!this.components_) throw new NotFittedError("NCA is not fitted");
-    return X.map(x => this._transform(this.components_!, x));
+    return X.map((x) => this._transform(this.components_!, x));
   }
 
   fitTransform(X: Float64Array[], y: Int32Array): Float64Array[] {
@@ -125,9 +126,12 @@ export class NeighborhoodComponentsAnalysis extends BaseEstimator {
     X: Float64Array[],
     n: number,
     nComp: number,
-    d: number
+    d: number,
   ): { loss: number; grad: Float64Array[] } {
-    const grad: Float64Array[] = Array.from({ length: nComp }, () => new Float64Array(d));
+    const grad: Float64Array[] = Array.from(
+      { length: nComp },
+      () => new Float64Array(d),
+    );
     let loss = 0;
 
     for (let i = 0; i < n; i++) {
@@ -136,7 +140,10 @@ export class NeighborhoodComponentsAnalysis extends BaseEstimator {
       // Softmax over distances in transformed space
       const dists = new Float64Array(n);
       for (let k = 0; k < n; k++) {
-        if (k === i) { dists[k] = 0; continue; }
+        if (k === i) {
+          dists[k] = 0;
+          continue;
+        }
         let sq = 0;
         const axk = Ax[k]!;
         for (let c = 0; c < nComp; c++) {

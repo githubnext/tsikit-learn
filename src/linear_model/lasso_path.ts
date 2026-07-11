@@ -56,9 +56,12 @@ export function lassoPath(
 
   // Center X and y (no intercept in path algorithm)
   const xMean = new Float64Array(p);
-  for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) xMean[j]! += X[i]![j]! ?? 0;
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < p; j++) xMean[j]! += X[i]![j]! ?? 0;
   for (let j = 0; j < p; j++) xMean[j]! /= n;
-  const Xc = X.map((row) => Float64Array.from(row, (v, j) => v - (xMean[j]! ?? 0)));
+  const Xc = X.map((row) =>
+    Float64Array.from(row, (v, j) => v - (xMean[j]! ?? 0)),
+  );
 
   let yMean = 0;
   for (let i = 0; i < n; i++) yMean += y[i]! ?? 0;
@@ -66,7 +69,8 @@ export function lassoPath(
   const yc = Float64Array.from(y, (v) => v - yMean);
 
   // Auto-generate alphas if not provided
-  if (!alphas) {
+  let alphasPath = alphas;
+  if (!alphasPath) {
     let alphaMax = 0;
     for (let j = 0; j < p; j++) {
       let dot = 0;
@@ -77,21 +81,20 @@ export function lassoPath(
     const alphaMin = alphaMax * eps;
     const logMax = Math.log(alphaMax);
     const logMin = Math.log(alphaMin);
-    alphas = Float64Array.from(
-      { length: nAlphas },
-      (_, i) => Math.exp(logMax + (i / (nAlphas - 1)) * (logMin - logMax)),
+    alphasPath = Float64Array.from({ length: nAlphas }, (_, i) =>
+      Math.exp(logMax + (i / (nAlphas - 1)) * (logMin - logMax)),
     );
   }
 
   const coefs: Float64Array[] = [];
-  const dualGaps = new Float64Array(alphas.length);
+  const dualGaps = new Float64Array(alphasPath.length);
   const nIters: number[] = [];
 
   // Warm start
-  let coef = new Float64Array(p);
+  const coef = new Float64Array(p);
 
-  for (let ai = 0; ai < alphas.length; ai++) {
-    const alpha = alphas[ai]! ?? 1e-3;
+  for (let ai = 0; ai < alphasPath.length; ai++) {
+    const alpha = alphasPath[ai]! ?? 1e-3;
     const l1Pen = alpha * l1Ratio;
     const l2Pen = alpha * (1 - l1Ratio);
 
@@ -106,7 +109,8 @@ export function lassoPath(
         let rj = 0;
         for (let i = 0; i < n; i++) {
           let pred = 0;
-          for (let k = 0; k < p; k++) if (k !== j) pred += (Xc[i]![k]! ?? 0) * (coef[k]! ?? 0);
+          for (let k = 0; k < p; k++)
+            if (k !== j) pred += (Xc[i]![k]! ?? 0) * (coef[k]! ?? 0);
           rj += (Xc[i]![j]! ?? 0) * ((yc[i]! ?? 0) - pred);
         }
         rj /= n;
@@ -121,20 +125,21 @@ export function lassoPath(
     nIters.push(iter);
 
     // Dual gap
-    let yPred = Float64Array.from({ length: n }, () => 0);
+    const yPred = Float64Array.from({ length: n }, () => 0);
     for (let i = 0; i < n; i++) {
       let s = 0;
       for (let j = 0; j < p; j++) s += (Xc[i]![j]! ?? 0) * (coef[j]! ?? 0);
       yPred[i]! = s;
     }
     let rNorm = 0;
-    for (let i = 0; i < n; i++) rNorm += ((yc[i]! ?? 0) - (yPred[i]! ?? 0)) ** 2;
+    for (let i = 0; i < n; i++)
+      rNorm += ((yc[i]! ?? 0) - (yPred[i]! ?? 0)) ** 2;
     dualGaps[ai]! = rNorm / n;
 
     coefs.push(new Float64Array(coef));
   }
 
-  return { alphas, coefs, dualGaps, nIters };
+  return { alphas: alphasPath, coefs, dualGaps, nIters };
 }
 
 /**
@@ -209,12 +214,14 @@ export class LassoPath {
   }
 
   predict(X: Float64Array[], alphaIdx?: number): Float64Array {
-    if (!this.coefs_ || !this.alphas_) throw new NotFittedError("LassoPath is not fitted");
+    if (!this.coefs_ || !this.alphas_)
+      throw new NotFittedError("LassoPath is not fitted");
     const idx = alphaIdx ?? this.coefs_.length - 1;
     const coef = this.coefs_[idx]!;
     return Float64Array.from(X, (row) => {
       let s = 0;
-      for (let j = 0; j < row.length; j++) s += (row[j]! ?? 0) * (coef[j]! ?? 0);
+      for (let j = 0; j < row.length; j++)
+        s += (row[j]! ?? 0) * (coef[j]! ?? 0);
       return s;
     });
   }

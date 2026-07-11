@@ -61,7 +61,8 @@ export class BernoulliRBM {
 
   private sample(probs: Float64Array): Float64Array {
     const s = new Float64Array(probs.length);
-    for (let i = 0; i < probs.length; i++) s[i] = this.rng_() < (probs[i] ?? 0) ? 1 : 0;
+    for (let i = 0; i < probs.length; i++)
+      s[i] = this.rng_() < (probs[i] ?? 0) ? 1 : 0;
     return s;
   }
 
@@ -83,7 +84,8 @@ export class BernoulliRBM {
     for (let i = 0; i < nVisible; i++) {
       let s = this.interceptVisible_![i] ?? 0;
       for (let j = 0; j < this.nComponents; j++) {
-        s += ((this.components_![j] ?? new Float64Array(0))[i] ?? 0) * (h[j] ?? 0);
+        s +=
+          ((this.components_![j] ?? new Float64Array(0))[i] ?? 0) * (h[j] ?? 0);
       }
       v[i] = sigmoid(s);
     }
@@ -109,12 +111,17 @@ export class BernoulliRBM {
       const perm = Array.from({ length: n }, (_, i) => i);
       for (let i = n - 1; i > 0; i--) {
         const j = Math.floor(this.rng_() * (i + 1));
-        const tmp = perm[i]!; perm[i] = perm[j]!; perm[j] = tmp;
+        const tmp = perm[i]!;
+        perm[i] = perm[j]!;
+        perm[j] = tmp;
       }
 
       for (let start = 0; start < n; start += this.batchSize) {
         const batchIdx = perm.slice(start, start + this.batchSize);
-        const dW: Float64Array[] = Array.from({ length: this.nComponents }, () => new Float64Array(nVisible));
+        const dW: Float64Array[] = Array.from(
+          { length: this.nComponents },
+          () => new Float64Array(nVisible),
+        );
         const dHBias = new Float64Array(this.nComponents);
         const dVBias = new Float64Array(nVisible);
 
@@ -132,7 +139,10 @@ export class BernoulliRBM {
           for (let j = 0; j < this.nComponents; j++) {
             const dj = dW[j] ?? new Float64Array(nVisible);
             for (let vi = 0; vi < nVisible; vi++) {
-              dj[vi] = (dj[vi] ?? 0) + (v0[vi] ?? 0) * (h0Prob[j] ?? 0) - (v1[vi] ?? 0) * (h1Prob[j] ?? 0);
+              dj[vi] =
+                (dj[vi] ?? 0) +
+                (v0[vi] ?? 0) * (h0Prob[j] ?? 0) -
+                (v1[vi] ?? 0) * (h1Prob[j] ?? 0);
             }
             dHBias[j] = (dHBias[j] ?? 0) + (h0Prob[j] ?? 0) - (h1Prob[j] ?? 0);
           }
@@ -147,11 +157,14 @@ export class BernoulliRBM {
         for (let j = 0; j < this.nComponents; j++) {
           const wj = this.components_![j] ?? new Float64Array(nVisible);
           const dj = dW[j] ?? new Float64Array(nVisible);
-          for (let vi = 0; vi < nVisible; vi++) wj[vi] = (wj[vi] ?? 0) + lr * (dj[vi] ?? 0);
-          this.interceptHidden_![j] = (this.interceptHidden_![j] ?? 0) + lr * (dHBias[j] ?? 0);
+          for (let vi = 0; vi < nVisible; vi++)
+            wj[vi] = (wj[vi] ?? 0) + lr * (dj[vi] ?? 0);
+          this.interceptHidden_![j] =
+            (this.interceptHidden_![j] ?? 0) + lr * (dHBias[j] ?? 0);
         }
         for (let vi = 0; vi < nVisible; vi++) {
-          this.interceptVisible_![vi] = (this.interceptVisible_![vi] ?? 0) + lr * (dVBias[vi] ?? 0);
+          this.interceptVisible_![vi] =
+            (this.interceptVisible_![vi] ?? 0) + lr * (dVBias[vi] ?? 0);
         }
       }
       this.nIter_ = iter + 1;
@@ -161,7 +174,8 @@ export class BernoulliRBM {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.components_) throw new NotFittedError("BernoulliRBM is not fitted yet.");
+    if (!this.components_)
+      throw new NotFittedError("BernoulliRBM is not fitted yet.");
     return X.map((xi) => this.propUp(xi));
   }
 
@@ -171,15 +185,19 @@ export class BernoulliRBM {
 
   /** Pseudo-log-likelihood score (proxy for likelihood). */
   score(X: Float64Array[]): number {
-    if (!this.components_) throw new NotFittedError("BernoulliRBM is not fitted yet.");
+    if (!this.components_)
+      throw new NotFittedError("BernoulliRBM is not fitted yet.");
     const nVisible = (X[0] ?? new Float64Array(0)).length;
     let total = 0;
     for (const v of X) {
       // Free energy: -b_v v - sum_j log(1 + exp(b_h_j + W_j v))
       let fe = 0;
-      for (let vi = 0; vi < nVisible; vi++) fe -= (this.interceptVisible_![vi] ?? 0) * (v[vi] ?? 0);
+      for (let vi = 0; vi < nVisible; vi++)
+        fe -= (this.interceptVisible_![vi] ?? 0) * (v[vi] ?? 0);
       for (let j = 0; j < this.nComponents; j++) {
-        const s = (this.interceptHidden_![j] ?? 0) + dot(this.components_![j] ?? new Float64Array(0), v);
+        const s =
+          (this.interceptHidden_![j] ?? 0) +
+          dot(this.components_![j] ?? new Float64Array(0), v);
         fe -= Math.log(1 + Math.exp(s));
       }
       total += fe;

@@ -26,8 +26,7 @@ function applyKernel(
   coef0: number,
 ): number {
   if (kernel === "rbf") return rbfKernel(a, b, gamma);
-  if (kernel === "poly")
-    return (gamma * linearKernel(a, b) + coef0) ** degree;
+  if (kernel === "poly") return (gamma * linearKernel(a, b) + coef0) ** degree;
   return linearKernel(a, b);
 }
 
@@ -101,8 +100,7 @@ export class NuSVC {
     for (let iter = 0; iter < this.maxIter; iter++) {
       let changed = 0;
       for (let i = 0; i < n; i++) {
-        let ei =
-          -label[i]!;
+        let ei = -label[i]!;
         for (let k = 0; k < n; k++) {
           ei +=
             (alpha[k] ?? 0) *
@@ -117,12 +115,11 @@ export class NuSVC {
             );
         }
         if (
-          ((label[i]! * ei < -this.tol) && alpha[i]! < C) ||
-          ((label[i]! * ei > this.tol) && alpha[i]! > 0)
+          (label[i]! * ei < -this.tol && alpha[i]! < C) ||
+          (label[i]! * ei > this.tol && alpha[i]! > 0)
         ) {
           const j = (i + 1) % n;
-          const ej =
-            -label[j]!;
+          const ej = -label[j]!;
           const kii = applyKernel(
             X[i]!,
             X[i]!,
@@ -154,8 +151,7 @@ export class NuSVC {
           alpha[j] = alphaJOld + (label[j]! * (ei - ej)) / eta;
           alpha[j] = Math.max(0, Math.min(C, alpha[j]!));
           alpha[i] =
-            alphaIOld +
-            label[i]! * label[j]! * (alphaJOld - alpha[j]!);
+            alphaIOld + label[i]! * label[j]! * (alphaJOld - alpha[j]!);
           alpha[i] = Math.max(0, Math.min(C, alpha[i]!));
           if (Math.abs((alpha[j] ?? 0) - alphaJOld) > 1e-5) changed++;
         }
@@ -166,9 +162,9 @@ export class NuSVC {
     // Collect support vectors
     const svIdx: number[] = [];
     for (let i = 0; i < n; i++) if ((alpha[i] ?? 0) > 1e-5) svIdx.push(i);
-    this.supportVectors_ = svIdx.map(i => X[i]!);
+    this.supportVectors_ = svIdx.map((i) => X[i]!);
     this.dualCoef_ = new Float64Array(
-      svIdx.map(i => (alpha[i] ?? 0) * (label[i] ?? 0)),
+      svIdx.map((i) => (alpha[i] ?? 0) * (label[i] ?? 0)),
     );
 
     // Compute intercept from margin support vectors
@@ -199,7 +195,7 @@ export class NuSVC {
     if (!this.supportVectors_ || !this.dualCoef_)
       throw new NotFittedError("NuSVC");
     return new Float64Array(
-      X.map(xi => {
+      X.map((xi) => {
         let s = this.intercept_;
         for (let k = 0; k < this.supportVectors_!.length; k++) {
           s +=
@@ -222,7 +218,9 @@ export class NuSVC {
     if (!this.classes_) throw new NotFittedError("NuSVC");
     const d = this.decisionFunction(X);
     return new Int32Array(
-      d.map(v => (v >= 0 ? (this.classes_![1] ?? 1) : (this.classes_![0] ?? 0))),
+      d.map((v) =>
+        v >= 0 ? (this.classes_![1] ?? 1) : (this.classes_![0] ?? 0),
+      ),
     );
   }
 
@@ -309,7 +307,14 @@ export class NuSVR {
         for (let k = 0; k < n; k++) {
           fi +=
             (alpha[k] ?? 0) *
-            applyKernel(X[i]!, X[k]!, this.kernel, this.gamma_, this.degree, this.coef0);
+            applyKernel(
+              X[i]!,
+              X[k]!,
+              this.kernel,
+              this.gamma_,
+              this.degree,
+              this.coef0,
+            );
         }
         const ri = fi - (y[i] ?? 0);
         const grad = ri > eps ? ri - eps : ri < -eps ? ri + eps : 0;
@@ -328,9 +333,10 @@ export class NuSVR {
     }
 
     const svIdx: number[] = [];
-    for (let i = 0; i < n; i++) if (Math.abs(alpha[i] ?? 0) > 1e-5) svIdx.push(i);
-    this.supportVectors_ = svIdx.map(i => X[i]!);
-    this.dualCoef_ = new Float64Array(svIdx.map(i => alpha[i] ?? 0));
+    for (let i = 0; i < n; i++)
+      if (Math.abs(alpha[i] ?? 0) > 1e-5) svIdx.push(i);
+    this.supportVectors_ = svIdx.map((i) => X[i]!);
+    this.dualCoef_ = new Float64Array(svIdx.map((i) => alpha[i] ?? 0));
 
     // Compute intercept
     let b = 0;
@@ -360,7 +366,7 @@ export class NuSVR {
     if (!this.supportVectors_ || !this.dualCoef_)
       throw new NotFittedError("NuSVR");
     return new Float64Array(
-      X.map(xi => {
+      X.map((xi) => {
         let s = this.intercept_;
         for (let k = 0; k < this.supportVectors_!.length; k++) {
           s +=

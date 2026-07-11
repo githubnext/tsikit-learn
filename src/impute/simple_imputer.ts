@@ -25,7 +25,9 @@ export class SimpleImputer {
   }
 
   private _isMissing(x: number): boolean {
-    return isNaN(this.missingValues) ? isNaN(x) : x === this.missingValues;
+    return Number.isNaN(this.missingValues)
+      ? Number.isNaN(x)
+      : x === this.missingValues;
   }
 
   fit(X: Float64Array[]): this {
@@ -40,7 +42,8 @@ export class SimpleImputer {
       }
 
       if (this.strategy === "mean") {
-        stats[j] = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+        stats[j] =
+          vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
       } else if (this.strategy === "median") {
         vals.sort((a, b) => a - b);
         const mid = Math.floor(vals.length / 2);

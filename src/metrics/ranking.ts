@@ -73,7 +73,8 @@ export function rocAucScore(
 function _auc(x: Float64Array, y: Float64Array): number {
   let area = 0;
   for (let i = 1; i < x.length; i++) {
-    area += ((x[i] ?? 0) - (x[i - 1] ?? 0)) * ((y[i] ?? 0) + (y[i - 1] ?? 0)) / 2;
+    area +=
+      (((x[i] ?? 0) - (x[i - 1] ?? 0)) * ((y[i] ?? 0) + (y[i - 1] ?? 0))) / 2;
   }
   return Math.abs(area);
 }
@@ -142,7 +143,10 @@ export function averagePrecisionScore(
 /**
  * Compute AUC (area under curve) using the trapezoidal rule.
  */
-export function auc(x: Float64Array | number[], y: Float64Array | number[]): number {
+export function auc(
+  x: Float64Array | number[],
+  y: Float64Array | number[],
+): number {
   const xArr = x instanceof Float64Array ? x : new Float64Array(x);
   const yArr = y instanceof Float64Array ? y : new Float64Array(y);
   return _auc(xArr, yArr);
@@ -168,14 +172,12 @@ export function ndcgScore(
     .slice(0, kk);
 
   const dcg = sortedByScore.reduce(
-    (sum, idx, rank) =>
-      sum + ((yTrue[idx] ?? 0) / Math.log2(rank + 2)),
+    (sum, idx, rank) => sum + (yTrue[idx] ?? 0) / Math.log2(rank + 2),
     0,
   );
 
   const idealDcg = sortedByTrue.reduce(
-    (sum, idx, rank) =>
-      sum + ((yTrue[idx] ?? 0) / Math.log2(rank + 2)),
+    (sum, idx, rank) => sum + (yTrue[idx] ?? 0) / Math.log2(rank + 2),
     0,
   );
 

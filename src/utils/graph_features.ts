@@ -31,7 +31,9 @@ export function computeDegrees(graph: Graph): Map<number, number> {
   return degrees;
 }
 
-export function computeClusteringCoefficients(graph: Graph): Map<number, number> {
+export function computeClusteringCoefficients(
+  graph: Graph,
+): Map<number, number> {
   const adj = new Map<number, Set<number>>();
   for (const node of graph.nodes) adj.set(node, new Set());
   for (const [u, v] of graph.edges) {
@@ -42,7 +44,10 @@ export function computeClusteringCoefficients(graph: Graph): Map<number, number>
   for (const node of graph.nodes) {
     const neighbors = [...(adj.get(node) ?? new Set())];
     const k = neighbors.length;
-    if (k < 2) { coeffs.set(node, 0); continue; }
+    if (k < 2) {
+      coeffs.set(node, 0);
+      continue;
+    }
     let triangles = 0;
     for (let i = 0; i < neighbors.length; i++) {
       for (let j = i + 1; j < neighbors.length; j++) {
@@ -76,7 +81,7 @@ export class GraphFeatureExtractor {
       }
       if (this.features.includes("density")) {
         const n = g.nodes.length;
-        const maxEdges = n * (n - 1) / 2;
+        const maxEdges = (n * (n - 1)) / 2;
         featureVec.push(maxEdges > 0 ? g.edges.length / maxEdges : 0);
       }
       return new Float64Array(featureVec);
@@ -84,7 +89,10 @@ export class GraphFeatureExtractor {
   }
 }
 
-export function shortestPathBFS(graph: Graph, source: number): Map<number, number> {
+export function shortestPathBFS(
+  graph: Graph,
+  source: number,
+): Map<number, number> {
   const adj = new Map<number, number[]>();
   for (const node of graph.nodes) adj.set(node, []);
   for (const [u, v] of graph.edges) {

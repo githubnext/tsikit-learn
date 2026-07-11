@@ -31,7 +31,12 @@ function mse(y: Float64Array, yPred: Float64Array): number {
 }
 
 /** Solve Ridge regression (OLS + L2): (X^T X + alpha I) w = X^T y. */
-function solveRidge(X: Float64Array[], y: Float64Array, alpha: number, fitIntercept: boolean): { w: Float64Array; intercept: number } {
+function solveRidge(
+  X: Float64Array[],
+  y: Float64Array,
+  alpha: number,
+  fitIntercept: boolean,
+): { w: Float64Array; intercept: number } {
   const n = X.length;
   const p = (X[0] ?? new Float64Array(0)).length;
 
@@ -41,8 +46,12 @@ function solveRidge(X: Float64Array[], y: Float64Array, alpha: number, fitInterc
 
   if (fitIntercept) {
     yMean = mean(Array.from(y));
-    for (const xi of X) for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0) / n;
-    Xuse = X.map((xi) => new Float64Array(xi.map((v, j) => v - (xMeans[j] ?? 0))));
+    for (const xi of X)
+      for (let j = 0; j < p; j++)
+        xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0) / n;
+    Xuse = X.map(
+      (xi) => new Float64Array(xi.map((v, j) => v - (xMeans[j] ?? 0))),
+    );
   }
 
   const yc = new Float64Array(y.map((v) => v - yMean));
@@ -58,24 +67,35 @@ function solveRidge(X: Float64Array[], y: Float64Array, alpha: number, fitInterc
   for (let i = 0; i < n; i++) {
     const xi = Xuse[i] ?? new Float64Array(p);
     for (let j = 0; j < p; j++) {
-      for (let k = 0; k < p; k++) A[j]![k] = (A[j]![k] ?? 0) + (xi[j] ?? 0) * (xi[k] ?? 0);
+      for (let k = 0; k < p; k++)
+        A[j]![k] = (A[j]![k] ?? 0) + (xi[j] ?? 0) * (xi[k] ?? 0);
       b[j] = (b[j] ?? 0) + (xi[j] ?? 0) * (yc[i] ?? 0);
     }
   }
 
   // Gauss-Jordan solve
-  const Ab = A.map((row, i) => { const r = new Float64Array(p + 1); for (let j = 0; j < p; j++) r[j] = row[j] ?? 0; r[p] = b[i] ?? 0; return r; });
+  const Ab = A.map((row, i) => {
+    const r = new Float64Array(p + 1);
+    for (let j = 0; j < p; j++) r[j] = row[j] ?? 0;
+    r[p] = b[i] ?? 0;
+    return r;
+  });
   for (let col = 0; col < p; col++) {
     let pivot = col;
-    for (let row = col + 1; row < p; row++) if (Math.abs(Ab[row]![col] ?? 0) > Math.abs(Ab[pivot]![col] ?? 0)) pivot = row;
-    const tmp = Ab[col]!; Ab[col] = Ab[pivot]!; Ab[pivot] = tmp;
+    for (let row = col + 1; row < p; row++)
+      if (Math.abs(Ab[row]![col] ?? 0) > Math.abs(Ab[pivot]![col] ?? 0))
+        pivot = row;
+    const tmp = Ab[col]!;
+    Ab[col] = Ab[pivot]!;
+    Ab[pivot] = tmp;
     const scale = Ab[col]![col] ?? 1;
     if (Math.abs(scale) < 1e-14) continue;
     for (let j = col; j <= p; j++) Ab[col]![j] = (Ab[col]![j] ?? 0) / scale;
     for (let row = 0; row < p; row++) {
       if (row === col) continue;
       const f = Ab[row]![col] ?? 0;
-      for (let j = col; j <= p; j++) Ab[row]![j] = (Ab[row]![j] ?? 0) - f * (Ab[col]![j] ?? 0);
+      for (let j = col; j <= p; j++)
+        Ab[row]![j] = (Ab[row]![j] ?? 0) - f * (Ab[col]![j] ?? 0);
     }
   }
   const w = new Float64Array(p);
@@ -89,12 +109,18 @@ function solveRidge(X: Float64Array[], y: Float64Array, alpha: number, fitInterc
   return { w, intercept };
 }
 
-function predictLinear(X: Float64Array[], w: Float64Array, intercept: number): Float64Array {
-  return new Float64Array(X.map((xi) => {
-    let pred = intercept;
-    for (let j = 0; j < xi.length; j++) pred += (w[j] ?? 0) * (xi[j] ?? 0);
-    return pred;
-  }));
+function predictLinear(
+  X: Float64Array[],
+  w: Float64Array,
+  intercept: number,
+): Float64Array {
+  return new Float64Array(
+    X.map((xi) => {
+      let pred = intercept;
+      for (let j = 0; j < xi.length; j++) pred += (w[j] ?? 0) * (xi[j] ?? 0);
+      return pred;
+    }),
+  );
 }
 
 /**
@@ -131,16 +157,32 @@ export class RidgeCV {
     for (const alpha of this.alphas) {
       const scores: number[] = [];
       for (const fold of kf.split(X)) {
-        const Xtrain = Array.from(fold.trainIndex).map((i) => X[i] ?? new Float64Array(0));
-        const ytrain = new Float64Array(Array.from(fold.trainIndex).map((i) => y[i] ?? 0));
-        const Xval = Array.from(fold.testIndex).map((i) => X[i] ?? new Float64Array(0));
-        const yval = new Float64Array(Array.from(fold.testIndex).map((i) => y[i] ?? 0));
-        const { w, intercept } = solveRidge(Xtrain, ytrain, alpha, this.fitIntercept);
+        const Xtrain = Array.from(fold.trainIndex).map(
+          (i) => X[i] ?? new Float64Array(0),
+        );
+        const ytrain = new Float64Array(
+          Array.from(fold.trainIndex).map((i) => y[i] ?? 0),
+        );
+        const Xval = Array.from(fold.testIndex).map(
+          (i) => X[i] ?? new Float64Array(0),
+        );
+        const yval = new Float64Array(
+          Array.from(fold.testIndex).map((i) => y[i] ?? 0),
+        );
+        const { w, intercept } = solveRidge(
+          Xtrain,
+          ytrain,
+          alpha,
+          this.fitIntercept,
+        );
         const yPred = predictLinear(Xval, w, intercept);
         scores.push(r2Score(yval, yPred));
       }
       const s = mean(scores);
-      if (s > bestScore) { bestScore = s; bestAlpha = alpha; }
+      if (s > bestScore) {
+        bestScore = s;
+        bestAlpha = alpha;
+      }
     }
 
     this.alpha_ = bestAlpha;
@@ -162,7 +204,13 @@ export class RidgeCV {
 }
 
 /** Coordinate-descent Lasso for a single alpha. Returns coef. */
-function lassoCD(X: Float64Array[], y: Float64Array, alpha: number, maxIter: number, tol: number): Float64Array {
+function lassoCD(
+  X: Float64Array[],
+  y: Float64Array,
+  alpha: number,
+  maxIter: number,
+  tol: number,
+): Float64Array {
   const n = X.length;
   const p = (X[0] ?? new Float64Array(0)).length;
   const w = new Float64Array(p);
@@ -173,14 +221,23 @@ function lassoCD(X: Float64Array[], y: Float64Array, alpha: number, maxIter: num
       for (let i = 0; i < n; i++) {
         const xi = X[i] ?? new Float64Array(p);
         let pred = 0;
-        for (let k = 0; k < p; k++) if (k !== j) pred += (w[k] ?? 0) * (xi[k] ?? 0);
+        for (let k = 0; k < p; k++)
+          if (k !== j) pred += (w[k] ?? 0) * (xi[k] ?? 0);
         rho += (xi[j] ?? 0) * ((y[i] ?? 0) - pred);
       }
       rho /= n;
-      const normSq = Array.from(X).reduce((s, xi) => s + (xi[j] ?? 0) ** 2, 0) / n;
+      const normSq =
+        Array.from(X).reduce((s, xi) => s + (xi[j] ?? 0) ** 2, 0) / n;
       const wOld = w[j] ?? 0;
       const r = rho;
-      w[j] = normSq > 0 ? (r > alpha ? (r - alpha) / normSq : r < -alpha ? (r + alpha) / normSq : 0) : 0;
+      w[j] =
+        normSq > 0
+          ? r > alpha
+            ? (r - alpha) / normSq
+            : r < -alpha
+              ? (r + alpha) / normSq
+              : 0
+          : 0;
       maxDelta = Math.max(maxDelta, Math.abs((w[j] ?? 0) - wOld));
     }
     if (maxDelta < tol) break;
@@ -234,23 +291,30 @@ export class LassoCV {
     const yMean = this.fitIntercept ? mean(Array.from(y)) : 0;
     const xMeans = new Float64Array(p);
     if (this.fitIntercept) {
-      for (const xi of X) for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0) / n;
+      for (const xi of X)
+        for (let j = 0; j < p; j++)
+          xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0) / n;
     }
-    const Xc = X.map((xi) => new Float64Array(xi.map((v, j) => v - (xMeans[j] ?? 0))));
+    const Xc = X.map(
+      (xi) => new Float64Array(xi.map((v, j) => v - (xMeans[j] ?? 0))),
+    );
     const yc = new Float64Array(y.map((v) => v - yMean));
 
     // Compute alpha_max
     let alphaMax = 0;
     for (let j = 0; j < p; j++) {
       let corr = 0;
-      for (let i = 0; i < n; i++) corr += ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (yc[i] ?? 0);
+      for (let i = 0; i < n; i++)
+        corr += ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (yc[i] ?? 0);
       alphaMax = Math.max(alphaMax, Math.abs(corr / n));
     }
 
-    const alphas = this.alphas ?? Array.from({ length: this.nAlphas }, (_, i) => {
-      const t = i / (this.nAlphas - 1);
-      return alphaMax * Math.pow(this.eps, t);
-    });
+    const alphas =
+      this.alphas ??
+      Array.from({ length: this.nAlphas }, (_, i) => {
+        const t = i / (this.nAlphas - 1);
+        return alphaMax * this.eps ** t;
+      });
 
     const kf = new KFold({ nSplits: Math.min(this.cv, n) });
     let bestAlpha = alphas[0] ?? 1.0;
@@ -259,16 +323,27 @@ export class LassoCV {
     for (const alpha of alphas) {
       const mses: number[] = [];
       for (const fold of kf.split(Xc)) {
-        const Xtrain = Array.from(fold.trainIndex).map((i) => Xc[i] ?? new Float64Array(p));
-        const ytrain = new Float64Array(Array.from(fold.trainIndex).map((i) => yc[i] ?? 0));
-        const Xval = Array.from(fold.testIndex).map((i) => Xc[i] ?? new Float64Array(p));
-        const yval = new Float64Array(Array.from(fold.testIndex).map((i) => yc[i] ?? 0));
+        const Xtrain = Array.from(fold.trainIndex).map(
+          (i) => Xc[i] ?? new Float64Array(p),
+        );
+        const ytrain = new Float64Array(
+          Array.from(fold.trainIndex).map((i) => yc[i] ?? 0),
+        );
+        const Xval = Array.from(fold.testIndex).map(
+          (i) => Xc[i] ?? new Float64Array(p),
+        );
+        const yval = new Float64Array(
+          Array.from(fold.testIndex).map((i) => yc[i] ?? 0),
+        );
         const w = lassoCD(Xtrain, ytrain, alpha, this.maxIter, this.tol);
         const yPred = predictLinear(Xval, w, 0);
         mses.push(mse(yval, yPred));
       }
       const avgMse = mean(mses);
-      if (avgMse < bestMse) { bestMse = avgMse; bestAlpha = alpha; }
+      if (avgMse < bestMse) {
+        bestMse = avgMse;
+        bestAlpha = alpha;
+      }
     }
 
     this.alpha_ = bestAlpha;
@@ -276,7 +351,8 @@ export class LassoCV {
     const w = lassoCD(Xc, yc, bestAlpha, this.maxIter, this.tol);
     this.coef_ = w;
     let intercept = yMean;
-    if (this.fitIntercept) for (let j = 0; j < p; j++) intercept -= (w[j] ?? 0) * (xMeans[j] ?? 0);
+    if (this.fitIntercept)
+      for (let j = 0; j < p; j++) intercept -= (w[j] ?? 0) * (xMeans[j] ?? 0);
     this.intercept_ = intercept;
     return this;
   }
@@ -339,21 +415,29 @@ export class ElasticNetCV {
 
     const yMean = this.fitIntercept ? mean(Array.from(y)) : 0;
     const xMeans = new Float64Array(p);
-    if (this.fitIntercept) for (const xi of X) for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0) / n;
-    const Xc = X.map((xi) => new Float64Array(xi.map((v, j) => v - (xMeans[j] ?? 0))));
+    if (this.fitIntercept)
+      for (const xi of X)
+        for (let j = 0; j < p; j++)
+          xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0) / n;
+    const Xc = X.map(
+      (xi) => new Float64Array(xi.map((v, j) => v - (xMeans[j] ?? 0))),
+    );
     const yc = new Float64Array(y.map((v) => v - yMean));
 
     let alphaMax = 0;
     for (let j = 0; j < p; j++) {
       let corr = 0;
-      for (let i = 0; i < n; i++) corr += ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (yc[i] ?? 0);
+      for (let i = 0; i < n; i++)
+        corr += ((Xc[i] ?? new Float64Array(p))[j] ?? 0) * (yc[i] ?? 0);
       alphaMax = Math.max(alphaMax, Math.abs(corr / n));
     }
 
-    const alphas = this.alphas ?? Array.from({ length: this.nAlphas }, (_, i) => {
-      const t = i / (this.nAlphas - 1);
-      return alphaMax * Math.pow(this.eps, t);
-    });
+    const alphas =
+      this.alphas ??
+      Array.from({ length: this.nAlphas }, (_, i) => {
+        const t = i / (this.nAlphas - 1);
+        return alphaMax * this.eps ** t;
+      });
 
     const kf = new KFold({ nSplits: Math.min(this.cv, n) });
     let bestAlpha = alphas[0] ?? 1.0;
@@ -366,10 +450,18 @@ export class ElasticNetCV {
         const l2 = alpha * (1 - ratio);
         const mses: number[] = [];
         for (const fold of kf.split(Xc)) {
-          const Xtrain = Array.from(fold.trainIndex).map((i) => Xc[i] ?? new Float64Array(p));
-          const ytrain = new Float64Array(Array.from(fold.trainIndex).map((i) => yc[i] ?? 0));
-          const Xval = Array.from(fold.testIndex).map((i) => Xc[i] ?? new Float64Array(p));
-          const yval = new Float64Array(Array.from(fold.testIndex).map((i) => yc[i] ?? 0));
+          const Xtrain = Array.from(fold.trainIndex).map(
+            (i) => Xc[i] ?? new Float64Array(p),
+          );
+          const ytrain = new Float64Array(
+            Array.from(fold.trainIndex).map((i) => yc[i] ?? 0),
+          );
+          const Xval = Array.from(fold.testIndex).map(
+            (i) => Xc[i] ?? new Float64Array(p),
+          );
+          const yval = new Float64Array(
+            Array.from(fold.testIndex).map((i) => yc[i] ?? 0),
+          );
           // Elastic net CD
           const w = new Float64Array(p);
           for (let iter = 0; iter < this.maxIter; iter++) {
@@ -379,13 +471,24 @@ export class ElasticNetCV {
               for (let ii = 0; ii < Xtrain.length; ii++) {
                 const xi = Xtrain[ii] ?? new Float64Array(p);
                 let pred = 0;
-                for (let k = 0; k < p; k++) if (k !== j) pred += (w[k] ?? 0) * (xi[k] ?? 0);
+                for (let k = 0; k < p; k++)
+                  if (k !== j) pred += (w[k] ?? 0) * (xi[k] ?? 0);
                 rho += (xi[j] ?? 0) * ((ytrain[ii] ?? 0) - pred);
               }
               rho /= Xtrain.length;
-              const normSq = Xtrain.reduce((s, xi) => s + (xi[j] ?? 0) ** 2, 0) / Xtrain.length + l2;
+              const normSq =
+                Xtrain.reduce((s, xi) => s + (xi[j] ?? 0) ** 2, 0) /
+                  Xtrain.length +
+                l2;
               const wOld = w[j] ?? 0;
-              w[j] = normSq > 0 ? (rho > l1 ? (rho - l1) / normSq : rho < -l1 ? (rho + l1) / normSq : 0) : 0;
+              w[j] =
+                normSq > 0
+                  ? rho > l1
+                    ? (rho - l1) / normSq
+                    : rho < -l1
+                      ? (rho + l1) / normSq
+                      : 0
+                  : 0;
               maxDelta = Math.max(maxDelta, Math.abs((w[j] ?? 0) - wOld));
             }
             if (maxDelta < this.tol) break;
@@ -394,7 +497,11 @@ export class ElasticNetCV {
           mses.push(mse(yval, yPred));
         }
         const avgMse = mean(mses);
-        if (avgMse < bestMse) { bestMse = avgMse; bestAlpha = alpha; bestRatio = ratio; }
+        if (avgMse < bestMse) {
+          bestMse = avgMse;
+          bestAlpha = alpha;
+          bestRatio = ratio;
+        }
       }
     }
 
@@ -410,20 +517,29 @@ export class ElasticNetCV {
         for (let i = 0; i < n; i++) {
           const xi = Xc[i] ?? new Float64Array(p);
           let pred = 0;
-          for (let k = 0; k < p; k++) if (k !== j) pred += (w[k] ?? 0) * (xi[k] ?? 0);
+          for (let k = 0; k < p; k++)
+            if (k !== j) pred += (w[k] ?? 0) * (xi[k] ?? 0);
           rho += (xi[j] ?? 0) * ((yc[i] ?? 0) - pred);
         }
         rho /= n;
         const normSq = Xc.reduce((s, xi) => s + (xi[j] ?? 0) ** 2, 0) / n + l2;
         const wOld = w[j] ?? 0;
-        w[j] = normSq > 0 ? (rho > l1 ? (rho - l1) / normSq : rho < -l1 ? (rho + l1) / normSq : 0) : 0;
+        w[j] =
+          normSq > 0
+            ? rho > l1
+              ? (rho - l1) / normSq
+              : rho < -l1
+                ? (rho + l1) / normSq
+                : 0
+            : 0;
         maxDelta = Math.max(maxDelta, Math.abs((w[j] ?? 0) - wOld));
       }
       if (maxDelta < this.tol) break;
     }
     this.coef_ = w;
     let intercept = yMean;
-    if (this.fitIntercept) for (let j = 0; j < p; j++) intercept -= (w[j] ?? 0) * (xMeans[j] ?? 0);
+    if (this.fitIntercept)
+      for (let j = 0; j < p; j++) intercept -= (w[j] ?? 0) * (xMeans[j] ?? 0);
     this.intercept_ = intercept;
     return this;
   }

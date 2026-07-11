@@ -37,7 +37,8 @@ export class LabelBinarizer {
   }
 
   transform(y: string[]): Float64Array[] {
-    if (!this.classes_) throw new NotFittedError("LabelBinarizer is not fitted yet.");
+    if (!this.classes_)
+      throw new NotFittedError("LabelBinarizer is not fitted yet.");
     const n = y.length;
     const k = this.classes_.length;
 
@@ -64,7 +65,8 @@ export class LabelBinarizer {
   }
 
   inverseTransform(Y: Float64Array[]): string[] {
-    if (!this.classes_) throw new NotFittedError("LabelBinarizer is not fitted yet.");
+    if (!this.classes_)
+      throw new NotFittedError("LabelBinarizer is not fitted yet.");
     const k = this.classes_.length;
 
     if (this.yType_ === "binary") {
@@ -77,9 +79,14 @@ export class LabelBinarizer {
       let best = -1;
       let bestVal = -Number.POSITIVE_INFINITY;
       for (let j = 0; j < k; j++) {
-        if ((row[j] ?? 0) > bestVal) { bestVal = row[j] ?? 0; best = j; }
+        if ((row[j] ?? 0) > bestVal) {
+          bestVal = row[j] ?? 0;
+          best = j;
+        }
       }
-      return best !== -1 ? (this.classes_![best] ?? "") : (this.classes_![0] ?? "");
+      return best !== -1
+        ? (this.classes_![best] ?? "")
+        : (this.classes_![0] ?? "");
     });
   }
 }
@@ -113,7 +120,8 @@ export class MultiLabelBinarizer {
   }
 
   transform(y: string[][]): Float64Array[] {
-    if (!this.classes_) throw new NotFittedError("MultiLabelBinarizer is not fitted yet.");
+    if (!this.classes_)
+      throw new NotFittedError("MultiLabelBinarizer is not fitted yet.");
     const k = this.classes_.length;
     return y.map((labels) => {
       const row = new Float64Array(k);
@@ -130,7 +138,8 @@ export class MultiLabelBinarizer {
   }
 
   inverseTransform(Y: Float64Array[]): string[][] {
-    if (!this.classes_) throw new NotFittedError("MultiLabelBinarizer is not fitted yet.");
+    if (!this.classes_)
+      throw new NotFittedError("MultiLabelBinarizer is not fitted yet.");
     return Y.map((row) => {
       const labels: string[] = [];
       for (let j = 0; j < this.classes_!.length; j++) {

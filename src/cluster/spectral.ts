@@ -42,7 +42,10 @@ function symmetricNormalizedLaplacian(W: Float64Array[]): Float64Array[] {
   const D = W.map((row) => row.reduce((s, v) => s + v, 0));
   const Dinvhalf = D.map((d) => (d > 0 ? 1 / Math.sqrt(d) : 0));
   return W.map((row, i) =>
-    Float64Array.from(row, (w, j) => (Dinvhalf[i] ?? 0) * w * (Dinvhalf[j] ?? 0)),
+    Float64Array.from(
+      row,
+      (w, j) => (Dinvhalf[i] ?? 0) * w * (Dinvhalf[j] ?? 0),
+    ),
   );
 }
 
@@ -128,9 +131,15 @@ function kmeansOnRows(
           const cc = centers[c] as Float64Array;
           let dd = 0;
           for (let j = 0; j < d; j++) dd += ((xi[j] ?? 0) - (cc[j] ?? 0)) ** 2;
-          if (dd < bestDist) { bestDist = dd; best = c; }
+          if (dd < bestDist) {
+            bestDist = dd;
+            best = c;
+          }
         }
-        if (labels[i] !== best) { labels[i]! = best; changed = true; }
+        if (labels[i] !== best) {
+          labels[i]! = best;
+          changed = true;
+        }
       }
       if (!changed) break;
       // Update centers
@@ -250,7 +259,8 @@ export class MeanShift {
         let totalWeight = 0;
         for (const xi of X) {
           let dist2 = 0;
-          for (let j = 0; j < d; j++) dist2 += ((seed[j] ?? 0) - (xi[j] ?? 0)) ** 2;
+          for (let j = 0; j < d; j++)
+            dist2 += ((seed[j] ?? 0) - (xi[j] ?? 0)) ** 2;
           const w = gaussianKernelWeight(dist2, this.bandwidth);
           totalWeight += w;
           for (let j = 0; j < d; j++) newSeed[j]! += w * (xi[j] ?? 0);
@@ -259,7 +269,8 @@ export class MeanShift {
           for (let j = 0; j < d; j++) newSeed[j]! /= totalWeight;
         }
         let shift = 0;
-        for (let j = 0; j < d; j++) shift += ((newSeed[j] ?? 0) - (seed[j] ?? 0)) ** 2;
+        for (let j = 0; j < d; j++)
+          shift += ((newSeed[j] ?? 0) - (seed[j] ?? 0)) ** 2;
         for (let j = 0; j < d; j++) seed[j]! = newSeed[j] ?? 0;
         if (Math.sqrt(shift) < this.tol) break;
       }
@@ -271,8 +282,12 @@ export class MeanShift {
       let merged = false;
       for (const center of mergedCenters) {
         let dist2 = 0;
-        for (let j = 0; j < d; j++) dist2 += ((seed[j] ?? 0) - (center[j] ?? 0)) ** 2;
-        if (Math.sqrt(dist2) < this.bandwidth) { merged = true; break; }
+        for (let j = 0; j < d; j++)
+          dist2 += ((seed[j] ?? 0) - (center[j] ?? 0)) ** 2;
+        if (Math.sqrt(dist2) < this.bandwidth) {
+          merged = true;
+          break;
+        }
       }
       if (!merged) mergedCenters.push(Float64Array.from(seed));
     }
@@ -289,7 +304,10 @@ export class MeanShift {
         const cc = mergedCenters[c] as Float64Array;
         let dist2 = 0;
         for (let j = 0; j < d; j++) dist2 += ((xi[j] ?? 0) - (cc[j] ?? 0)) ** 2;
-        if (dist2 < bestDist) { bestDist = dist2; best = c; }
+        if (dist2 < bestDist) {
+          bestDist = dist2;
+          best = c;
+        }
       }
       labels[i]! = best;
     }
@@ -315,7 +333,10 @@ export class MeanShift {
         const cc = this.clusterCenters_[c] as Float64Array;
         let dist2 = 0;
         for (let j = 0; j < d; j++) dist2 += ((xi[j] ?? 0) - (cc[j] ?? 0)) ** 2;
-        if (dist2 < bestDist) { bestDist = dist2; best = c; }
+        if (dist2 < bestDist) {
+          bestDist = dist2;
+          best = c;
+        }
       }
       labels[i]! = best;
     }
@@ -359,9 +380,13 @@ export class Birch {
     for (const xi of X) {
       let inserted = false;
       for (const entry of entries) {
-        const centroid = Float64Array.from({ length: d }, (_, j) => (entry.ls[j] ?? 0) / entry.n);
+        const centroid = Float64Array.from(
+          { length: d },
+          (_, j) => (entry.ls[j] ?? 0) / entry.n,
+        );
         let dist2 = 0;
-        for (let j = 0; j < d; j++) dist2 += ((xi[j] ?? 0) - (centroid[j] ?? 0)) ** 2;
+        for (let j = 0; j < d; j++)
+          dist2 += ((xi[j] ?? 0) - (centroid[j] ?? 0)) ** 2;
         if (Math.sqrt(dist2) <= this.threshold) {
           entry.n += 1;
           for (let j = 0; j < d; j++) entry.ls[j]! += xi[j] ?? 0;
@@ -371,7 +396,11 @@ export class Birch {
         }
       }
       if (!inserted) {
-        entries.push({ n: 1, ls: Float64Array.from(xi), ss: xi.reduce((s, v) => s + v * v, 0) });
+        entries.push({
+          n: 1,
+          ls: Float64Array.from(xi),
+          ss: xi.reduce((s, v) => s + v * v, 0),
+        });
       }
     }
 
@@ -394,7 +423,10 @@ export class Birch {
         const cc = centers[c] as Float64Array;
         let dist2 = 0;
         for (let j = 0; j < d; j++) dist2 += ((xi[j] ?? 0) - (cc[j] ?? 0)) ** 2;
-        if (dist2 < bestDist) { bestDist = dist2; bestIdx = c; }
+        if (dist2 < bestDist) {
+          bestDist = dist2;
+          bestIdx = c;
+        }
       }
       labels[i]! = subcluLabels[bestIdx] ?? 0;
     }
@@ -420,7 +452,10 @@ export class Birch {
         const cc = this.subclusterCenters_[c] as Float64Array;
         let dist2 = 0;
         for (let j = 0; j < d; j++) dist2 += ((xi[j] ?? 0) - (cc[j] ?? 0)) ** 2;
-        if (dist2 < bestDist) { bestDist = dist2; bestIdx = c; }
+        if (dist2 < bestDist) {
+          bestDist = dist2;
+          bestIdx = c;
+        }
       }
       labels[i]! = bestIdx;
     }
@@ -485,7 +520,10 @@ export class OPTICS {
       const cd = coreDist[idx] ?? Number.POSITIVE_INFINITY;
       for (let j = 0; j < n; j++) {
         if (processed[j]) continue;
-        const newRD = Math.max(cd, (dists[idx] as Float64Array)[j] ?? Number.POSITIVE_INFINITY);
+        const newRD = Math.max(
+          cd,
+          (dists[idx] as Float64Array)[j] ?? Number.POSITIVE_INFINITY,
+        );
         if (newRD < (reachDist[j] ?? Number.POSITIVE_INFINITY)) {
           reachDist[j]! = newRD;
           if (!seeds.includes(j)) seeds.push(j);
@@ -506,7 +544,10 @@ export class OPTICS {
           for (let s = 0; s < seeds.length; s++) {
             const sd = seeds[s] ?? 0;
             const rd = reachDist[sd] ?? Number.POSITIVE_INFINITY;
-            if (rd < minRD) { minRD = rd; minIdx = s; }
+            if (rd < minRD) {
+              minRD = rd;
+              minIdx = s;
+            }
           }
           const q = seeds[minIdx] ?? 0;
           seeds.splice(minIdx, 1);
@@ -523,12 +564,19 @@ export class OPTICS {
     // Assign labels via xi-cluster extraction (simplified: threshold-based)
     const labels = new Int32Array(n).fill(-1);
     let clusterId = 0;
-    const eps = this.xi * (reachDist.reduce((mx, v) => Math.max(mx, isFinite(v) ? v : 0), 0));
+    const eps =
+      this.xi *
+      reachDist.reduce((mx, v) => Math.max(mx, Number.isFinite(v) ? v : 0), 0);
     let currentCluster = -1;
     for (const idx of ordering) {
       const rd = reachDist[idx] ?? Number.POSITIVE_INFINITY;
-      if (rd <= eps && (coreDist[idx] ?? Number.POSITIVE_INFINITY) <= this.maxEps) {
-        if (currentCluster === -1) { currentCluster = clusterId++; }
+      if (
+        rd <= eps &&
+        (coreDist[idx] ?? Number.POSITIVE_INFINITY) <= this.maxEps
+      ) {
+        if (currentCluster === -1) {
+          currentCluster = clusterId++;
+        }
         labels[idx]! = currentCluster;
       } else {
         currentCluster = -1;

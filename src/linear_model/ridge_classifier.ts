@@ -10,8 +10,9 @@ import { checkArray, checkXy } from "../utils/validation.js";
 function choleskyLinsolve(A: Float64Array[], b: Float64Array): Float64Array {
   const n = A.length;
   // Cholesky decomposition in-place copy
-  const L: Float64Array[] = Array.from({ length: n }, (_, i) =>
-    new Float64Array(A[i]!),
+  const L: Float64Array[] = Array.from(
+    { length: n },
+    (_, i) => new Float64Array(A[i]!),
   );
   for (let j = 0; j < n; j++) {
     for (let k = 0; k < j; k++)
@@ -95,17 +96,21 @@ export class RidgeClassifier {
     const sampleWeights = new Float64Array(n).fill(1);
     if (this.class_weight === "balanced") {
       const counts = new Map<number, number>();
-      for (let i = 0; i < n; i++) counts.set(y[i] ?? 0, (counts.get(y[i] ?? 0) ?? 0) + 1);
+      for (let i = 0; i < n; i++)
+        counts.set(y[i] ?? 0, (counts.get(y[i] ?? 0) ?? 0) + 1);
       for (let i = 0; i < n; i++) {
         const c = y[i] ?? 0;
         sampleWeights[i]! = n / (k * (counts.get(c) ?? 1));
       }
     } else if (this.class_weight !== null) {
-      for (let i = 0; i < n; i++) sampleWeights[i]! = this.class_weight[y[i] ?? 0] ?? 1;
+      for (let i = 0; i < n; i++)
+        sampleWeights[i]! = this.class_weight[y[i] ?? 0] ?? 1;
     }
 
     // Build indicator matrix Y [n x k] (−1 / +1 encoding)
-    const Y: Float64Array[] = Array.from({ length: n }, () => new Float64Array(k).fill(-1));
+    const Y: Float64Array[] = Array.from({ length: n }, () =>
+      new Float64Array(k).fill(-1),
+    );
     for (let i = 0; i < n; i++) {
       const ci = classes.indexOf(y[i] ?? 0);
       if (ci >= 0) Y[i]![ci]! = sampleWeights[i]! * 2 - 1;
@@ -120,9 +125,11 @@ export class RidgeClassifier {
     // Center X if fit_intercept
     const xMean = new Float64Array(p);
     if (this.fit_intercept) {
-      for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) xMean[j]! += Xw[i]![j]! ?? 0;
+      for (let i = 0; i < n; i++)
+        for (let j = 0; j < p; j++) xMean[j]! += Xw[i]![j]! ?? 0;
       for (let j = 0; j < p; j++) xMean[j]! /= n;
-      for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) Xw[i]![j]! -= xMean[j]!;
+      for (let i = 0; i < n; i++)
+        for (let j = 0; j < p; j++) Xw[i]![j]! -= xMean[j];
     }
 
     // Gram matrix + ridge
@@ -131,7 +138,10 @@ export class RidgeClassifier {
 
     // Solve for each output
     this.coef_ = Array.from({ length: k }, (_, ci) => {
-      const rhs = xtDotY(Xw, Float64Array.from({ length: n }, (_, i) => Y[i]![ci]! ?? 0));
+      const rhs = xtDotY(
+        Xw,
+        Float64Array.from({ length: n }, (_, i) => Y[i]![ci]! ?? 0),
+      );
       return choleskyLinsolve(G, rhs);
     });
 
@@ -142,7 +152,8 @@ export class RidgeClassifier {
         for (let i = 0; i < n; i++) yMean += Y[i]![ci]! ?? 0;
         yMean /= n;
         let dot = 0;
-        for (let j = 0; j < p; j++) dot += (this.coef_[ci]![j]! ?? 0) * (xMean[j]! ?? 0);
+        for (let j = 0; j < p; j++)
+          dot += (this.coef_[ci]![j]! ?? 0) * (xMean[j]! ?? 0);
         this.intercept_[ci]! = yMean - dot;
       }
     } else {
@@ -153,13 +164,15 @@ export class RidgeClassifier {
   }
 
   decisionFunction(X: Float64Array[]): Float64Array[] {
-    if (!this.coef_ || !this.intercept_ || !this.classes_) throw new NotFittedError("RidgeClassifier is not fitted");
+    if (!this.coef_ || !this.intercept_ || !this.classes_)
+      throw new NotFittedError("RidgeClassifier is not fitted");
     checkArray(X);
     return X.map((row) => {
       const scores = new Float64Array(this.classes_!.length);
       for (let ci = 0; ci < this.classes_!.length; ci++) {
         let s = this.intercept_![ci]! ?? 0;
-        for (let j = 0; j < row.length; j++) s += (this.coef_![ci]![j]! ?? 0) * (row[j]! ?? 0);
+        for (let j = 0; j < row.length; j++)
+          s += (this.coef_![ci]![j]! ?? 0) * (row[j]! ?? 0);
         scores[ci]! = s;
       }
       return scores;
@@ -172,7 +185,11 @@ export class RidgeClassifier {
     return Int32Array.from(decisions, (scores) => {
       let best = 0;
       for (let ci = 1; ci < scores.length; ci++)
-        if ((scores[ci]! ?? -Infinity) > (scores[best]! ?? -Infinity)) best = ci;
+        if (
+          (scores[ci]! ?? Number.NEGATIVE_INFINITY) >
+          (scores[best]! ?? Number.NEGATIVE_INFINITY)
+        )
+          best = ci;
       return classes[best]! ?? 0;
     });
   }
@@ -223,7 +240,7 @@ export class RidgeClassifierCV {
     const foldSize = Math.floor(n / this.cv);
 
     let bestAlpha = this.alphas[0]!;
-    let bestScore = -Infinity;
+    let bestScore = Number.NEGATIVE_INFINITY;
     const scores = new Float64Array(this.alphas.length);
 
     for (let ai = 0; ai < this.alphas.length; ai++) {
@@ -239,7 +256,11 @@ export class RidgeClassifierCV {
         const ytrain = Int32Array.from(trainIdx, (i) => y[i] ?? 0);
         const Xval = valIdx.map((i) => X[i]!);
         const yval = Int32Array.from(valIdx, (i) => y[i] ?? 0);
-        const clf = new RidgeClassifier({ alpha, fit_intercept: this.fit_intercept, class_weight: this.class_weight });
+        const clf = new RidgeClassifier({
+          alpha,
+          fit_intercept: this.fit_intercept,
+          class_weight: this.class_weight,
+        });
         clf.fit(Xtrain, ytrain);
         totalScore += clf.score(Xval, yval);
       }
@@ -255,7 +276,11 @@ export class RidgeClassifierCV {
     this.cv_values_ = [scores];
 
     // Refit on all data with best alpha
-    const best = new RidgeClassifier({ alpha: bestAlpha, fit_intercept: this.fit_intercept, class_weight: this.class_weight });
+    const best = new RidgeClassifier({
+      alpha: bestAlpha,
+      fit_intercept: this.fit_intercept,
+      class_weight: this.class_weight,
+    });
     best.fit(X, y);
     this.coef_ = best.coef_;
     this.intercept_ = best.intercept_;
@@ -265,7 +290,8 @@ export class RidgeClassifierCV {
   }
 
   predict(X: Float64Array[]): Int32Array {
-    if (!this.coef_ || !this.classes_) throw new NotFittedError("RidgeClassifierCV is not fitted");
+    if (!this.coef_ || !this.classes_)
+      throw new NotFittedError("RidgeClassifierCV is not fitted");
     const clf = new RidgeClassifier({ alpha: this.alpha_! });
     clf.coef_ = this.coef_;
     clf.intercept_ = this.intercept_;

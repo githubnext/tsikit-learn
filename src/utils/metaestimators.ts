@@ -74,16 +74,16 @@ export function available_if<T extends BaseEstimator>(
   propertyKey: string,
   descriptor: PropertyDescriptor,
 ) => PropertyDescriptor {
-  return function (
+  return (
     _target: T,
     _propertyKey: string,
     descriptor: PropertyDescriptor,
-  ): PropertyDescriptor {
+  ): PropertyDescriptor => {
     const original = descriptor.value as (...args: unknown[]) => unknown;
     descriptor.value = function (this: T, ...args: unknown[]) {
       if (!check(this)) {
         throw new Error(
-          `This method is not available because the check condition is not met.`,
+          "This method is not available because the check condition is not met.",
         );
       }
       return original.apply(this, args);
@@ -104,11 +104,11 @@ export function if_delegate_has_method(
   propertyKey: string,
   descriptor: PropertyDescriptor,
 ) => PropertyDescriptor {
-  return function (
+  return (
     _target: BaseEstimator,
     _propertyKey: string,
     descriptor: PropertyDescriptor,
-  ): PropertyDescriptor {
+  ): PropertyDescriptor => {
     const original = descriptor.value as (...args: unknown[]) => unknown;
     descriptor.value = function (
       this: BaseEstimator & Record<string, unknown>,
@@ -134,11 +134,11 @@ export function if_delegate_has_method(
 /**
  * Check if a fitted estimator has a specific method.
  */
-export function hasMethod(
-  estimator: BaseEstimator,
-  method: string,
-): boolean {
-  return typeof (estimator as unknown as Record<string, unknown>)[method] === "function";
+export function hasMethod(estimator: BaseEstimator, method: string): boolean {
+  return (
+    typeof (estimator as unknown as Record<string, unknown>)[method] ===
+    "function"
+  );
 }
 
 /**
@@ -149,7 +149,10 @@ export function check_is_fitted_has_method<T extends BaseEstimator>(
   estimator: T,
   method: string,
 ): void {
-  if (typeof (estimator as unknown as Record<string, unknown>)[method] !== "function") {
+  if (
+    typeof (estimator as unknown as Record<string, unknown>)[method] !==
+    "function"
+  ) {
     throw new Error(
       `${estimator.constructor.name} does not implement '${method}'.`,
     );
@@ -165,7 +168,9 @@ export abstract class _DelegatingMixin extends MetaEstimatorMixin {
     if (!this.estimator) {
       throw new Error("No estimator set.");
     }
-    const fn = (this.estimator as unknown as Record<string, unknown>)[methodName];
+    const fn = (this.estimator as unknown as Record<string, unknown>)[
+      methodName
+    ];
     if (typeof fn !== "function") {
       throw new Error(
         `The estimator ${this.estimator.constructor.name} does not implement '${methodName}'.`,

@@ -50,8 +50,18 @@ export function makeColumnSelector(
 
       // Dtype filters
       const dtype = dtypes?.[name];
-      if (dtypeInclude !== undefined && dtype !== undefined && !dtypeInclude.includes(dtype)) continue;
-      if (dtypeExclude !== undefined && dtype !== undefined && dtypeExclude.includes(dtype)) continue;
+      if (
+        dtypeInclude !== undefined &&
+        dtype !== undefined &&
+        !dtypeInclude.includes(dtype)
+      )
+        continue;
+      if (
+        dtypeExclude !== undefined &&
+        dtype !== undefined &&
+        dtypeExclude.includes(dtype)
+      )
+        continue;
 
       result.push(i);
     }

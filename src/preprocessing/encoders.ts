@@ -12,9 +12,7 @@ export class OneHotEncoder {
   categories_: Float64Array[] | null = null;
   featureNamesOut_: string[] | null = null;
 
-  constructor(
-    options: { sparse?: boolean; handleUnknown?: string } = {},
-  ) {
+  constructor(options: { sparse?: boolean; handleUnknown?: string } = {}) {
     this.sparse = options.sparse ?? false;
     this.handleUnknown = options.handleUnknown ?? "error";
   }
@@ -23,7 +21,9 @@ export class OneHotEncoder {
     const p = (X[0] ?? new Float64Array(0)).length;
     this.categories_ = [];
     for (let j = 0; j < p; j++) {
-      const vals = Array.from(new Set(X.map((xi) => xi[j] ?? 0))).sort((a, b) => a - b);
+      const vals = Array.from(new Set(X.map((xi) => xi[j] ?? 0))).sort(
+        (a, b) => a - b,
+      );
       this.categories_.push(new Float64Array(vals));
     }
     return this;
@@ -83,7 +83,9 @@ export class OrdinalEncoder {
     const p = (X[0] ?? new Float64Array(0)).length;
     this.categories_ = [];
     for (let j = 0; j < p; j++) {
-      const vals = Array.from(new Set(X.map((xi) => xi[j] ?? 0))).sort((a, b) => a - b);
+      const vals = Array.from(new Set(X.map((xi) => xi[j] ?? 0))).sort(
+        (a, b) => a - b,
+      );
       this.categories_.push(new Float64Array(vals));
     }
     return this;

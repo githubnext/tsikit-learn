@@ -47,15 +47,24 @@ export function warn(
   _emittedWarnings.add(key);
 
   const msg = buildMessage(symbol, options);
-  const record: DeprecationWarning = { symbol, message: msg, options, timestamp: Date.now() };
+  const record: DeprecationWarning = {
+    symbol,
+    message: msg,
+    options,
+    timestamp: Date.now(),
+  };
   _warningHistory.push(record);
 
   if (severity === "error") throw new Error(msg);
-  if (typeof console !== "undefined") console.warn(`[DeprecationWarning] ${msg}`);
+  if (typeof console !== "undefined")
+    console.warn(`[DeprecationWarning] ${msg}`);
 }
 
 /** Builds the human-readable deprecation message for a symbol. */
-export function buildMessage(symbol: string, options: DeprecationOptions = {}): string {
+export function buildMessage(
+  symbol: string,
+  options: DeprecationOptions = {},
+): string {
   let msg = `\`${symbol}\` is deprecated`;
   if (options.since) msg += ` since version ${options.since}`;
   if (options.removeIn) msg += ` and will be removed in ${options.removeIn}`;
@@ -100,9 +109,14 @@ export function deprecated<T extends (...args: unknown[]) => unknown>(
  * whenever the class is instantiated.
  */
 export function deprecatedClass(options: DeprecationOptions = {}) {
-  return <T extends new (...args: unknown[]) => object>(Base: T, ctx?: { name?: string }): T => {
+  // biome-ignore lint/suspicious/noExplicitAny: mixin class requires any[] per TypeScript spec
+  return <T extends new (...args: any[]) => object>(
+    Base: T,
+    ctx?: { name?: string },
+  ): T => {
     const name = ctx?.name ?? Base.name;
     return class extends Base {
+      // biome-ignore lint/suspicious/noExplicitAny: mixin class requires any[] per TypeScript spec
       constructor(...args: any[]) {
         super(...args);
         warn(name, options);

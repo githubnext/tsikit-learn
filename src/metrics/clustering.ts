@@ -50,7 +50,7 @@ export function silhouetteScore(X: Float64Array[], labels: Int32Array): number {
         if (bMean < bi) bi = bMean;
       }
     }
-    if (!isFinite(bi)) bi = 0;
+    if (!Number.isFinite(bi)) bi = 0;
 
     const maxAB = Math.max(ai, bi);
     scores[i] = maxAB > 0 ? (bi - ai) / maxAB : 0;
@@ -102,7 +102,11 @@ export function adjustedRandScore(
   const maxVal = (sumRowComb + sumColComb) / 2;
   const denom = maxVal - expected;
 
-  return denom === 0 ? (sumComb === expected ? 1 : 0) : (sumComb - expected) / denom;
+  return denom === 0
+    ? sumComb === expected
+      ? 1
+      : 0
+    : (sumComb - expected) / denom;
 }
 
 export function homogeneityScore(

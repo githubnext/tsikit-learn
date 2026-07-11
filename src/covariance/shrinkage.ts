@@ -18,7 +18,11 @@ export interface CovResult {
  * Computes the sample covariance matrix from a flat (nSamples × nFeatures) matrix X
  * that has already been mean-centered.
  */
-function sampleCov(X: Float64Array, nSamples: number, nFeatures: number): Float64Array {
+function sampleCov(
+  X: Float64Array,
+  nSamples: number,
+  nFeatures: number,
+): Float64Array {
   const cov = new Float64Array(nFeatures * nFeatures);
   const scale = 1 / (nSamples - 1);
   for (let i = 0; i < nSamples; i++) {
@@ -34,17 +38,27 @@ function sampleCov(X: Float64Array, nSamples: number, nFeatures: number): Float6
 }
 
 /** Centers X in-place and returns the column means. */
-function centerMatrix(X: Float64Array, nSamples: number, nFeatures: number): Float64Array {
+function centerMatrix(
+  X: Float64Array,
+  nSamples: number,
+  nFeatures: number,
+): Float64Array {
   const means = new Float64Array(nFeatures);
-  for (let i = 0; i < nSamples; i++) for (let j = 0; j < nFeatures; j++) means[j]! += X[i * nFeatures + j]!;
+  for (let i = 0; i < nSamples; i++)
+    for (let j = 0; j < nFeatures; j++) means[j]! += X[i * nFeatures + j];
   for (let j = 0; j < nFeatures; j++) means[j]! /= nSamples;
-  for (let i = 0; i < nSamples; i++) for (let j = 0; j < nFeatures; j++) X[i * nFeatures + j]! -= means[j]!;
+  for (let i = 0; i < nSamples; i++)
+    for (let j = 0; j < nFeatures; j++) X[i * nFeatures + j]! -= means[j];
   return means;
 }
 
 /** Applies a shrinkage factor α: Σ_shrunk = (1-α)·S + α·(tr(S)/p)·I */
 function shrinkCov(S: Float64Array, p: number, alpha: number): Float64Array {
-  const mu = (() => { let t = 0; for (let j = 0; j < p; j++) t += S[j * p + j]!; return t / p; })();
+  const mu = (() => {
+    let t = 0;
+    for (let j = 0; j < p; j++) t += S[j * p + j]!;
+    return t / p;
+  })();
   const out = new Float64Array(p * p);
   for (let i = 0; i < p; i++) {
     for (let j = 0; j < p; j++) out[i * p + j] = (1 - alpha) * S[i * p + j]!;
@@ -62,7 +76,11 @@ function invertPD(A: Float64Array, p: number): Float64Array {
   }
   for (let col = 0; col < p; col++) {
     let maxRow = col;
-    for (let r = col + 1; r < p; r++) if (Math.abs(aug[r * 2 * p + col]!) > Math.abs(aug[maxRow * 2 * p + col]!)) maxRow = r;
+    for (let r = col + 1; r < p; r++)
+      if (
+        Math.abs(aug[r * 2 * p + col]!) > Math.abs(aug[maxRow * 2 * p + col]!)
+      )
+        maxRow = r;
     if (maxRow !== col) {
       for (let k = 0; k < 2 * p; k++) {
         const tmp = aug[col * 2 * p + k]!;
@@ -76,11 +94,13 @@ function invertPD(A: Float64Array, p: number): Float64Array {
     for (let r = 0; r < p; r++) {
       if (r === col) continue;
       const f = aug[r * 2 * p + col]!;
-      for (let k = 0; k < 2 * p; k++) aug[r * 2 * p + k]! -= f * aug[col * 2 * p + k]!;
+      for (let k = 0; k < 2 * p; k++)
+        aug[r * 2 * p + k]! -= f * aug[col * 2 * p + k]!;
     }
   }
   const inv = new Float64Array(p * p);
-  for (let i = 0; i < p; i++) for (let j = 0; j < p; j++) inv[i * p + j] = aug[i * 2 * p + p + j]!;
+  for (let i = 0; i < p; i++)
+    for (let j = 0; j < p; j++) inv[i * p + j] = aug[i * 2 * p + p + j]!;
   return inv;
 }
 
@@ -121,13 +141,21 @@ export class ShrunkCovariance {
     this.location_ = location;
     const S = sampleCov(Xc, nSamples, nFeatures);
     this.covariance_ = shrinkCov(S, nFeatures, this.opts.shrinkage);
-    if (this.opts.storePrecision) this.precision_ = invertPD(this.covariance_, nFeatures);
+    if (this.opts.storePrecision)
+      this.precision_ = invertPD(this.covariance_, nFeatures);
     return this;
   }
 
   score(X: Float64Array, nSamples: number, nFeatures: number): number {
-    if (!this.covariance_) throw new NotFittedError("ShrunkCovariance is not fitted");
-    return logLikelihood(X, nSamples, nFeatures, this.covariance_, this.location_!);
+    if (!this.covariance_)
+      throw new NotFittedError("ShrunkCovariance is not fitted");
+    return logLikelihood(
+      X,
+      nSamples,
+      nFeatures,
+      this.covariance_,
+      this.location_!,
+    );
   }
 }
 
@@ -150,11 +178,15 @@ export class OAS {
   location_: Float64Array | undefined;
 
   constructor(opts: OASOptions = {}) {
-    this.opts = { storePrecision: opts.storePrecision ?? true, assumeCentered: opts.assumeCentered ?? false };
+    this.opts = {
+      storePrecision: opts.storePrecision ?? true,
+      assumeCentered: opts.assumeCentered ?? false,
+    };
   }
 
   fit(X: Float64Array, nSamples: number, nFeatures: number): this {
-    const n = nSamples; const p = nFeatures;
+    const n = nSamples;
+    const p = nFeatures;
     const Xc = new Float64Array(X);
     let location: Float64Array;
     if (this.opts.assumeCentered) {
@@ -166,19 +198,27 @@ export class OAS {
     const S = sampleCov(Xc, n, p);
 
     // OAS shrinkage estimate
-    const trS = (() => { let t = 0; for (let j = 0; j < p; j++) t += S[j * p + j]!; return t; })();
+    const trS = (() => {
+      let t = 0;
+      for (let j = 0; j < p; j++) t += S[j * p + j]!;
+      return t;
+    })();
     const trS2 = (() => {
       let t = 0;
-      for (let i = 0; i < p; i++) for (let j = 0; j < p; j++) t += S[i * p + j]! * S[j * p + i]!;
+      for (let i = 0; i < p; i++)
+        for (let j = 0; j < p; j++) t += S[i * p + j]! * S[j * p + i]!;
       return t;
     })();
 
     const mu = trS / p;
-    const rho1 = ((1 - 2 / p) * trS2 + trS * trS) / ((n + 1 - 2 / p) * (trS2 - trS * trS / p));
+    const rho1 =
+      ((1 - 2 / p) * trS2 + trS * trS) /
+      ((n + 1 - 2 / p) * (trS2 - (trS * trS) / p));
     const alpha = Math.min(1, Math.max(0, rho1));
     this.shrinkage_ = alpha;
     this.covariance_ = shrinkCov(S, p, alpha);
-    if (this.opts.storePrecision) this.precision_ = invertPD(this.covariance_, p);
+    if (this.opts.storePrecision)
+      this.precision_ = invertPD(this.covariance_, p);
     // suppress unused warning
     void mu;
     return this;
@@ -186,7 +226,13 @@ export class OAS {
 
   score(X: Float64Array, nSamples: number, nFeatures: number): number {
     if (!this.covariance_) throw new NotFittedError("OAS is not fitted");
-    return logLikelihood(X, nSamples, nFeatures, this.covariance_, this.location_!);
+    return logLikelihood(
+      X,
+      nSamples,
+      nFeatures,
+      this.covariance_,
+      this.location_!,
+    );
   }
 }
 
@@ -207,7 +253,8 @@ function logLikelihood(
     let quad = 0;
     for (let j = 0; j < p; j++) {
       let row = 0;
-      for (let k = 0; k < p; k++) row += prec[j * p + k]! * (X[i * p + k]! - loc[k]!);
+      for (let k = 0; k < p; k++)
+        row += prec[j * p + k]! * (X[i * p + k]! - loc[k]!);
       quad += (X[i * p + j]! - loc[j]!) * row;
     }
     ll -= 0.5 * quad;

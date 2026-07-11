@@ -43,7 +43,7 @@ export function preprocessData(
 
   // Compute column means
   for (let i = 0; i < nSamples; i++) {
-    for (let j = 0; j < nFeatures; j++) xMean[j]! += Xout[i * nFeatures + j]!;
+    for (let j = 0; j < nFeatures; j++) xMean[j]! += Xout[i * nFeatures + j];
     yMean += yOut[i]!;
   }
   for (let j = 0; j < nFeatures; j++) xMean[j]! /= nSamples;
@@ -51,7 +51,7 @@ export function preprocessData(
 
   // Center
   for (let i = 0; i < nSamples; i++) {
-    for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! -= xMean[j]!;
+    for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! -= xMean[j];
     yOut[i]! -= yMean;
   }
 
@@ -68,7 +68,7 @@ export function preprocessData(
       xScale[j] = s > 0 ? s : 1;
     }
     for (let i = 0; i < nSamples; i++) {
-      for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! /= xScale[j]!;
+      for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! /= xScale[j];
     }
   }
 
@@ -98,22 +98,31 @@ export function setIntercept(
 export abstract class LinearClassifierMixin {
   abstract classes_: Int32Array | undefined;
 
-  abstract decisionFunction(X: Float64Array, nSamples: number, nFeatures: number): Float64Array;
+  abstract decisionFunction(
+    X: Float64Array,
+    nSamples: number,
+    nFeatures: number,
+  ): Float64Array;
 
   predict(X: Float64Array, nSamples: number, nFeatures: number): Int32Array {
-    if (!this.classes_) throw new NotFittedError("LinearClassifierMixin is not fitted");
+    if (!this.classes_)
+      throw new NotFittedError("LinearClassifierMixin is not fitted");
     const scores = this.decisionFunction(X, nSamples, nFeatures);
     const out = new Int32Array(nSamples);
     const nClasses = this.classes_.length;
     if (nClasses === 2) {
-      for (let i = 0; i < nSamples; i++) out[i] = scores[i]! > 0 ? this.classes_[1]! : this.classes_[0]!;
+      for (let i = 0; i < nSamples; i++)
+        out[i] = scores[i]! > 0 ? this.classes_[1]! : this.classes_[0]!;
     } else {
       for (let i = 0; i < nSamples; i++) {
         let best = 0;
         let bestScore = Number.NEGATIVE_INFINITY;
         for (let k = 0; k < nClasses; k++) {
           const s = scores[i * nClasses + k]!;
-          if (s > bestScore) { bestScore = s; best = k; }
+          if (s > bestScore) {
+            bestScore = s;
+            best = k;
+          }
         }
         out[i] = this.classes_[best]!;
       }
@@ -137,7 +146,10 @@ export class SparseCoefMixin {
     const values: number[] = [];
     for (let j = 0; j < this.coef_.length; j++) {
       const v = this.coef_[j]!;
-      if (v !== 0) { indices.push(j); values.push(v); }
+      if (v !== 0) {
+        indices.push(j);
+        values.push(v);
+      }
     }
     this.sparseIndices_ = new Int32Array(indices);
     this.sparseValues_ = new Float64Array(values);

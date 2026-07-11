@@ -15,11 +15,12 @@ export function dcgScore(
 ): number {
   const n = yTrue.length;
   const limit = k ?? n;
-  const order = Array.from({ length: n }, (_, i) => i)
-    .sort((a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0));
+  const order = Array.from({ length: n }, (_, i) => i).sort(
+    (a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0),
+  );
   let dcg = 0;
   for (let i = 0; i < Math.min(limit, n); i++) {
-    const gain = (2 ** (yTrue[order[i]!] ?? 0)) - 1;
+    const gain = 2 ** (yTrue[order[i]!] ?? 0) - 1;
     dcg += gain / Math.log2(i + 2);
   }
   return dcg;
@@ -34,8 +35,9 @@ export function cumulativeGainCurve(
   yScore: Float64Array,
 ): { percentiles: Float64Array; gains: Float64Array } {
   const n = yTrue.length;
-  const order = Array.from({ length: n }, (_, i) => i)
-    .sort((a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0));
+  const order = Array.from({ length: n }, (_, i) => i).sort(
+    (a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0),
+  );
   const totalGain = Array.from(yTrue).reduce((s, v) => s + v, 0) || 1;
   const percentiles = new Float64Array(n + 1);
   const gains = new Float64Array(n + 1);
@@ -57,8 +59,9 @@ export function detCurve(
   yScore: Float64Array,
 ): { fnr: Float64Array; fpr: Float64Array; thresholds: Float64Array } {
   const n = yTrue.length;
-  const order = Array.from({ length: n }, (_, i) => i)
-    .sort((a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0));
+  const order = Array.from({ length: n }, (_, i) => i).sort(
+    (a, b) => (yScore[b] ?? 0) - (yScore[a] ?? 0),
+  );
   const totalPos = Array.from(yTrue).filter((v) => v > 0).length;
   const totalNeg = n - totalPos;
 
@@ -98,8 +101,9 @@ export function topKAccuracyScore(
   for (let i = 0; i < n; i++) {
     const scores = yScore[i]!;
     const nClasses = scores.length;
-    const order = Array.from({ length: nClasses }, (_, j) => j)
-      .sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
+    const order = Array.from({ length: nClasses }, (_, j) => j).sort(
+      (a, b) => (scores[b] ?? 0) - (scores[a] ?? 0),
+    );
     const topK = order.slice(0, k);
     if (topK.includes(yTrue[i] as number)) correct++;
   }

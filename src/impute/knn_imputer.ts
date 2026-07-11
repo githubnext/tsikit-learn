@@ -11,12 +11,14 @@ function nanEuclidean(a: Float64Array, b: Float64Array): number {
   for (let j = 0; j < a.length; j++) {
     const av = a[j] ?? Number.NaN;
     const bv = b[j] ?? Number.NaN;
-    if (!isNaN(av) && !isNaN(bv)) {
+    if (!Number.isNaN(av) && !Number.isNaN(bv)) {
       sum += (av - bv) ** 2;
       count++;
     }
   }
-  return count === 0 ? Number.POSITIVE_INFINITY : Math.sqrt((sum * a.length) / count);
+  return count === 0
+    ? Number.POSITIVE_INFINITY
+    : Math.sqrt((sum * a.length) / count);
 }
 
 export interface KNNImputerOptions {
@@ -40,7 +42,9 @@ export class KNNImputer {
   }
 
   private _isMissing(v: number): boolean {
-    return isNaN(this.missingValues) ? isNaN(v) : v === this.missingValues;
+    return Number.isNaN(this.missingValues)
+      ? Number.isNaN(v)
+      : v === this.missingValues;
   }
 
   fit(X: Float64Array[]): this {
@@ -49,7 +53,9 @@ export class KNNImputer {
     this.statistics_ = new Float64Array(nFeatures);
 
     for (let j = 0; j < nFeatures; j++) {
-      const vals = X.map((row) => row[j] ?? Number.NaN).filter((v) => !this._isMissing(v));
+      const vals = X.map((row) => row[j] ?? Number.NaN).filter(
+        (v) => !this._isMissing(v),
+      );
       this.statistics_[j] =
         vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
     }
@@ -57,7 +63,8 @@ export class KNNImputer {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.xFit_ || !this.statistics_) throw new NotFittedError("KNNImputer");
+    if (!this.xFit_ || !this.statistics_)
+      throw new NotFittedError("KNNImputer");
     const nFeatures = X[0]?.length ?? 0;
 
     return X.map((row) => {
@@ -133,7 +140,9 @@ export class IterativeImputer {
   }
 
   private _isMissing(v: number): boolean {
-    return isNaN(this.missingValues) ? isNaN(v) : v === this.missingValues;
+    return Number.isNaN(this.missingValues)
+      ? Number.isNaN(v)
+      : v === this.missingValues;
   }
 
   fit(X: Float64Array[]): this {
@@ -191,7 +200,9 @@ export class IterativeImputer {
             r[k] = filled[i]![otherCols[k]!] ?? 0;
           return r;
         });
-        const trainY = new Float64Array(trainRows.map((i) => filled[i]![j] ?? 0));
+        const trainY = new Float64Array(
+          trainRows.map((i) => filled[i]![j] ?? 0),
+        );
 
         // Compute mean of trainY as simple predictor
         const meanY = trainY.reduce((a, b) => a + b, 0) / trainY.length;

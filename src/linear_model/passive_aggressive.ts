@@ -67,7 +67,8 @@ export class PassiveAggressiveClassifier {
       const flat = new Float64Array(this.classes_.length * nFeatures);
       const flatB = new Float64Array(this.classes_.length);
       for (let k = 0; k < this.classes_.length; k++) {
-        for (let j = 0; j < nFeatures; j++) flat[k * nFeatures + j] = coefs[k]![j] ?? 0;
+        for (let j = 0; j < nFeatures; j++)
+          flat[k * nFeatures + j] = coefs[k]![j] ?? 0;
         flatB[k] = intercepts[k]![0] ?? 0;
       }
       this.coef_ = flat;
@@ -119,36 +120,39 @@ export class PassiveAggressiveClassifier {
   }
 
   predict(X: Float64Array[]): Int32Array {
-    if (!this.coef_ || !this.classes_) throw new NotFittedError("PassiveAggressiveClassifier");
+    if (!this.coef_ || !this.classes_)
+      throw new NotFittedError("PassiveAggressiveClassifier");
     const nFeatures = X[0]?.length ?? 0;
 
     if (this.classes_.length === 2) {
       return new Int32Array(
         X.map((xi) => {
           let score = this.intercept_![0] ?? 0;
-          for (let j = 0; j < nFeatures; j++) score += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
-          return score >= 0 ? (this.classes_![1] ?? 1) : (this.classes_![0] ?? 0);
-        }),
-      );
-    } else {
-      const nClasses = this.classes_.length;
-      return new Int32Array(
-        X.map((xi) => {
-          let bestScore = Number.NEGATIVE_INFINITY;
-          let bestClass = 0;
-          for (let k = 0; k < nClasses; k++) {
-            let score = this.intercept_![k] ?? 0;
-            for (let j = 0; j < nFeatures; j++)
-              score += (this.coef_![k * nFeatures + j] ?? 0) * (xi[j] ?? 0);
-            if (score > bestScore) {
-              bestScore = score;
-              bestClass = this.classes_![k] ?? 0;
-            }
-          }
-          return bestClass;
+          for (let j = 0; j < nFeatures; j++)
+            score += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
+          return score >= 0
+            ? (this.classes_![1] ?? 1)
+            : (this.classes_![0] ?? 0);
         }),
       );
     }
+    const nClasses = this.classes_.length;
+    return new Int32Array(
+      X.map((xi) => {
+        let bestScore = Number.NEGATIVE_INFINITY;
+        let bestClass = 0;
+        for (let k = 0; k < nClasses; k++) {
+          let score = this.intercept_![k] ?? 0;
+          for (let j = 0; j < nFeatures; j++)
+            score += (this.coef_![k * nFeatures + j] ?? 0) * (xi[j] ?? 0);
+          if (score > bestScore) {
+            bestScore = score;
+            bestClass = this.classes_![k] ?? 0;
+          }
+        }
+        return bestClass;
+      }),
+    );
   }
 
   score(X: Float64Array[], y: Int32Array): number {
@@ -231,7 +235,8 @@ export class PassiveAggressiveRegressor {
     return new Float64Array(
       X.map((xi) => {
         let pred = this.intercept_![0] ?? 0;
-        for (let j = 0; j < xi.length; j++) pred += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
+        for (let j = 0; j < xi.length; j++)
+          pred += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
         return pred;
       }),
     );

@@ -14,7 +14,9 @@ export interface GridParams {
   [key: string]: number | string | boolean;
 }
 
-function cartesianProduct(paramGrid: Record<string, (number | string | boolean)[]>): GridParams[] {
+function cartesianProduct(
+  paramGrid: Record<string, (number | string | boolean)[]>,
+): GridParams[] {
   const keys = Object.keys(paramGrid);
   if (keys.length === 0) return [{}];
   const result: GridParams[] = [{}];
@@ -67,10 +69,18 @@ export class GridSearchCV {
       for (const fold of kfold.split(X)) {
         const trainIdx = fold.trainIndex;
         const testIdx = fold.testIndex;
-        const XTrain = Array.from(trainIdx).map((i) => X[i] ?? new Float64Array(0));
-        const yTrain = new Float64Array(Array.from(trainIdx).map((i) => y[i] ?? 0));
-        const XTest = Array.from(testIdx).map((i) => X[i] ?? new Float64Array(0));
-        const yTest = new Float64Array(Array.from(testIdx).map((i) => y[i] ?? 0));
+        const XTrain = Array.from(trainIdx).map(
+          (i) => X[i] ?? new Float64Array(0),
+        );
+        const yTrain = new Float64Array(
+          Array.from(trainIdx).map((i) => y[i] ?? 0),
+        );
+        const XTest = Array.from(testIdx).map(
+          (i) => X[i] ?? new Float64Array(0),
+        );
+        const yTest = new Float64Array(
+          Array.from(testIdx).map((i) => y[i] ?? 0),
+        );
 
         // Clone and set params
         const est = Object.create(
@@ -111,7 +121,8 @@ export class GridSearchCV {
   }
 
   score(X: Float64Array[], y: Float64Array): number {
-    if (this.bestEstimator_ === null) throw new Error("GridSearchCV not fitted");
+    if (this.bestEstimator_ === null)
+      throw new Error("GridSearchCV not fitted");
     return this.bestEstimator_.score(X, y);
   }
 }

@@ -5,24 +5,35 @@
 export type ActivationFn = (x: Float64Array) => Float64Array;
 
 export const activations = {
-  relu: (x: Float64Array): Float64Array => x.map((v) => Math.max(0, v)) as unknown as Float64Array,
+  relu: (x: Float64Array): Float64Array =>
+    x.map((v) => Math.max(0, v)) as unknown as Float64Array,
   sigmoid: (x: Float64Array): Float64Array =>
     x.map((v) => 1 / (1 + Math.exp(-v))) as unknown as Float64Array,
-  tanh: (x: Float64Array): Float64Array => x.map(Math.tanh) as unknown as Float64Array,
+  tanh: (x: Float64Array): Float64Array =>
+    x.map(Math.tanh) as unknown as Float64Array,
   softmax: (x: Float64Array): Float64Array => {
     const max = Math.max(...Array.from(x));
     const exp = x.map((v) => Math.exp(v - max));
     const sum = exp.reduce((a, b) => a + b, 0);
     return exp.map((v) => v / sum) as unknown as Float64Array;
   },
-  leaky_relu: (alpha = 0.01) =>
+  leaky_relu:
+    (alpha = 0.01) =>
     (x: Float64Array): Float64Array =>
       x.map((v) => (v > 0 ? v : alpha * v)) as unknown as Float64Array,
-  elu: (alpha = 1.0) =>
+  elu:
+    (alpha = 1.0) =>
     (x: Float64Array): Float64Array =>
-      x.map((v) => (v >= 0 ? v : alpha * (Math.exp(v) - 1))) as unknown as Float64Array,
+      x.map((v) =>
+        v >= 0 ? v : alpha * (Math.exp(v) - 1),
+      ) as unknown as Float64Array,
   gelu: (x: Float64Array): Float64Array =>
-    x.map((v) => 0.5 * v * (1 + Math.tanh(Math.sqrt(2 / Math.PI) * (v + 0.044715 * v ** 3)))) as unknown as Float64Array,
+    x.map(
+      (v) =>
+        0.5 *
+        v *
+        (1 + Math.tanh(Math.sqrt(2 / Math.PI) * (v + 0.044715 * v ** 3))),
+    ) as unknown as Float64Array,
   silu: (x: Float64Array): Float64Array =>
     x.map((v) => v / (1 + Math.exp(-v))) as unknown as Float64Array,
 };
@@ -30,12 +41,14 @@ export const activations = {
 export const losses = {
   mse: (yTrue: Float64Array, yPred: Float64Array): number => {
     let s = 0;
-    for (let i = 0; i < yTrue.length; i++) s += ((yTrue[i] ?? 0) - (yPred[i] ?? 0)) ** 2;
+    for (let i = 0; i < yTrue.length; i++)
+      s += ((yTrue[i] ?? 0) - (yPred[i] ?? 0)) ** 2;
     return s / yTrue.length;
   },
   mae: (yTrue: Float64Array, yPred: Float64Array): number => {
     let s = 0;
-    for (let i = 0; i < yTrue.length; i++) s += Math.abs((yTrue[i] ?? 0) - (yPred[i] ?? 0));
+    for (let i = 0; i < yTrue.length; i++)
+      s += Math.abs((yTrue[i] ?? 0) - (yPred[i] ?? 0));
     return s / yTrue.length;
   },
   crossEntropy: (yTrue: Float64Array, yPred: Float64Array): number => {
@@ -45,7 +58,8 @@ export const losses = {
     }
     return s / yTrue.length;
   },
-  huber: (delta = 1.0) =>
+  huber:
+    (delta = 1.0) =>
     (yTrue: Float64Array, yPred: Float64Array): number => {
       let s = 0;
       for (let i = 0; i < yTrue.length; i++) {
@@ -73,8 +87,12 @@ export const initializers = {
       const row = new Float64Array(fanOut);
       for (let i = 0; i < fanOut; i++) {
         // Box-Muller
-        const u1 = Math.random(), u2 = Math.random();
-        row[i] = std * Math.sqrt(-2 * Math.log(u1 + 1e-10)) * Math.cos(2 * Math.PI * u2);
+        const u1 = Math.random();
+        const u2 = Math.random();
+        row[i] =
+          std *
+          Math.sqrt(-2 * Math.log(u1 + 1e-10)) *
+          Math.cos(2 * Math.PI * u2);
       }
       return row;
     });
@@ -110,17 +128,28 @@ export class BatchNormLayer {
 
     if (training) {
       const mean = new Float64Array(this.nFeatures);
-      for (const row of X) for (let j = 0; j < this.nFeatures; j++) mean[j] += (row[j] ?? 0) / n;
+      for (const row of X)
+        for (let j = 0; j < this.nFeatures; j++) mean[j] += (row[j] ?? 0) / n;
       const variance = new Float64Array(this.nFeatures);
-      for (const row of X) for (let j = 0; j < this.nFeatures; j++) variance[j] += ((row[j] ?? 0) - (mean[j] ?? 0)) ** 2 / n;
+      for (const row of X)
+        for (let j = 0; j < this.nFeatures; j++)
+          variance[j] += ((row[j] ?? 0) - (mean[j] ?? 0)) ** 2 / n;
       for (let j = 0; j < this.nFeatures; j++) {
-        this.runningMean[j] = (1 - this.momentum) * (this.runningMean[j] ?? 0) + this.momentum * (mean[j] ?? 0);
-        this.runningVar[j] = (1 - this.momentum) * (this.runningVar[j] ?? 1) + this.momentum * (variance[j] ?? 1);
+        this.runningMean[j] =
+          (1 - this.momentum) * (this.runningMean[j] ?? 0) +
+          this.momentum * (mean[j] ?? 0);
+        this.runningVar[j] =
+          (1 - this.momentum) * (this.runningVar[j] ?? 1) +
+          this.momentum * (variance[j] ?? 1);
       }
       for (const row of X) {
         const out = new Float64Array(this.nFeatures);
         for (let j = 0; j < this.nFeatures; j++) {
-          out[j] = ((row[j] ?? 0) - (mean[j] ?? 0)) / Math.sqrt((variance[j] ?? 1) + this.eps) * (this.gamma[j] ?? 1) + (this.beta[j] ?? 0);
+          out[j] =
+            (((row[j] ?? 0) - (mean[j] ?? 0)) /
+              Math.sqrt((variance[j] ?? 1) + this.eps)) *
+              (this.gamma[j] ?? 1) +
+            (this.beta[j] ?? 0);
         }
         result.push(out);
       }
@@ -128,7 +157,11 @@ export class BatchNormLayer {
       for (const row of X) {
         const out = new Float64Array(this.nFeatures);
         for (let j = 0; j < this.nFeatures; j++) {
-          out[j] = ((row[j] ?? 0) - (this.runningMean[j] ?? 0)) / Math.sqrt((this.runningVar[j] ?? 1) + this.eps) * (this.gamma[j] ?? 1) + (this.beta[j] ?? 0);
+          out[j] =
+            (((row[j] ?? 0) - (this.runningMean[j] ?? 0)) /
+              Math.sqrt((this.runningVar[j] ?? 1) + this.eps)) *
+              (this.gamma[j] ?? 1) +
+            (this.beta[j] ?? 0);
         }
         result.push(out);
       }

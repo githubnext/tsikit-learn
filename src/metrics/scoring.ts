@@ -18,7 +18,10 @@ export interface ScorerOptions {
  * Make a scorer from a metric function.
  */
 export function makeScorer(
-  scoreFn: (yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array) => number,
+  scoreFn: (
+    yTrue: Float64Array | Int32Array,
+    yPred: Float64Array | Int32Array,
+  ) => number,
   options: ScorerOptions = {},
 ): ScorerFn {
   const { greaterIsBetter = true } = options;
@@ -44,7 +47,9 @@ export function registerScorer(name: string, scorer: ScorerFn): void {
 export function getScorer(name: string): ScorerFn {
   const scorer = SCORERS[name];
   if (scorer === undefined) {
-    throw new Error(`Unknown scorer: '${name}'. Available: ${Object.keys(SCORERS).join(", ")}`);
+    throw new Error(
+      `Unknown scorer: '${name}'. Available: ${Object.keys(SCORERS).join(", ")}`,
+    );
   }
   return scorer;
 }
@@ -65,9 +70,15 @@ export function checkScoring(
       typeof (estimator as { score: unknown }).score === "function"
     ) {
       return (est, X, y) =>
-        (est as unknown as { score: (X: Float64Array[], y: Float64Array | Int32Array) => number }).score(X, y);
+        (
+          est as unknown as {
+            score: (X: Float64Array[], y: Float64Array | Int32Array) => number;
+          }
+        ).score(X, y);
     }
-    throw new Error("scoring must be provided when estimator has no default score method");
+    throw new Error(
+      "scoring must be provided when estimator has no default score method",
+    );
   }
   if (typeof scoring === "string") {
     return getScorer(scoring);

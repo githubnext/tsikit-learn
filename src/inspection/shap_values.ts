@@ -40,7 +40,11 @@ export class LinearExplainer {
    * @param intercept  Model intercept.
    * @param featureMeans Background feature means (E[x_j]). If omitted, zeros are used.
    */
-  fit(coef: Float64Array, intercept: number, featureMeans?: Float64Array): this {
+  fit(
+    coef: Float64Array,
+    intercept: number,
+    featureMeans?: Float64Array,
+  ): this {
     this.coef_ = new Float64Array(coef);
     this.intercept_ = intercept;
     this.nFeatures_ = coef.length;
@@ -57,8 +61,15 @@ export class LinearExplainer {
    * @param nSamples Number of samples.
    */
   explain(X: Float64Array, nSamples: number): SHAPExplanation {
-    if (!this.coef_ || this.intercept_ === undefined || !this.featureMeans_ || !this.nFeatures_) {
-      throw new NotFittedError("LinearExplainer is not fitted. Call fit() first.");
+    if (
+      !this.coef_ ||
+      this.intercept_ === undefined ||
+      !this.featureMeans_ ||
+      !this.nFeatures_
+    ) {
+      throw new NotFittedError(
+        "LinearExplainer is not fitted. Call fit() first.",
+      );
     }
     const nFeatures = this.nFeatures_;
     const values = new Float64Array(nSamples * nFeatures);
@@ -66,12 +77,14 @@ export class LinearExplainer {
 
     // Base value = coef · featureMeans + intercept (same for every sample)
     let baseValue = this.intercept_;
-    for (let j = 0; j < nFeatures; j++) baseValue += this.coef_[j]! * this.featureMeans_[j]!;
+    for (let j = 0; j < nFeatures; j++)
+      baseValue += this.coef_[j]! * this.featureMeans_[j]!;
 
     for (let i = 0; i < nSamples; i++) {
       baseValues[i] = baseValue;
       for (let j = 0; j < nFeatures; j++) {
-        values[i * nFeatures + j] = this.coef_[j]! * (X[i * nFeatures + j]! - this.featureMeans_[j]!);
+        values[i * nFeatures + j] =
+          this.coef_[j]! * (X[i * nFeatures + j]! - this.featureMeans_[j]!);
       }
     }
     return { values, baseValues, nSamples, nFeatures };
@@ -134,19 +147,29 @@ export class TreeSHAPExplainer {
    */
   explain(X: Float64Array, nSamples: number): SHAPExplanation {
     if (
-      !this.featureIndex_ || !this.threshold_ || !this.leftChild_ || !this.rightChild_ ||
-      !this.leafValues_ || this.nFeatures_ === undefined
+      !this.featureIndex_ ||
+      !this.threshold_ ||
+      !this.leftChild_ ||
+      !this.rightChild_ ||
+      !this.leafValues_ ||
+      this.nFeatures_ === undefined
     ) {
-      throw new NotFittedError("TreeSHAPExplainer is not fitted. Call fit() first.");
+      throw new NotFittedError(
+        "TreeSHAPExplainer is not fitted. Call fit() first.",
+      );
     }
     const nFeatures = this.nFeatures_;
     const values = new Float64Array(nSamples * nFeatures);
     const baseValues = new Float64Array(nSamples);
 
     // Mean leaf value as base value (approximate)
-    let leafSum = 0; let leafCount = 0;
+    let leafSum = 0;
+    let leafCount = 0;
     for (let node = 0; node < this.leftChild_.length; node++) {
-      if (this.leftChild_[node] === -1) { leafSum += this.leafValues_[node]!; leafCount++; }
+      if (this.leftChild_[node] === -1) {
+        leafSum += this.leafValues_[node]!;
+        leafCount++;
+      }
     }
     const meanLeaf = leafCount > 0 ? leafSum / leafCount : 0;
 
@@ -161,13 +184,16 @@ export class TreeSHAPExplainer {
         const thr = this.threshold_[node]!;
         const xFeat = X[i * nFeatures + feat]!;
         const goLeft = xFeat <= thr;
-        const nextNode = goLeft ? this.leftChild_[node]! : this.rightChild_[node]!;
+        const nextNode = goLeft
+          ? this.leftChild_[node]!
+          : this.rightChild_[node]!;
         const nextVal = this.leafValues_[nextNode]!;
         contrib[feat]! += nextVal - parentVal;
         parentVal = nextVal;
         node = nextNode;
       }
-      for (let j = 0; j < nFeatures; j++) values[i * nFeatures + j] = contrib[j]!;
+      for (let j = 0; j < nFeatures; j++)
+        values[i * nFeatures + j] = contrib[j]!;
     }
     return { values, baseValues, nSamples, nFeatures };
   }
@@ -181,7 +207,8 @@ export function meanAbsShap(explanation: SHAPExplanation): Float64Array {
   const { values, nSamples, nFeatures } = explanation;
   const out = new Float64Array(nFeatures);
   for (let i = 0; i < nSamples; i++) {
-    for (let j = 0; j < nFeatures; j++) out[j]! += Math.abs(values[i * nFeatures + j]!);
+    for (let j = 0; j < nFeatures; j++)
+      out[j]! += Math.abs(values[i * nFeatures + j]!);
   }
   for (let j = 0; j < nFeatures; j++) out[j]! /= nSamples;
   return out;

@@ -9,9 +9,15 @@ type Estimator = {
 };
 
 type FoldSplit = { trainIndex: Int32Array; testIndex: Int32Array };
-type Splitter = { split(X: Float64Array[], y?: Float64Array | Int32Array): Generator<FoldSplit> };
+type Splitter = {
+  split(X: Float64Array[], y?: Float64Array | Int32Array): Generator<FoldSplit>;
+};
 
-function makeSplits(X: Float64Array[], y: Float64Array | Int32Array | undefined, cvParam: number | Splitter): FoldSplit[] {
+function makeSplits(
+  X: Float64Array[],
+  y: Float64Array | Int32Array | undefined,
+  cvParam: number | Splitter,
+): FoldSplit[] {
   if (typeof cvParam === "number") {
     const n = X.length;
     const k = cvParam;
@@ -26,7 +32,10 @@ function makeSplits(X: Float64Array[], y: Float64Array | Int32Array | undefined,
         if (i >= start && i < end) testIdx.push(i);
         else trainIdx.push(i);
       }
-      splits.push({ trainIndex: new Int32Array(trainIdx), testIndex: new Int32Array(testIdx) });
+      splits.push({
+        trainIndex: new Int32Array(trainIdx),
+        testIndex: new Int32Array(testIdx),
+      });
     }
     return splits;
   }
@@ -42,7 +51,11 @@ export interface CrossValidateResult {
 
 export interface CrossValidateOptions {
   cv?: number | Splitter;
-  scoring?: ((estimator: Estimator, X: Float64Array[], y: Float64Array | Int32Array) => number);
+  scoring?: (
+    estimator: Estimator,
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ) => number;
   returnTrainScore?: boolean;
 }
 
@@ -51,10 +64,11 @@ export function crossValidate(
   estimator: Estimator,
   X: Float64Array[],
   y: Float64Array | Int32Array,
-  options: CrossValidateOptions = {}
+  options: CrossValidateOptions = {},
 ): CrossValidateResult {
   const cvParam = options.cv ?? 5;
-  const scoring = options.scoring ?? ((est, Xtest, ytest) => est.score(Xtest, ytest));
+  const scoring =
+    options.scoring ?? ((est, Xtest, ytest) => est.score(Xtest, ytest));
   const returnTrainScore = options.returnTrainScore ?? false;
   const splits = makeSplits(X, y, cvParam);
 
@@ -64,14 +78,18 @@ export function crossValidate(
   const scoreTimes: number[] = [];
 
   for (const { trainIndex, testIndex } of splits) {
-    const Xtrain = Array.from(trainIndex).map((i) => X[i] ?? new Float64Array(0));
+    const Xtrain = Array.from(trainIndex).map(
+      (i) => X[i] ?? new Float64Array(0),
+    );
     const Xtest = Array.from(testIndex).map((i) => X[i] ?? new Float64Array(0));
-    const ytrain = y instanceof Int32Array
-      ? new Int32Array(Array.from(trainIndex).map((i) => y[i] ?? 0))
-      : new Float64Array(Array.from(trainIndex).map((i) => y[i] ?? 0));
-    const ytest = y instanceof Int32Array
-      ? new Int32Array(Array.from(testIndex).map((i) => y[i] ?? 0))
-      : new Float64Array(Array.from(testIndex).map((i) => y[i] ?? 0));
+    const ytrain =
+      y instanceof Int32Array
+        ? new Int32Array(Array.from(trainIndex).map((i) => y[i] ?? 0))
+        : new Float64Array(Array.from(trainIndex).map((i) => y[i] ?? 0));
+    const ytest =
+      y instanceof Int32Array
+        ? new Int32Array(Array.from(testIndex).map((i) => y[i] ?? 0))
+        : new Float64Array(Array.from(testIndex).map((i) => y[i] ?? 0));
 
     const t0 = Date.now();
     estimator.fit(Xtrain, ytrain);
@@ -95,7 +113,11 @@ export function crossValidate(
 export interface LearningCurveOptions {
   cv?: number | Splitter;
   trainSizes?: Float64Array;
-  scoring?: (estimator: Estimator, X: Float64Array[], y: Float64Array | Int32Array) => number;
+  scoring?: (
+    estimator: Estimator,
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ) => number;
 }
 
 export interface LearningCurveResult {
@@ -109,14 +131,18 @@ export function learningCurve(
   estimator: Estimator,
   X: Float64Array[],
   y: Float64Array | Int32Array,
-  options: LearningCurveOptions = {}
+  options: LearningCurveOptions = {},
 ): LearningCurveResult {
-  const trainSizeFractions = options.trainSizes ?? new Float64Array([0.1, 0.33, 0.55, 0.78, 1.0]);
+  const trainSizeFractions =
+    options.trainSizes ?? new Float64Array([0.1, 0.33, 0.55, 0.78, 1.0]);
   const cvParam = options.cv ?? 5;
-  const scoring = options.scoring ?? ((est, Xtest, ytest) => est.score(Xtest, ytest));
+  const scoring =
+    options.scoring ?? ((est, Xtest, ytest) => est.score(Xtest, ytest));
 
   const n = X.length;
-  const absoluteSizes = Array.from(trainSizeFractions).map((f) => Math.max(1, Math.round(f * n)));
+  const absoluteSizes = Array.from(trainSizeFractions).map((f) =>
+    Math.max(1, Math.round(f * n)),
+  );
   const splits = makeSplits(X, y, cvParam);
 
   const trainScoresBySize: Float64Array[] = [];
@@ -128,13 +154,17 @@ export function learningCurve(
     for (const { trainIndex, testIndex } of splits) {
       const subTrain = Array.from(trainIndex).slice(0, sz);
       const Xtrain = subTrain.map((i) => X[i] ?? new Float64Array(0));
-      const Xtest = Array.from(testIndex).map((i) => X[i] ?? new Float64Array(0));
-      const ytrain = y instanceof Int32Array
-        ? new Int32Array(subTrain.map((i) => y[i] ?? 0))
-        : new Float64Array(subTrain.map((i) => y[i] ?? 0));
-      const ytest = y instanceof Int32Array
-        ? new Int32Array(Array.from(testIndex).map((i) => y[i] ?? 0))
-        : new Float64Array(Array.from(testIndex).map((i) => y[i] ?? 0));
+      const Xtest = Array.from(testIndex).map(
+        (i) => X[i] ?? new Float64Array(0),
+      );
+      const ytrain =
+        y instanceof Int32Array
+          ? new Int32Array(subTrain.map((i) => y[i] ?? 0))
+          : new Float64Array(subTrain.map((i) => y[i] ?? 0));
+      const ytest =
+        y instanceof Int32Array
+          ? new Int32Array(Array.from(testIndex).map((i) => y[i] ?? 0))
+          : new Float64Array(Array.from(testIndex).map((i) => y[i] ?? 0));
 
       estimator.fit(Xtrain, ytrain);
       tsArr.push(scoring(estimator, Xtrain, ytrain));
@@ -155,7 +185,11 @@ export interface ValidationCurveOptions {
   cv?: number | Splitter;
   paramName: string;
   paramRange: number[];
-  scoring?: (estimator: Estimator, X: Float64Array[], y: Float64Array | Int32Array) => number;
+  scoring?: (
+    estimator: Estimator,
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ) => number;
 }
 
 export interface ValidationCurveResult {
@@ -168,11 +202,12 @@ export function validationCurve(
   estimator: Estimator & Record<string, unknown>,
   X: Float64Array[],
   y: Float64Array | Int32Array,
-  options: ValidationCurveOptions
+  options: ValidationCurveOptions,
 ): ValidationCurveResult {
   const { paramName, paramRange } = options;
   const cvParam = options.cv ?? 5;
-  const scoring = options.scoring ?? ((est, Xtest, ytest) => est.score(Xtest, ytest));
+  const scoring =
+    options.scoring ?? ((est, Xtest, ytest) => est.score(Xtest, ytest));
   const splits = makeSplits(X, y, cvParam);
 
   const trainScores: Float64Array[] = [];
@@ -185,14 +220,20 @@ export function validationCurve(
     const tsArr: number[] = [];
     const vsArr: number[] = [];
     for (const { trainIndex, testIndex } of splits) {
-      const Xtrain = Array.from(trainIndex).map((i) => X[i] ?? new Float64Array(0));
-      const Xtest = Array.from(testIndex).map((i) => X[i] ?? new Float64Array(0));
-      const ytrain = y instanceof Int32Array
-        ? new Int32Array(Array.from(trainIndex).map((i) => y[i] ?? 0))
-        : new Float64Array(Array.from(trainIndex).map((i) => y[i] ?? 0));
-      const ytest = y instanceof Int32Array
-        ? new Int32Array(Array.from(testIndex).map((i) => y[i] ?? 0))
-        : new Float64Array(Array.from(testIndex).map((i) => y[i] ?? 0));
+      const Xtrain = Array.from(trainIndex).map(
+        (i) => X[i] ?? new Float64Array(0),
+      );
+      const Xtest = Array.from(testIndex).map(
+        (i) => X[i] ?? new Float64Array(0),
+      );
+      const ytrain =
+        y instanceof Int32Array
+          ? new Int32Array(Array.from(trainIndex).map((i) => y[i] ?? 0))
+          : new Float64Array(Array.from(trainIndex).map((i) => y[i] ?? 0));
+      const ytest =
+        y instanceof Int32Array
+          ? new Int32Array(Array.from(testIndex).map((i) => y[i] ?? 0))
+          : new Float64Array(Array.from(testIndex).map((i) => y[i] ?? 0));
 
       estimator.fit(Xtrain, ytrain);
       tsArr.push(scoring(estimator, Xtrain, ytrain));

@@ -39,7 +39,7 @@ export class LassoLarsCV {
   private lassoPath(
     X: Float64Array[],
     y: Float64Array,
-    alpha: number
+    alpha: number,
   ): Float64Array {
     // Coordinate descent for LASSO at a single alpha
     const n = X.length;
@@ -51,13 +51,15 @@ export class LassoLarsCV {
       ? Array.from(y).reduce((a, b) => a + b, 0) / n
       : 0;
     const xMean = this.fitIntercept
-      ? new Float64Array(p).map((_, j) =>
-          Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n
+      ? new Float64Array(p).map(
+          (_, j) => Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n,
         )
       : new Float64Array(p);
 
     const yC = new Float64Array(y.map((v, i) => v - yMean));
-    const XC = X.map((row) => new Float64Array(row.map((v, j) => v - (xMean[j] ?? 0))));
+    const XC = X.map(
+      (row) => new Float64Array(row.map((v, j) => v - (xMean[j] ?? 0))),
+    );
 
     for (let iter = 0; iter < this.maxIter; iter++) {
       let maxDelta = 0;
@@ -98,14 +100,15 @@ export class LassoLarsCV {
     coef: Float64Array,
     intercept: number,
     X: Float64Array[],
-    y: Float64Array
+    y: Float64Array,
   ): number {
     let err = 0;
     for (let i = 0; i < X.length; i++) {
       let pred = intercept;
       const xi = X[i]!;
-      for (let j = 0; j < coef.length; j++) pred += (coef[j] ?? 0) * (xi[j] ?? 0);
-      err += (((y[i] ?? 0) - pred) ** 2);
+      for (let j = 0; j < coef.length; j++)
+        pred += (coef[j] ?? 0) * (xi[j] ?? 0);
+      err += ((y[i] ?? 0) - pred) ** 2;
     }
     return err / X.length;
   }
@@ -133,11 +136,16 @@ export class LassoLarsCV {
         const coef = this.lassoPath(xTrain, yTrain, alphas[ai]!);
         let intercept = 0;
         if (this.fitIntercept) {
-          const yMean = Array.from(yTrain).reduce((a, b) => a + b, 0) / yTrain.length;
-          const xMean = new Float64Array(coef.length).map((_, j) =>
-            Array.from(xTrain).reduce((a, row) => a + (row[j] ?? 0), 0) / xTrain.length
+          const yMean =
+            Array.from(yTrain).reduce((a, b) => a + b, 0) / yTrain.length;
+          const xMean = new Float64Array(coef.length).map(
+            (_, j) =>
+              Array.from(xTrain).reduce((a, row) => a + (row[j] ?? 0), 0) /
+              xTrain.length,
           );
-          intercept = yMean - Array.from(coef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
+          intercept =
+            yMean -
+            Array.from(coef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
         }
         msePerAlpha[ai]![fold] = this.mse(coef, intercept, xVal, yVal);
       }
@@ -147,8 +155,12 @@ export class LassoLarsCV {
     let bestAlpha = alphas[0]!;
     let bestMSE = Number.POSITIVE_INFINITY;
     for (let ai = 0; ai < alphas.length; ai++) {
-      const meanMse = Array.from(msePerAlpha[ai]!).reduce((a, b) => a + b, 0) / this.cv;
-      if (meanMse < bestMSE) { bestMSE = meanMse; bestAlpha = alphas[ai]!; }
+      const meanMse =
+        Array.from(msePerAlpha[ai]!).reduce((a, b) => a + b, 0) / this.cv;
+      if (meanMse < bestMSE) {
+        bestMSE = meanMse;
+        bestAlpha = alphas[ai]!;
+      }
     }
 
     this.alpha_ = bestAlpha;
@@ -159,10 +171,12 @@ export class LassoLarsCV {
     this.coef_ = bestCoef;
     if (this.fitIntercept) {
       const yMean = Array.from(y).reduce((a, b) => a + b, 0) / n;
-      const xMean = new Float64Array(bestCoef.length).map((_, j) =>
-        Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n
+      const xMean = new Float64Array(bestCoef.length).map(
+        (_, j) => Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n,
       );
-      this.intercept_ = yMean - Array.from(bestCoef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
+      this.intercept_ =
+        yMean -
+        Array.from(bestCoef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
     } else {
       this.intercept_ = 0;
     }
@@ -175,7 +189,8 @@ export class LassoLarsCV {
     for (let i = 0; i < X.length; i++) {
       let pred = this.intercept_ ?? 0;
       const xi = X[i]!;
-      for (let j = 0; j < this.coef_.length; j++) pred += (this.coef_[j] ?? 0) * (xi[j] ?? 0);
+      for (let j = 0; j < this.coef_.length; j++)
+        pred += (this.coef_[j] ?? 0) * (xi[j] ?? 0);
       out[i] = pred;
     }
     return out;
@@ -184,7 +199,8 @@ export class LassoLarsCV {
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
     const n = y.length;
-    let ssTot = 0, ssRes = 0;
+    let ssTot = 0;
+    let ssRes = 0;
     const yMean = Array.from(y).reduce((a, b) => a + b, 0) / n;
     for (let i = 0; i < n; i++) {
       ssTot += ((y[i] ?? 0) - yMean) ** 2;
@@ -231,7 +247,7 @@ export class LassoLarsIC {
   private coordDescent(
     X: Float64Array[],
     y: Float64Array,
-    alpha: number
+    alpha: number,
   ): Float64Array {
     const n = X.length;
     const p = X[0]?.length ?? 0;
@@ -249,7 +265,10 @@ export class LassoLarsIC {
         }
         const xjNorm2 = X.reduce((s, row) => s + (row[j] ?? 0) ** 2, 0);
         const prev = coef[j] ?? 0;
-        if (xjNorm2 < this.eps) { coef[j] = 0; continue; }
+        if (xjNorm2 < this.eps) {
+          coef[j] = 0;
+          continue;
+        }
         const z = rho / xjNorm2;
         const thresh = (alpha * n) / xjNorm2;
         if (z > thresh) coef[j] = z - thresh;
@@ -264,7 +283,9 @@ export class LassoLarsIC {
 
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
-    const alphas = [1e-5, 5e-5, 1e-4, 5e-4, 1e-3, 5e-3, 0.01, 0.05, 0.1, 0.5, 1.0];
+    const alphas = [
+      1e-5, 5e-5, 1e-4, 5e-4, 1e-3, 5e-3, 0.01, 0.05, 0.1, 0.5, 1.0,
+    ];
 
     let bestAlpha = alphas[0]!;
     let bestIC = Number.POSITIVE_INFINITY;
@@ -282,23 +303,29 @@ export class LassoLarsIC {
       let intercept = 0;
       if (this.fitIntercept) {
         const yMean = Array.from(y).reduce((a, b) => a + b, 0) / n;
-        const xMean = new Float64Array(coef.length).map((_, j) =>
-          Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n
+        const xMean = new Float64Array(coef.length).map(
+          (_, j) => Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n,
         );
-        intercept = yMean - Array.from(coef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
+        intercept =
+          yMean -
+          Array.from(coef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
       }
       // Residual sum of squares
       let rss = 0;
       for (let i = 0; i < n; i++) {
         let pred = intercept;
-        for (let j = 0; j < coef.length; j++) pred += (coef[j] ?? 0) * (X[i]![j] ?? 0);
+        for (let j = 0; j < coef.length; j++)
+          pred += (coef[j] ?? 0) * (X[i]![j] ?? 0);
         rss += ((y[i] ?? 0) - pred) ** 2;
       }
       const df = Array.from(coef).filter((c) => Math.abs(c) > this.eps).length;
       const k = this.criterion === "bic" ? Math.log(n) : 2;
       const ic = n * Math.log(rss / n + noiseVar * 1e-6) + k * df;
       icValues[ai] = ic;
-      if (ic < bestIC) { bestIC = ic; bestAlpha = alphas[ai]!; }
+      if (ic < bestIC) {
+        bestIC = ic;
+        bestAlpha = alphas[ai]!;
+      }
     }
 
     this.alpha_ = bestAlpha;
@@ -309,10 +336,12 @@ export class LassoLarsIC {
     this.coef_ = bestCoef;
     if (this.fitIntercept) {
       const yMean = Array.from(y).reduce((a, b) => a + b, 0) / n;
-      const xMean = new Float64Array(bestCoef.length).map((_, j) =>
-        Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n
+      const xMean = new Float64Array(bestCoef.length).map(
+        (_, j) => Array.from(X).reduce((a, row) => a + (row[j] ?? 0), 0) / n,
       );
-      this.intercept_ = yMean - Array.from(bestCoef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
+      this.intercept_ =
+        yMean -
+        Array.from(bestCoef).reduce((a, c, j) => a + c * (xMean[j] ?? 0), 0);
     } else {
       this.intercept_ = 0;
     }
@@ -325,7 +354,8 @@ export class LassoLarsIC {
     for (let i = 0; i < X.length; i++) {
       let pred = this.intercept_ ?? 0;
       const xi = X[i]!;
-      for (let j = 0; j < this.coef_.length; j++) pred += (this.coef_[j] ?? 0) * (xi[j] ?? 0);
+      for (let j = 0; j < this.coef_.length; j++)
+        pred += (this.coef_[j] ?? 0) * (xi[j] ?? 0);
       out[i] = pred;
     }
     return out;
@@ -334,7 +364,8 @@ export class LassoLarsIC {
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
     const n = y.length;
-    let ssTot = 0, ssRes = 0;
+    let ssTot = 0;
+    let ssRes = 0;
     const yMean = Array.from(y).reduce((a, b) => a + b, 0) / n;
     for (let i = 0; i < n; i++) {
       ssTot += ((y[i] ?? 0) - yMean) ** 2;

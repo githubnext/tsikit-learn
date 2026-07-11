@@ -3,10 +3,15 @@
  * Mirrors scikit-learn's covariance.EmpiricalCovariance, LedoitWolf, OAS.
  */
 
-function mean(X: Float64Array[], nSamples: number, nFeatures: number): Float64Array {
+function mean(
+  X: Float64Array[],
+  nSamples: number,
+  nFeatures: number,
+): Float64Array {
   const m = new Float64Array(nFeatures);
   for (const row of X) {
-    for (let j = 0; j < nFeatures; j++) m[j] = (m[j] ?? 0) + (row[j] ?? 0) / nSamples;
+    for (let j = 0; j < nFeatures; j++)
+      m[j] = (m[j] ?? 0) + (row[j] ?? 0) / nSamples;
   }
   return m;
 }
@@ -17,12 +22,17 @@ function covMatrix(
   nSamples: number,
   nFeatures: number,
 ): Float64Array[] {
-  const C: Float64Array[] = Array.from({ length: nFeatures }, () => new Float64Array(nFeatures));
+  const C: Float64Array[] = Array.from(
+    { length: nFeatures },
+    () => new Float64Array(nFeatures),
+  );
   for (const row of X) {
     for (let i = 0; i < nFeatures; i++) {
       for (let j = 0; j < nFeatures; j++) {
-        C[i]![j] = (C[i]![j] ?? 0) +
-          ((row[i] ?? 0) - (mu[i] ?? 0)) * ((row[j] ?? 0) - (mu[j] ?? 0)) / nSamples;
+        C[i]![j] =
+          (C[i]![j] ?? 0) +
+          (((row[i] ?? 0) - (mu[i] ?? 0)) * ((row[j] ?? 0) - (mu[j] ?? 0))) /
+            nSamples;
       }
     }
   }
@@ -54,7 +64,7 @@ export class EmpiricalCovariance {
       let s = 0;
       for (let j = 0; j < xi.length; j++) {
         const diff = (xi[j] ?? 0) - (this.location_![j] ?? 0);
-        s += diff * diff / (diagInv[j] ?? 1);
+        s += (diff * diff) / (diagInv[j] ?? 1);
       }
       return Math.sqrt(s);
     });
@@ -92,23 +102,29 @@ export class LedoitWolf extends EmpiricalCovariance {
     const S = covMatrix(X, mu, n, p);
 
     // Ledoit-Wolf analytical formula
-    let trS = 0, trS2 = 0, tr2S = 0;
+    let trS = 0;
+    let trS2 = 0;
+    let tr2S = 0;
     for (let i = 0; i < p; i++) {
       trS += S[i]?.[i] ?? 0;
-      for (let j = 0; j < p; j++) trS2 += ((S[i]?.[j] ?? 0) ** 2);
+      for (let j = 0; j < p; j++) trS2 += (S[i]?.[j] ?? 0) ** 2;
     }
     tr2S = trS * trS;
 
     // Oracle approximating shrinkage
     const mu1 = trS / p;
     const delta2 = (trS2 - tr2S / p) / p;
-    const beta2 = Math.max(0, (trS2 / n - tr2S / (n * p)) / (trS2 - tr2S / p + 1e-10));
+    const beta2 = Math.max(
+      0,
+      (trS2 / n - tr2S / (n * p)) / (trS2 - tr2S / p + 1e-10),
+    );
     const shrinkage = Math.min(1, beta2);
     this.shrinkage_ = shrinkage;
 
     this.covariance_ = S.map((row, i) =>
-      Float64Array.from(row, (v, j) =>
-        (1 - shrinkage) * v + (i === j ? shrinkage * mu1 : 0),
+      Float64Array.from(
+        row,
+        (v, j) => (1 - shrinkage) * v + (i === j ? shrinkage * mu1 : 0),
       ),
     );
     void delta2;
@@ -129,22 +145,24 @@ export class OAS extends EmpiricalCovariance {
     this.location_ = mu;
     const S = covMatrix(X, mu, n, p);
 
-    let trS = 0, trS2 = 0;
+    let trS = 0;
+    let trS2 = 0;
     for (let i = 0; i < p; i++) {
       trS += S[i]?.[i] ?? 0;
-      for (let j = 0; j < p; j++) trS2 += ((S[i]?.[j] ?? 0) ** 2);
+      for (let j = 0; j < p; j++) trS2 += (S[i]?.[j] ?? 0) ** 2;
     }
 
     // OAS formula
     const rho = (1 - 2 / p) * trS2 + trS * trS;
-    const gamma = (n + 1 - 2 / p) * (trS2 - trS * trS / p);
+    const gamma = (n + 1 - 2 / p) * (trS2 - (trS * trS) / p);
     const shrinkage = Math.min(1, rho / (gamma + 1e-10));
     this.shrinkage_ = shrinkage;
     const mu1 = trS / p;
 
     this.covariance_ = S.map((row, i) =>
-      Float64Array.from(row, (v, j) =>
-        (1 - shrinkage) * v + (i === j ? shrinkage * mu1 : 0),
+      Float64Array.from(
+        row,
+        (v, j) => (1 - shrinkage) * v + (i === j ? shrinkage * mu1 : 0),
       ),
     );
     return this;

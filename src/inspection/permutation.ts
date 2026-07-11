@@ -10,7 +10,12 @@ export interface PermutationImportanceOptions {
   /** Sample weight array */
   sampleWeight?: Float64Array | null;
   /** Scoring function: takes (yTrue, yPred) and returns a number (higher = better) */
-  scoring?: ((yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array) => number) | null;
+  scoring?:
+    | ((
+        yTrue: Float64Array | Int32Array,
+        yPred: Float64Array | Int32Array,
+      ) => number)
+    | null;
 }
 
 export interface PermutationImportanceResult {
@@ -29,7 +34,10 @@ type AnyEstimator = {
   score?: (X: Float64Array[], y: Float64Array | Int32Array) => number;
 };
 
-function defaultAccuracy(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array): number {
+function defaultAccuracy(
+  yTrue: Float64Array | Int32Array,
+  yPred: Float64Array | Int32Array,
+): number {
   let correct = 0;
   for (let i = 0; i < yTrue.length; i++) {
     if ((yTrue[i] ?? 0) === (yPred[i] ?? 0)) correct++;

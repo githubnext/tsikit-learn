@@ -40,7 +40,10 @@ function fitLogisticL2(
       const err = prob - (yBin[i] ?? 0);
       gradBias += err;
       for (let j = 0; j < p; j++) gradCoef[j]! += err * (X[i]![j] ?? 0);
-      loss += -((yBin[i] ?? 0) * Math.log(prob + 1e-15) + (1 - (yBin[i] ?? 0)) * Math.log(1 - prob + 1e-15));
+      loss += -(
+        (yBin[i] ?? 0) * Math.log(prob + 1e-15) +
+        (1 - (yBin[i] ?? 0)) * Math.log(1 - prob + 1e-15)
+      );
     }
 
     // L2 regularization gradient
@@ -53,11 +56,11 @@ function fitLogisticL2(
 
     const maxGrad = Math.max(
       Math.abs(gradBias) / n,
-      Math.max(...Array.from(gradCoef).map(g => Math.abs(g / n))),
+      Math.max(...Array.from(gradCoef).map((g) => Math.abs(g / n))),
     );
     if (maxGrad < tol) break;
 
-    intercept -= lr * gradBias / n;
+    intercept -= (lr * gradBias) / n;
     for (let j = 0; j < p; j++) coef[j]! -= lr * (gradCoef[j]! / n);
     void loss;
   }
@@ -100,8 +103,9 @@ export class LogisticRegressionCV {
     const rawCs = options.Cs ?? 10;
     this.Cs =
       typeof rawCs === "number"
-        ? Array.from({ length: rawCs }, (_, i) =>
-            Math.pow(10, -4 + (8 / (rawCs - 1)) * i),
+        ? Array.from(
+            { length: rawCs },
+            (_, i) => 10 ** (-4 + (8 / (rawCs - 1)) * i),
           )
         : rawCs;
     this.cv = options.cv ?? 5;
@@ -204,11 +208,12 @@ export class LogisticRegressionCV {
   }
 
   predict(X: Float64Array[]): Int32Array {
-    if (!this.coef_ || !this.classes_) throw new NotFittedError("LogisticRegressionCV");
+    if (!this.coef_ || !this.classes_)
+      throw new NotFittedError("LogisticRegressionCV");
     const c0 = this.classes_[0] ?? 0;
     const c1 = this.classes_[1] ?? 1;
     return new Int32Array(
-      X.map(xi => {
+      X.map((xi) => {
         let dot = this.intercept_;
         for (let j = 0; j < this.coef_!.length; j++)
           dot += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
@@ -218,8 +223,9 @@ export class LogisticRegressionCV {
   }
 
   predictProba(X: Float64Array[]): Float64Array[] {
-    if (!this.coef_ || !this.classes_) throw new NotFittedError("LogisticRegressionCV");
-    return X.map(xi => {
+    if (!this.coef_ || !this.classes_)
+      throw new NotFittedError("LogisticRegressionCV");
+    return X.map((xi) => {
       let dot = this.intercept_;
       for (let j = 0; j < this.coef_!.length; j++)
         dot += (this.coef_![j] ?? 0) * (xi[j] ?? 0);

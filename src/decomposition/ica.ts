@@ -77,7 +77,8 @@ export class FastICA {
 
     // Center
     const mean = new Float64Array(p);
-    for (const row of X) for (let j = 0; j < p; j++) mean[j]! += (row[j] ?? 0) / n;
+    for (const row of X)
+      for (let j = 0; j < p; j++) mean[j]! += (row[j] ?? 0) / n;
     this.mean_ = mean;
 
     const Xc = X.map((row) => {
@@ -93,12 +94,14 @@ export class FastICA {
     if (this.whiten) {
       // Covariance matrix (p x p), simplified via SVD-like approach
       // Use thin approach: compute XtX
-      const cov: number[][] = Array.from({ length: p }, () => new Array<number>(p).fill(0));
+      const cov: number[][] = Array.from({ length: p }, () =>
+        new Array<number>(p).fill(0),
+      );
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < p; j++) {
           for (let l = j; l < p; l++) {
             cov[j]![l]! += (Xc[i]![j] ?? 0) * (Xc[i]![l] ?? 0);
-            if (l !== j) cov[l]![j]! = cov[j]![l]!;
+            if (l !== j) cov[l]![j]! = cov[j]![l];
           }
         }
       }
@@ -106,7 +109,8 @@ export class FastICA {
 
       // Diagonal whitening (simplified: divide by std)
       const scales = new Float64Array(p);
-      for (let j = 0; j < p; j++) scales[j] = 1 / (Math.sqrt(Math.max(cov[j]![j] ?? 1, 1e-10)));
+      for (let j = 0; j < p; j++)
+        scales[j] = 1 / Math.sqrt(Math.max(cov[j]![j] ?? 1, 1e-10));
       Xw = Xc.map((row) => row.map((v, j) => v * (scales[j] ?? 1)));
       this.whitening_ = [scales.map((s) => s)].map(() => scales);
     }
@@ -148,7 +152,7 @@ export class FastICA {
         }
 
         for (let j = 0; j < p; j++) {
-          wNew[j] = (wNew[j]! / n) - (expG2 / n) * (w[j] ?? 0);
+          wNew[j] = wNew[j]! / n - (expG2 / n) * (w[j] ?? 0);
         }
 
         // Orthogonalize
@@ -189,7 +193,8 @@ export class FastICA {
     return Xw.map((xi) => {
       const out = new Float64Array(k);
       for (let c = 0; c < k; c++) {
-        for (let j = 0; j < p; j++) out[c]! += (components[c]![j] ?? 0) * (xi[j] ?? 0);
+        for (let j = 0; j < p; j++)
+          out[c]! += (components[c]![j] ?? 0) * (xi[j] ?? 0);
       }
       return out;
     });
@@ -206,14 +211,16 @@ export class FastICA {
       return r;
     });
 
-    const Xw = this.whiten && this.whitening_
-      ? Xc.map((row) => row.map((v, j) => v * (this.whitening_![0]![j] ?? 1)))
-      : Xc;
+    const Xw =
+      this.whiten && this.whitening_
+        ? Xc.map((row) => row.map((v, j) => v * (this.whitening_![0]![j] ?? 1)))
+        : Xc;
 
     return Xw.map((xi) => {
       const out = new Float64Array(k);
       for (let c = 0; c < k; c++) {
-        for (let j = 0; j < p; j++) out[c]! += (this.components_![c]![j] ?? 0) * (xi[j] ?? 0);
+        for (let j = 0; j < p; j++)
+          out[c]! += (this.components_![c]![j] ?? 0) * (xi[j] ?? 0);
       }
       return out;
     });
@@ -284,7 +291,10 @@ export class LatentDirichletAllocation {
           let phiSum = 0;
           const phi = new Float64Array(K);
           for (let k = 0; k < K; k++) {
-            phi[k] = Math.exp(Math.log(gamma[di]![k] ?? 1e-10) + Math.log(lambda[k]![vi] ?? 1e-10));
+            phi[k] = Math.exp(
+              Math.log(gamma[di]![k] ?? 1e-10) +
+                Math.log(lambda[k]![vi] ?? 1e-10),
+            );
             phiSum += phi[k] ?? 0;
           }
 
@@ -299,7 +309,7 @@ export class LatentDirichletAllocation {
       }
 
       // M-step: update lambda
-      const ro = Math.pow(this.learningOffset + iter, -this.learningDecay);
+      const ro = (this.learningOffset + iter) ** -this.learningDecay;
 
       for (let k = 0; k < K; k++) {
         const newLambda = new Float64Array(nFeatures).fill(0.1);
@@ -316,7 +326,8 @@ export class LatentDirichletAllocation {
 
         // Interpolate
         for (let vi = 0; vi < nFeatures; vi++) {
-          lambda[k]![vi] = (1 - ro) * (lambda[k]![vi] ?? 0) + ro * (newLambda[vi] ?? 0);
+          lambda[k]![vi] =
+            (1 - ro) * (lambda[k]![vi] ?? 0) + ro * (newLambda[vi] ?? 0);
         }
       }
       this.nIter_ = iter + 1;
@@ -328,7 +339,8 @@ export class LatentDirichletAllocation {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.components_) throw new NotFittedError("LatentDirichletAllocation");
+    if (!this.components_)
+      throw new NotFittedError("LatentDirichletAllocation");
     const K = this.nComponents;
     const nFeatures = this.components_[0]?.length ?? 0;
 
@@ -346,7 +358,7 @@ export class LatentDirichletAllocation {
         for (let k = 0; k < K; k++) {
           phi[k] = Math.exp(
             Math.log(gamma[k] ?? 1e-10) +
-            Math.log(this.components_![k]![vi] ?? 1e-10),
+              Math.log(this.components_![k]![vi] ?? 1e-10),
           );
           phiSum += phi[k] ?? 0;
         }

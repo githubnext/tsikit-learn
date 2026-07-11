@@ -27,7 +27,9 @@ export class MultiOutputClassifier {
     this.estimators_ = [];
     for (let k = 0; k < nOutputs; k++) {
       // Clone estimator by using Object.create - simple approach
-      const est = Object.create(Object.getPrototypeOf(this.estimator) as object) as typeof this.estimator;
+      const est = Object.create(
+        Object.getPrototypeOf(this.estimator) as object,
+      ) as typeof this.estimator;
       Object.assign(est, JSON.parse(JSON.stringify(this.estimator)));
       est.fit(X, Y[k] as Int32Array);
       this.estimators_.push(est);
@@ -36,8 +38,9 @@ export class MultiOutputClassifier {
   }
 
   predict(X: Float64Array[]): Int32Array[] {
-    if (!this.estimators_) throw new NotFittedError("MultiOutputClassifier is not fitted.");
-    return this.estimators_.map(est => est.predict(X));
+    if (!this.estimators_)
+      throw new NotFittedError("MultiOutputClassifier is not fitted.");
+    return this.estimators_.map((est) => est.predict(X));
   }
 
   score(X: Float64Array[], Y: Int32Array[]): number {
@@ -76,7 +79,9 @@ export class MultiOutputRegressor {
     const nOutputs = Y.length;
     this.estimators_ = [];
     for (let k = 0; k < nOutputs; k++) {
-      const est = Object.create(Object.getPrototypeOf(this.estimator) as object) as typeof this.estimator;
+      const est = Object.create(
+        Object.getPrototypeOf(this.estimator) as object,
+      ) as typeof this.estimator;
       Object.assign(est, JSON.parse(JSON.stringify(this.estimator)));
       est.fit(X, Y[k] as Float64Array);
       this.estimators_.push(est);
@@ -85,8 +90,9 @@ export class MultiOutputRegressor {
   }
 
   predict(X: Float64Array[]): Float64Array[] {
-    if (!this.estimators_) throw new NotFittedError("MultiOutputRegressor is not fitted.");
-    return this.estimators_.map(est => est.predict(X));
+    if (!this.estimators_)
+      throw new NotFittedError("MultiOutputRegressor is not fitted.");
+    return this.estimators_.map((est) => est.predict(X));
   }
 
   score(X: Float64Array[], Y: Float64Array[]): number {
@@ -96,7 +102,8 @@ export class MultiOutputRegressor {
       const yk = Y[k] as Float64Array;
       const pk = preds[k] as Float64Array;
       const n = yk.length;
-      let ssRes = 0; let ssTot = 0;
+      let ssRes = 0;
+      let ssTot = 0;
       let mean = 0;
       for (let i = 0; i < n; i++) mean += yk[i] ?? 0;
       mean /= n;
@@ -129,16 +136,21 @@ export class ClassifierChain {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
 
-    this.order_ = this.order === "random"
-      ? Array.from({ length: nOutputs }, (_, i) => i).sort(() => Math.random() - 0.5)
-      : (this.order ?? Array.from({ length: nOutputs }, (_, i) => i));
+    this.order_ =
+      this.order === "random"
+        ? Array.from({ length: nOutputs }, (_, i) => i).sort(
+            () => Math.random() - 0.5,
+          )
+        : (this.order ?? Array.from({ length: nOutputs }, (_, i) => i));
 
     this.estimators_ = [];
-    let augX: Float64Array[] = X.map(xi => new Float64Array(xi));
+    let augX: Float64Array[] = X.map((xi) => new Float64Array(xi));
 
     for (let idx = 0; idx < nOutputs; idx++) {
       const k = this.order_[idx] ?? idx;
-      const est = Object.create(Object.getPrototypeOf(this.estimator) as object) as typeof this.estimator;
+      const est = Object.create(
+        Object.getPrototypeOf(this.estimator) as object,
+      ) as typeof this.estimator;
       Object.assign(est, JSON.parse(JSON.stringify(this.estimator)));
       est.fit(augX, Y[k] as Int32Array);
       this.estimators_.push(est);
@@ -156,14 +168,20 @@ export class ClassifierChain {
   }
 
   predict(X: Float64Array[]): Int32Array[] {
-    if (!this.estimators_ || !this.order_) throw new NotFittedError("ClassifierChain is not fitted.");
+    if (!this.estimators_ || !this.order_)
+      throw new NotFittedError("ClassifierChain is not fitted.");
     const nOutputs = this.estimators_.length;
-    const results: Int32Array[] = Array.from({ length: nOutputs }, () => new Int32Array(X.length));
-    let augX: Float64Array[] = X.map(xi => new Float64Array(xi));
+    const results: Int32Array[] = Array.from(
+      { length: nOutputs },
+      () => new Int32Array(X.length),
+    );
+    let augX: Float64Array[] = X.map((xi) => new Float64Array(xi));
 
     for (let idx = 0; idx < nOutputs; idx++) {
       const k = this.order_[idx] ?? idx;
-      const preds = (this.estimators_[idx] as typeof this.estimator).predict(augX);
+      const preds = (this.estimators_[idx] as typeof this.estimator).predict(
+        augX,
+      );
       results[k] = preds;
       augX = augX.map((xi, i) => {
         const newXi = new Float64Array(xi.length + 1);

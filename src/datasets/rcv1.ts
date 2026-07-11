@@ -35,8 +35,16 @@ export interface TextDataset {
  */
 export function buildTfIdf(
   documents: string[][],
-  options: { maxFeatures?: number; sublinearTf?: boolean; smoothIdf?: boolean } = {}
-): { matrix: SparseMatrix; vocabulary: Map<string, number>; idf: Float64Array } {
+  options: {
+    maxFeatures?: number;
+    sublinearTf?: boolean;
+    smoothIdf?: boolean;
+  } = {},
+): {
+  matrix: SparseMatrix;
+  vocabulary: Map<string, number>;
+  idf: Float64Array;
+} {
   const { maxFeatures, sublinearTf = false, smoothIdf = true } = options;
   const nDocs = documents.length;
 
@@ -45,7 +53,10 @@ export function buildTfIdf(
   for (const doc of documents) {
     const seen = new Set<string>();
     for (const term of doc) {
-      if (!seen.has(term)) { df.set(term, (df.get(term) ?? 0) + 1); seen.add(term); }
+      if (!seen.has(term)) {
+        df.set(term, (df.get(term) ?? 0) + 1);
+        seen.add(term);
+      }
     }
   }
 
@@ -59,7 +70,8 @@ export function buildTfIdf(
   const idf = new Float64Array(nTerms);
   for (const [term, idx] of termToIdx) {
     const dfi = df.get(term) ?? 0;
-    idf[idx] = Math.log(((smoothIdf ? 1 : 0) + nDocs) / ((smoothIdf ? 1 : 0) + dfi)) + 1;
+    idf[idx] =
+      Math.log(((smoothIdf ? 1 : 0) + nDocs) / ((smoothIdf ? 1 : 0) + dfi)) + 1;
   }
 
   // Build CSR TF-IDF matrix
@@ -78,7 +90,10 @@ export function buildTfIdf(
     for (const [idx, count] of entries) {
       const tfVal = sublinearTf ? 1 + Math.log(count) : count / docLen;
       const val = tfVal * (idf[idx] ?? 0);
-      if (val !== 0) { dataArr.push(val); indicesArr.push(idx); }
+      if (val !== 0) {
+        dataArr.push(val);
+        indicesArr.push(idx);
+      }
     }
     indptrArr.push(dataArr.length);
   }
@@ -97,13 +112,20 @@ export function buildTfIdf(
  * Generate a synthetic sparse text dataset for testing.
  * Returns documents drawn from `nCategories` topics with `nFeatures` vocabulary.
  */
-export function makeSparseTextDataset(options: {
-  nSamples?: number;
-  nFeatures?: number;
-  nCategories?: number;
-  avgTermsPerDoc?: number;
-  randomState?: number;
-} = {}): { X: SparseMatrix; y: Int32Array; featureNames: string[]; categoryNames: string[] } {
+export function makeSparseTextDataset(
+  options: {
+    nSamples?: number;
+    nFeatures?: number;
+    nCategories?: number;
+    avgTermsPerDoc?: number;
+    randomState?: number;
+  } = {},
+): {
+  X: SparseMatrix;
+  y: Int32Array;
+  featureNames: string[];
+  categoryNames: string[];
+} {
   const {
     nSamples = 200,
     nFeatures = 500,
@@ -121,7 +143,10 @@ export function makeSparseTextDataset(options: {
   };
 
   const featureNames = Array.from({ length: nFeatures }, (_, i) => `word_${i}`);
-  const categoryNames = Array.from({ length: nCategories }, (_, i) => `category_${i}`);
+  const categoryNames = Array.from(
+    { length: nCategories },
+    (_, i) => `category_${i}`,
+  );
 
   const data: number[] = [];
   const indices: number[] = [];
@@ -136,12 +161,15 @@ export function makeSparseTextDataset(options: {
     for (let t = 0; t < nTerms; t++) {
       // Category-biased term selection
       const bias = rng() < 0.3 ? cat * Math.floor(nFeatures / nCategories) : 0;
-      const termIdx = (Math.floor(rng() * Math.floor(nFeatures / nCategories)) + bias) % nFeatures;
+      const termIdx =
+        (Math.floor(rng() * Math.floor(nFeatures / nCategories)) + bias) %
+        nFeatures;
       tfMap.set(termIdx, (tfMap.get(termIdx) ?? 0) + 1);
     }
     const entries = [...tfMap.entries()].sort((a, b) => a[0] - b[0]);
     for (const [idx, count] of entries) {
-      data.push(count); indices.push(idx);
+      data.push(count);
+      indices.push(idx);
     }
     indptr.push(data.length);
   }

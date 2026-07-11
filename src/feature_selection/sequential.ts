@@ -14,7 +14,11 @@ export type SFSEstimator = {
 export interface SequentialFeatureSelectorOptions {
   nFeaturesToSelect?: number | "auto";
   direction?: "forward" | "backward";
-  scoring?: (est: SFSEstimator, X: Float64Array[], y: Float64Array | Int32Array) => number;
+  scoring?: (
+    est: SFSEstimator,
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ) => number;
   cv?: number;
   tol?: number | null;
 }
@@ -52,8 +56,12 @@ function cvScore(
         trainY.push(y[i] ?? 0);
       }
     }
-    const yTrain = y instanceof Int32Array ? new Int32Array(trainY) : new Float64Array(trainY);
-    const yTest = y instanceof Int32Array ? new Int32Array(testY) : new Float64Array(testY);
+    const yTrain =
+      y instanceof Int32Array
+        ? new Int32Array(trainY)
+        : new Float64Array(trainY);
+    const yTest =
+      y instanceof Int32Array ? new Int32Array(testY) : new Float64Array(testY);
     estimator.fit(trainX, yTrain);
     totalScore += estimator.score(testX, yTest);
   }
@@ -70,7 +78,10 @@ export class SequentialFeatureSelector extends BaseEstimator {
   supportMask_: boolean[] | null = null;
   nFeaturesIn_: number | null = null;
 
-  constructor(estimator: SFSEstimator, opts: SequentialFeatureSelectorOptions = {}) {
+  constructor(
+    estimator: SFSEstimator,
+    opts: SequentialFeatureSelectorOptions = {},
+  ) {
     super();
     this.estimator = estimator;
     this.nFeaturesToSelect = opts.nFeaturesToSelect ?? "auto";
@@ -83,19 +94,23 @@ export class SequentialFeatureSelector extends BaseEstimator {
     const nFeatures = X[0]?.length ?? 0;
     this.nFeaturesIn_ = nFeatures;
 
-    const target = this.nFeaturesToSelect === "auto"
-      ? Math.floor(nFeatures / 2)
-      : this.nFeaturesToSelect;
+    const target =
+      this.nFeaturesToSelect === "auto"
+        ? Math.floor(nFeatures / 2)
+        : this.nFeaturesToSelect;
 
     const selected: Set<number> = new Set();
-    const remaining: Set<number> = new Set(Array.from({ length: nFeatures }, (_, i) => i));
+    const remaining: Set<number> = new Set(
+      Array.from({ length: nFeatures }, (_, i) => i),
+    );
 
     if (this.direction === "backward") {
       for (let i = 0; i < nFeatures; i++) selected.add(i);
       remaining.clear();
     }
 
-    const nToSelect = this.direction === "forward" ? target : nFeatures - target;
+    const nToSelect =
+      this.direction === "forward" ? target : nFeatures - target;
 
     for (let step = 0; step < nToSelect; step++) {
       let bestScore = -Number.POSITIVE_INFINITY;
@@ -106,7 +121,10 @@ export class SequentialFeatureSelector extends BaseEstimator {
           const cols = [...selected, f].sort((a, b) => a - b);
           const Xsub = subsetCols(X, cols);
           const score = cvScore(this.estimator, Xsub, y, this.cv);
-          if (score > bestScore) { bestScore = score; bestFeature = f; }
+          if (score > bestScore) {
+            bestScore = score;
+            bestFeature = f;
+          }
         }
         if (bestFeature >= 0) {
           selected.add(bestFeature);
@@ -114,10 +132,15 @@ export class SequentialFeatureSelector extends BaseEstimator {
         }
       } else {
         for (const f of selected) {
-          const cols = [...selected].filter(x => x !== f).sort((a, b) => a - b);
+          const cols = [...selected]
+            .filter((x) => x !== f)
+            .sort((a, b) => a - b);
           const Xsub = subsetCols(X, cols);
           const score = cvScore(this.estimator, Xsub, y, this.cv);
-          if (score > bestScore) { bestScore = score; bestFeature = f; }
+          if (score > bestScore) {
+            bestScore = score;
+            bestFeature = f;
+          }
         }
         if (bestFeature >= 0) {
           selected.delete(bestFeature);
@@ -125,22 +148,31 @@ export class SequentialFeatureSelector extends BaseEstimator {
       }
     }
 
-    this.supportMask_ = Array.from({ length: nFeatures }, (_, i) => selected.has(i));
+    this.supportMask_ = Array.from({ length: nFeatures }, (_, i) =>
+      selected.has(i),
+    );
     return this;
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.supportMask_) throw new NotFittedError("SequentialFeatureSelector");
-    const cols = this.supportMask_.map((v, i) => v ? i : -1).filter(i => i >= 0);
+    if (!this.supportMask_)
+      throw new NotFittedError("SequentialFeatureSelector");
+    const cols = this.supportMask_
+      .map((v, i) => (v ? i : -1))
+      .filter((i) => i >= 0);
     return subsetCols(X, cols);
   }
 
-  fitTransform(X: Float64Array[], y: Float64Array | Int32Array): Float64Array[] {
+  fitTransform(
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 
   getSupport(): boolean[] {
-    if (!this.supportMask_) throw new NotFittedError("SequentialFeatureSelector");
+    if (!this.supportMask_)
+      throw new NotFittedError("SequentialFeatureSelector");
     return this.supportMask_;
   }
 }

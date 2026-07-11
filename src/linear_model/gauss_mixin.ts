@@ -18,7 +18,10 @@ export function bayesianPosterior(
 
   // S_N^{-1} = alpha * I + lambda * X^T X
   const sinvDiag = new Float64Array(p).fill(alpha);
-  const Sigma: Float64Array[] = Array.from({ length: p }, () => new Float64Array(p));
+  const Sigma: Float64Array[] = Array.from(
+    { length: p },
+    () => new Float64Array(p),
+  );
 
   // X^T X
   for (let i = 0; i < p; i++) {
@@ -64,7 +67,10 @@ function invertMatrix(M: Float64Array[], n: number): Float64Array[] {
     let maxV = Math.abs(aug[col]?.[col] ?? 0);
     for (let row = col + 1; row < n; row++) {
       const v = Math.abs(aug[row]?.[col] ?? 0);
-      if (v > maxV) { maxV = v; pivot = row; }
+      if (v > maxV) {
+        maxV = v;
+        pivot = row;
+      }
     }
     const tmp = aug[col]!;
     aug[col] = aug[pivot]!;
@@ -110,7 +116,8 @@ export function logMarginalLikelihood(
   for (let j = 0; j < p; j++) priorNorm += (mN[j] ?? 0) ** 2;
 
   let logDet = 0;
-  for (let i = 0; i < p; i++) logDet += Math.log(Math.abs(SN[i]?.[i] ?? 1) + 1e-10);
+  for (let i = 0; i < p; i++)
+    logDet += Math.log(Math.abs(SN[i]?.[i] ?? 1) + 1e-10);
 
   return (
     -0.5 * lambda * residNorm -

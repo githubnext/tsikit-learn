@@ -45,7 +45,9 @@ export class loguniform {
   sample(n: number, randomState?: number): Float64Array {
     const result = new Float64Array(n);
     for (let i = 0; i < n; i++) {
-      result[i] = this.rvs(randomState !== undefined ? randomState + i : undefined);
+      result[i] = this.rvs(
+        randomState !== undefined ? randomState + i : undefined,
+      );
     }
     return result;
   }
@@ -86,7 +88,9 @@ export class randint {
   sample(n: number, randomState?: number): Int32Array {
     const result = new Int32Array(n);
     for (let i = 0; i < n; i++) {
-      result[i] = this.rvs(randomState !== undefined ? randomState + i : undefined);
+      result[i] = this.rvs(
+        randomState !== undefined ? randomState + i : undefined,
+      );
     }
     return result;
   }
@@ -122,7 +126,11 @@ export function versionAtLeast(a: VersionTuple, b: VersionTuple): boolean {
 }
 
 /** Current tsikit-learn version */
-export const TSIKIT_LEARN_VERSION: VersionTuple = { major: 0, minor: 1, patch: 0 };
+export const TSIKIT_LEARN_VERSION: VersionTuple = {
+  major: 0,
+  minor: 1,
+  patch: 0,
+};
 
 /**
  * Threadpoolctl-like context for controlling parallel workers.

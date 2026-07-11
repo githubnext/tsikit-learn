@@ -6,7 +6,10 @@
 export type SelectionMode = "percentile" | "k_best" | "fpr" | "fdr" | "fwe";
 
 export interface GenericUnivariateSelectOptions {
-  scoreFunc?: (X: Float64Array[], y: Float64Array | Int32Array) => { scores: Float64Array; pvalues: Float64Array };
+  scoreFunc?: (
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ) => { scores: Float64Array; pvalues: Float64Array };
   mode?: SelectionMode;
   param?: number;
 }
@@ -15,7 +18,10 @@ export interface GenericUnivariateSelectOptions {
  * Univariate feature selector with configurable selection mode.
  */
 export class GenericUnivariateSelect {
-  private scoreFunc: (X: Float64Array[], y: Float64Array | Int32Array) => { scores: Float64Array; pvalues: Float64Array };
+  private scoreFunc: (
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ) => { scores: Float64Array; pvalues: Float64Array };
   mode: SelectionMode;
   param: number;
 
@@ -35,14 +41,15 @@ export class GenericUnivariateSelect {
     this.pvalues_ = pvalues;
     const nFeatures = scores.length;
 
-    const ranked = Array.from({ length: nFeatures }, (_, i) => i)
-      .sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
+    const ranked = Array.from({ length: nFeatures }, (_, i) => i).sort(
+      (a, b) => (scores[b] ?? 0) - (scores[a] ?? 0),
+    );
 
     this.supportMask_ = new Array(nFeatures).fill(false);
 
     switch (this.mode) {
       case "percentile": {
-        const k = Math.max(1, Math.round(this.param / 100 * nFeatures));
+        const k = Math.max(1, Math.round((this.param / 100) * nFeatures));
         for (let i = 0; i < k; i++) this.supportMask_[ranked[i]!] = true;
         break;
       }
@@ -66,34 +73,46 @@ export class GenericUnivariateSelect {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.supportMask_) throw new Error("GenericUnivariateSelect not fitted");
+    if (!this.supportMask_)
+      throw new Error("GenericUnivariateSelect not fitted");
     const selectedIdxs = this.supportMask_.reduce<number[]>((acc, v, i) => {
       if (v) acc.push(i);
       return acc;
     }, []);
-    return X.map(row => new Float64Array(selectedIdxs.map(j => row[j] ?? 0)));
+    return X.map(
+      (row) => new Float64Array(selectedIdxs.map((j) => row[j] ?? 0)),
+    );
   }
 
-  fitTransform(X: Float64Array[], y: Float64Array | Int32Array): Float64Array[] {
+  fitTransform(
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 
   getSupportMask(): boolean[] {
-    if (!this.supportMask_) throw new Error("GenericUnivariateSelect not fitted");
+    if (!this.supportMask_)
+      throw new Error("GenericUnivariateSelect not fitted");
     return [...this.supportMask_];
   }
 
   getFeatureNamesOut(inputFeatures?: string[]): string[] {
-    if (!this.supportMask_) throw new Error("GenericUnivariateSelect not fitted");
-    if (!inputFeatures) return this.supportMask_.reduce<string[]>((acc, v, i) => {
-      if (v) acc.push(`x${i}`);
-      return acc;
-    }, []);
+    if (!this.supportMask_)
+      throw new Error("GenericUnivariateSelect not fitted");
+    if (!inputFeatures)
+      return this.supportMask_.reduce<string[]>((acc, v, i) => {
+        if (v) acc.push(`x${i}`);
+        return acc;
+      }, []);
     return inputFeatures.filter((_, i) => this.supportMask_![i]);
   }
 }
 
-function defaultScoreFunc(X: Float64Array[], y: Float64Array | Int32Array): { scores: Float64Array; pvalues: Float64Array } {
+function defaultScoreFunc(
+  X: Float64Array[],
+  y: Float64Array | Int32Array,
+): { scores: Float64Array; pvalues: Float64Array } {
   const nFeatures = X[0]?.length ?? 0;
   const nSamples = X.length;
   const scores = new Float64Array(nFeatures);
@@ -104,11 +123,13 @@ function defaultScoreFunc(X: Float64Array[], y: Float64Array | Int32Array): { sc
   for (let j = 0; j < nFeatures; j++) {
     const vals = Array.from({ length: nSamples }, (_, i) => X[i]?.[j] ?? 0);
     const globalMean = vals.reduce((s, v) => s + v, 0) / nSamples;
-    const groupMeans = classes.map(cls => {
+    const groupMeans = classes.map((cls) => {
       const clsVals = vals.filter((_, i) => y[i] === cls);
       return clsVals.reduce((s, v) => s + v, 0) / (clsVals.length || 1);
     });
-    const groupCounts = classes.map(cls => vals.filter((_, i) => y[i] === cls).length);
+    const groupCounts = classes.map(
+      (cls) => vals.filter((_, i) => y[i] === cls).length,
+    );
     let ssBetween = 0;
     let ssWithin = 0;
     groupMeans.forEach((gm, ci) => {
@@ -120,7 +141,7 @@ function defaultScoreFunc(X: Float64Array[], y: Float64Array | Int32Array): { sc
     }
     const dfBetween = Math.max(classes.length - 1, 1);
     const dfWithin = Math.max(nSamples - classes.length, 1);
-    scores[j] = (ssBetween / dfBetween) / ((ssWithin / dfWithin) || 1e-10);
+    scores[j] = ssBetween / dfBetween / (ssWithin / dfWithin || 1e-10);
     pvalues[j] = Math.exp(-scores[j]! / 2);
   }
   return { scores, pvalues };
@@ -131,8 +152,11 @@ function defaultScoreFunc(X: Float64Array[], y: Float64Array | Int32Array): { sc
  */
 export class SelectPercentileExt extends GenericUnivariateSelect {
   constructor(
-    scoreFunc?: (X: Float64Array[], y: Float64Array | Int32Array) => { scores: Float64Array; pvalues: Float64Array },
-    percentile = 10
+    scoreFunc?: (
+      X: Float64Array[],
+      y: Float64Array | Int32Array,
+    ) => { scores: Float64Array; pvalues: Float64Array },
+    percentile = 10,
   ) {
     super({ scoreFunc, mode: "percentile", param: percentile });
   }

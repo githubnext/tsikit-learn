@@ -34,7 +34,9 @@ export function assertArrayEqual(
   }
   for (let i = 0; i < actual.length; i++) {
     if (actual[i] !== expected[i]) {
-      throw new Error(`Arrays differ at index ${i}: ${actual[i]} != ${expected[i]}`);
+      throw new Error(
+        `Arrays differ at index ${i}: ${actual[i]} != ${expected[i]}`,
+      );
     }
   }
 }
@@ -63,14 +65,20 @@ export function assertRaises(
   } catch (e) {
     threw = true;
     if (!(e instanceof errorClass)) {
-      throw new Error(`Expected ${errorClass.name} but got ${(e as Error).constructor.name}`);
+      throw new Error(
+        `Expected ${errorClass.name} but got ${(e as Error).constructor.name}`,
+      );
     }
     if (msgPattern !== undefined && !msgPattern.test((e as Error).message)) {
-      throw new Error(`Error message "${(e as Error).message}" does not match ${msgPattern}`);
+      throw new Error(
+        `Error message "${(e as Error).message}" does not match ${msgPattern}`,
+      );
     }
   }
   if (!threw) {
-    throw new Error(`Expected ${errorClass.name} to be raised but no error was thrown`);
+    throw new Error(
+      `Expected ${errorClass.name} to be raised but no error was thrown`,
+    );
   }
 }
 
@@ -82,7 +90,8 @@ export function createMock<T extends object>(
   const handler: ProxyHandler<object> = {
     get(target, prop) {
       if (prop === "_calls") return calls;
-      if (prop in target) return (target as Record<string | symbol, unknown>)[prop];
+      if (prop in target)
+        return (target as Record<string | symbol, unknown>)[prop];
       return (...args: unknown[]) => {
         const key = String(prop);
         if (calls[key] === undefined) calls[key] = [];
@@ -90,7 +99,9 @@ export function createMock<T extends object>(
       };
     },
   };
-  return new Proxy(defaults as object, handler) as T & { _calls: Record<string, unknown[][]> };
+  return new Proxy(defaults as object, handler) as T & {
+    _calls: Record<string, unknown[][]>;
+  };
 }
 
 /** Ignore warnings during a function call. */

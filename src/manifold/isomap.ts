@@ -80,7 +80,10 @@ export class Isomap {
     const { indices, distances } = knnGraph(X, this.nNeighbors);
 
     // Build adjacency list (undirected)
-    const adj: { j: number; d: number }[][] = Array.from({ length: n }, () => []);
+    const adj: { j: number; d: number }[][] = Array.from(
+      { length: n },
+      () => [],
+    );
     for (let i = 0; i < n; i++) {
       for (let ni = 0; ni < indices[i]!.length; ni++) {
         const j = indices[i]![ni] ?? 0;
@@ -98,9 +101,7 @@ export class Isomap {
     // MDS on geodesic distance matrix
     // Double centering
     const G2 = G.map((row) => new Float64Array(row.map((d) => -(d * d) / 2)));
-    const rowMean = G2.map(
-      (row) => row.reduce((a, b) => a + b, 0) / n,
-    );
+    const rowMean = G2.map((row) => row.reduce((a, b) => a + b, 0) / n);
     const totalMean = rowMean.reduce((a, b) => a + b, 0) / n;
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
@@ -180,7 +181,10 @@ export class LocallyLinearEmbedding {
     const { indices } = knnGraph(X, this.nNeighbors);
 
     // Compute reconstruction weights
-    const W: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+    const W: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(n),
+    );
 
     for (let i = 0; i < n; i++) {
       const nbrs = indices[i]!;

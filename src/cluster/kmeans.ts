@@ -47,7 +47,9 @@ export class KMeans {
     const centers: Float64Array[] = [];
 
     // Pick first center randomly
-    centers.push(new Float64Array(X[Math.floor(Math.random() * n)] ?? new Float64Array(p)));
+    centers.push(
+      new Float64Array(X[Math.floor(Math.random() * n)] ?? new Float64Array(p)),
+    );
 
     for (let c = 1; c < k; c++) {
       const dists = X.map((xi) => {
@@ -88,7 +90,10 @@ export class KMeans {
         let minDist = Number.POSITIVE_INFINITY;
         let minIdx = 0;
         for (let c = 0; c < centers.length; c++) {
-          const d = euclideanSq(X[i] ?? new Float64Array(p), centers[c] ?? new Float64Array(p));
+          const d = euclideanSq(
+            X[i] ?? new Float64Array(p),
+            centers[c] ?? new Float64Array(p),
+          );
           if (d < minDist) {
             minDist = d;
             minIdx = c;
@@ -98,7 +103,10 @@ export class KMeans {
       }
 
       // Update step
-      const newCenters: Float64Array[] = Array.from({ length: k }, () => new Float64Array(p));
+      const newCenters: Float64Array[] = Array.from(
+        { length: k },
+        () => new Float64Array(p),
+      );
       const counts = new Int32Array(k);
       for (let i = 0; i < n; i++) {
         const c = labels[i] ?? 0;
@@ -123,7 +131,10 @@ export class KMeans {
           const randIdx = Math.floor(Math.random() * n);
           newCenters[c] = new Float64Array(X[randIdx] ?? new Float64Array(p));
         }
-        const shift = euclideanSq(centers[c] ?? new Float64Array(p), newCenters[c] ?? new Float64Array(p));
+        const shift = euclideanSq(
+          centers[c] ?? new Float64Array(p),
+          newCenters[c] ?? new Float64Array(p),
+        );
         if (shift > maxShift) maxShift = shift;
       }
       centers = newCenters;
@@ -133,7 +144,10 @@ export class KMeans {
     // Compute inertia
     let inertia = 0;
     for (let i = 0; i < n; i++) {
-      inertia += euclideanSq(X[i] ?? new Float64Array(p), centers[labels[i] ?? 0] ?? new Float64Array(p));
+      inertia += euclideanSq(
+        X[i] ?? new Float64Array(p),
+        centers[labels[i] ?? 0] ?? new Float64Array(p),
+      );
     }
 
     return { centers, labels, inertia };

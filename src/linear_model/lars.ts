@@ -35,7 +35,7 @@ export class Lars {
     const n = X.length;
     const p = X[0]?.length ?? 0;
 
-    let xMean = new Float64Array(p);
+    const xMean = new Float64Array(p);
     let yMean = 0;
 
     if (this.fitIntercept) {
@@ -70,7 +70,8 @@ export class Lars {
       for (let j = 0; j < p; j++) {
         if (activeSet.includes(j)) continue;
         let corr = 0;
-        for (let i = 0; i < n; i++) corr += (Xc[i]![j] ?? 0) * (residual[i] ?? 0);
+        for (let i = 0; i < n; i++)
+          corr += (Xc[i]![j] ?? 0) * (residual[i] ?? 0);
         corr = Math.abs(corr) / n;
         if (corr > maxCorr) {
           maxCorr = corr;
@@ -108,7 +109,12 @@ export class Lars {
     return this;
   }
 
-  private _ols(X: Float64Array[], y: Float64Array, n: number, p: number): Float64Array {
+  private _ols(
+    X: Float64Array[],
+    y: Float64Array,
+    n: number,
+    p: number,
+  ): Float64Array {
     // Normal equations: (X'X)^-1 X'y
     const XtX = new Float64Array(p * p);
     const Xty = new Float64Array(p);
@@ -116,7 +122,8 @@ export class Lars {
       const xi = X[i]!;
       for (let j = 0; j < p; j++) {
         Xty[j]! += (xi[j] ?? 0) * (y[i] ?? 0);
-        for (let k = 0; k < p; k++) XtX[j * p + k]! += (xi[j] ?? 0) * (xi[k] ?? 0);
+        for (let k = 0; k < p; k++)
+          XtX[j * p + k]! += (xi[j] ?? 0) * (xi[k] ?? 0);
       }
     }
     // Add small ridge for stability
@@ -134,7 +141,11 @@ export class Lars {
     for (let col = 0; col < n; col++) {
       let maxRow = col;
       for (let row = col + 1; row < n; row++) {
-        if (Math.abs(M[row * (n + 1) + col] ?? 0) > Math.abs(M[maxRow * (n + 1) + col] ?? 0)) maxRow = row;
+        if (
+          Math.abs(M[row * (n + 1) + col] ?? 0) >
+          Math.abs(M[maxRow * (n + 1) + col] ?? 0)
+        )
+          maxRow = row;
       }
       for (let k = col; k <= n; k++) {
         const tmp = M[col * (n + 1) + k] ?? 0;
@@ -146,7 +157,8 @@ export class Lars {
       for (let row = 0; row < n; row++) {
         if (row === col) continue;
         const factor = (M[row * (n + 1) + col] ?? 0) / pivot;
-        for (let k = col; k <= n; k++) M[row * (n + 1) + k]! -= factor * (M[col * (n + 1) + k] ?? 0);
+        for (let k = col; k <= n; k++)
+          M[row * (n + 1) + k]! -= factor * (M[col * (n + 1) + k] ?? 0);
       }
     }
     const x = new Float64Array(n);
@@ -174,7 +186,9 @@ export class Lars {
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
     const n = y.length;
-    let ssTot = 0, ssRes = 0, yMean = 0;
+    let ssTot = 0;
+    let ssRes = 0;
+    let yMean = 0;
     for (let i = 0; i < n; i++) yMean += y[i] ?? 0;
     yMean /= n;
     for (let i = 0; i < n; i++) {
@@ -271,11 +285,16 @@ export class LarsCV {
             trainY.push(y[i] ?? 0);
           }
         }
-        const model = new LassoLars({ alpha: alphas[ai], fitIntercept: this.fitIntercept, eps: this.eps });
+        const model = new LassoLars({
+          alpha: alphas[ai],
+          fitIntercept: this.fitIntercept,
+          eps: this.eps,
+        });
         model.fit(trainX, new Float64Array(trainY));
         const preds = model.predict(testX);
         let mse = 0;
-        for (let i = 0; i < testY.length; i++) mse += ((testY[i] ?? 0) - (preds[i] ?? 0)) ** 2;
+        for (let i = 0; i < testY.length; i++)
+          mse += ((testY[i] ?? 0) - (preds[i] ?? 0)) ** 2;
         totalMse += testY.length > 0 ? mse / testY.length : 0;
       }
       msePerAlpha[ai]! = totalMse / this.cv;
@@ -289,7 +308,11 @@ export class LarsCV {
     this.cv_alphas_ = new Float64Array(alphas);
     this.mse_path_ = msePerAlpha;
 
-    const best = new LassoLars({ alpha: bestAlpha, fitIntercept: this.fitIntercept, eps: this.eps });
+    const best = new LassoLars({
+      alpha: bestAlpha,
+      fitIntercept: this.fitIntercept,
+      eps: this.eps,
+    });
     best.fit(X, y);
     this.coef_ = best.coef_;
     this.intercept_ = best.intercept_;
@@ -313,7 +336,9 @@ export class LarsCV {
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
     const n = y.length;
-    let ssTot = 0, ssRes = 0, yMean = 0;
+    let ssTot = 0;
+    let ssRes = 0;
+    let yMean = 0;
     for (let i = 0; i < n; i++) yMean += y[i] ?? 0;
     yMean /= n;
     for (let i = 0; i < n; i++) {

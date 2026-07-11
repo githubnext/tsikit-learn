@@ -35,7 +35,8 @@ function isTypedArray(
 /** Serialize a value to a JSON-safe representation */
 function serializeValue(v: unknown): unknown {
   if (v === null || v === undefined) return v;
-  if (typeof v === "number" || typeof v === "boolean" || typeof v === "string") return v;
+  if (typeof v === "number" || typeof v === "boolean" || typeof v === "string")
+    return v;
   if (isTypedArray(v)) {
     return {
       __typedArray: true,
@@ -62,21 +63,27 @@ function serializeValue(v: unknown): unknown {
 /** Deserialize a value from JSON-safe representation */
 function deserializeValue(v: unknown): unknown {
   if (v === null || v === undefined) return v;
-  if (typeof v === "number" || typeof v === "boolean" || typeof v === "string") return v;
+  if (typeof v === "number" || typeof v === "boolean" || typeof v === "string")
+    return v;
   if (Array.isArray(v)) {
     return v.map(deserializeValue);
   }
   if (typeof v === "object") {
     const obj = v as Record<string, unknown>;
-    if (obj["__typedArray"] === true) {
-      const type = obj["type"] as string;
-      const data = obj["data"] as number[];
+    if (obj.__typedArray === true) {
+      const type = obj.type as string;
+      const data = obj.data as number[];
       switch (type) {
-        case "Float64Array": return new Float64Array(data);
-        case "Float32Array": return new Float32Array(data);
-        case "Int32Array": return new Int32Array(data);
-        case "Uint8Array": return new Uint8Array(data);
-        default: return new Float64Array(data);
+        case "Float64Array":
+          return new Float64Array(data);
+        case "Float32Array":
+          return new Float32Array(data);
+        case "Int32Array":
+          return new Int32Array(data);
+        case "Uint8Array":
+          return new Uint8Array(data);
+        default:
+          return new Float64Array(data);
       }
     }
     const out: Record<string, unknown> = {};
@@ -97,7 +104,9 @@ export function dumpEstimator(estimator: BaseEstimator): SerializedModel {
   const fittedAttributes: Record<string, unknown> = {};
 
   // Collect fitted attributes (those ending with _)
-  for (const key of Object.keys(estimator as unknown as Record<string, unknown>)) {
+  for (const key of Object.keys(
+    estimator as unknown as Record<string, unknown>,
+  )) {
     if (key.endsWith("_") && !key.endsWith("__")) {
       fittedAttributes[key] = serializeValue(
         (estimator as unknown as Record<string, unknown>)[key],
@@ -142,7 +151,8 @@ export function loadEstimator<T extends BaseEstimator>(
 
   // Restore fitted attributes
   for (const [key, val] of Object.entries(serialized.fittedAttributes)) {
-    (estimator as unknown as Record<string, unknown>)[key] = deserializeValue(val);
+    (estimator as unknown as Record<string, unknown>)[key] =
+      deserializeValue(val);
   }
 
   return estimator;
@@ -182,18 +192,17 @@ export class Memory {
     fn: (...args: TArgs) => TResult,
     _options: { ignore?: string[] } = {},
   ): (...args: TArgs) => TResult {
-    const self = this;
-    return function (...args: TArgs): TResult {
+    return (...args: TArgs): TResult => {
       const key = JSON.stringify(args, (_k, v: unknown) => {
         if (isTypedArray(v)) return Array.from(v);
         return v;
       });
-      if (self.cache.has(key)) {
-        if (self.verbose > 0) console.log(`[Memory] Cache hit for ${fn.name}`);
-        return self.cache.get(key) as TResult;
+      if (this.cache.has(key)) {
+        if (this.verbose > 0) console.log(`[Memory] Cache hit for ${fn.name}`);
+        return this.cache.get(key) as TResult;
       }
       const result = fn(...args);
-      self.cache.set(key, result);
+      this.cache.set(key, result);
       return result;
     };
   }
@@ -241,5 +250,5 @@ export function runTasks<T>(
   tasks: DelayedResult<T>[],
   _options: { nJobs?: number; verbose?: number } = {},
 ): T[] {
-  return tasks.map(t => t.fn());
+  return tasks.map((t) => t.fn());
 }

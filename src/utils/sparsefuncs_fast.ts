@@ -79,7 +79,7 @@ export function csrColumnVariances(csr: CSRMatrix): Float64Array {
   for (let i = 0; i < csr.data.length; i++) {
     const j = csr.indices[i]!;
     const v = (csr.data[i] ?? 0) - (means[j] ?? 0);
-    vars[j] = (vars[j] ?? 0) + v * v / nRows;
+    vars[j] = (vars[j] ?? 0) + (v * v) / nRows;
   }
 
   // Add contribution from zero elements (x - mean)^2
@@ -89,7 +89,7 @@ export function csrColumnVariances(csr: CSRMatrix): Float64Array {
   }
   for (let j = 0; j < nCols; j++) {
     const nZero = nRows - (nnzPerCol[j] ?? 0);
-    vars[j] = (vars[j] ?? 0) + nZero * (means[j] ?? 0) ** 2 / nRows;
+    vars[j] = (vars[j] ?? 0) + (nZero * (means[j] ?? 0) ** 2) / nRows;
   }
 
   return vars;

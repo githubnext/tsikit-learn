@@ -37,7 +37,10 @@ function buildBallNode(data: Float64Array[], indices: Int32Array): TreeNode {
   const n = indices.length;
 
   const centroid = new Float64Array(p);
-  for (const idx of indices) for (let j = 0; j < p; j++) centroid[j] = (centroid[j] ?? 0) + ((data[idx] ?? new Float64Array(0))[j] ?? 0);
+  for (const idx of indices)
+    for (let j = 0; j < p; j++)
+      centroid[j] =
+        (centroid[j] ?? 0) + ((data[idx] ?? new Float64Array(0))[j] ?? 0);
   for (let j = 0; j < p; j++) centroid[j] = (centroid[j] ?? 0) / n;
 
   let radius = 0;
@@ -54,16 +57,24 @@ function buildBallNode(data: Float64Array[], indices: Int32Array): TreeNode {
   let bestDim = 0;
   let bestSpread = -1;
   for (let j = 0; j < p; j++) {
-    let lo = Number.POSITIVE_INFINITY, hi = Number.NEGATIVE_INFINITY;
+    let lo = Number.POSITIVE_INFINITY;
+    let hi = Number.NEGATIVE_INFINITY;
     for (const idx of indices) {
       const v = (data[idx] ?? new Float64Array(0))[j] ?? 0;
       if (v < lo) lo = v;
       if (v > hi) hi = v;
     }
-    if (hi - lo > bestSpread) { bestSpread = hi - lo; bestDim = j; }
+    if (hi - lo > bestSpread) {
+      bestSpread = hi - lo;
+      bestDim = j;
+    }
   }
 
-  const sortedIndices = Array.from(indices).sort((a, b) => ((data[a] ?? new Float64Array(0))[bestDim] ?? 0) - ((data[b] ?? new Float64Array(0))[bestDim] ?? 0));
+  const sortedIndices = Array.from(indices).sort(
+    (a, b) =>
+      ((data[a] ?? new Float64Array(0))[bestDim] ?? 0) -
+      ((data[b] ?? new Float64Array(0))[bestDim] ?? 0),
+  );
   const mid = Math.floor(sortedIndices.length / 2);
   const leftIdx = new Int32Array(sortedIndices.slice(0, mid));
   const rightIdx = new Int32Array(sortedIndices.slice(mid));
@@ -77,7 +88,13 @@ function buildBallNode(data: Float64Array[], indices: Int32Array): TreeNode {
   };
 }
 
-function queryBallNode(node: TreeNode, q: Float64Array, k: number, metricFn: MetricFn, heap: Array<[number, number]>): void {
+function queryBallNode(
+  node: TreeNode,
+  q: Float64Array,
+  k: number,
+  metricFn: MetricFn,
+  heap: Array<[number, number]>,
+): void {
   const distToCenter = metricFn(q, node.centroid);
 
   if (heap.length >= k) {
@@ -87,7 +104,11 @@ function queryBallNode(node: TreeNode, q: Float64Array, k: number, metricFn: Met
 
   if (!node.left && !node.right) {
     for (const idx of node.indices) {
-      const d = metricFn(q, (node as unknown as { data: Float64Array[] }).data?.[idx] ?? new Float64Array(0));
+      const d = metricFn(
+        q,
+        (node as unknown as { data: Float64Array[] }).data?.[idx] ??
+          new Float64Array(0),
+      );
       if (heap.length < k || d < heap[0]![0]) {
         heap.push([d, idx]);
         heap.sort((a, b) => b[0] - a[0]);
@@ -140,8 +161,12 @@ export class BallTree {
     if (node.right) this.attachData(node.right, data);
   }
 
-  query(X: Float64Array[], kNeighbors: number = 1): [Float64Array[], Int32Array[]] {
-    if (!this.root_ || !this.data_) throw new NotFittedError("BallTree is not fitted yet.");
+  query(
+    X: Float64Array[],
+    kNeighbors: number = 1,
+  ): [Float64Array[], Int32Array[]] {
+    if (!this.root_ || !this.data_)
+      throw new NotFittedError("BallTree is not fitted yet.");
     const distances: Float64Array[] = [];
     const indices: Int32Array[] = [];
 
@@ -149,7 +174,10 @@ export class BallTree {
       const heap: Array<[number, number]> = [];
       queryBallNode(this.root_, xi, kNeighbors, this.metricFn_, heap);
       // Brute force fallback for leaf nodes with attached data
-      const bruteDists: Array<[number, number]> = this.data_.map((d, i) => [this.metricFn_(xi, d), i]);
+      const bruteDists: Array<[number, number]> = this.data_.map((d, i) => [
+        this.metricFn_(xi, d),
+        i,
+      ]);
       bruteDists.sort((a, b) => a[0] - b[0]);
       const knn = bruteDists.slice(0, kNeighbors);
       distances.push(new Float64Array(knn.map((x) => x[0])));
@@ -172,12 +200,20 @@ interface KDNode {
   right: KDNode | null;
 }
 
-function buildKD(data: Float64Array[], indices: number[], depth: number): KDNode | null {
+function buildKD(
+  data: Float64Array[],
+  indices: number[],
+  depth: number,
+): KDNode | null {
   if (indices.length === 0) return null;
   const p = (data[0] ?? new Float64Array(0)).length;
   const dim = depth % p;
 
-  indices.sort((a, b) => ((data[a] ?? new Float64Array(0))[dim] ?? 0) - ((data[b] ?? new Float64Array(0))[dim] ?? 0));
+  indices.sort(
+    (a, b) =>
+      ((data[a] ?? new Float64Array(0))[dim] ?? 0) -
+      ((data[b] ?? new Float64Array(0))[dim] ?? 0),
+  );
   const mid = Math.floor(indices.length / 2);
   return {
     idx: indices[mid]!,
@@ -187,7 +223,14 @@ function buildKD(data: Float64Array[], indices: number[], depth: number): KDNode
   };
 }
 
-function queryKD(node: KDNode | null, data: Float64Array[], q: Float64Array, k: number, metricFn: MetricFn, heap: Array<[number, number]>): void {
+function queryKD(
+  node: KDNode | null,
+  data: Float64Array[],
+  q: Float64Array,
+  k: number,
+  metricFn: MetricFn,
+  heap: Array<[number, number]>,
+): void {
   if (!node) return;
   const d = metricFn(q, data[node.idx] ?? new Float64Array(0));
   if (heap.length < k) {
@@ -198,7 +241,9 @@ function queryKD(node: KDNode | null, data: Float64Array[], q: Float64Array, k: 
     heap.sort((a, b) => b[0] - a[0]);
   }
 
-  const diff = (q[node.dim] ?? 0) - ((data[node.idx] ?? new Float64Array(0))[node.dim] ?? 0);
+  const diff =
+    (q[node.dim] ?? 0) -
+    ((data[node.idx] ?? new Float64Array(0))[node.dim] ?? 0);
   const near = diff <= 0 ? node.left : node.right;
   const far = diff <= 0 ? node.right : node.left;
 
@@ -233,8 +278,12 @@ export class KDTree {
     return this;
   }
 
-  query(X: Float64Array[], kNeighbors: number = 1): [Float64Array[], Int32Array[]] {
-    if (!this.root_ || !this.data_) throw new NotFittedError("KDTree is not fitted yet.");
+  query(
+    X: Float64Array[],
+    kNeighbors: number = 1,
+  ): [Float64Array[], Int32Array[]] {
+    if (!this.root_ || !this.data_)
+      throw new NotFittedError("KDTree is not fitted yet.");
     const distances: Float64Array[] = [];
     const indices: Int32Array[] = [];
 

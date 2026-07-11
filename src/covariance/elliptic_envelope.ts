@@ -55,7 +55,8 @@ function logDet(M: Float64Array[]): number {
     }
   }
   let logd = 0;
-  for (let i = 0; i < p; i++) logd += Math.log(Math.max(L[i]![i] ?? 1e-12, 1e-12));
+  for (let i = 0; i < p; i++)
+    logd += Math.log(Math.max(L[i]![i] ?? 1e-12, 1e-12));
   return 2 * logd;
 }
 
@@ -156,14 +157,18 @@ export class EllipticEnvelope {
   fit(X: Float64Array[]): this {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
-    const h = this.supportFraction !== null
-      ? Math.floor(this.supportFraction * n)
-      : Math.floor((n + p + 1) / 2);
+    const h =
+      this.supportFraction !== null
+        ? Math.floor(this.supportFraction * n)
+        : Math.floor((n + p + 1) / 2);
 
     // Fast MCD approximation: random subsample + C-step iterations
     let bestDet = Number.POSITIVE_INFINITY;
     let bestMean = new Float64Array(p);
-    let bestCov: Float64Array[] = Array.from({ length: p }, () => new Float64Array(p));
+    let bestCov: Float64Array[] = Array.from(
+      { length: p },
+      () => new Float64Array(p),
+    );
 
     const rng = this.randomState;
     const nTrials = 10;
@@ -172,12 +177,16 @@ export class EllipticEnvelope {
       const indices = Array.from({ length: n }, (_, i) => i);
       // Pseudo-random shuffle using simple LCG
       for (let i = n - 1; i > 0; i--) {
-        const j = Math.abs((rng * 1664525 + 1013904223 + i * trial * 31337) % (i + 1));
+        const j = Math.abs(
+          (rng * 1664525 + 1013904223 + i * trial * 31337) % (i + 1),
+        );
         const tmp = indices[i]!;
         indices[i] = indices[j]!;
         indices[j] = tmp;
       }
-      const subset = indices.slice(0, h).map((i) => X[i] ?? new Float64Array(p));
+      const subset = indices
+        .slice(0, h)
+        .map((i) => X[i] ?? new Float64Array(p));
 
       // C-step iterations
       let curSubset = subset;
@@ -190,7 +199,9 @@ export class EllipticEnvelope {
         const sortedIdx = Array.from({ length: n }, (_, i) => i).sort(
           (a, b) => (dists[a] ?? 0) - (dists[b] ?? 0),
         );
-        curSubset = sortedIdx.slice(0, h).map((i) => X[i] ?? new Float64Array(p));
+        curSubset = sortedIdx
+          .slice(0, h)
+          .map((i) => X[i] ?? new Float64Array(p));
       }
 
       const mean = colMeans(curSubset);

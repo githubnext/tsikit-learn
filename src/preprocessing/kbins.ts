@@ -113,7 +113,7 @@ export class KBinsDiscretizer {
         const edges = this.binEdges_![f] as Float64Array;
         const binIdx = this.binFeature(xi[f] ?? 0, edges);
         row[offset + binIdx]! = 1;
-        offset += (this.nBins_![f] ?? 0);
+        offset += this.nBins_![f] ?? 0;
       }
       return row;
     });

@@ -16,7 +16,7 @@ export function johnsonLindenstraussMinDim(
   eps: number = 0.1,
 ): number {
   if (eps <= 0 || eps >= 1) throw new RangeError("eps must be in (0, 1)");
-  const denominator = (eps ** 2 / 2) - (eps ** 3 / 3);
+  const denominator = eps ** 2 / 2 - eps ** 3 / 3;
   return Math.ceil((4 * Math.log(nSamples)) / denominator);
 }
 
@@ -61,10 +61,13 @@ function sparseMatrix(
   });
 }
 
-function project(X: Float64Array[], components: Float64Array[]): Float64Array[] {
+function project(
+  X: Float64Array[],
+  components: Float64Array[],
+): Float64Array[] {
   // X: n x nFeatures, components: nFeatures x nComponents -> n x nComponents
   const nComponents = (components[0] ?? new Float64Array(0)).length;
-  return X.map(xi => {
+  return X.map((xi) => {
     const out = new Float64Array(nComponents);
     for (let f = 0; f < xi.length; f++) {
       const comp = components[f] ?? new Float64Array(nComponents);
