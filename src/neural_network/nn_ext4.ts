@@ -114,13 +114,13 @@ export class EchoStateNetwork {
     const Xty = new Float64Array(cols);
     for (let i = 0; i < nSamples; i++) {
       for (let j = 0; j < cols; j++) {
-        Xty[j] += (extended[i]?.[j] ?? 0) * (y[i] ?? 0);
+        Xty[j] = (Xty[j] ?? 0) + (extended[i]?.[j] ?? 0) * (y[i] ?? 0);
         for (let k = 0; k < cols; k++) {
-          (XtX[j] as Float64Array)[k] += (extended[i]?.[j] ?? 0) * (extended[i]?.[k] ?? 0);
+          (XtX[j] as Float64Array)[k] = ((XtX[j] as Float64Array)[k] ?? 0) + (extended[i]?.[j] ?? 0) * (extended[i]?.[k] ?? 0);
         }
       }
     }
-    for (let j = 0; j < cols - 1; j++) (XtX[j] as Float64Array)[j] += this.alpha;
+    for (let j = 0; j < cols - 1; j++) (XtX[j] as Float64Array)[j] = ((XtX[j] as Float64Array)[j] ?? 0) + this.alpha;
 
     const w = solveESN(XtX, Xty, cols);
     this.W_out = [w];
@@ -150,12 +150,12 @@ export class EchoStateNetwork {
 function _powerIteration(A: Float64Array[], n: number, nIter: number, rand: () => number): number {
   let v = Float64Array.from({ length: n }, () => rand() - 0.5);
   let norm = Math.sqrt(v.reduce((s, x) => s + x * x, 0)) || 1;
-  for (let i = 0; i < n; i++) v[i] /= norm;
+  for (let i = 0; i < n; i++) v[i] = (v[i] ?? 0) / norm;
   let lambda = 1;
   for (let iter = 0; iter < nIter; iter++) {
     const Av = new Float64Array(n);
     for (let i = 0; i < n; i++) {
-      for (let j = 0; j < n; j++) Av[i] += (A[i]?.[j] ?? 0) * (v[j] ?? 0);
+      for (let j = 0; j < n; j++) Av[i] = (Av[i] ?? 0) + (A[i]?.[j] ?? 0) * (v[j] ?? 0);
     }
     norm = Math.sqrt(Av.reduce((s, x) => s + x * x, 0)) || 1;
     lambda = norm;
@@ -172,7 +172,7 @@ function solveESN(A: Float64Array[], b: Float64Array, n: number): Float64Array {
     for (let r = c + 1; r < n; r++) {
       if (Math.abs((M[r] as Float64Array)[c] ?? 0) > Math.abs((M[maxR] as Float64Array)[c] ?? 0)) maxR = r;
     }
-    const t = M[c]; M[c] = M[maxR] as Float64Array; M[maxR] = t as Float64Array;
+    const t = M[c]; M[c] = M[maxR] as Float64Array<ArrayBuffer>; M[maxR] = t as Float64Array<ArrayBuffer>;
     const tr = rhs[c] ?? 0; rhs[c] = rhs[maxR] ?? 0; rhs[maxR] = tr;
     const piv = (M[c] as Float64Array)[c] ?? 1e-12;
     for (let r = c + 1; r < n; r++) {

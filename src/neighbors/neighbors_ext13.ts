@@ -143,7 +143,4 @@ export class ANNClassifier {
       return [...votes.entries()].reduce((best, [c, v]) => v > best.v ? { c, v } : best, { c: 0, v: -1 }).c;
     }));
   }
-
-  void;
-  get nTrees(): number { return this.nTrees; }
 }

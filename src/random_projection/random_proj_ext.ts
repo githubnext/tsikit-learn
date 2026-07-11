@@ -32,7 +32,7 @@ export class GaussianRandomProjectionRP {
     this.nFeaturesIn_ = d;
     this.nComponentsActual_ =
       this.nComponents === "auto"
-        ? Math.min(johnsonLindenstraussMinDim(n, this.eps), d)
+        ? Math.min(johnsonLindenstraussMinDimRP(n, this.eps), d)
         : (this.nComponents as number);
 
     const k = this.nComponentsActual_;
@@ -88,7 +88,7 @@ export class SparseRandomProjectionRP {
     this.nFeaturesIn_ = d;
     this.nComponentsActual_ =
       this.nComponents === "auto"
-        ? Math.min(johnsonLindenstraussMinDim(n, this.eps), d)
+        ? Math.min(johnsonLindenstraussMinDimRP(n, this.eps), d)
         : (this.nComponents as number);
 
     const dens = this.density === "auto" ? 1 / Math.sqrt(d) : (this.density as number);

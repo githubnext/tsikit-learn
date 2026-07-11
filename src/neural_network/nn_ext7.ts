@@ -81,7 +81,7 @@ export class GlobalAveragePooling1D {
     const features = input[0]?.length ?? 0;
     const out = new Float64Array(features);
     for (const vec of input) {
-      for (let j = 0; j < features; j++) out[j] += (vec[j] ?? 0) / input.length;
+      for (let j = 0; j < features; j++) out[j] = (out[j] ?? 0) + (vec[j] ?? 0) / input.length;
     }
     return out;
   }
@@ -139,7 +139,7 @@ export class ConvolutionalMLP {
     for (let j = 0; j < this.nOutputs; j++) out[j] = this.denseBias?.[j] ?? 0;
     for (let i = 0; i < pooled.length; i++) {
       for (let j = 0; j < this.nOutputs; j++) {
-        out[j] += (pooled[i] ?? 0) * (this.denseWeights?.[i]?.[j] ?? 0);
+        out[j] = (out[j] ?? 0) + (pooled[i] ?? 0) * (this.denseWeights?.[i]?.[j] ?? 0);
       }
     }
     return out;

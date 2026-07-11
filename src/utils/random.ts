@@ -51,8 +51,8 @@ export class RandomState {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = this.randint(0, i + 1);
       const tmp = arr[i]!;
-      arr[i]! = arr[j];
-      arr[j]! = tmp;
+      arr[i] = arr[j]!;
+      arr[j] = tmp;
     }
     return arr;
   }
@@ -62,8 +62,8 @@ export class RandomState {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = this.randint(0, i + 1);
       const tmp = arr[i]!;
-      arr[i]! = arr[j];
-      arr[j]! = tmp;
+      arr[i] = arr[j]!;
+      arr[j] = tmp;
     }
   }
 
@@ -79,8 +79,8 @@ export class RandomState {
     for (let i = 0; i < nSamples; i++) {
       const j = i + this.randint(0, nTotal - i);
       const tmp = pool[i]!;
-      pool[i]! = pool[j];
-      pool[j]! = tmp;
+      pool[i] = pool[j]!;
+      pool[j] = tmp;
     }
     return pool.slice(0, nSamples);
   }

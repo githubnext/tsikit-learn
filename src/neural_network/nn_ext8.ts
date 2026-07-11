@@ -123,7 +123,7 @@ export class TransformerMLP extends BaseEstimator {
   learning_rate: number;
   max_iter: number;
   n_attention_heads: number;
-  weights_: Float64Array[][] = [];
+  weights_: Float64Array[] = [];
   biases_: Float64Array[] = [];
 
   constructor(params: TransformerMLPParams = {}) {

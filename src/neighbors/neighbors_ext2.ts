@@ -31,7 +31,7 @@ export class NCA {
       // Compute transformed X
       const Xt = X.map((xi) => {
         const row = new Float64Array(k);
-        for (let l = 0; l < k; l++) for (let j = 0; j < d; j++) row[l] += (A[l]![j] ?? 0) * (xi[j] ?? 0);
+        for (let l = 0; l < k; l++) for (let j = 0; j < d; j++) row[l] = (row[l] ?? 0) + (A[l]![j] ?? 0) * (xi[j] ?? 0);
         return row;
       });
 
@@ -95,7 +95,7 @@ export class NCA {
     const d = A[0]?.length ?? 0;
     return X.map((xi) => {
       const row = new Float64Array(k);
-      for (let l = 0; l < k; l++) for (let j = 0; j < d; j++) row[l] += (A[l]![j] ?? 0) * (xi[j] ?? 0);
+      for (let l = 0; l < k; l++) for (let j = 0; j < d; j++) row[l] = (row[l] ?? 0) + (A[l]![j] ?? 0) * (xi[j] ?? 0);
       return row;
     });
   }
@@ -162,7 +162,7 @@ export class RadiusNeighborsClassifierExt {
           const label = this.y_![j] ?? 0;
           const ci = classIndex.get(label) ?? 0;
           const w = this.weights === "distance" ? 1 / (Math.sqrt(d2) + 1e-10) : 1;
-          proba[ci] += w;
+          proba[ci] = (proba[ci] ?? 0) + w;
           total += w;
         }
       }
