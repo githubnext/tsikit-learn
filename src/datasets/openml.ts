@@ -57,12 +57,14 @@ export async function fetchOpenML(
     throw new Error(`fetchOpenML: HTTP ${response.status} for ${url}`);
   }
 
-  const json = (await response.json()) as Record<string, unknown>;
+  const json = (await response.json()) as {
+    data?: { dataset?: { did?: number }[] };
+  };
 
   // Parse the dataset list to find the actual dataset ID
   let actualDataId = dataId;
   if (actualDataId == null) {
-    const datasets = json.data as { dataset?: { did?: number }[] } | undefined;
+    const datasets = json.data;
     const did = datasets?.dataset?.[0]?.did;
     if (did == null)
       throw new Error(`fetchOpenML: dataset "${name}" not found`);

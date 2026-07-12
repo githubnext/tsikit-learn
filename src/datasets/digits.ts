@@ -48,7 +48,7 @@ export function loadDigits(
   for (let cls = 0; cls < nClass; cls++) {
     // Build a prototype 8×8 pattern for this digit using a seeded pattern
     const proto = new Float64Array(nFeatures);
-    const seed = cls * 17;
+    const seed = BigInt(cls * 17);
     for (let px = 0; px < nFeatures; px++) {
       const r =
         (seed * 6364136223846793005n + BigInt(px) * 2862933555777941757n) &

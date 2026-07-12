@@ -41,7 +41,7 @@ export class IterativeImputerExt {
         const v = xi[j];
         if (v !== null && v !== undefined && !Number.isNaN(Number(v))) {
           means[j] = (means[j] ?? 0) + Number(v);
-          counts[j]++;
+          counts[j]!++;
         }
       }
     }
@@ -141,7 +141,7 @@ export class MatrixCompletionImputer {
     const counts = new Float64Array(n);
     for (const xi of X) for (let j = 0; j < n; j++) {
       const v = xi[j];
-      if (v !== null && v !== undefined) { this.means_[j] = (this.means_[j] ?? 0) + v; counts[j]++; }
+      if (v !== null && v !== undefined) { this.means_[j] = (this.means_[j] ?? 0) + v; counts[j]!++; }
     }
     for (let j = 0; j < n; j++) this.means_[j] = (this.means_[j] ?? 0) / ((counts[j] ?? 1) + 1e-15);
     this.U_ = Array.from({ length: m }, () => { const row = new Float64Array(r); for (let k = 0; k < r; k++) row[k] = rng() * 0.01; return row; });

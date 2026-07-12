@@ -175,7 +175,7 @@ export class SparseGaussianProcess {
         for (let k = 0; k < n; k++) s += ((Kuf[i] as Float64Array)[k] ?? 0) * ((Kuf[j] as Float64Array)[k] ?? 0) / (lambda[k] ?? 1);
         (B[i] as Float64Array)[j] = s + ((Kuu[i] as Float64Array)[j] ?? 0);
       }
-      for (let k = 0; k < n; k++) c[i] += ((Kuf[i] as Float64Array)[k] ?? 0) * (y[k] ?? 0) / (lambda[k] ?? 1);
+      for (let k = 0; k < n; k++) c[i]! += ((Kuf[i] as Float64Array)[k] ?? 0) * (y[k] ?? 0) / (lambda[k] ?? 1);
     }
     this.L_ = GPUtilities.choleskyDecompose(B);
     const Lc = GPUtilities.solveLower(this.L_, c);

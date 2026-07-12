@@ -49,8 +49,8 @@ export class RANSACRegressor {
         const inlierY = new Float64Array(Array.from(y).filter((_, i) => inliers[i]));
         if (inlierX.length >= p + 1) {
           const [c, b] = this._fitOLS(inlierX, inlierY);
-          bestCoef = c; bestIntercept = b;
-        } else { bestCoef = coef; bestIntercept = intercept; }
+          bestCoef = c as unknown as Float64Array<ArrayBuffer>; bestIntercept = b;
+        } else { bestCoef = coef as unknown as Float64Array<ArrayBuffer>; bestIntercept = intercept; }
         bestMask = inliers;
       }
       // Early stopping

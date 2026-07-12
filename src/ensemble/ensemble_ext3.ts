@@ -119,7 +119,7 @@ export function sammeRWeightUpdate(
     const pyi = Math.max(proba[yi] ?? 1e-10, 1e-10);
     let sum = 0;
     for (let c = 0; c < nClasses; c++) sum += Math.log(Math.max(proba[c] ?? 1e-10, 1e-10));
-    weights[i] *= Math.exp(-((nClasses - 1) / nClasses) * (Math.log(pyi) - sum / nClasses));
+    weights[i]! *= Math.exp(-((nClasses - 1) / nClasses) * (Math.log(pyi) - sum / nClasses));
   }
   // Normalize
   const total = weights.reduce((a, b) => a + b, 0);
@@ -130,7 +130,7 @@ export function sammeRWeightUpdate(
 export function baggingWeights(n: number, maxSamples: number): Int32Array {
   const counts = new Int32Array(n);
   for (let i = 0; i < maxSamples; i++) {
-    counts[Math.floor(Math.random() * n)]++;
+    counts[Math.floor(Math.random() * n)]!++;
   }
   return counts;
 }

@@ -72,8 +72,8 @@ export class DictionaryLearning extends DecompositionMixin {
         const xi = X[i] as Float64Array;
         const ci = codes[i] as Float64Array;
         for (let j = 0; j < k; j++) {
-          for (let l = 0; l < k; l++) (A[j] as Float64Array)[l] += (ci[j] ?? 0) * (ci[l] ?? 0) / n;
-          for (let f = 0; f < p; f++) (B[f] as Float64Array)[j] += (xi[f] ?? 0) * (ci[j] ?? 0) / n;
+          for (let l = 0; l < k; l++) (A[j] as Float64Array)[l]! += (ci[j] ?? 0) * (ci[l] ?? 0) / n;
+          for (let f = 0; f < p; f++) (B[f] as Float64Array)[j]! += (xi[f] ?? 0) * (ci[j] ?? 0) / n;
         }
       }
 
@@ -138,7 +138,7 @@ export class DictionaryLearning extends DecompositionMixin {
         const atom = D[bestJ] as Float64Array;
         const corr = residual.reduce((s, v, f) => s + v * (atom[f] ?? 0), 0);
         code[bestJ] = corr;
-        for (let f = 0; f < residual.length; f++) residual[f] -= corr * (atom[f] ?? 0);
+        for (let f = 0; f < residual.length; f++) residual[f]! -= corr * (atom[f] ?? 0);
       }
     }
     return code;
@@ -210,7 +210,7 @@ export class SparseCoder {
           const atom = this.dictionary[bestJ] as Float64Array;
           const corr = residual.reduce((s, v, f) => s + v * (atom[f] ?? 0), 0);
           code[bestJ] = corr;
-          for (let f = 0; f < residual.length; f++) residual[f] -= corr * (atom[f] ?? 0);
+          for (let f = 0; f < residual.length; f++) residual[f]! -= corr * (atom[f] ?? 0);
         }
       }
       return code;

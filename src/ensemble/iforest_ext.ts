@@ -72,7 +72,7 @@ export class IsolationForestExt {
 		this.featureImportances_ = new Float64Array(d);
 		for (const tree of this.estimators_) {
 			for (const feature of tree.splitFeatures) {
-				this.featureImportances_![feature]++;
+				this.featureImportances_![feature]!++;
 			}
 		}
 		const totalSplits = this.featureImportances_.reduce((s, v) => s + v, 0);

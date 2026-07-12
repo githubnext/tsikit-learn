@@ -136,7 +136,7 @@ export class GPRegressorExt {
 
 		// Kernel matrix + noise
 		const K = computeKernelMatrix(X, X, this.kernelFn);
-		for (let i = 0; i < n; i++) K[i]![i] += this.alpha;
+		for (let i = 0; i < n; i++) K[i]![i]! += this.alpha;
 
 		// Cholesky decomposition
 		this.L_ = cholesky(K);
@@ -152,7 +152,7 @@ export class GPRegressorExt {
 		const mean = new Float64Array(n);
 		for (let i = 0; i < n; i++) {
 			for (let j = 0; j < this.alpha_!.length; j++) {
-				mean[i] += (KStar[i]?.[j] ?? 0) * this.alpha_![j]!;
+				mean[i]! += (KStar[i]?.[j] ?? 0) * this.alpha_![j]!;
 			}
 		}
 

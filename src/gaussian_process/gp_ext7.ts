@@ -94,7 +94,7 @@ export class SparseGPR {
 		// Build Kuu
 		const Kuu = this.Xu_.map((xu) => new Float64Array(this.Xu_!.map((xv) => this.kernelFn(xu, xv))));
 		// Add noise to diagonal
-		for (let i = 0; i < m; i++) Kuu[i]![i] += 1e-4;
+		for (let i = 0; i < m; i++) Kuu[i]![i]! += 1e-4;
 		// Build Kuf (m x n)
 		const Kuf = this.Xu_.map((xu) => new Float64Array(X.map((xi) => this.kernelFn(xu, xi))));
 		// Compute Kuu_inv (simplified: use Cholesky-style inverse)

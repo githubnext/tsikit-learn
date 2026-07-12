@@ -224,9 +224,9 @@ export class OrthogonalMatchingPursuitCVExt {
         for (let i = 0; i < n; i++) s += (X[i]?.[j] ?? 0) * (X[i]?.[k] ?? 0);
         XtX[j * p + k] = s;
       }
-      for (let i = 0; i < n; i++) Xty[j] += (X[i]?.[j] ?? 0) * (y[i] ?? 0);
+      for (let i = 0; i < n; i++) Xty[j]! += (X[i]?.[j] ?? 0) * (y[i] ?? 0);
     }
-    for (let j = 0; j < p; j++) XtX[j * p + j] += 1e-10;
+    for (let j = 0; j < p; j++) XtX[j * p + j]! += 1e-10;
     return this._solve(XtX, p, Xty);
   }
 

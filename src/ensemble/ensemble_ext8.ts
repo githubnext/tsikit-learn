@@ -49,7 +49,7 @@ export class IsolationForestExt extends BaseEstimator {
       for (let k = 0; k < nfSub; k++) feats.push(((seed + t * 13 + k * 7) * 1664525) % nf);
       const tree = new IsolationTree(Math.ceil(Math.log2(Math.max(ms, 2))));
       tree.fit(subsample.map((xi) => new Float64Array(feats.map((f) => xi[f] ?? 0))));
-      (tree as { feats: number[] }).feats = feats;
+      (tree as unknown as { feats: number[] }).feats = feats;
       this.estimators_.push(tree);
     }
     if (this.contamination !== "auto" && typeof this.contamination === "number") {
@@ -69,7 +69,7 @@ export class IsolationForestExt extends BaseEstimator {
       for (let i = 0; i < n; i++) {
         const xi = new Float64Array((feats ?? []).map((f: number) => X[i]?.[f] ?? 0));
         const depth = tree.pathLength(xi);
-        scores[i] += depth;
+        scores[i]! += depth;
       }
     }
     const avgDepth = this.max_samples_;

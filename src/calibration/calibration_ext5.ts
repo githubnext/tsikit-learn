@@ -32,12 +32,12 @@ export class HistogramBinningCalibration {
     for (let i = 0; i < n; i++) {
       const s = scores[i] ?? 0;
       const bin = Math.min(Math.floor(s * this.nBins), this.nBins - 1);
-      binMeans[bin] += labels[i] ?? 0;
-      binCounts[bin]++;
+      binMeans[bin]! += labels[i] ?? 0;
+      binCounts[bin]!++;
     }
 
     for (let b = 0; b < this.nBins; b++) {
-      binMeans[b] = binCounts[b] > 0 ? (binMeans[b] ?? 0) / binCounts[b] : (edges[b]! + edges[b + 1]!) / 2;
+      binMeans[b] = binCounts[b]! > 0 ? (binMeans[b] ?? 0) / binCounts[b]! : (edges[b]! + edges[b + 1]!) / 2;
     }
 
     this.binMeans_ = binMeans;
@@ -167,12 +167,12 @@ export function reliabilityDiagram(
     const s = scores[i] ?? 0;
     const bin = Math.min(Math.floor(s * nBins), nBins - 1);
     fractions[bin] = (fractions[bin] ?? 0) + (labels[i] ?? 0);
-    counts[bin]++;
+    counts[bin]!++;
   }
 
   for (let b = 0; b < nBins; b++) {
-    if (counts[b] > 0) {
-      fractions[b] = (fractions[b] ?? 0) / counts[b];
+    if (counts[b]! > 0) {
+      fractions[b] = (fractions[b] ?? 0) / counts[b]!;
     }
   }
 
@@ -190,7 +190,7 @@ export function maximumCalibrationError(
   const { fractions, binCenters, counts } = reliabilityDiagram(scores, labels, nBins);
   let maxErr = 0;
   for (let b = 0; b < nBins; b++) {
-    if (counts[b] > 0) {
+    if (counts[b]! > 0) {
       maxErr = Math.max(maxErr, Math.abs((fractions[b] ?? 0) - (binCenters[b] ?? 0)));
     }
   }

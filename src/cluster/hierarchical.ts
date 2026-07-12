@@ -14,7 +14,7 @@ export type LinkageMethod =
   | "weighted";
 
 /** A single row of a linkage matrix: [idx1, idx2, distance, count]. */
-export interface HierarchicalHierarchicalLinkageRow {
+export interface HierarchicalLinkageRow {
   idx1: number;
   idx2: number;
   distance: number;

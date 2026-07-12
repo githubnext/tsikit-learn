@@ -129,7 +129,7 @@ export class RidgeClassifier {
         for (let j = 0; j < p; j++) xMean[j]! += Xw[i]![j]! ?? 0;
       for (let j = 0; j < p; j++) xMean[j]! /= n;
       for (let i = 0; i < n; i++)
-        for (let j = 0; j < p; j++) Xw[i]![j]! -= xMean[j]!;
+        for (let j = 0; j < p; j++) Xw[i]![j]! -= xMean[j];
     }
 
     // Gram matrix + ridge

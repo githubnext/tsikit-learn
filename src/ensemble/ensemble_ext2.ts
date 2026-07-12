@@ -86,9 +86,9 @@ export class AdaBoostR2 {
       const w = this.estimatorWeights_[m] ?? 0;
       totalWeight += w;
       const preds = this.estimators_[m]!.predict(X);
-      for (let i = 0; i < n; i++) result[i] += w * (preds[i] ?? 0);
+      for (let i = 0; i < n; i++) result[i]! += w * (preds[i] ?? 0);
     }
-    for (let i = 0; i < n; i++) result[i] /= totalWeight || 1;
+    for (let i = 0; i < n; i++) result[i]! /= totalWeight || 1;
     return result;
   }
 }
@@ -177,7 +177,7 @@ export class GradientBoostingExt {
     const result = new Float64Array(n).fill(this.initialPred_);
     for (const tree of this.estimators_) {
       const preds = tree.predict(X);
-      for (let i = 0; i < n; i++) result[i] += this.learningRate * (preds[i] ?? 0);
+      for (let i = 0; i < n; i++) result[i]! += this.learningRate * (preds[i] ?? 0);
     }
     return result;
   }

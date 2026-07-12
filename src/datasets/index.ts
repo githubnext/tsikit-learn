@@ -7,5 +7,26 @@ export * from "./rcv1.js";
 export * from "./real_datasets.js";
 export * from "./digits.js";
 export * from "./newsgroups.js";
-export * from "./generator_ext.js";
-export * from "./fetch_datasets.js";
+export {
+  makeBiclusters,
+  makeLowRankMatrix,
+  makeSparseCodedSignal,
+} from "./generator_ext.js";
+export type {
+  BiclustersOptions,
+  BiclustersResult,
+  CheckerboardOptions,
+  CheckerboardResult,
+  LowRankMatrixOptions,
+  LowRankMatrixResult,
+  SparseCodingOptions,
+  SparseCodingResult,
+} from "./generator_ext.js";
+export {
+  fetchCaliforniaHousing,
+  fetchCovtype,
+  fetchKddcup99,
+  fetchLfw,
+  fetchOlivettiFaces,
+} from "./fetch_datasets.js";
+export type { FetchedDataset } from "./fetch_datasets.js";

@@ -111,7 +111,7 @@ export class ARDRegression {
 
       // Solve for coef = alpha * sigma * X^T y
       const sigmaXty = this._solveSystem(sigmaInv, Xty);
-      coef = sigmaXty;
+      coef = sigmaXty as Float64Array<ArrayBuffer>;
 
       // Update alpha (noise precision)
       const residuals = new Float64Array(nSamples).map((_, i) => {
@@ -198,8 +198,8 @@ export class ARDRegression {
     const x = new Float64Array(n);
     for (let i = n - 1; i >= 0; i--) {
       x[i] = mat[i]?.[n] ?? 0;
-      for (let j = i + 1; j < n; j++) x[i] -= (mat[i]?.[j] ?? 0) * (x[j] ?? 0);
-      x[i] /= mat[i]?.[i] ?? 1e-10;
+      for (let j = i + 1; j < n; j++) x[i]! -= (mat[i]?.[j] ?? 0) * (x[j] ?? 0);
+      x[i]! /= mat[i]?.[i] ?? 1e-10;
     }
     return x;
   }

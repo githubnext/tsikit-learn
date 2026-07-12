@@ -101,7 +101,7 @@ export class SplineIsotonicRegression {
     let ys = new Float64Array(sorted.map((s) => s.y));
     // Apply isotonic regression
     if (!this.increasing) for (let i = 0; i < n; i++) ys[i] = -(ys[i] ?? 0);
-    ys = pava(ys);
+    ys = pava(ys) as Float64Array<ArrayBuffer>;
     if (!this.increasing) for (let i = 0; i < n; i++) ys[i] = -(ys[i] ?? 0);
     this.x_thresholds_ = xs;
     this.y_thresholds_ = ys;

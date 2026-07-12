@@ -64,8 +64,8 @@ export class PROCLUS {
         // Find best subspace dimensions (lowest variance within cluster)
         const variances = new Float64Array(p);
         const mean = new Float64Array(p);
-        for (const m of members) for (let f = 0; f < p; f++) mean[f] += (X[m]?.[f] ?? 0) / members.length;
-        for (const m of members) for (let f = 0; f < p; f++) variances[f] += ((X[m]?.[f] ?? 0) - (mean[f] ?? 0)) ** 2 / members.length;
+        for (const m of members) for (let f = 0; f < p; f++) mean[f]! += (X[m]?.[f] ?? 0) / members.length;
+        for (const m of members) for (let f = 0; f < p; f++) variances[f]! += ((X[m]?.[f] ?? 0) - (mean[f] ?? 0)) ** 2 / members.length;
 
         // Select l features with lowest variance
         const sorted = Array.from({ length: p }, (_, f) => f).sort((a, b) => (variances[a] ?? 0) - (variances[b] ?? 0));
@@ -86,12 +86,12 @@ export class PROCLUS {
     const counts = new Int32Array(k);
     for (let i = 0; i < n; i++) {
       const ci = labels[i] ?? 0;
-      counts[ci]++;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f] += ((X[i] as Float64Array)[f] ?? 0);
+      counts[ci]!++;
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f]! += ((X[i] as Float64Array)[f] ?? 0);
     }
     for (let ci = 0; ci < k; ci++) {
       const cnt = counts[ci] ?? 1;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f] /= cnt;
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f]! /= cnt;
     }
     return this;
   }
@@ -131,7 +131,7 @@ export class ProjectedKMeans {
     // Project data
     const Xproj = X.map((row) => {
       const out = new Float64Array(d);
-      for (let j = 0; j < d; j++) for (let i = 0; i < p; i++) out[j] += (row[i] ?? 0) * ((this.projectionMatrix_![i] as Float64Array)[j] ?? 0);
+      for (let j = 0; j < d; j++) for (let i = 0; i < p; i++) out[j]! += (row[i] ?? 0) * ((this.projectionMatrix_![i] as Float64Array)[j] ?? 0);
       return out;
     });
 
@@ -152,12 +152,12 @@ export class ProjectedKMeans {
       const counts = new Int32Array(this.nClusters);
       for (let i = 0; i < n; i++) {
         const ci = newLabels[i] ?? 0;
-        counts[ci]++;
-        for (let j = 0; j < d; j++) (newCenters[ci] as Float64Array)[j] += ((Xproj[i] as Float64Array)[j] ?? 0);
+        counts[ci]!++;
+        for (let j = 0; j < d; j++) (newCenters[ci] as Float64Array)[j]! += ((Xproj[i] as Float64Array)[j] ?? 0);
       }
       for (let ki = 0; ki < this.nClusters; ki++) {
         const cnt = counts[ki] ?? 1;
-        for (let j = 0; j < d; j++) (newCenters[ki] as Float64Array)[j] /= cnt;
+        for (let j = 0; j < d; j++) (newCenters[ki] as Float64Array)[j]! /= cnt;
       }
       let changed = false;
       for (let i = 0; i < n; i++) if (newLabels[i] !== labels[i]) { changed = true; break; }
@@ -173,12 +173,12 @@ export class ProjectedKMeans {
     let inertia = 0;
     for (let i = 0; i < n; i++) {
       const ci = labels[i] ?? 0;
-      finalCounts[ci]++;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f] += ((X[i] as Float64Array)[f] ?? 0);
+      finalCounts[ci]!++;
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f]! += ((X[i] as Float64Array)[f] ?? 0);
     }
     for (let ki = 0; ki < this.nClusters; ki++) {
       const cnt = finalCounts[ki] ?? 1;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ki] as Float64Array)[f] /= cnt;
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ki] as Float64Array)[f]! /= cnt;
     }
     for (let i = 0; i < n; i++) {
       const ci = labels[i] ?? 0;

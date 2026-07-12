@@ -71,7 +71,7 @@ export class SparsePCA {
     for (let c = 0; c < k; c++) {
       const comp = new Float64Array(nFeatures);
       let norm = 0;
-      for (let j = 0; j < nFeatures; j++) { comp[j] = rand(); norm += comp[j] ** 2; }
+      for (let j = 0; j < nFeatures; j++) { comp[j] = rand(); norm += comp[j]! ** 2; }
       norm = Math.sqrt(norm) || 1;
       for (let j = 0; j < nFeatures; j++) comp[j] = (comp[j] ?? 0) / norm;
       this.components_.push(comp);
@@ -198,7 +198,7 @@ export class MiniBatchSparsePCA extends SparsePCA {
     for (let c = 0; c < k; c++) {
       const comp = new Float64Array(nFeatures);
       let norm = 0;
-      for (let j = 0; j < nFeatures; j++) { comp[j] = rand(); norm += comp[j] ** 2; }
+      for (let j = 0; j < nFeatures; j++) { comp[j] = rand(); norm += comp[j]! ** 2; }
       norm = Math.sqrt(norm) || 1;
       for (let j = 0; j < nFeatures; j++) comp[j] = (comp[j] ?? 0) / norm;
       this.components_.push(comp);

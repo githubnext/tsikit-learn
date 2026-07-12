@@ -20,7 +20,7 @@ export class RobustPCAExt {
       const oldL = L.map(r => r.slice());
       // Update L: SVT of (X - S)
       const M = X.map((row, i) => new Float64Array(row.map((v, j) => v - (S[i]?.[j] ?? 0))));
-      L = this._svt(M, 1 / mu);
+      L = this._svt(M, 1 / mu) as Float64Array<ArrayBuffer>[];
       // Update S: soft threshold of (X - L)
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < p; j++) {

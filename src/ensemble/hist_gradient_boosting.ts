@@ -336,7 +336,7 @@ export class HistGradientBoostingClassifier {
 
   predictProba(X: Float64Array[]): Float64Array[] {
     const raw = this._rawScore(X);
-    return raw.map((f) => {
+    return Array.from(raw, (f) => {
       const p1 = 1 / (1 + Math.exp(-f));
       return new Float64Array([1 - p1, p1]);
     });

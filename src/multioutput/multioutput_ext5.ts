@@ -59,7 +59,7 @@ export class MultiOutputRegressorExt {
       },
       predict(X: Float64Array[]) {
         return Float64Array.from(X.map(xi => {
-          let val = this.intercept_;
+          let val = this.intercept_ ?? 0;
           for (let j = 0; j < xi.length; j++) val += (xi[j] ?? 0) * (this.coef_![j] ?? 0);
           return val;
         }));

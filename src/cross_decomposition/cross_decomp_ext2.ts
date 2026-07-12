@@ -123,7 +123,7 @@ export class PLSCanonical {
 			const scores = new Float64Array(k);
 			for (let c = 0; c < k; c++) {
 				for (let j = 0; j < row.length; j++) {
-					scores[c] += ((row[j] ?? 0) - (this.xMean_![j] ?? 0)) * (this.xRotations_![c]?.[j] ?? 0);
+					scores[c]! += ((row[j] ?? 0) - (this.xMean_![j] ?? 0)) * (this.xRotations_![c]?.[j] ?? 0);
 				}
 			}
 			return scores;
@@ -133,7 +133,7 @@ export class PLSCanonical {
 			const scores = new Float64Array(k);
 			for (let c = 0; c < k; c++) {
 				for (let j = 0; j < row.length; j++) {
-					scores[c] += ((row[j] ?? 0) - (this.yMean_![j] ?? 0)) * (this.yRotations_![c]?.[j] ?? 0);
+					scores[c]! += ((row[j] ?? 0) - (this.yMean_![j] ?? 0)) * (this.yRotations_![c]?.[j] ?? 0);
 				}
 			}
 			return scores;

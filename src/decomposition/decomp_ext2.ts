@@ -44,8 +44,8 @@ export class MiniBatchNMF {
       const WtX: Float64Array[] = Array.from({ length: k }, () => new Float64Array(p));
       for (let s = 0; s < batch.length; s++) {
         for (let i = 0; i < k; i++) {
-          for (let j = 0; j < k; j++) HtH[i]![j] += (W[s]![i] ?? 0) * (W[s]![j] ?? 0);
-          for (let j = 0; j < p; j++) WtX[i]![j] += (W[s]![i] ?? 0) * (batch[s]![j] ?? 0);
+          for (let j = 0; j < k; j++) HtH[i]![j]! += (W[s]![i] ?? 0) * (W[s]![j] ?? 0);
+          for (let j = 0; j < p; j++) WtX[i]![j]! += (W[s]![i] ?? 0) * (batch[s]![j] ?? 0);
         }
       }
       for (let i = 0; i < k; i++) {
@@ -227,7 +227,7 @@ export class LatentSemanticAnalysis {
       let norm = 0;
       for (let j = 0; j < p; j++) { const v = X.reduce((acc, row, s) => acc + (Q[s]![i] ?? 0) * (row[j] ?? 0), 0); V[i]![j] = v; norm += v * v; }
       sigma[i] = Math.sqrt(norm);
-      if (sigma[i] > 1e-10) for (let j = 0; j < p; j++) V[i]![j] = (V[i]![j] ?? 0) / (sigma[i] ?? 1);
+      if (sigma[i]! > 1e-10) for (let j = 0; j < p; j++) V[i]![j] = (V[i]![j] ?? 0) / (sigma[i] ?? 1);
     }
     return { V, sigma };
   }
@@ -235,14 +235,14 @@ export class LatentSemanticAnalysis {
   private matMul(A: Float64Array[], B: Float64Array[], n: number, p: number, k: number): Float64Array[] {
     return Array.from({ length: n }, (_, i) => {
       const row = new Float64Array(k);
-      for (let j = 0; j < k; j++) for (let l = 0; l < p; l++) row[j] += (A[i]![l] ?? 0) * (B[l]![j] ?? 0);
+      for (let j = 0; j < k; j++) for (let l = 0; l < p; l++) row[j]! += (A[i]![l] ?? 0) * (B[l]![j] ?? 0);
       return row;
     });
   }
 
   private matMulT(A: Float64Array[], B: Float64Array[], n: number, p: number, k: number): Float64Array[] {
     const result: Float64Array[] = Array.from({ length: p }, () => new Float64Array(k));
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) for (let l = 0; l < k; l++) result[j]![l] += (A[i]![l] ?? 0) * (B[i]![j] ?? 0);
+    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) for (let l = 0; l < k; l++) result[j]![l]! += (A[i]![l] ?? 0) * (B[i]![j] ?? 0);
     return result;
   }
 

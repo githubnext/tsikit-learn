@@ -30,12 +30,12 @@ function kMeansOneStep(X: Float64Array[], k: number, maxIter = 100): Int32Array 
     const counts = new Int32Array(k);
     for (let i = 0; i < n; i++) {
       const ci = newLabels[i] ?? 0;
-      counts[ci]++;
-      for (let j = 0; j < p; j++) (newCenters[ci] as Float64Array)[j] += ((X[i] as Float64Array)[j] ?? 0);
+      counts[ci]!++;
+      for (let j = 0; j < p; j++) (newCenters[ci] as Float64Array)[j]! += ((X[i] as Float64Array)[j] ?? 0);
     }
     for (let ki = 0; ki < k; ki++) {
       const cnt = counts[ki] ?? 1;
-      for (let j = 0; j < p; j++) (newCenters[ki] as Float64Array)[j] /= cnt;
+      for (let j = 0; j < p; j++) (newCenters[ki] as Float64Array)[j]! /= cnt;
     }
 
     let changed = false;
@@ -74,8 +74,8 @@ export class TwoLevelClustering {
     for (let i = 0; i < n; i++) {
       const ci = subLabels[i] ?? 0;
       if (ci < this.nSubClusters) {
-        subCounts[ci]++;
-        for (let j = 0; j < p; j++) (subCenters[ci] as Float64Array)[j] += ((X[i] as Float64Array)[j] ?? 0);
+        subCounts[ci]!++;
+        for (let j = 0; j < p; j++) (subCenters[ci] as Float64Array)[j]! += ((X[i] as Float64Array)[j] ?? 0);
       }
     }
     const activeSubs: Float64Array[] = [];
@@ -101,12 +101,12 @@ export class TwoLevelClustering {
     const counts = new Int32Array(this.nClusters);
     for (let i = 0; i < n; i++) {
       const ci = finalLabels[i] ?? 0;
-      counts[ci]++;
-      for (let j = 0; j < p; j++) (centers[ci] as Float64Array)[j] += ((X[i] as Float64Array)[j] ?? 0);
+      counts[ci]!++;
+      for (let j = 0; j < p; j++) (centers[ci] as Float64Array)[j]! += ((X[i] as Float64Array)[j] ?? 0);
     }
     for (let ki = 0; ki < this.nClusters; ki++) {
       const cnt = counts[ki] ?? 1;
-      for (let j = 0; j < p; j++) (centers[ki] as Float64Array)[j] /= cnt;
+      for (let j = 0; j < p; j++) (centers[ki] as Float64Array)[j]! /= cnt;
     }
 
     this.labels_ = finalLabels;
@@ -169,15 +169,15 @@ export class EnsembleClustering {
         for (let i = 0; i < n; i++) {
           for (let j = i + 1; j < n; j++) {
             if ((lbls[i] ?? -1) === (lbls[j] ?? -2)) {
-              (coOcc[i] as Float64Array)[j]++;
-              (coOcc[j] as Float64Array)[i]++;
+              (coOcc[i] as Float64Array)[j]!++;
+              (coOcc[j] as Float64Array)[i]!++;
             }
           }
         }
       }
       // Normalize
       const nEstimators = allLabels.length;
-      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) (coOcc[i] as Float64Array)[j] /= nEstimators;
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) (coOcc[i] as Float64Array)[j]! /= nEstimators;
       // Spectral clustering on co-occurrence (simplified: greedy assignment)
       const labels = new Int32Array(n).fill(-1);
       let cluster = 0;

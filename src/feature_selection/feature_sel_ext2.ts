@@ -75,8 +75,8 @@ export function reliefF(
 
     for (let feat = 0; feat < p; feat++) {
       const xiF = xi[feat] ?? 0;
-      for (const hit of hits) weights[feat] -= Math.abs(xiF - (X[hit.j]![feat] ?? 0)) / (n * nNeighbors);
-      for (const miss of misses) weights[feat] += Math.abs(xiF - (X[miss.j]![feat] ?? 0)) / (n * nNeighbors);
+      for (const hit of hits) weights[feat]! -= Math.abs(xiF - (X[hit.j]![feat] ?? 0)) / (n * nNeighbors);
+      for (const miss of misses) weights[feat]! += Math.abs(xiF - (X[miss.j]![feat] ?? 0)) / (n * nNeighbors);
     }
   }
   return weights;

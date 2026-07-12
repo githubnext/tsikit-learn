@@ -83,7 +83,7 @@ export class TruncatedSVDExtended {
       });
     }
     // QR decomposition (simplified Gram-Schmidt)
-    Q = this._gramSchmidt(Q);
+    Q = this._gramSchmidt(Q) as Float64Array<ArrayBuffer>[];
     // Project X onto Q
     const B = Q.map((q) => {
       const proj = new Float64Array(n);

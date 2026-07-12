@@ -86,7 +86,7 @@ function bisect(
         break;
       }
     labels = newLabels;
-    centers = newCenters;
+    centers = newCenters as Float64Array<ArrayBuffer>[];
     if (!changed) break;
   }
 

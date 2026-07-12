@@ -55,23 +55,23 @@ export class QuantileRegressor {
         const wi = Math.abs(weights[i] ?? 0) + 1e-8;
         for (let j = 0; j < cols; j++) {
           const xij = Xaug[i]?.[j] ?? 0;
-          XtWy[j] += wi * xij * (y[i] ?? 0);
+          XtWy[j]! += wi * xij * (y[i] ?? 0);
           for (let k = 0; k < cols; k++) {
-            (XtWX[j] as Float64Array)[k] += wi * xij * (Xaug[i]?.[k] ?? 0);
+            (XtWX[j] as Float64Array)[k]! += wi * xij * (Xaug[i]?.[k] ?? 0);
           }
         }
       }
 
       // Add L1 regularization diagonal
       for (let j = 0; j < (this.fitIntercept ? p : cols); j++) {
-        (XtWX[j] as Float64Array)[j] += this.alpha;
+        (XtWX[j] as Float64Array)[j]! += this.alpha;
       }
 
       // Solve via Cholesky (simple Jacobi iteration here)
       const wNew = solveNormalEquations(XtWX, XtWy, cols);
       let maxDiff = 0;
       for (let j = 0; j < cols; j++) maxDiff = Math.max(maxDiff, Math.abs((wNew[j] ?? 0) - (w[j] ?? 0)));
-      w = wNew;
+      w = wNew as Float64Array<ArrayBuffer>;
       this.nIter_ = iter + 1;
       if (maxDiff < this.tol) break;
     }

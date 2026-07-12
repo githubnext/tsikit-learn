@@ -38,7 +38,7 @@ export class SelectFromModel {
     this.threshold_ = thresh;
     this.mask_ = Array.from(importances, (v) => v >= thresh);
     if (this.maxFeatures !== undefined) {
-      const idxScores = importances.map((v, i) => ({ i, v })).sort((a, b) => b.v - a.v);
+      const idxScores = Array.from(importances, (v, i) => ({ i, v })).sort((a, b) => b.v - a.v);
       const keep = new Set(idxScores.slice(0, this.maxFeatures).map((s) => s.i));
       this.mask_ = this.mask_.map((m, i) => m && keep.has(i));
     }

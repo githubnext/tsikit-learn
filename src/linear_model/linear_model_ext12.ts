@@ -43,7 +43,7 @@ export class RANSACRegressor {
     let yMean = 0;
     for (let i = 0; i < n; i++) {
       yMean += (y[i] ?? 0) / n;
-      for (let j = 0; j < p; j++) xMean[j] += (X[i]?.[j] ?? 0) / n;
+      for (let j = 0; j < p; j++) xMean[j]! += (X[i]?.[j] ?? 0) / n;
     }
 
     const XtX: Float64Array[] = Array.from({ length: p }, () => new Float64Array(p));
@@ -51,9 +51,9 @@ export class RANSACRegressor {
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < p; j++) {
         const xij = (X[i]?.[j] ?? 0) - (xMean[j] ?? 0);
-        Xty[j] += xij * ((y[i] ?? 0) - yMean);
+        Xty[j]! += xij * ((y[i] ?? 0) - yMean);
         for (let k = 0; k < p; k++) {
-          (XtX[j] as Float64Array)[k] += xij * ((X[i]?.[k] ?? 0) - (xMean[k] ?? 0));
+          (XtX[j] as Float64Array)[k]! += xij * ((X[i]?.[k] ?? 0) - (xMean[k] ?? 0));
         }
       }
     }
@@ -110,7 +110,7 @@ export class RANSACRegressor {
         const Xinl = X.filter((_, i) => mask[i] === 1);
         const yInl = new Float64Array(y.filter((_, i) => mask[i] === 1));
         const refitted = this._fitOLS(Xinl, yInl);
-        bestCoef = refitted.coef;
+        bestCoef = refitted.coef as Float64Array<ArrayBuffer>;
         bestIntercept = refitted.intercept;
       }
 
@@ -181,8 +181,8 @@ export class MultiTaskElasticNet {
     const yMean = new Float64Array(nTasks);
     if (this.fitIntercept) {
       for (let i = 0; i < n; i++) {
-        for (let j = 0; j < p; j++) xMean[j] += (X[i]?.[j] ?? 0) / n;
-        for (let t = 0; t < nTasks; t++) yMean[t] += (Y[i]?.[t] ?? 0) / n;
+        for (let j = 0; j < p; j++) xMean[j]! += (X[i]?.[j] ?? 0) / n;
+        for (let t = 0; t < nTasks; t++) yMean[t]! += (Y[i]?.[t] ?? 0) / n;
       }
     }
 
@@ -203,7 +203,7 @@ export class MultiTaskElasticNet {
             for (let k = 0; k < p; k++) {
               if (k !== j) res -= ((X[i]?.[k] ?? 0) - (this.fitIntercept ? (xMean[k] ?? 0) : 0)) * ((W[k] as Float64Array)[t] ?? 0);
             }
-            grad[t] += xij * res / n;
+            grad[t]! += xij * res / n;
           }
         }
         // L21 proximal operator
@@ -225,7 +225,7 @@ export class MultiTaskElasticNet {
       const intercept = new Float64Array(nTasks);
       for (let t = 0; t < nTasks; t++) {
         intercept[t] = yMean[t] ?? 0;
-        for (let j = 0; j < p; j++) intercept[t] -= ((W[j] as Float64Array)[t] ?? 0) * (xMean[j] ?? 0);
+        for (let j = 0; j < p; j++) intercept[t]! -= ((W[j] as Float64Array)[t] ?? 0) * (xMean[j] ?? 0);
       }
       this.intercept_ = intercept;
     } else {
@@ -244,7 +244,7 @@ export class MultiTaskElasticNet {
       for (let t = 0; t < nTasks; t++) out[t] = intercept[t] ?? 0;
       for (let j = 0; j < p; j++) {
         for (let t = 0; t < nTasks; t++) {
-          out[t] += (row[j] ?? 0) * ((W[j] as Float64Array)[t] ?? 0);
+          out[t]! += (row[j] ?? 0) * ((W[j] as Float64Array)[t] ?? 0);
         }
       }
       return out;

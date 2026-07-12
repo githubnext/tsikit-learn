@@ -1,5 +1,5 @@
 export * from "./lda.js";
-export * from "./qda.js";
+export type { QDAParams } from "./qda.js";
 export * from "./da_ext.js";
-export * from "./da_ext2.js";
-export * from "./discriminant_ext2.js";
+// duplicate exports from ./da_ext2.js omitted
+export { FlexibleQDA } from "./discriminant_ext2.js";

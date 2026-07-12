@@ -158,6 +158,6 @@ export class SelectPercentileExt extends GenericUnivariateSelect {
     ) => { scores: Float64Array; pvalues: Float64Array },
     percentile = 10,
   ) {
-    super({ scoreFunc, mode: "percentile", param: percentile });
+    super({ scoreFunc: scoreFunc!, mode: "percentile", param: percentile });
   }
 }

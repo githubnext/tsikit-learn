@@ -29,7 +29,7 @@ export class FeatureHasher {
         const hash = this._fnv1aHash(key);
         const idx = hash % this.nFeatures;
         const sign = this.alternateSign && (hash >>> 31) ? -1 : 1;
-        row[idx] += sign * value;
+        row[idx]! += sign * value;
       }
       return row;
     });
@@ -40,7 +40,7 @@ export class FeatureHasher {
       const out = new Float64Array(this.nFeatures);
       for (let j = 0; j < row.length; j++) {
         const idx = j % this.nFeatures;
-        out[idx] += row[j] ?? 0;
+        out[idx]! += row[j] ?? 0;
       }
       return out;
     });
@@ -79,7 +79,7 @@ export class SelectFwe {
     this.pValues_ = pValues;
     // Bonferroni correction (FWE)
     const alphaCorr = this.alpha / p;
-    this._support = pValues.map((pv) => pv < alphaCorr ? 1 : 0);
+    this._support = Uint8Array.from(pValues, (pv) => pv < alphaCorr ? 1 : 0);
     return this;
   }
 
@@ -165,11 +165,11 @@ export class VarianceThresholdSelector {
     const n = X.length, p = X[0]?.length ?? 0;
     this.nFeaturesIn_ = p;
     const means = new Float64Array(p);
-    for (const row of X) for (let j = 0; j < p; j++) means[j] += (row[j] ?? 0) / n;
+    for (const row of X) for (let j = 0; j < p; j++) means[j]! += (row[j] ?? 0) / n;
     this.variances_ = Float64Array.from({ length: p }, (_, j) => {
       return X.reduce((s, row) => s + ((row[j] ?? 0) - (means[j] ?? 0)) ** 2, 0) / Math.max(n - 1, 1);
     });
-    this._support = this.variances_.map((v) => v > this.threshold ? 1 : 0);
+    this._support = Uint8Array.from(this.variances_, (v) => v > this.threshold ? 1 : 0);
     return this;
   }
 

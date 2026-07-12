@@ -92,20 +92,20 @@ export class GeneralizedLinearRegressor {
         const wi = W[i] ?? 0;
         for (let j = 0; j < cols; j++) {
           const xij = Xa[i]?.[j] ?? 0;
-          XtWz[j] += wi * xij * (z[i] ?? 0);
+          XtWz[j]! += wi * xij * (z[i] ?? 0);
           for (let k = 0; k < cols; k++) {
-            (XtWX[j] as Float64Array)[k] += wi * xij * (Xa[i]?.[k] ?? 0);
+            (XtWX[j] as Float64Array)[k]! += wi * xij * (Xa[i]?.[k] ?? 0);
           }
         }
       }
       for (let j = 0; j < (this.fitIntercept ? p : cols); j++) {
-        (XtWX[j] as Float64Array)[j] += this.alpha;
+        (XtWX[j] as Float64Array)[j]! += this.alpha;
       }
 
       const betaNew = solveGE(XtWX, XtWz, cols);
       let maxDiff = 0;
       for (let j = 0; j < cols; j++) maxDiff = Math.max(maxDiff, Math.abs((betaNew[j] ?? 0) - (beta[j] ?? 0)));
-      beta = betaNew;
+      beta = betaNew as Float64Array<ArrayBuffer>;
       this.nIter_ = iter + 1;
       if (maxDiff < this.tol) break;
     }

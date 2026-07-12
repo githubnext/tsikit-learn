@@ -19,10 +19,10 @@ export * from "./metrics/index.js";
 export * from "./model_selection/index.js";
 
 // Linear models
-export * from "./linear_model/index.js";
+// duplicate exports from ./linear_model/index.js omitted
 
 // SVM
-export * from "./svm/index.js";
+// duplicate exports from ./svm/index.js omitted
 
 // Tree
 export * from "./tree/index.js";
@@ -31,13 +31,13 @@ export * from "./tree/index.js";
 export * from "./ensemble/index.js";
 
 // Neighbors
-export * from "./neighbors/index.js";
+// duplicate exports from ./neighbors/index.js omitted
 
 // Naive Bayes
 export * from "./naive_bayes/index.js";
 
 // Cluster
-export * from "./cluster/index.js";
+// duplicate exports from ./cluster/index.js omitted
 
 // Decomposition
 export * from "./decomposition/index.js";
@@ -46,16 +46,24 @@ export * from "./decomposition/index.js";
 export * from "./neural_network/index.js";
 
 // Pipeline
-export * from "./pipeline/index.js";
+export {
+  CachedPipeline,
+  FeatureUnionExt,
+  FeatureUnionExt3,
+  PipelineExt,
+  SelectiveColumnTransformer,
+  TransformerPipeline,
+} from "./pipeline/index.js";
 
 // Impute
 export * from "./impute/index.js";
 
 // Feature selection
-export * from "./feature_selection/index.js";
+export { SelectPercentileExt } from "./feature_selection/index.js";
+export type { SelectionMode } from "./feature_selection/index.js";
 
 // Compose
-export * from "./compose/index.js";
+// duplicate exports from ./compose/index.js omitted
 
 // Datasets
 export * from "./datasets/index.js";
@@ -70,7 +78,11 @@ export * from "./isotonic/index.js";
 export * from "./multiclass/index.js";
 
 // Calibration
-export * from "./calibration/index.js";
+export {
+  CalibratedClassifierCVExt,
+  IsotonicCalibratorExt,
+  calibrationCurveExt,
+} from "./calibration/index.js";
 
 // Manifold
 export * from "./manifold/index.js";
@@ -85,10 +97,10 @@ export * from "./semi_supervised/index.js";
 export * from "./feature_extraction/index.js";
 
 // Multioutput
-export * from "./multioutput/index.js";
+// duplicate exports from ./multioutput/index.js omitted
 
 // Kernel ridge
-export * from "./kernel_ridge/index.js";
+// duplicate exports from ./kernel_ridge/index.js omitted
 
 // Gaussian process
 export * from "./gaussian_process/index.js";
@@ -103,7 +115,7 @@ export * from "./covariance/index.js";
 export * from "./cross_decomposition/index.js";
 
 // Inspection
-export * from "./inspection/index.js";
+// duplicate exports from ./inspection/index.js omitted
 
 // Random projection
 export * from "./random_projection/index.js";
