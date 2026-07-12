@@ -101,7 +101,7 @@ function kmeansSimple(X: Float64Array[], k: number, maxIter = 100): Int32Array {
     }
     for (let j = 0; j < k; j++) {
       if ((counts[j] ?? 0) > 0) {
-        for (let l = 0; l < d; l++) centers[j]![l]! /= counts[j];
+        for (let l = 0; l < d; l++) centers[j]![l]! /= counts[j] ?? 1;
       }
     }
   }
