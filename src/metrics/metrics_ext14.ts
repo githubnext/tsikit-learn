@@ -105,7 +105,7 @@ export function groupMetricDifference(
 
 export function biasAmplificationScore(y: Int32Array, yPred: Int32Array, sensitiveAttr: Int32Array): number {
   // Measure how much the model amplifies existing biases
-  const dpData = demographicParityDifference(y, y.map ? y : new Int32Array(y), sensitiveAttr);
+  const dpData = demographicParityDifference(y, new Int32Array(y), sensitiveAttr);
   const dpModel = demographicParityDifference(y, yPred, sensitiveAttr);
   return dpData > 0 ? dpModel / dpData : 1;
 }

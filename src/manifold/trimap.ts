@@ -128,7 +128,7 @@ export class PHATE {
     return this.embedding_;
   }
   // nLandmark is stored but not used in simplified version
-  private _nLandmark = this.nLandmark;
+  private get _nLandmark() { return this.nLandmark; }
 }
 
 export class ForceAtlas2 {

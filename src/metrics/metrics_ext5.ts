@@ -103,7 +103,7 @@ export function cohensKappa(y1: Int32Array, y2: Int32Array): number {
   for (let i = 0; i < n; i++) {
     const r = classes.indexOf(y1[i] ?? 0);
     const c = classes.indexOf(y2[i] ?? 0);
-    if (r >= 0 && c >= 0) (confMatrix[r] as Int32Array)[c]++;
+    if (r >= 0 && c >= 0) { const arr = confMatrix[r] as Int32Array; arr[c] = (arr[c] ?? 0) + 1; }
   }
   const rowSums = confMatrix.map((row) => Array.from(row).reduce((a, b) => a + b, 0));
   const colSums = classes.map((_, j) => confMatrix.reduce((s, row) => s + ((row as Int32Array)[j] ?? 0), 0));

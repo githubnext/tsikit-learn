@@ -27,14 +27,14 @@ export class OnlineGaussianNB {
 
     for (let i = 0; i < X.length; i++) {
       const c = y[i] ?? 0;
-      (this.classCounts_ as Float64Array)[c]++;
+      (this.classCounts_ as Float64Array)[c] = ((this.classCounts_ as Float64Array)[c] ?? 0) + 1;
       const count = (this.classCounts_ as Float64Array)[c] ?? 1;
       for (let j = 0; j < p; j++) {
         const x = X[i]?.[j] ?? 0;
         const delta = x - ((this.classMeans_[c] as Float64Array)[j] ?? 0);
-        (this.classMeans_[c] as Float64Array)[j] += delta / count;
+        (this.classMeans_[c] as Float64Array)[j] = ((this.classMeans_[c] as Float64Array)[j] ?? 0) + delta / count;
         const delta2 = x - ((this.classMeans_[c] as Float64Array)[j] ?? 0);
-        (M2[c] as Float64Array)[j] += delta * delta2;
+        (M2[c] as Float64Array)[j] = ((M2[c] as Float64Array)[j] ?? 0) + delta * delta2;
       }
     }
 
@@ -58,14 +58,14 @@ export class OnlineGaussianNB {
 
     for (let i = 0; i < X.length; i++) {
       const c = y[i] ?? 0;
-      (this.classCounts_ as Float64Array)[c]++;
+      (this.classCounts_ as Float64Array)[c] = ((this.classCounts_ as Float64Array)[c] ?? 0) + 1;
       const count = (this.classCounts_ as Float64Array)[c] ?? 1;
       for (let j = 0; j < p; j++) {
         const x = X[i]?.[j] ?? 0;
         const delta = x - ((this.classMeans_![c] as Float64Array)[j] ?? 0);
-        (this.classMeans_![c] as Float64Array)[j] += delta / count;
+        (this.classMeans_![c] as Float64Array)[j] = ((this.classMeans_![c] as Float64Array)[j] ?? 0) + delta / count;
         const delta2 = x - ((this.classMeans_![c] as Float64Array)[j] ?? 0);
-        (M2[c] as Float64Array)[j] += delta * delta2;
+        (M2[c] as Float64Array)[j] = ((M2[c] as Float64Array)[j] ?? 0) + delta * delta2;
       }
     }
     const total = (this.classCounts_ as Float64Array).reduce((s, v) => s + v, 0);

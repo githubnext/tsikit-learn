@@ -67,14 +67,14 @@ export function inplaceDenseColumnScale(
 ): void {
   for (let i = 0; i < nRows; i++) {
     for (let j = 0; j < nCols; j++) {
-      X[i * nCols + j]! *= scale[j]!;
+      X[i * nCols + j]! *= scale[j] ?? 1;
     }
   }
 }
 
 /** Computes cumulative sum in-place (modifies arr). */
 export function cumsum(arr: Float64Array): Float64Array {
-  for (let i = 1; i < arr.length; i++) arr[i]! += arr[i - 1]!;
+  for (let i = 1; i < arr.length; i++) arr[i]! += arr[i - 1] ?? 0;
   return arr;
 }
 
