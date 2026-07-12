@@ -38,7 +38,7 @@ export class RANSACRegressor {
         : Math.round(this.minSamples);
 
     let bestInlierCount = 0;
-    let bestCoef = new Float64Array(nFeatures);
+    let bestCoef: Float64Array = new Float64Array(nFeatures);
     let bestIntercept = 0;
     let bestMask = new Int8Array(n);
 

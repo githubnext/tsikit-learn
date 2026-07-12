@@ -19,7 +19,8 @@ export function calinskiHarabaszScore(
   // Global centroid
   const globalMean = new Float64Array(d);
   for (const x of X)
-    for (let j = 0; j < d; j++) globalMean[j] = (globalMean[j] ?? 0) + (x[j] ?? 0) / n;
+    for (let j = 0; j < d; j++)
+      globalMean[j] = (globalMean[j] ?? 0) + (x[j] ?? 0) / n;
 
   // Between-cluster dispersion
   let bcd = 0;
@@ -28,7 +29,8 @@ export function calinskiHarabaszScore(
     const nc = mask.filter(Boolean).length;
     const cm = new Float64Array(d);
     for (let i = 0; i < n; i++)
-      if (mask[i]) for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
+      if (mask[i])
+        for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
     for (let j = 0; j < d; j++) bcd += nc * (cm[j]! - globalMean[j]!) ** 2;
   }
 
@@ -40,7 +42,8 @@ export function calinskiHarabaszScore(
     if (nc === 0) continue;
     const cm = new Float64Array(d);
     for (let i = 0; i < n; i++)
-      if (mask[i]) for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
+      if (mask[i])
+        for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
     for (let i = 0; i < n; i++) {
       if (!mask[i]) continue;
       for (let j = 0; j < d; j++) wcd += ((X[i]?.[j] ?? 0) - cm[j]!) ** 2;
@@ -72,7 +75,8 @@ export function daviesBouldinScore(
     const nc = mask.filter(Boolean).length;
     const cm = new Float64Array(d);
     for (let i = 0; i < n; i++)
-      if (mask[i]) for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
+      if (mask[i])
+        for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
     centroids.push(cm);
     let scatter = 0;
     for (let i = 0; i < n; i++) {
@@ -168,7 +172,7 @@ export function xieBeniIndex(
     }
   }
   for (let c = 0; c < k; c++) {
-    for (let j = 0; j < d; j++) centroids[c]![j] = (centroids[c]![j] ?? 0) / (membershipSums[c] ?? 1 || 1);
+    for (let j = 0; j < d; j++) centroids[c]![j] = (centroids[c]![j] ?? 0) / ((membershipSums[c] ?? 1) || 1);
   }
 
   // Compactness

@@ -15,6 +15,7 @@ export interface TheilSenRegressorParams {
 
 /** Theil-Sen Estimator: robust regression using median of pairwise slopes. */
 export class TheilSenRegressor extends BaseEstimator implements RegressorMixin {
+  readonly _estimator_type = "regressor" as const;
   readonly __type = "regressor" as const;
   fit_intercept: boolean;
   max_subpopulation: number;
@@ -100,6 +101,7 @@ export interface RANSACRegressorParams {
 
 /** RANSAC: RANdom SAmple Consensus regressor. */
 export class RANSACRegressor extends BaseEstimator implements RegressorMixin {
+  readonly _estimator_type = "regressor" as const;
   readonly __type = "regressor" as const;
   max_trials: number;
   min_samples: number;

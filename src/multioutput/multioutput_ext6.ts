@@ -147,7 +147,7 @@ export class MultiOutputGradientBoostingRegressor {
 				const tree = { feat: bestFeat, thresh: bestThresh, lVal: l === 0 ? 0 : lSum / l, rVal: r === 0 ? 0 : rSum / r };
 				treesThisIter.push(tree);
 				for (let i = 0; i < n; i++) {
-					preds[i]![out] += this.learningRate * ((X[i]?.[bestFeat] ?? 0) <= bestThresh ? tree.lVal : tree.rVal);
+					preds[i]![out]! += this.learningRate * ((X[i]?.[bestFeat] ?? 0) <= bestThresh ? tree.lVal : tree.rVal);
 				}
 			}
 			this.trees_.push(treesThisIter);

@@ -173,7 +173,7 @@ export class HalvingRandomSearchCV extends HalvingGridSearchCV {
     this.randomState = randomState;
   }
 
-  fit(X: Float64Array[], y: Float64Array | Int32Array): this {
+  override fit(X: Float64Array[], y: Float64Array | Int32Array): this {
     // Sample random combinations
     const keys = Object.keys(this.paramGrid);
     const sampled: Array<Record<string, unknown>> = [];

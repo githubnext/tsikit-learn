@@ -60,8 +60,8 @@ export function computeLearningCurveData(
 	const trainSizes = new Int32Array(
 		trainSizeFractions.map((f) => Math.max(1, Math.round(f * nSamples))),
 	);
-	const trainScores: Float64Array[] = trainSizes.map(() => new Float64Array(nCv));
-	const testScores: Float64Array[] = trainSizes.map(() => new Float64Array(nCv));
+	const trainScores: Float64Array[] = Array.from(trainSizes, () => new Float64Array(nCv));
+	const testScores: Float64Array[] = Array.from(trainSizes, () => new Float64Array(nCv));
 	let rng = randomState;
 	const rand = (): number => {
 		rng = (rng * 1664525 + 1013904223) & 0xffffffff;

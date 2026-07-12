@@ -45,8 +45,8 @@ export class LassoCoordinateDescent {
 			for (let i = 0; i < nSamples; i++) yCenter += y[i] ?? 0;
 			yCenter /= nSamples;
 			for (let j = 0; j < nFeatures; j++) {
-				for (let i = 0; i < nSamples; i++) xCenter[j] += X[i]?.[j] ?? 0;
-				xCenter[j] /= nSamples;
+				for (let i = 0; i < nSamples; i++) xCenter[j]! += X[i]?.[j] ?? 0;
+				xCenter[j]! /= nSamples;
 			}
 		}
 		const coef = new Float64Array(nFeatures);
@@ -58,7 +58,7 @@ export class LassoCoordinateDescent {
 		for (let j = 0; j < nFeatures; j++) {
 			for (let i = 0; i < nSamples; i++) {
 				const xij = (X[i]?.[j] ?? 0) - xCenter[j]!;
-				colNorms[j] += xij * xij;
+				colNorms[j]! += xij * xij;
 			}
 		}
 		for (let iter = 0; iter < this.maxIter; iter++) {
@@ -148,7 +148,7 @@ export class ElasticNetCoordinateDescent {
 			for (let i = 0; i < nSamples; i++) yCenter += y[i] ?? 0;
 			yCenter /= nSamples;
 			for (let j = 0; j < nFeatures; j++) {
-				for (let i = 0; i < nSamples; i++) xCenter[j] += X[i]?.[j] ?? 0;
+				for (let i = 0; i < nSamples; i++) xCenter[j]! += X[i]?.[j] ?? 0;
 				xCenter[j]! /= nSamples;
 			}
 		}

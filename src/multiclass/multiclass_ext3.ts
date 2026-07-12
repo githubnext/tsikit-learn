@@ -118,7 +118,7 @@ export class TournamentClassifier {
           if (!clf) continue;
           const pred = clf.predict([x]);
           const winner = (pred[0] ?? 0) === 0 ? i : j;
-          votes[winner]++;
+          votes[winner] = (votes[winner] ?? 0) + 1;
         }
       }
       let best = 0; let bestVotes = -1;
@@ -158,7 +158,7 @@ export function multiclassRocAuc(
 ): number {
   const aucs: number[] = [];
   const classCounts = new Int32Array(nClasses);
-  for (let i = 0; i < yTrue.length; i++) classCounts[yTrue[i] ?? 0]++;
+  for (let i = 0; i < yTrue.length; i++) { const ci = yTrue[i] ?? 0; classCounts[ci] = (classCounts[ci] ?? 0) + 1; }
 
   for (let c = 0; c < nClasses; c++) {
     const scores = Float64Array.from(yScore, row => row[c] ?? 0);

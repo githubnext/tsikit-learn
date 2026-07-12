@@ -9,6 +9,8 @@ export interface RegressionEstimator {
   fit(X: Float64Array[], y: Float64Array): this;
   predict(X: Float64Array[]): Float64Array;
   score?(X: Float64Array[], y: Float64Array): number;
+  coef_?: Float64Array | null;
+  intercept_?: number;
 }
 
 export interface ClassifierEstimator {
