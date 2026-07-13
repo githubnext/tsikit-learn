@@ -156,7 +156,7 @@ export class PLSRegression {
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
     const q = (Y[0] ?? new Float64Array(0)).length;
-    const k = Math.min(this.nComponents, p, q);
+    const k = Math.min(this.nComponents, p, n);
 
     this.xMean_ = colMeans(X);
     this.yMean_ = colMeans(Y);
@@ -184,11 +184,11 @@ export class PLSRegression {
         s[i] = dot(yi, v);
       }
 
-      // Normalize t
+      // Normalize t in-place for use in loadings and deflation
       const tNorm = norm(t);
       if (tNorm > 1e-15) for (let i = 0; i < n; i++) t[i] = (t[i] ?? 0) / tNorm;
 
-      // X loadings: p_h = Xc^T t
+      // X loadings: p_h = Xc^T t_normalized
       const px = new Float64Array(p);
       for (let i = 0; i < n; i++) {
         const xi = Xc[i] ?? new Float64Array(p);
@@ -196,17 +196,14 @@ export class PLSRegression {
           px[j] = (px[j] ?? 0) + (xi[j] ?? 0) * (t[i] ?? 0);
       }
 
-      // Y loadings: q_h = Yc^T s / ||s||^2
-      const sNorm2 = dot(s, s);
+      // Y loadings: q_h = Yc^T t_normalized (inner relation with x scores)
       const qy = new Float64Array(q);
       for (let i = 0; i < n; i++) {
         const yi = Yc[i] ?? new Float64Array(q);
         for (let j = 0; j < q; j++) {
-          qy[j] = (qy[j] ?? 0) + (yi[j] ?? 0) * (s[i] ?? 0);
+          qy[j] = (qy[j] ?? 0) + (yi[j] ?? 0) * (t[i] ?? 0);
         }
       }
-      if (sNorm2 > 1e-15)
-        for (let j = 0; j < q; j++) qy[j] = (qy[j] ?? 0) / sNorm2;
 
       this.xWeights_[comp] = u;
       this.yWeights_[comp] = v;
@@ -217,22 +214,17 @@ export class PLSRegression {
         this.yScores_![i]![comp] = s[i] ?? 0;
       }
 
-      // Deflate
-      const tFull = new Float64Array(n);
-      for (let i = 0; i < n; i++) {
-        const xi = Xc[i] ?? new Float64Array(p);
-        tFull[i] = dot(xi, u);
-      }
+      // Deflate using t_normalized (consistent with how px and qy were computed)
       Xc = Xc.map((xi, i) => {
         const out = new Float64Array(p);
         for (let j = 0; j < p; j++)
-          out[j] = (xi[j] ?? 0) - (tFull[i] ?? 0) * (px[j] ?? 0);
+          out[j] = (xi[j] ?? 0) - (t[i] ?? 0) * (px[j] ?? 0);
         return out;
       });
       Yc = Yc.map((yi, i) => {
         const out = new Float64Array(q);
         for (let j = 0; j < q; j++)
-          out[j] = (yi[j] ?? 0) - (tFull[i] ?? 0) * (qy[j] ?? 0);
+          out[j] = (yi[j] ?? 0) - (t[i] ?? 0) * (qy[j] ?? 0);
         return out;
       });
     }
