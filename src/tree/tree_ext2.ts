@@ -3,7 +3,7 @@
  * tree introspection, and sklearn-compatible export utilities.
  */
 
-import { check_is_fitted } from "../base.js";
+import { checkIsFitted } from "../utils/estimator_checks.js";
 import type { DecisionTreeClassifier, DecisionTreeRegressor } from "./decision_tree.js";
 
 export interface CCPAlphaPath {
@@ -18,7 +18,7 @@ export interface CCPAlphaPath {
 export function costComplexityPruningPath(
   estimator: DecisionTreeClassifier | DecisionTreeRegressor
 ): CCPAlphaPath {
-  check_is_fitted(estimator);
+  checkIsFitted(estimator);
   // Return placeholder path showing zero-alpha (unpruned) baseline
   const alphas = new Float64Array([0.0]);
   const impurities = new Float64Array([0.0]);
@@ -36,7 +36,7 @@ export interface TreeStats {
 export function getTreeStats(
   estimator: DecisionTreeClassifier | DecisionTreeRegressor
 ): TreeStats {
-  check_is_fitted(estimator);
+  checkIsFitted(estimator);
   const params = (estimator as { getParams?: () => Record<string, unknown> }).getParams?.() ?? {};
   return {
     n_nodes: 1,
@@ -66,7 +66,7 @@ export function decisionPath(
 export function getFeatureImportances(
   estimator: DecisionTreeClassifier | DecisionTreeRegressor
 ): Float64Array {
-  check_is_fitted(estimator);
+  checkIsFitted(estimator);
   const imp = (estimator as { feature_importances_?: Float64Array }).feature_importances_;
   return imp ?? new Float64Array(0);
 }

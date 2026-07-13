@@ -24,7 +24,7 @@ export interface ExtraTreeClassifierOptions {
 export class ExtraTreeClassifier extends DecisionTreeClassifier {
   constructor(options: ExtraTreeClassifierOptions = {}) {
     super({
-      ...(options.maxDepth !== undefined ? { maxDepth: options.maxDepth } : {}),
+      ...(options.maxDepth != null ? { maxDepth: options.maxDepth } : {}),
       minSamplesSplit: options.minSamplesSplit ?? 2,
       criterion: options.criterion ?? "gini",
     });
@@ -48,7 +48,7 @@ export interface ExtraTreeRegressorOptions {
 export class ExtraTreeRegressor extends DecisionTreeRegressor {
   constructor(options: ExtraTreeRegressorOptions = {}) {
     super({
-      ...(options.maxDepth !== undefined ? { maxDepth: options.maxDepth } : {}),
+      ...(options.maxDepth != null ? { maxDepth: options.maxDepth } : {}),
       minSamplesSplit: options.minSamplesSplit ?? 2,
     });
   }

@@ -159,7 +159,7 @@ export function leveneTest(groups: Float64Array[]): { statistic: number; pValue:
   const N = groups.reduce((s, g) => s + g.length, 0);
   const means = groups.map(g => g.reduce((s, v) => s + v, 0) / g.length);
   const W = groups.map((g, i) => g.map(v => Math.abs(v - (means[i] ?? 0))));
-  const grandMean = W.reduce((s, g) => s + g.reduce((a, b) => a + b, 0), 0) / N;
+  const grandMean = W.reduce((s, wi) => s + wi.reduce((ss, v) => ss + v, 0), 0) / N;
   const Wmeans = W.map(wi => wi.reduce((s, v) => s + v, 0) / wi.length);
   let numerator = 0;
   for (let i = 0; i < k; i++) numerator += W[i]!.length * ((Wmeans[i]! - grandMean) ** 2);

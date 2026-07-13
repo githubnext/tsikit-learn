@@ -6,6 +6,5 @@ export * from "./multioutput_ext6.js";
 export {
   type MultiLabelClassifierParams,
   MultiLabelClassifier,
-  type MultiTargetRegressionChainParams,
 } from "./multioutput_ext7.js";
 export * from "./multioutput_ext8.js";

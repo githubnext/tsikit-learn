@@ -65,8 +65,8 @@ function pruneAtAlpha(node: TreeNodeCCP, alpha: number): void {
 	const nodeAlpha = (node.impurity * node.nSamples - leafImpurity) / Math.max(1, leaves - 1);
 	if (nodeAlpha <= alpha) {
 		node.isLeaf = true;
-		delete (node as { leftChild?: TreeNodeCCP }).leftChild;
-		delete (node as { rightChild?: TreeNodeCCP }).rightChild;
+		delete node.leftChild;
+		delete node.rightChild;
 	} else {
 		pruneAtAlpha(node.leftChild!, alpha);
 		pruneAtAlpha(node.rightChild!, alpha);

@@ -69,7 +69,7 @@ export class HalvingGridSearchCV extends BaseEstimator {
       const nSamples = Math.min(resources, n);
       const scores: number[] = [];
       for (const params of candidates) {
-        const score = this._crossValScore(X.slice(0, nSamples), (y as Float64Array).slice(0, nSamples), params);
+        const score = this._crossValScore(X.slice(0, nSamples), y instanceof Float64Array ? y.slice(0, nSamples) : new Float64Array(nSamples), params);
         scores.push(score);
         results.push({ params, mean_test_score: score, n_resources: nSamples });
       }
