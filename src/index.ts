@@ -19,10 +19,10 @@ export * from "./metrics/index.js";
 export * from "./model_selection/index.js";
 
 // Linear models
-// (removed duplicate: export * from "./linear_model/index.js")
+export * from "./linear_model/index.js";
 
 // SVM
-// (removed duplicate: export * from "./svm/index.js")
+export * from "./svm/index.js";
 
 // Tree
 export * from "./tree/index.js";
@@ -31,13 +31,13 @@ export * from "./tree/index.js";
 export * from "./ensemble/index.js";
 
 // Neighbors
-// (removed duplicate: export * from "./neighbors/index.js")
+export * from "./neighbors/index.js";
 
 // Naive Bayes
 export * from "./naive_bayes/index.js";
 
 // Cluster
-// (removed duplicate: export * from "./cluster/index.js")
+export * from "./cluster/index.js";
 
 // Decomposition
 export * from "./decomposition/index.js";
@@ -46,7 +46,7 @@ export * from "./decomposition/index.js";
 export * from "./neural_network/index.js";
 
 // Pipeline
-// (removed duplicate: export * from "./pipeline/index.js")
+export * from "./pipeline/index.js";
 
 // Impute
 export * from "./impute/index.js";
@@ -55,7 +55,7 @@ export * from "./impute/index.js";
 export * from "./feature_selection/index.js";
 
 // Compose
-// (removed duplicate: export * from "./compose/index.js")
+export * from "./compose/index.js";
 
 // Datasets
 export * from "./datasets/index.js";
@@ -85,10 +85,10 @@ export * from "./semi_supervised/index.js";
 export * from "./feature_extraction/index.js";
 
 // Multioutput
-// (removed duplicate: export * from "./multioutput/index.js")
+export * from "./multioutput/index.js";
 
 // Kernel ridge
-// (removed duplicate: export * from "./kernel_ridge/index.js")
+export * from "./kernel_ridge/index.js";
 
 // Gaussian process
 export * from "./gaussian_process/index.js";
@@ -103,7 +103,7 @@ export * from "./covariance/index.js";
 export * from "./cross_decomposition/index.js";
 
 // Inspection
-// (removed duplicate: export * from "./inspection/index.js")
+export * from "./inspection/index.js";
 
 // Random projection
 export * from "./random_projection/index.js";

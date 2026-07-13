@@ -85,7 +85,7 @@ export class RANSACRegressor {
 
       if (inlierCount > bestInlierCount) {
         bestInlierCount = inlierCount;
-        bestCoef = coef as Float64Array<ArrayBuffer>;
+        bestCoef = coef;
         bestIntercept = intercept;
         bestMask = mask;
         this.nTrialsReached_ = trial + 1;
@@ -103,7 +103,7 @@ export class RANSACRegressor {
     }
     if (inlierX.length > 0) {
       const { coef, intercept } = this._fitOLS(inlierX, inlierY, nFeatures);
-      bestCoef = coef as Float64Array<ArrayBuffer>;
+      bestCoef = coef;
       bestIntercept = intercept;
     }
 

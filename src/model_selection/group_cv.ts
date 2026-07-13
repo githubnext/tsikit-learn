@@ -49,7 +49,7 @@ export class GroupKFold {
     for (const g of sortedGroups) {
       const minFold = foldSizes.indexOf(Math.min(...foldSizes));
       folds[minFold]!.push(g);
-      foldSizes[minFold]! += groupSizes.get(g) ?? 0;
+      foldSizes[minFold] += groupSizes.get(g) ?? 0;
     }
 
     return folds.map((testGroups) => {

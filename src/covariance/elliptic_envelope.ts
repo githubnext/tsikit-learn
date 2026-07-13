@@ -209,7 +209,7 @@ export class EllipticEnvelope {
       const det = logDet(cov);
       if (det < bestDet) {
         bestDet = det;
-        bestMean = mean as Float64Array<ArrayBuffer>;
+        bestMean = mean;
         bestCov = cov;
       }
     }

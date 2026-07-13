@@ -75,7 +75,7 @@ export class ElasticNet {
           for (let k = 0; k < p; k++) pred += (X[i]?.[k] ?? 0) * (coef[k] ?? 0);
           rj +=
             (X[i]?.[j] ?? 0) *
-            (yCenter[i]! - pred + (X[i]?.[j] ?? 0) * oldCoefJ);
+            (yCenter[i] - pred + (X[i]?.[j] ?? 0) * oldCoefJ);
         }
         const denom = (colNorm2[j] ?? 0) + alphaL2 * n;
         coef[j] =

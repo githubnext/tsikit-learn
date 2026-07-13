@@ -110,9 +110,9 @@ export function calibrationCurve(
         break;
       }
     }
-    counts[binIdx]!++;
-    meanPredictedValue[binIdx]! += p;
-    if (yTrue[i] === 1) positives[binIdx]!++;
+    counts[binIdx]++;
+    meanPredictedValue[binIdx] += p;
+    if (yTrue[i] === 1) positives[binIdx]++;
   }
 
   for (let b = 0; b < nBins; b++) {

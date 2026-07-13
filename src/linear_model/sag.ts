@@ -93,7 +93,7 @@ export function sagSolver(
 
       // Update sum of gradients
       for (let j = 0; j < d; j++) {
-        sumGrad[j]! += sw * ((newGrad[j] ?? 0) - (oldGrad[j] ?? 0));
+        sumGrad[j] += sw * ((newGrad[j] ?? 0) - (oldGrad[j] ?? 0));
         oldGrad[j] = sw * (newGrad[j] ?? 0);
       }
       sumInterceptGrad += sw * (newIntGrad - oldIntGrad);

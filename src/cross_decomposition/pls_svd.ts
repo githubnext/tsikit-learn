@@ -122,7 +122,7 @@ export class PLSSVDExt {
         const v = new Float64Array(nTargets);
         for (let j = 0; j < nFeatures; j++)
           for (let l = 0; l < nTargets; l++)
-            v[l]! += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
+            v[l] += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
         const normV = Math.sqrt(v.reduce((s, v2) => s + v2 ** 2, 0)) || 1;
         for (let l = 0; l < nTargets; l++) v[l] = (v[l] ?? 0) / normV;
 
@@ -130,7 +130,7 @@ export class PLSSVDExt {
         const uNew = new Float64Array(nFeatures);
         for (let j = 0; j < nFeatures; j++)
           for (let l = 0; l < nTargets; l++)
-            uNew[j]! += (C[j]?.[l] ?? 0) * (v[l] ?? 0);
+            uNew[j] += (C[j]?.[l] ?? 0) * (v[l] ?? 0);
 
         // Orthogonalize against previous
         for (const pu of xWeights) {
@@ -149,7 +149,7 @@ export class PLSSVDExt {
       const v = new Float64Array(nTargets);
       for (let j = 0; j < nFeatures; j++)
         for (let l = 0; l < nTargets; l++)
-          v[l]! += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
+          v[l] += (C[j]?.[l] ?? 0) * (u[j] ?? 0);
       const normV = Math.sqrt(v.reduce((s, v2) => s + v2 ** 2, 0)) || 1;
       for (let l = 0; l < nTargets; l++) v[l] = (v[l] ?? 0) / normV;
 
