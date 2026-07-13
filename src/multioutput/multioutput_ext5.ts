@@ -6,6 +6,8 @@
 import { NotFittedError } from "../exceptions.js";
 
 export interface RegressionEstimator {
+  coef_?: Float64Array | null;
+  intercept_?: number;
   fit(X: Float64Array[], y: Float64Array): this;
   predict(X: Float64Array[]): Float64Array;
   score?(X: Float64Array[], y: Float64Array): number;

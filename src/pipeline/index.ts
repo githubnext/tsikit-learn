@@ -6,7 +6,7 @@ export type { Estimator } from "./pipeline_ext2.js";
 export {
   CachedPipeline,
   TransformerPipeline,
-  FeatureUnionExt3,
+  FeatureUnionExt as FeatureUnionExt3,
   SelectiveColumnTransformer,
 } from "./pipeline_ext3.js";
 export * from "./pipeline_ext4.js";

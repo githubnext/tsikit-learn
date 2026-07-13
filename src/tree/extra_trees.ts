@@ -23,9 +23,8 @@ export interface ExtraTreeClassifierOptions {
  */
 export class ExtraTreeClassifier extends DecisionTreeClassifier {
   constructor(options: ExtraTreeClassifierOptions = {}) {
-    // ExtraTrees use sqrt features by default and random splits
     super({
-      maxDepth: options.maxDepth ?? undefined,
+      ...(options.maxDepth !== undefined ? { maxDepth: options.maxDepth } : {}),
       minSamplesSplit: options.minSamplesSplit ?? 2,
       criterion: options.criterion ?? "gini",
     });
@@ -49,7 +48,7 @@ export interface ExtraTreeRegressorOptions {
 export class ExtraTreeRegressor extends DecisionTreeRegressor {
   constructor(options: ExtraTreeRegressorOptions = {}) {
     super({
-      maxDepth: options.maxDepth ?? undefined,
+      ...(options.maxDepth !== undefined ? { maxDepth: options.maxDepth } : {}),
       minSamplesSplit: options.minSamplesSplit ?? 2,
     });
   }

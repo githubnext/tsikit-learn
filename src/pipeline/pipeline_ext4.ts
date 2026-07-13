@@ -66,10 +66,10 @@ export class FeatureUnionWeighted {
 }
 
 /** Apply a function transformer to data. */
-export class FunctionTransformerExt {
+export class FunctionTransformerExt4 {
 	private fitted_ = false;
 	readonly func: (X: Float64Array[]) => Float64Array[];
-	readonly inverseFunc?: (X: Float64Array[]) => Float64Array[];
+	readonly inverseFunc: ((X: Float64Array[]) => Float64Array[]) | undefined;
 	readonly validate: boolean;
 
 	constructor(options: {
@@ -95,7 +95,7 @@ export class FunctionTransformerExt {
 	}
 
 	transform(X: Float64Array[]): Float64Array[] {
-		if (!this.fitted_) throw new NotFittedError("FunctionTransformerExt is not fitted.");
+		if (!this.fitted_) throw new NotFittedError("FunctionTransformerExt4 is not fitted.");
 		return this.func(X);
 	}
 

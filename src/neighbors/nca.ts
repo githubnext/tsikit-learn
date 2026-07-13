@@ -198,7 +198,7 @@ export class NeighborhoodComponentsAnalysis extends BaseEstimator {
 
   getParams(): NCAOptions {
     return {
-      nComponents: this.nComponents,
+      ...(this.nComponents !== undefined ? { nComponents: this.nComponents } : {}),
       init: this.init,
       tol: this.tol,
       maxIter: this.maxIter,

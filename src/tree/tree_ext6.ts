@@ -65,8 +65,8 @@ function pruneAtAlpha(node: TreeNodeCCP, alpha: number): void {
 	const nodeAlpha = (node.impurity * node.nSamples - leafImpurity) / Math.max(1, leaves - 1);
 	if (nodeAlpha <= alpha) {
 		node.isLeaf = true;
-		node.leftChild = undefined;
-		node.rightChild = undefined;
+		delete (node as { leftChild?: TreeNodeCCP }).leftChild;
+		delete (node as { rightChild?: TreeNodeCCP }).rightChild;
 	} else {
 		pruneAtAlpha(node.leftChild!, alpha);
 		pruneAtAlpha(node.rightChild!, alpha);
@@ -78,7 +78,7 @@ function cloneTree(node: TreeNodeCCP): TreeNodeCCP {
 		isLeaf: node.isLeaf,
 		impurity: node.impurity,
 		nSamples: node.nSamples,
-		label: node.label,
+		...(node.label !== undefined ? { label: node.label } : {}),
 	};
 	if (node.leftChild) clone.leftChild = cloneTree(node.leftChild);
 	if (node.rightChild) clone.rightChild = cloneTree(node.rightChild);

@@ -274,7 +274,7 @@ export class TransformerEncoder {
           for (let k = 0; k < this.dFF; k++) ff2Out[j] = (ff2Out[j] ?? 0) + (this.ff2_![l]![j]![k] ?? 0) * (ff1Out[k] ?? 0);
         }
         return this.norm2_![l]!.forward(Float64Array.from(x.map((v, j) => (v ?? 0) + (ff2Out[j] ?? 0))));
-      });
+      }) as Float64Array<ArrayBuffer>[];
     }
     return out;
   }
