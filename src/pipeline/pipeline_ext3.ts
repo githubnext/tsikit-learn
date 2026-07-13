@@ -122,7 +122,7 @@ export class TransformerPipeline {
   }
 }
 
-export class FeatureUnionExt {
+export class FeatureUnionExt3 {
   transformerList: Array<[string, Transformer]>;
   private fitted_ = false;
 
@@ -140,7 +140,7 @@ export class FeatureUnionExt {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.fitted_) throw new NotFittedError("FeatureUnionExt not fitted.");
+    if (!this.fitted_) throw new NotFittedError("FeatureUnionExt3 not fitted.");
     const outputs = this.transformerList.map(([, t]) => t.transform(X));
     return X.map((_, i) => {
       const parts = outputs.map(out => out[i]!);

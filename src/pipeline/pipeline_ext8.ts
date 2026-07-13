@@ -149,13 +149,13 @@ export class FeatureUnion implements TransformerLike {
 }
 
 export class TransformedTargetRegressor {
-  regressor: RegressorLike;
-  transformer: TransformerLikeForTarget;
-  private _regressor: RegressorLike | null = null;
+  regressor: { fit(X: Float64Array[], y: Float64Array): unknown; predict(X: Float64Array[]): Float64Array };
+  transformer: { fit(y: Float64Array[]): unknown; transform(y: Float64Array[]): Float64Array[]; inverseTransform(y: Float64Array[]): Float64Array[] };
+  private _fitted = false;
 
   constructor(
-    regressor: RegressorLike,
-    transformer: TransformerLikeForTarget,
+    regressor: { fit(X: Float64Array[], y: Float64Array): unknown; predict(X: Float64Array[]): Float64Array },
+    transformer: { fit(y: Float64Array[]): unknown; transform(y: Float64Array[]): Float64Array[]; inverseTransform(y: Float64Array[]): Float64Array[] },
   ) {
     this.regressor = regressor;
     this.transformer = transformer;
@@ -166,13 +166,14 @@ export class TransformedTargetRegressor {
     this.transformer.fit(yWrapped);
     const yTransformed = this.transformer.transform(yWrapped);
     const yFlat = Float64Array.from(yTransformed, (row) => row[0] ?? 0);
-    this._regressor = this.regressor.fit(X, yFlat);
+    this.regressor.fit(X, yFlat);
+    this._fitted = true;
     return this;
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (!this._regressor) throw new Error("Not fitted");
-    const rawPreds = this._regressor.predict(X);
+    if (!this._fitted) throw new Error("Not fitted");
+    const rawPreds = this.regressor.predict(X);
     const wrapped = Array.from(rawPreds, (v) => Float64Array.from([v]));
     const invTransformed = this.transformer.inverseTransform(wrapped);
     return Float64Array.from(invTransformed, (row) => row[0] ?? 0);
