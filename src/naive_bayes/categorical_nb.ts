@@ -3,7 +3,7 @@
  * Mirrors sklearn.naive_bayes.CategoricalNB and ComplementNB.
  */
 
-import { checkIsFitted } from "../base.js";
+import { checkIsFitted } from "../utils/estimator_checks.js";
 import { NotFittedError } from "../exceptions.js";
 
 export interface CategoricalNBOptions {

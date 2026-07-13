@@ -239,7 +239,8 @@ export function cohenD(x: Float64Array, y: Float64Array): number {
 }
 
 export function etaSquared(groups: Float64Array[]): number {
-  const allValues = groups.flat();
+  const allValues: number[] = [];
+  for (const g of groups) for (const v of g) allValues.push(v);
   const grandMean = allValues.reduce((s, v) => s + v, 0) / allValues.length;
   const ssBetween = groups.reduce((s, g) => {
     const gm = g.reduce((ss, v) => ss + v, 0) / g.length;
