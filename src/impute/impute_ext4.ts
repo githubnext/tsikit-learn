@@ -35,12 +35,12 @@ export class MatrixFactorizationImputer {
     for (const row of X) {
       for (let j = 0; j < p; j++) {
         if (!Number.isNaN(row[j] ?? NaN)) {
-          (this._colMeans as Float64Array)[j] += row[j] ?? 0;
-          colCounts[j]++;
+          (this._colMeans as Float64Array)[j]! += row[j] ?? 0;
+          colCounts[j]!++;
         }
       }
     }
-    for (let j = 0; j < p; j++) (this._colMeans as Float64Array)[j] /= Math.max(colCounts[j] ?? 0, 1);
+    for (let j = 0; j < p; j++) (this._colMeans as Float64Array)[j]! /= Math.max(colCounts[j] ?? 0, 1);
 
     this._rowMeans = new Float64Array(n);
     for (let i = 0; i < n; i++) {
@@ -68,14 +68,14 @@ export class MatrixFactorizationImputer {
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < p; j++) {
           const actual = Xfilled[i]?.[j] ?? 0;
-          const pred = (this._U[i] as Float64Array).reduce((s, v, k) => s + v * ((this._V[j] as Float64Array)[k] ?? 0), 0);
+          const pred = (this._U[i] as Float64Array).reduce((s, v, k) => s + v * ((this._V![j] as Float64Array)[k] ?? 0), 0);
           const err = actual - pred;
           loss += err * err;
           for (let k2 = 0; k2 < k; k2++) {
             const uik = (this._U[i] as Float64Array)[k2] ?? 0;
-            const vjk = (this._V[j] as Float64Array)[k2] ?? 0;
+            const vjk = (this._V![j] as Float64Array)[k2] ?? 0;
             (this._U[i] as Float64Array)[k2] = uik + this.lr * (2 * err * vjk - this.regParam * uik);
-            (this._V[j] as Float64Array)[k2] = vjk + this.lr * (2 * err * uik - this.regParam * vjk);
+            (this._V![j] as Float64Array)[k2] = vjk + this.lr * (2 * err * uik - this.regParam * vjk);
           }
         }
       }
@@ -127,12 +127,12 @@ export class SoftImputeImputer {
     for (const row of X) {
       for (let j = 0; j < p; j++) {
         if (!Number.isNaN(row[j] ?? NaN) && row[j] !== undefined) {
-          (this._colMeans as Float64Array)[j] += row[j] ?? 0;
-          colCounts[j]++;
+          (this._colMeans as Float64Array)[j]! += row[j] ?? 0;
+          colCounts[j]!++;
         }
       }
     }
-    for (let j = 0; j < p; j++) (this._colMeans as Float64Array)[j] /= Math.max(colCounts[j] ?? 1, 1);
+    for (let j = 0; j < p; j++) (this._colMeans as Float64Array)[j]! /= Math.max(colCounts[j] ?? 1, 1);
     return this;
   }
 

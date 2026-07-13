@@ -43,7 +43,7 @@ export class BayesianRidgeExt {
     const xMean = new Float64Array(p);
     const yMean = y.reduce((a, b) => a + b, 0) / n;
     if (this.fitIntercept) {
-      for (const row of X) for (let j = 0; j < p; j++) xMean[j] += (row[j] ?? 0) / n;
+      for (const row of X) for (let j = 0; j < p; j++) xMean[j]! += (row[j] ?? 0) / n;
     }
 
     const Xc = X.map((row) => {
@@ -58,8 +58,8 @@ export class BayesianRidgeExt {
     const Xty = new Float64Array(p);
     for (let s = 0; s < n; s++) {
       for (let i = 0; i < p; i++) {
-        Xty[i] += (Xc[s]![i] ?? 0) * (yc[s] ?? 0);
-        for (let j = 0; j < p; j++) XtX[i]![j] += (Xc[s]![i] ?? 0) * (Xc[s]![j] ?? 0);
+        Xty[i]! += (Xc[s]![i] ?? 0) * (yc[s] ?? 0);
+        for (let j = 0; j < p; j++) XtX[i]![j]! += (Xc[s]![i] ?? 0) * (Xc[s]![j] ?? 0);
       }
     }
 
@@ -91,7 +91,7 @@ export class BayesianRidgeExt {
       const coefNorm2 = newCoef.reduce((acc, v) => acc + v * v, 0);
       lambda = (gamma + 2 * (this.lambda1 - 1)) / (coefNorm2 + 2 * this.lambda2);
 
-      coef = newCoef;
+      coef = newCoef as Float64Array<ArrayBuffer>;
       if (delta < this.tol) break;
     }
 
@@ -173,7 +173,7 @@ export class ARDRegressionExt {
         }
       }
       const Xty = new Float64Array(p);
-      for (let s = 0; s < n; s++) for (let j = 0; j < p; j++) Xty[j] += alpha * (X[s]![j] ?? 0) * (y[s] ?? 0);
+      for (let s = 0; s < n; s++) for (let j = 0; j < p; j++) Xty[j]! += alpha * (X[s]![j] ?? 0) * (y[s] ?? 0);
 
       const newCoef = this.solve(A, Xty);
       const delta = newCoef.reduce((acc, v, i) => acc + (v - (coef[i] ?? 0)) ** 2, 0);
@@ -193,7 +193,7 @@ export class ARDRegressionExt {
         ssRes += ((y[s] ?? 0) - pred) ** 2;
       }
       alpha = n / (ssRes + 1e-10);
-      coef = newCoef;
+      coef = newCoef as Float64Array<ArrayBuffer>;
       if (delta < this.tol) break;
     }
 
@@ -289,10 +289,10 @@ export class HuberRegressorExt {
       for (let s = 0; s < n; s++) {
         const w = weights[s] ?? 0;
         const r = residuals[s] ?? 0;
-        for (let j = 0; j < p; j++) newCoef[j] += lr * 2 * w * r * (X[s]![j] ?? 0) / n;
+        for (let j = 0; j < p; j++) newCoef[j]! += lr * 2 * w * r * (X[s]![j] ?? 0) / n;
         newIntercept += lr * 2 * w * r / n;
       }
-      for (let j = 0; j < p; j++) coef[j] += newCoef[j] - this.alpha * (coef[j] ?? 0);
+      for (let j = 0; j < p; j++) coef[j]! += newCoef[j]! - this.alpha * (coef[j] ?? 0);
       intercept += newIntercept;
 
       this.outliers_ = outliers;

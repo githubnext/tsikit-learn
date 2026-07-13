@@ -5,13 +5,13 @@
 export function sampleCovariance(X: Float64Array[]): Float64Array[] {
   const n = X.length, p = X[0]?.length ?? 0;
   const mean = new Float64Array(p);
-  for (const row of X) for (let j = 0; j < p; j++) mean[j] += (row[j] ?? 0) / n;
+  for (const row of X) for (let j = 0; j < p; j++) mean[j]! += (row[j] ?? 0) / n;
   const cov: Float64Array[] = Array.from({ length: p }, () => new Float64Array(p));
   for (const row of X) {
     for (let j = 0; j < p; j++) {
       const dj = (row[j] ?? 0) - (mean[j] ?? 0);
       for (let k = 0; k < p; k++) {
-        (cov[j] as Float64Array)[k] += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / (n - 1);
+        (cov[j]! as Float64Array)[k]! += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / (n - 1);
       }
     }
   }
@@ -166,7 +166,7 @@ export class MinimumCovarianceDeterminant {
         const Xsub = support.map((i) => X[i] as Float64Array);
         const cov = sampleCovariance(Xsub);
         const mean = new Float64Array(p);
-        for (const row of Xsub) for (let j = 0; j < p; j++) mean[j] += (row[j] ?? 0) / Xsub.length;
+        for (const row of Xsub) for (let j = 0; j < p; j++) mean[j]! += (row[j] ?? 0) / Xsub.length;
 
         // Mahalanobis distances (approximate: use diagonal)
         const variances = Float64Array.from({ length: p }, (_, j) => (cov[j] as Float64Array)[j] ?? 1);
@@ -183,7 +183,7 @@ export class MinimumCovarianceDeterminant {
     const Xbest = bestSupport.map((i) => X[i] as Float64Array);
     this.covariance_ = sampleCovariance(Xbest);
     this.location_ = new Float64Array(p);
-    for (const row of Xbest) for (let j = 0; j < p; j++) (this.location_ as Float64Array)[j] += (row[j] ?? 0) / Xbest.length;
+    for (const row of Xbest) for (let j = 0; j < p; j++) (this.location_ as Float64Array)[j]! += (row[j] ?? 0) / Xbest.length;
     this.supportIndices_ = Int32Array.from(bestSupport);
     this.precision_ = Array.from({ length: p }, (_, i) => {
       const row = new Float64Array(p);

@@ -111,7 +111,7 @@ export class FactorAnalysisExt {
 			const out = new Float64Array(k);
 			for (let c = 0; c < k; c++) {
 				for (let j = 0; j < row.length; j++) {
-					out[c] += (this.components_![c]![j] ?? 0) * ((row[j] ?? 0) - (this.mean_![j] ?? 0));
+					out[c]! += (this.components_![c]![j] ?? 0) * ((row[j] ?? 0) - (this.mean_![j] ?? 0));
 				}
 			}
 			return out;
@@ -176,7 +176,7 @@ export class SparseRandomProjectionExt {
 				const rj = this.randomMatrix_![j];
 				if (rj === undefined) continue;
 				for (let c = 0; c < this.nComponents; c++) {
-					out[c] += (row[j] ?? 0) * (rj[c] ?? 0);
+					out[c]! += (row[j] ?? 0) * (rj[c] ?? 0);
 				}
 			}
 			return out;

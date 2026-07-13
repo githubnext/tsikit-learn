@@ -149,7 +149,7 @@ export class ProductQuantizerExt {
             for (let j = 0; j < this.subDim_; j++) d += ((xi[j] ?? 0) - (centroids[c]![j] ?? 0)) ** 2;
             if (d < bestDist) { bestDist = d; best = c; }
           }
-          counts[best]++;
+          counts[best]!++;
           for (let j = 0; j < this.subDim_; j++) sums[best]![j] = (sums[best]![j] ?? 0) + (xi[j] ?? 0);
         }
         centroids = centroids.map((_, c) => Float64Array.from({ length: this.subDim_ }, (__, j) => (sums[c]![j] ?? 0) / ((counts[c] ?? 1) + 1e-15)));

@@ -201,7 +201,7 @@ export class IsotonicRegressionExt {
 			const xMax = this.xThresholds_[this.xThresholds_.length - 1]!;
 			if (t < xMin || t > xMax) {
 				if (this.outOfBounds === "clip") {
-					result[i] = t < xMin ? this.yThresholds_![0]! : this.yThresholds_![this.yThresholds_.length - 1]!;
+					result[i] = t < xMin ? this.yThresholds_![0]! : this.yThresholds_![this.yThresholds_!.length - 1]!;
 				} else {
 					result[i] = Number.NaN;
 				}

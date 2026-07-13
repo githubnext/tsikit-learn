@@ -121,11 +121,11 @@ export class SammonMapping {
 					dij_y = Math.sqrt(dij_y) || 1e-10;
 					const factor = (dij_y - dij) / (dij * dij_y);
 					for (let dim = 0; dim < k; dim++) {
-						grad[dim] += factor * ((Y[i]?.[dim] ?? 0) - (Y[j]?.[dim] ?? 0));
+						grad[dim]! += factor * ((Y[i]?.[dim] ?? 0) - (Y[j]?.[dim] ?? 0));
 					}
 				}
 				for (let dim = 0; dim < k; dim++) {
-					Y[i]![dim] -= (this.learningRate / dSum) * (grad[dim] ?? 0);
+					Y[i]![dim]! -= (this.learningRate / dSum) * (grad[dim] ?? 0);
 				}
 			}
 		}
@@ -139,7 +139,7 @@ export class SammonMapping {
 	}
 
 	fitTransform(X: Float64Array[]): Float64Array[] {
-		return this.fit(X).embedding_;
+		return this.fit(X).embedding_ ?? [];
 	}
 }
 

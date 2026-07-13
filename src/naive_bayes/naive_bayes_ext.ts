@@ -48,16 +48,16 @@ export class ComplementNB {
 
 		for (let i = 0; i < n; i++) {
 			const ci = classSet.indexOf(y[i]!);
-			this.classCount_[ci]++;
+			this.classCount_[ci]!++;
 			for (let j = 0; j < nFeatures; j++) {
-				this.featureCount_[ci]![j] += X[i]?.[j] ?? 0;
+				this.featureCount_[ci]![j]! += X[i]?.[j] ?? 0;
 			}
 		}
 
 		// Complement counts: sum over all OTHER classes
 		const totalFeatureCount = new Float64Array(nFeatures);
 		for (let ci = 0; ci < nClasses; ci++) {
-			for (let j = 0; j < nFeatures; j++) totalFeatureCount[j] += this.featureCount_[ci]![j] ?? 0;
+			for (let j = 0; j < nFeatures; j++) totalFeatureCount[j]! += this.featureCount_[ci]![j] ?? 0;
 		}
 
 		this.featureLogProb_ = Array.from({ length: nClasses }, (_, ci) => {
@@ -171,10 +171,10 @@ export class BernoulliNB {
 		const threshold = this.binarize;
 		for (let i = 0; i < n; i++) {
 			const ci = classSet.indexOf(y[i]!);
-			this.classCount_[ci]++;
+			this.classCount_[ci]!++;
 			for (let j = 0; j < nFeatures; j++) {
 				const val = threshold !== null ? ((X[i]?.[j] ?? 0) > threshold ? 1 : 0) : (X[i]?.[j] ?? 0);
-				this.featureCount_[ci]![j] += val;
+				this.featureCount_[ci]![j]! += val;
 			}
 		}
 

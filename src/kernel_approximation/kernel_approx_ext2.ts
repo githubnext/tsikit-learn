@@ -135,7 +135,7 @@ export class TensorSketch {
       for (let j = 0; j < p; j++) {
         const h = this.hashMaps_![0]![j] ?? 0;
         const s = this.signs_![0]![j] ?? 1;
-        sketch[h] += s * (row[j] ?? 0);
+        sketch[h]! += s * (row[j] ?? 0);
       }
       for (let d = 1; d < this.degree; d++) {
         const nextSketch = new Float64Array(this.nComponents);
@@ -143,7 +143,7 @@ export class TensorSketch {
         for (let j = 0; j < p; j++) {
           const h = this.hashMaps_![d]![j] ?? 0;
           const s = this.signs_![d]![j] ?? 1;
-          currSketch[h] += s * (row[j] ?? 0);
+          currSketch[h]! += s * (row[j] ?? 0);
         }
         // Approximate polynomial kernel via element-wise product in frequency domain
         for (let c = 0; c < this.nComponents; c++) {

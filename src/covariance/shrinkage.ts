@@ -45,10 +45,10 @@ function centerMatrix(
 ): Float64Array {
   const means = new Float64Array(nFeatures);
   for (let i = 0; i < nSamples; i++)
-    for (let j = 0; j < nFeatures; j++) means[j]! += X[i * nFeatures + j];
+    for (let j = 0; j < nFeatures; j++) means[j]! += X[i * nFeatures + j] ?? 0;
   for (let j = 0; j < nFeatures; j++) means[j]! /= nSamples;
   for (let i = 0; i < nSamples; i++)
-    for (let j = 0; j < nFeatures; j++) X[i * nFeatures + j]! -= means[j];
+    for (let j = 0; j < nFeatures; j++) X[i * nFeatures + j]! -= means[j] ?? 0;
   return means;
 }
 

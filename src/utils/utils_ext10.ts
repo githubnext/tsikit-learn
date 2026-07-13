@@ -33,7 +33,7 @@ export function histogramBins(data: Float64Array, nBins: number): { counts: Int3
   const edges = Float64Array.from({ length: nBins + 1 }, (_, i) => mn + i * binWidth);
   for (const v of data) {
     const bin = Math.min(Math.floor((v - mn) / Math.max(binWidth, 1e-12)), nBins - 1);
-    if (bin >= 0) counts[bin]++;
+    if (bin >= 0) counts[bin]!++;
   }
   return { counts, edges };
 }

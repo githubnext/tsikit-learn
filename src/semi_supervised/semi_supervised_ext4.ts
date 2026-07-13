@@ -90,7 +90,7 @@ export class LabelPropagationExt {
         for (let j = 0; j < n; j++) {
           const tij = (T[i] as Float64Array)[j] ?? 0;
           for (let c = 0; c < this.nClasses; c++) {
-            (Fnew[i] as Float64Array)[c] += tij * ((F[j] as Float64Array)[c] ?? 0);
+            (Fnew[i]! as Float64Array)[c]! += tij * ((F[j] as Float64Array)[c] ?? 0);
           }
         }
       }

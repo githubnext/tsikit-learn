@@ -74,7 +74,7 @@ export function buildDecisionTree(
     ? (y instanceof Float64Array ? (criterion === "mse" ? mseCriterion(y) : maeCriterion(y)) : 0)
     : (() => {
       const counts = new Int32Array(nClasses);
-      for (const label of y) counts[label as number]++;
+      for (const label of y) counts[label as number]!++;
       return criterion === "gini" ? giniImpurity(counts) : entropy(counts);
     })();
 
@@ -101,8 +101,8 @@ export function buildDecisionTree(
       } else {
         const lC = new Int32Array(nClasses);
         const rC = new Int32Array(nClasses);
-        for (const v of leftY) lC[v as number]++;
-        for (const v of rightY) rC[v as number]++;
+        for (const v of leftY) lC[v as number]!++;
+        for (const v of rightY) rC[v as number]!++;
         leftImpurity = criterion === "gini" ? giniImpurity(lC) : entropy(lC);
         rightImpurity = criterion === "gini" ? giniImpurity(rC) : entropy(rC);
       }

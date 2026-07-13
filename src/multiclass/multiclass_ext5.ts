@@ -143,8 +143,8 @@ export class OneVsOneClassifier {
     for (const { i, j, est } of this._classifiers) {
       const preds = est.predict(X);
       for (let k = 0; k < n; k++) {
-        if ((preds[k] ?? 0) === 0) (votes[k] as Int32Array)[i]++;
-        else (votes[k] as Int32Array)[j]++;
+        if ((preds[k] ?? 0) === 0) (votes[k]! as Int32Array)[i]!++;
+        else (votes[k]! as Int32Array)[j]!++;
       }
     }
     return Int32Array.from(votes, (row) => {

@@ -213,7 +213,7 @@ export class BorutaFeatureSelector {
         }
       }
       const shadowMax = imps.slice(p).reduce((a, b) => Math.max(a, b), 0);
-      for (let j = 0; j < p; j++) if ((imps[j] ?? 0) > shadowMax) hits[j]++;
+      for (let j = 0; j < p; j++) if ((imps[j] ?? 0) > shadowMax) hits[j]!++;
       void iter;
     }
     const threshold = this.maxIter * (1 - this.alpha);

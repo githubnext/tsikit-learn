@@ -8,7 +8,11 @@ export * from "./robust_scaler.js";
 export * from "./power_transformer.js";
 export * from "./spline.js";
 export * from "./kbins.js";
-export * from "./binarizer.js";
+export type {
+  BinarizerOptions,
+  FunctionTransformerOptions,
+  QuantileTransformerOptions,
+} from "./binarizer.js";
 export * from "./label_binarizer.js";
 export * from "./data.js";
 export * from "./kernel_centerer.js";

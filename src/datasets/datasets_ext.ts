@@ -71,7 +71,7 @@ export function makeMultivariateNormal(
     const x = new Float64Array(nFeatures);
     for (let i = 0; i < nFeatures; i++) {
       x[i] = mean[i] ?? 0;
-      for (let j = 0; j <= i; j++) x[i] += (L[i]![j] ?? 0) * (z[j] ?? 0);
+      for (let j = 0; j <= i; j++) x[i]! += (L[i]![j] ?? 0) * (z[j] ?? 0);
     }
     X.push(x);
   }
@@ -158,7 +158,7 @@ export function makeLowRankMatrix(
   return Array.from({ length: nSamples }, (_, i) => {
     const row = new Float64Array(nFeatures);
     for (let j = 0; j < nFeatures; j++) {
-      for (let k = 0; k < n; k++) row[j] += (U[i]![k] ?? 0) * (singularVals[k] ?? 0) * (V[j]![k] ?? 0);
+      for (let k = 0; k < n; k++) row[j]! += (U[i]![k] ?? 0) * (singularVals[k] ?? 0) * (V[j]![k] ?? 0);
     }
     return row;
   });

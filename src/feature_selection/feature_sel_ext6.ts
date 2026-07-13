@@ -58,7 +58,7 @@ export class BorutaSelector {
       const shadowMax = Math.max(...Array.from(importances.slice(p)));
 
       for (let j = 0; j < p; j++) {
-        if ((importances[j] ?? 0) > shadowMax) hitCounts[j]++;
+        if ((importances[j] ?? 0) > shadowMax) hitCounts[j]!++;
       }
     }
 

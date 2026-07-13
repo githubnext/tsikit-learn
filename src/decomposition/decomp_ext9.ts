@@ -118,18 +118,18 @@ function thinSVD(X: Float64Array[], k: number): { U: Float64Array[]; s: number[]
     for (let iter = 0; iter < 20; iter++) {
       // u = X @ v
       const u = new Float64Array(m);
-      for (let i = 0; i < m; i++) for (let j = 0; j < n; j++) u[i] += (X[i]?.[j] ?? 0) * (v[j] ?? 0);
+      for (let i = 0; i < m; i++) for (let j = 0; j < n; j++) u[i]! += (X[i]?.[j] ?? 0) * (v[j] ?? 0);
       let norm = 0;
       for (const uv of u) norm += uv * uv;
       norm = Math.sqrt(norm) || 1;
-      for (let i = 0; i < m; i++) u[i] /= norm;
+      for (let i = 0; i < m; i++) u[i]! /= norm;
       // v = X.T @ u
       const vnew = new Float64Array(n);
-      for (let i = 0; i < m; i++) for (let j = 0; j < n; j++) vnew[j] += (X[i]?.[j] ?? 0) * (u[i] ?? 0);
+      for (let i = 0; i < m; i++) for (let j = 0; j < n; j++) vnew[j]! += (X[i]?.[j] ?? 0) * (u[i] ?? 0);
       let vnorm = 0;
       for (const vv of vnew) vnorm += vv * vv;
       vnorm = Math.sqrt(vnorm) || 1;
-      for (let j = 0; j < n; j++) vnew[j] /= vnorm;
+      for (let j = 0; j < n; j++) vnew[j]! /= vnorm;
       v = vnew;
       s[ri] = vnorm;
     }

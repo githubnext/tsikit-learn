@@ -28,7 +28,7 @@ function svdTruncated(A: Float64Array[], k: number): { U: Float64Array[]; S: Flo
 
       // v = A^T * u
       let vNew = new Float64Array(m);
-      for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) vNew[j] += (u[i] ?? 0) * ((Acopy[i] as Float64Array)[j] ?? 0);
+      for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) vNew[j]! += (u[i] ?? 0) * ((Acopy[i] as Float64Array)[j] ?? 0);
       const sv = Math.sqrt(vNew.reduce((s, vi) => s + vi * vi, 0));
       vNew = vNew.map((vi) => vi / Math.max(sv, 1e-12));
       v = vNew;
@@ -46,7 +46,7 @@ function svdTruncated(A: Float64Array[], k: number): { U: Float64Array[]; S: Flo
     // Deflate
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < m; j++) {
-        (Acopy[i] as Float64Array)[j] -= sigma * (uNorm[i] ?? 0) * (v[j] ?? 0);
+        (Acopy[i]! as Float64Array)[j]! -= sigma * (uNorm[i] ?? 0) * (v[j] ?? 0);
       }
     }
   }
@@ -71,7 +71,7 @@ export class SpectralCocluster {
     // Normalize: D_r^{-1/2} * X * D_c^{-1/2}
     const rowSums = Float64Array.from(X, (row) => Math.sqrt(Math.max(row.reduce((s, v) => s + Math.abs(v), 0), 1e-12)));
     const colSums = new Float64Array(m);
-    for (const row of X) for (let j = 0; j < m; j++) colSums[j] += Math.abs(row[j] ?? 0);
+    for (const row of X) for (let j = 0; j < m; j++) colSums[j]! += Math.abs(row[j] ?? 0);
     const colSqrt = colSums.map((v) => Math.sqrt(Math.max(v, 1e-12)));
 
     const Xnorm = X.map((row, i) => Float64Array.from({ length: m }, (_, j) => (row[j] ?? 0) / (rowSums[i] ?? 1) / (colSqrt[j] ?? 1)));

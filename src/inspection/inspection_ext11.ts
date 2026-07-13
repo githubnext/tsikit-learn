@@ -118,7 +118,7 @@ export function partialDependence2D(
       return preds.reduce((s, v) => s + v, 0) / preds.length;
     })
   );
-  return { grid0, grid1, averagePredictions };
+  return { grid0, grid1, averagePredictions } as Float64Array<ArrayBufferLike>[][];
 }
 
 export function hStatisticExt(

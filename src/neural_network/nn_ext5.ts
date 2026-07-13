@@ -266,7 +266,7 @@ export class TransformerEncoder {
     let out = X.map(x => x.slice());
     for (let l = 0; l < this.nLayers; l++) {
       const attended = this.attention_![l]!.forward(out, out, out);
-      out = out.map((x, i) => this.norm1_![l]!.forward(Float64Array.from(x.map((v, j) => (v ?? 0) + (attended[i]![j] ?? 0)))));
+      out = out.map((x, i) => this.norm1_![l]!.forward(Float64Array.from(x.map((v, j) => (v ?? 0) + (attended[i]![j] ?? 0))))) as Float64Array<ArrayBuffer>[];
       out = out.map(x => {
         const ff1Out = this.ff1_![l]!.map(row => Math.max(0, x.reduce((s, v, j) => s + (row[j] ?? 0) * (v ?? 0), 0)));
         const ff2Out = new Float64Array(this.dModel);

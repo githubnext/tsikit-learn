@@ -55,7 +55,7 @@ export class OneClassSVMExt {
     for (let iter = 0; iter < this.maxIter; iter++) {
       let maxViolation = 0;
       for (let i = 0; i < n; i++) {
-        let fi = -(K[i] as Float64Array).reduce((s, v, j) => s + alphas[j] * v, 0);
+        let fi = -(K[i] as Float64Array).reduce((s, v, j) => s + alphas[j]! * v, 0);
         for (let j = 0; j < n; j++) {
           if (i === j) continue;
           // Simple gradient step
@@ -66,7 +66,7 @@ export class OneClassSVMExt {
           const yeta = 1 / eta;
           const oldAlphai = alphas[i] ?? 0;
           const oldAlphaj = alphas[j] ?? 0;
-          const deltaI = yeta * (fi - (-(K[j] as Float64Array).reduce((s, v, k) => s + alphas[k] * v, 0)));
+          const deltaI = yeta * (fi - (-(K[j] as Float64Array).reduce((s, v, k) => s + alphas[k]! * v, 0)));
           alphas[i] = Math.max(0, Math.min(C, (alphas[i] ?? 0) + deltaI));
           alphas[j] = oldAlphai + oldAlphaj - (alphas[i] ?? 0);
           alphas[j] = Math.max(0, Math.min(C, alphas[j] ?? 0));

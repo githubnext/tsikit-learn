@@ -41,7 +41,7 @@ export class VotingClassifier extends EnsembleBase {
     const votes: Int32Array[] = this.estimators_.map((est) => est.predict(X) as Int32Array);
     return Int32Array.from({ length: n }, (_, i) => {
       const counts = new Int32Array(this.nClasses);
-      for (const v of votes) counts[v[i] ?? 0]++;
+      for (const v of votes) counts[v[i] ?? 0]! += 1;
       let best = 0, bestCount = 0;
       for (let c = 0; c < this.nClasses; c++) if ((counts[c] ?? 0) > bestCount) { bestCount = counts[c] ?? 0; best = c; }
       return best;

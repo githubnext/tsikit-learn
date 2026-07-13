@@ -103,7 +103,7 @@ export class MinCovDet {
     const n = indices.length;
     const mean = new Float64Array(p);
     for (const idx of indices)
-      for (let j = 0; j < p; j++) mean[j] += (X[idx]![j] ?? 0) / n;
+      for (let j = 0; j < p; j++) mean[j]! += (X[idx]![j] ?? 0) / n;
     const cov: Float64Array[] = Array.from(
       { length: p },
       () => new Float64Array(p),
@@ -113,7 +113,7 @@ export class MinCovDet {
       for (let j = 0; j < p; j++) diff[j] = (X[idx]![j] ?? 0) - (mean[j] ?? 0);
       for (let i = 0; i < p; i++)
         for (let j = 0; j < p; j++)
-          cov[i]![j] += ((diff[i] ?? 0) * (diff[j] ?? 0)) / (n - 1);
+          cov[i]![j]! += ((diff[i] ?? 0) * (diff[j] ?? 0)) / (n - 1);
     }
     return { mean, cov };
   }

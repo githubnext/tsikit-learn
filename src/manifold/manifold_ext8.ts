@@ -45,7 +45,7 @@ export class PHATE extends BaseEstimator {
     const tSteps = this.t === "auto" ? Math.max(1, Math.floor(Math.sqrt(n))) : this.t;
     let Pt = P.map((row) => row.slice());
     for (let step = 1; step < tSteps; step++) {
-      Pt = this._matMul(Pt, P, n);
+      Pt = this._matMul(Pt, P, n) as Float64Array<ArrayBuffer>[];
     }
     // Step 4: Potential distances (-log of transition probabilities)
     const potential = Pt.map((row) => row.map((v) => -Math.log(Math.max(v, 1e-10))));

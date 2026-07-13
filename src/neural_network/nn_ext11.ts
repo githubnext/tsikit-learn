@@ -12,7 +12,7 @@ function mean(vecs: Float64Array[]): Float64Array {
   if (vecs.length === 0) return new Float64Array(0);
   const dim = vecs[0]?.length ?? 0;
   const out = new Float64Array(dim);
-  for (const v of vecs) for (let j = 0; j < dim; j++) out[j] += (v[j] ?? 0) / vecs.length;
+  for (const v of vecs) for (let j = 0; j < dim; j++) out[j]! += (v[j] ?? 0) / vecs.length;
   return out;
 }
 
@@ -145,7 +145,7 @@ export class RelationNetwork {
     concat.set(e2, e1.length);
     let h = concat;
     for (let i = 0; i < this.relationLayers.length; i++) {
-      h = denseForwardFew(h, this.relationLayers[i]!.W, this.relationLayers[i]!.b, i < this.relationLayers.length - 1);
+      h = denseForwardFew(h, this.relationLayers[i]!.W, this.relationLayers[i]!.b, i < this.relationLayers.length - 1) as Float64Array<ArrayBuffer>;
     }
     return 1 / (1 + Math.exp(-(h[0] ?? 0)));
   }

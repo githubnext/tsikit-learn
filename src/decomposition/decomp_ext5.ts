@@ -62,7 +62,7 @@ export class FastICA {
   private _center(X: Float64Array[]): { Xc: Float64Array[]; mean: Float64Array } {
     const n = X.length, p = X[0]?.length ?? 0;
     const mean = new Float64Array(p);
-    for (const row of X) for (let j = 0; j < p; j++) mean[j] += (row[j] ?? 0) / n;
+    for (const row of X) for (let j = 0; j < p; j++) mean[j]! += (row[j] ?? 0) / n;
     const Xc = X.map((row) => row.map((v, j) => v - (mean[j] ?? 0)));
     return { Xc, mean };
   }
@@ -72,7 +72,7 @@ export class FastICA {
     const cov: Float64Array[] = Array.from({ length: p }, () => new Float64Array(p));
     for (const row of X) {
       for (let j = 0; j < p; j++) {
-        for (let k = 0; k < p; k++) (cov[j] as Float64Array)[k] += (row[j] ?? 0) * (row[k] ?? 0) / n;
+        for (let k = 0; k < p; k++) (cov[j]! as Float64Array)[k]! += (row[j] ?? 0) * (row[k] ?? 0) / n;
       }
     }
     // Diagonal whitening
@@ -124,7 +124,7 @@ export class FastICA {
         // Decorrelate (symmetric deflation)
         for (let c2 = 0; c2 < c; c2++) {
           const dot = (W[c2] as Float64Array).reduce((s, v, j) => s + v * (newW[j] ?? 0), 0);
-          for (let j = 0; j < p; j++) newW[j] -= dot * ((W[c2] as Float64Array)[j] ?? 0);
+          for (let j = 0; j < p; j++) newW[j]! -= dot * ((W[c2] as Float64Array)[j] ?? 0);
         }
         const norm = Math.sqrt(newW.reduce((s, v) => s + v * v, 0));
         W[c] = norm > 0 ? newW.map((v) => v / norm) : newW;
@@ -190,7 +190,7 @@ export class TruncatedSVDDecomp {
         const sigma = Math.sqrt(u.reduce((s, ui) => s + ui * ui, 0));
         const uNorm = sigma > 0 ? u.map((ui) => ui / sigma) : u;
         let newV = new Float64Array(p);
-        for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) newV[j] += (uNorm[i] ?? 0) * ((Xcopy[i] as Float64Array)[j] ?? 0);
+        for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) newV[j]! += (uNorm[i] ?? 0) * ((Xcopy[i] as Float64Array)[j] ?? 0);
         const normNewV = Math.sqrt(newV.reduce((s, vi) => s + vi * vi, 0));
         newV = newV.map((vi) => vi / Math.max(normNewV, 1e-12));
         v = newV;
@@ -203,7 +203,7 @@ export class TruncatedSVDDecomp {
 
       for (let i = 0; i < n; i++) {
         const ui = sigma > 0 ? (u[i] ?? 0) / sigma : 0;
-        for (let j = 0; j < p; j++) (Xcopy[i] as Float64Array)[j] -= sigma * ui * (v[j] ?? 0);
+        for (let j = 0; j < p; j++) (Xcopy[i]! as Float64Array)[j]! -= sigma * ui * (v[j] ?? 0);
       }
     }
 

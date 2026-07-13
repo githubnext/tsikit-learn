@@ -120,12 +120,12 @@ export class IterativeImputer {
 			for (let j = 0; j < d; j++) {
 				const v = row[j] ?? Number.NaN;
 				if (!Number.isNaN(v) && v !== this.missingValues) {
-					colMeans[j] += v;
-					counts[j]++;
+					colMeans[j]! += v;
+					counts[j]!++;
 				}
 			}
 		}
-		for (let j = 0; j < d; j++) colMeans[j] /= (counts[j] ?? 1) || 1;
+		for (let j = 0; j < d; j++) colMeans[j]! /= (counts[j] ?? 1) || 1;
 		this.statistics_ = colMeans;
 
 		// Initialize imputed matrix

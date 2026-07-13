@@ -69,7 +69,7 @@ export class IsolationForestExt extends BaseEstimator {
       for (let i = 0; i < n; i++) {
         const xi = new Float64Array((feats ?? []).map((f: number) => X[i]?.[f] ?? 0));
         const depth = tree.pathLength(xi);
-        scores[i] += depth;
+        scores[i]! += depth;
       }
     }
     const avgDepth = this.max_samples_;

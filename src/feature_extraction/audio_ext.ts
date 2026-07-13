@@ -29,18 +29,18 @@ export function mfcc(
 		const melSpectrum = new Float64Array(nMels);
 		for (let m = 0; m < nMels; m++) {
 			for (let k = 0; k < spectrum.length; k++) {
-				melSpectrum[m] += (melFilters[m]?.[k] ?? 0) * (spectrum[k] ?? 0);
+				melSpectrum[m]! += (melFilters[m]?.[k] ?? 0) * (spectrum[k] ?? 0);
 			}
-			melSpectrum[m] = Math.log(melSpectrum[m] + 1e-10);
+			melSpectrum[m] = Math.log(melSpectrum[m]! + 1e-10);
 		}
 
 		// DCT to get MFCCs
 		const coeffs = new Float64Array(nMfcc);
 		for (let n = 0; n < nMfcc; n++) {
 			for (let m = 0; m < nMels; m++) {
-				coeffs[n] += melSpectrum[m]! * Math.cos(Math.PI * n * (m + 0.5) / nMels);
+				coeffs[n]! += melSpectrum[m]! * Math.cos(Math.PI * n * (m + 0.5) / nMels);
 			}
-			coeffs[n] *= Math.sqrt(2 / nMels);
+			coeffs[n]! *= Math.sqrt(2 / nMels);
 		}
 		return coeffs;
 	});

@@ -73,9 +73,9 @@ export class BayesianGaussianMixture {
 
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < k; j++) {
-          Nk[j] += R[i]?.[j] ?? 0;
+          Nk[j]! += R[i]?.[j] ?? 0;
           for (let d = 0; d < p; d++) {
-            (xk[j] as Float64Array)[d] += ((R[i]?.[j] ?? 0) * (X[i]?.[d] ?? 0));
+            (xk[j]! as Float64Array)[d]! += ((R[i]?.[j] ?? 0) * (X[i]?.[d] ?? 0));
           }
         }
       }
@@ -107,7 +107,7 @@ export class BayesianGaussianMixture {
           (newR[i] as Float64Array)[j] = Math.exp((logProbs[j] ?? 0) - logNormConst);
           sumExp += (newR[i] as Float64Array)[j] ?? 0;
         }
-        for (let j = 0; j < k; j++) (newR[i] as Float64Array)[j] /= Math.max(sumExp, 1e-12);
+        for (let j = 0; j < k; j++) (newR[i]! as Float64Array)[j]! /= Math.max(sumExp, 1e-12);
       }
 
       // Check ELBO (approximate)

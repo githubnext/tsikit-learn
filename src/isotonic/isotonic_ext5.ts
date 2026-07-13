@@ -23,7 +23,7 @@ export class IsotonicRegressionExt {
     const wSorted = sampleWeight ? Float64Array.from(order, (i) => sampleWeight[i] ?? 1) : Float64Array.from({ length: n }, () => 1);
 
     if (!this.increasing) {
-      for (let i = 0; i < ySorted.length; i++) ySorted[i] = -ySorted[i];
+      for (let i = 0; i < ySorted.length; i++) ySorted[i] = -ySorted[i]!;
     }
 
     // Pool Adjacent Violators Algorithm
