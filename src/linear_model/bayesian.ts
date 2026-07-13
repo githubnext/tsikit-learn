@@ -169,8 +169,8 @@ export class BayesianRidge {
         }
       }
       const tmp = aug[col]!;
-      aug[col]! = aug[maxRow];
-      aug[maxRow]! = tmp;
+      aug[col] = aug[maxRow]!;
+      aug[maxRow] = tmp;
 
       const pivot = (aug[col] as Float64Array)[col] ?? 1;
       if (Math.abs(pivot) < 1e-12) continue;
