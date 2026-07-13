@@ -132,17 +132,19 @@ export class IsotonicCalibratorExt {
 
   predict(scores: Float64Array): Float64Array {
     if (!this.thresholds_ || !this.isotonic_) throw new NotFittedError("IsotonicCalibratorExt not fitted.");
+    const thresholds = this.thresholds_!;
+    const isotonic = this.isotonic_!;
     return Float64Array.from(scores.map(s => {
-      const n = this.thresholds_!.length;
-      if ((s ?? 0) <= (this.thresholds_![0] ?? 0)) return this.isotonic_![0] ?? 0;
-      if ((s ?? 0) >= (this.thresholds_![n - 1] ?? 0)) return this.isotonic_![n - 1] ?? 0;
+      const n = thresholds.length;
+      if ((s ?? 0) <= (thresholds[0]! ?? 0)) return isotonic[0] ?? 0;
+      if ((s ?? 0) >= (thresholds[n - 1]! ?? 0)) return isotonic[n - 1] ?? 0;
       for (let i = 0; i < n - 1; i++) {
-        if ((s ?? 0) >= (this.thresholds_![i] ?? 0) && (s ?? 0) <= (this.thresholds_![i + 1] ?? 0)) {
-          const t = ((s ?? 0) - (this.thresholds_![i] ?? 0)) / ((this.thresholds_![i + 1] ?? 0) - (this.thresholds_![i] ?? 0) + 1e-15);
-          return (1 - t) * (this.isotonic_![i] ?? 0) + t * (this.isotonic_![i + 1] ?? 0);
+        if ((s ?? 0) >= (thresholds[i]! ?? 0) && (s ?? 0) <= (thresholds[i + 1]! ?? 0)) {
+          const t = ((s ?? 0) - (thresholds[i]! ?? 0)) / ((thresholds[i + 1]! ?? 0) - (thresholds[i]! ?? 0) + 1e-15);
+          return (1 - t) * (isotonic[i] ?? 0) + t * (isotonic[i + 1] ?? 0);
         }
       }
-      return this.isotonic_![n - 1] ?? 0;
+      return isotonic[n - 1] ?? 0;
     }));
   }
 }

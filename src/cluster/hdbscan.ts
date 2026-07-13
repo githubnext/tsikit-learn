@@ -123,7 +123,7 @@ export class HDBSCAN {
           !inMST[v] &&
           mrd[u]![v]! < (minEdge[v] ?? Number.POSITIVE_INFINITY)
         ) {
-          minEdge[v]! = mrd[u]![v];
+          minEdge[v] = mrd[u]![v] ?? 0;
           parent[v]! = u;
         }
       }
@@ -134,13 +134,13 @@ export class HDBSCAN {
 
     // Build hierarchy via single-linkage (union-find)
     const uf = Array.from({ length: n }, (_, i) => i);
-    const find = (start: number): number => {
-      let x = start;
-      while (uf[x] !== x) {
-        uf[x]! = uf[uf[x]!];
-        x = uf[x]!;
+    const find = (x: number): number => {
+      let cur = x;
+      while (uf[cur] !== cur) {
+        uf[cur] = uf[uf[cur]!] ?? cur;
+        cur = uf[cur]!;
       }
-      return x;
+      return cur;
     };
     const clusterSizes = new Int32Array(n).fill(1);
     const labels = new Int32Array(n).fill(-1);
@@ -177,7 +177,7 @@ export class HDBSCAN {
       const sz = clusterSizes[root] ?? 1;
       if (sz >= this.minClusterSize) {
         if (!rootToCluster.has(root)) rootToCluster.set(root, nextCluster++);
-        labels[i]! = rootToCluster.get(root);
+        labels[i] = rootToCluster.get(root) ?? -1;
       }
     }
 

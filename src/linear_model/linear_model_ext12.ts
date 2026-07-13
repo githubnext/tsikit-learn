@@ -53,7 +53,7 @@ export class RANSACRegressor {
         const xij = (X[i]?.[j] ?? 0) - (xMean[j] ?? 0);
         Xty[j]! += xij * ((y[i] ?? 0) - yMean);
         for (let k = 0; k < p; k++) {
-          (XtX[j]! as Float64Array)[k]! += xij * ((X[i]?.[k] ?? 0) - (xMean[k] ?? 0));
+          (XtX[j] as Float64Array)[k]! += xij * ((X[i]?.[k] ?? 0) - (xMean[k] ?? 0));
         }
       }
     }

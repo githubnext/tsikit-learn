@@ -103,9 +103,7 @@ export interface SVMModel {
   params: KernelParams;
 }
 
-/**
- * Compute decision function values for a set of samples.
- */
+/** Compute decision function values for a set of samples. */
 export function svmDecisionFunction(
   X: Float64Array[],
   model: SVMModel,
@@ -122,10 +120,8 @@ export function svmDecisionFunction(
   );
 }
 
-/**
- * Platt scaling: convert SVM scores to probabilities.
- */
-export function svmPlattScaling(
+/** Platt scaling: convert SVM scores to probabilities. */
+export function plattScaling(
   scores: Float64Array,
   A: number,
   B: number,
@@ -133,14 +129,11 @@ export function svmPlattScaling(
   return new Float64Array(scores.map((s) => 1 / (1 + Math.exp(A * s + B))));
 }
 
-/**
- * Compute Platt calibration parameters from scores and labels.
- */
-export function svmFitPlattScaling(
+/** Compute Platt calibration parameters from scores and labels. */
+export function fitPlattScaling(
   scores: Float64Array,
   y: Int32Array,
 ): { A: number; B: number } {
-  // Simplified sigmoid calibration
   const n = scores.length;
   const nPos = Array.from(y).filter((v) => v > 0).length;
   const nNeg = n - nPos;
@@ -150,7 +143,6 @@ export function svmFitPlattScaling(
   let A = 0;
   let B = Math.log((nNeg + 1) / (nPos + 1));
 
-  // Simple gradient descent
   for (let iter = 0; iter < 100; iter++) {
     let dA = 0;
     let dB = 0;
@@ -166,10 +158,8 @@ export function svmFitPlattScaling(
   return { A, B };
 }
 
-/**
- * Hinge loss for SVM.
- */
-export function svmHingeLoss(
+/** Hinge loss for SVM. */
+export function hingeLoss(
   yTrue: Int32Array,
   decisionValues: Float64Array,
 ): number {
@@ -180,3 +170,11 @@ export function svmHingeLoss(
   }
   return loss / yTrue.length;
 }
+
+/** @deprecated Use svmDecisionFunction, plattScaling, fitPlattScaling, hingeLoss instead. */
+export const SVMUtils = {
+  decisionFunction: svmDecisionFunction,
+  plattScaling,
+  fitPlattScaling,
+  hingeLoss,
+};

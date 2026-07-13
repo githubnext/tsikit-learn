@@ -9,8 +9,8 @@ export * from "./inspection_ext2.js";
 export * from "./inspection_ext4.js";
 export {
   aggregateFeatureImportances,
-  kernelSHAP,
   hStatistic,
+  kernelSHAP,
 } from "./inspection_ext5.js";
 export * from "./inspection_ext6.js";
 export { modelComplexityMetrics } from "./inspection_ext7.js";

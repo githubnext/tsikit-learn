@@ -41,7 +41,7 @@ export class VotingClassifier extends EnsembleBase {
     const votes: Int32Array[] = this.estimators_.map((est) => est.predict(X) as Int32Array);
     return Int32Array.from({ length: n }, (_, i) => {
       const counts = new Int32Array(this.nClasses);
-      for (const v of votes) counts[v[i] ?? 0]! += 1;
+      for (const v of votes) counts[v[i] ?? 0]!++;
       let best = 0, bestCount = 0;
       for (let c = 0; c < this.nClasses; c++) if ((counts[c] ?? 0) > bestCount) { bestCount = counts[c] ?? 0; best = c; }
       return best;
@@ -70,14 +70,15 @@ export class VotingRegressor extends EnsembleBase {
 }
 
 export class ExtraTreesBooster extends EnsembleBase {
-  nEstimators: number;
+  private _nEstimators: number;
+  override get nEstimators(): number { return this._nEstimators; }
   maxDepth: number;
   minSamplesSplit: number;
   private _fitEstimators: number = 0;
 
   constructor(nEstimators = 100, maxDepth = 5, minSamplesSplit = 2) {
     super();
-    this.nEstimators = nEstimators;
+    this._nEstimators = nEstimators;
     this.maxDepth = maxDepth;
     this.minSamplesSplit = minSamplesSplit;
   }
@@ -170,7 +171,8 @@ export class ExtraTreesBooster extends EnsembleBase {
 
 export class BaggingRegressor extends EnsembleBase {
   baseEstimatorFactory: () => BaseEstimatorExt;
-  nEstimators: number;
+  private _nEstimators: number;
+  override get nEstimators(): number { return this._nEstimators; }
   maxSamples: number;
   maxFeatures: number;
   private _nFeatures: number = 0;
@@ -183,7 +185,7 @@ export class BaggingRegressor extends EnsembleBase {
   ) {
     super();
     this.baseEstimatorFactory = baseEstimatorFactory;
-    this.nEstimators = nEstimators;
+    this._nEstimators = nEstimators;
     this.maxSamples = maxSamples;
     this.maxFeatures = maxFeatures;
   }

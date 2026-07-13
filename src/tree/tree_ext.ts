@@ -74,7 +74,7 @@ export function buildDecisionTree(
     ? (y instanceof Float64Array ? (criterion === "mse" ? mseCriterion(y) : maeCriterion(y)) : 0)
     : (() => {
       const counts = new Int32Array(nClasses);
-      for (const label of y) counts[label as number]!++;
+      for (const label of y) counts[label as number] = (counts[label as number] ?? 0) + 1;
       return criterion === "gini" ? giniImpurity(counts) : entropy(counts);
     })();
 
@@ -101,8 +101,8 @@ export function buildDecisionTree(
       } else {
         const lC = new Int32Array(nClasses);
         const rC = new Int32Array(nClasses);
-        for (const v of leftY) lC[v as number]!++;
-        for (const v of rightY) rC[v as number]!++;
+        for (const v of leftY) lC[v as number] = (lC[v as number] ?? 0) + 1;
+        for (const v of rightY) rC[v as number] = (rC[v as number] ?? 0) + 1;
         leftImpurity = criterion === "gini" ? giniImpurity(lC) : entropy(lC);
         rightImpurity = criterion === "gini" ? giniImpurity(rC) : entropy(rC);
       }
@@ -146,7 +146,7 @@ export function predictTreeNode(node: TreeNode, x: Float64Array): number {
 
 export function pruneReducedError(node: TreeNode, Xval: Float64Array[], yval: Int32Array): TreeNode {
   if (node.isLeaf) return node;
-  const pruned: TreeNode = { ...node, isLeaf: true, left: undefined, right: undefined };
+  const pruned: TreeNode = { isLeaf: true, value: node.value, nSamples: node.nSamples, impurity: node.impurity, depth: node.depth, nodeId: node.nodeId };
   const prunedError = Xval.filter((_, i) => Math.round(predictTreeNode(pruned, Xval[i] as Float64Array)) !== (yval[i] ?? 0)).length;
   const fullError = Xval.filter((_, i) => Math.round(predictTreeNode(node, Xval[i] as Float64Array)) !== (yval[i] ?? 0)).length;
   return prunedError <= fullError ? pruned : node;

@@ -68,14 +68,14 @@ export class MatrixFactorizationImputer {
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < p; j++) {
           const actual = Xfilled[i]?.[j] ?? 0;
-          const pred = (this._U[i] as Float64Array).reduce((s, v, k) => s + v * ((this._V![j] as Float64Array)[k] ?? 0), 0);
+          const pred = (this._U[i] as Float64Array).reduce((s, v, k) => s + v * (this._V?.[j]?.[k] ?? 0), 0);
           const err = actual - pred;
           loss += err * err;
           for (let k2 = 0; k2 < k; k2++) {
             const uik = (this._U[i] as Float64Array)[k2] ?? 0;
-            const vjk = (this._V![j] as Float64Array)[k2] ?? 0;
+            const vjk = (this._V[j] as Float64Array)[k2] ?? 0;
             (this._U[i] as Float64Array)[k2] = uik + this.lr * (2 * err * vjk - this.regParam * uik);
-            (this._V![j] as Float64Array)[k2] = vjk + this.lr * (2 * err * uik - this.regParam * vjk);
+            (this._V[j] as Float64Array)[k2] = vjk + this.lr * (2 * err * uik - this.regParam * vjk);
           }
         }
       }

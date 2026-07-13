@@ -7,12 +7,8 @@ export * from "./perceptron.js";
 export * from "./passive_aggressive.js";
 export * from "./huber.js";
 export * from "./bayesian.js";
-export {
-  type LassoLarsOptions,
-  LassoLars,
-  type LarsCVOptions,
-  LarsCV,
-} from "./lars.js";
+export { LarsCV, LassoLars } from "./lars.js";
+export type { LarsCVOptions, LassoLarsOptions } from "./lars.js";
 export * from "./theil_sen.js";
 export * from "./multi_task.js";
 export * from "./omp.js";
@@ -31,4 +27,4 @@ export * from "./logistic_regression_cv.js";
 export * from "./minibatch_cd.js";
 export * from "./wls.js";
 export type { ElasticNetCVOptions } from "./elasticnet_cv.js";
-// (removed duplicate: export * from "./ard_regression.js")
+// duplicate exports from ./ard_regression.js omitted

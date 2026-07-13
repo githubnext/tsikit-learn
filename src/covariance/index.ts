@@ -4,14 +4,14 @@ export * from "./elliptic_envelope.js";
 export * from "./precision.js";
 export type {
   CovResult,
-  ShrunkCovarianceOptions,
   OASOptions,
+  ShrunkCovarianceOptions,
 } from "./shrinkage.js";
-export { OASCovariance, LedoitWolfCovariance } from "./covariance_ext.js";
+export { LedoitWolfCovariance, OASCovariance } from "./covariance_ext.js";
 export * from "./covariance_ext2.js";
 export { LedoitWolfExt } from "./covariance_ext3.js";
 export { OASShrinkage, covarianceCVScore } from "./covariance_ext4.js";
 export { MinCovDetExt } from "./covariance_ext5.js";
 export * from "./covariance_ext6.js";
-// (removed duplicate: export * from "./empirical.js")
-// (removed duplicate: export * from "./mcd.js")
+// duplicate exports from ./empirical.js omitted
+// duplicate exports from ./mcd.js omitted

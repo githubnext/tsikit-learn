@@ -72,7 +72,7 @@ export class FastICA {
     const cov: Float64Array[] = Array.from({ length: p }, () => new Float64Array(p));
     for (const row of X) {
       for (let j = 0; j < p; j++) {
-        for (let k = 0; k < p; k++) (cov[j]! as Float64Array)[k]! += (row[j] ?? 0) * (row[k] ?? 0) / n;
+        for (let k = 0; k < p; k++) (cov[j] as Float64Array)[k]! += (row[j] ?? 0) * (row[k] ?? 0) / n;
       }
     }
     // Diagonal whitening
@@ -203,7 +203,7 @@ export class TruncatedSVDDecomp {
 
       for (let i = 0; i < n; i++) {
         const ui = sigma > 0 ? (u[i] ?? 0) / sigma : 0;
-        for (let j = 0; j < p; j++) (Xcopy[i]! as Float64Array)[j]! -= sigma * ui * (v[j] ?? 0);
+        for (let j = 0; j < p; j++) (Xcopy[i] as Float64Array)[j]! -= sigma * ui * (v[j] ?? 0);
       }
     }
 

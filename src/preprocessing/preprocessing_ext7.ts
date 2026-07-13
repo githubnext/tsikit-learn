@@ -24,8 +24,8 @@ export class BatchNormalizer {
     this.var_ = new Float64Array(p);
     this.gamma_ = new Float64Array(p).fill(1);
     this.beta_ = new Float64Array(p).fill(0);
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) this.mean_[j]! += (X[i]?.[j] ?? 0) / n;
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) this.var_[j]! += ((X[i]?.[j] ?? 0) - (this.mean_[j] ?? 0)) ** 2 / n;
+    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) this.mean_[j] = (this.mean_[j] ?? 0) + (X[i]?.[j] ?? 0) / n;
+    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) this.var_[j] = (this.var_[j] ?? 0) + ((X[i]?.[j] ?? 0) - (this.mean_[j] ?? 0)) ** 2 / n;
     return this;
   }
 
@@ -40,8 +40,8 @@ export class BatchNormalizer {
     }
     const batchMean = new Float64Array(p);
     const batchVar = new Float64Array(p);
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) batchMean[j]! += (X[i]?.[j] ?? 0) / n;
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) batchVar[j]! += ((X[i]?.[j] ?? 0) - (batchMean[j] ?? 0)) ** 2 / n;
+    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) batchMean[j] = (batchMean[j] ?? 0) + (X[i]?.[j] ?? 0) / n;
+    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) batchVar[j] = (batchVar[j] ?? 0) + ((X[i]?.[j] ?? 0) - (batchMean[j] ?? 0)) ** 2 / n;
     for (let j = 0; j < p; j++) {
       this.mean_[j] = (1 - this.momentum) * (this.mean_[j] ?? 0) + this.momentum * (batchMean[j] ?? 0);
       (this.var_ as Float64Array)[j] = (1 - this.momentum) * ((this.var_ as Float64Array)[j] ?? 0) + this.momentum * (batchVar[j] ?? 0);
@@ -165,10 +165,10 @@ export class GroupNormalizer {
       const groupNorms = new Float64Array(maxGroup);
       for (let j = 0; j < row.length; j++) {
         const g = this.groups[j] ?? 0;
-        if (this.norm === "l2") groupNorms[g]! += (row[j] ?? 0) ** 2;
-        else groupNorms[g]! += Math.abs(row[j] ?? 0);
+        if (this.norm === "l2") groupNorms[g] = (groupNorms[g] ?? 0) + (row[j] ?? 0) ** 2;
+        else groupNorms[g] = (groupNorms[g] ?? 0) + Math.abs(row[j] ?? 0);
       }
-      if (this.norm === "l2") for (let g = 0; g < maxGroup; g++) groupNorms[g] = Math.sqrt(groupNorms[g]);
+      if (this.norm === "l2") for (let g = 0; g < maxGroup; g++) groupNorms[g] = Math.sqrt(groupNorms[g] ?? 0);
       for (let j = 0; j < row.length; j++) {
         const g = this.groups[j] ?? 0;
         out[j] = (groupNorms[g] ?? 1) > 0 ? (row[j] ?? 0) / (groupNorms[g] ?? 1) : 0;

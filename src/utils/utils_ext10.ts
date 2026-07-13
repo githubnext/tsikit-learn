@@ -2,6 +2,8 @@
  * Additional utility functions — numerical integration, statistics, sparse ops.
  */
 
+import { normalCDF } from "./utils_ext9.js";
+
 export function trapz(y: Float64Array, x?: Float64Array): number {
   let sum = 0;
   for (let i = 0; i < y.length - 1; i++) {
@@ -33,7 +35,7 @@ export function histogramBins(data: Float64Array, nBins: number): { counts: Int3
   const edges = Float64Array.from({ length: nBins + 1 }, (_, i) => mn + i * binWidth);
   for (const v of data) {
     const bin = Math.min(Math.floor((v - mn) / Math.max(binWidth, 1e-12)), nBins - 1);
-    if (bin >= 0) counts[bin]!++;
+    if (bin >= 0) counts[bin] = (counts[bin] ?? 0) + 1;
   }
   return { counts, edges };
 }
@@ -99,7 +101,7 @@ export function mannWhitneyU(x: Float64Array, y: Float64Array): { statistic: num
   const meanU = n1 * n2 / 2;
   const stdU = Math.sqrt(n1 * n2 * (n1 + n2 + 1) / 12);
   const z = (u - meanU) / Math.max(stdU, 1e-12);
-  const pValue = 2 * (1 - 0.5 * (1 + Math.erf ? (Math as unknown as { erf: (x: number) => number }).erf(Math.abs(z) / Math.sqrt(2)) : 0.9999));
+  const pValue = 2 * (1 - normalCDF(Math.abs(z) / Math.sqrt(2)));
   return { statistic: u, pValue: Math.max(0, Math.min(1, pValue)) };
 }
 

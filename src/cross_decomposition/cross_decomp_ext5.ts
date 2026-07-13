@@ -19,7 +19,7 @@ function covMatrix(X: Float64Array[]): Float64Array[] {
   for (const row of X) {
     for (let j = 0; j < p; j++) {
       const dj = (row[j] ?? 0) - (mean[j] ?? 0);
-      for (let k = 0; k < p; k++) (cov[j]! as Float64Array)[k]! += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / (n - 1);
+      for (let k = 0; k < p; k++) (cov[j] as Float64Array)[k]! += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / (n - 1);
     }
   }
   return cov;
@@ -62,14 +62,14 @@ export class RegularizedCCA {
       for (let j = 0; j < p; j++) {
         const dxj = (X[i]?.[j] ?? 0) - (meanX[j] ?? 0);
         for (let k = 0; k < q; k++) {
-          (Sxy[j]! as Float64Array)[k]! += dxj * ((Y[i]?.[k] ?? 0) - (meanY[k] ?? 0)) / (n - 1);
+          (Sxy[j] as Float64Array)[k]! += dxj * ((Y[i]?.[k] ?? 0) - (meanY[k] ?? 0)) / (n - 1);
         }
       }
     }
 
     // Regularize
-    for (let j = 0; j < p; j++) (Sxx[j]! as Float64Array)[j]! += this.regX;
-    for (let k = 0; k < q; k++) (Syy[k]! as Float64Array)[k]! += this.regY;
+    for (let j = 0; j < p; j++) (Sxx[j] as Float64Array)[j]! += this.regX;
+    for (let k = 0; k < q; k++) (Syy[k] as Float64Array)[k]! += this.regY;
 
     // Iterative deflation for CCA (power method approach)
     const xWeights: Float64Array[] = [], yWeights: Float64Array[] = [], cancorr: number[] = [];
@@ -84,7 +84,7 @@ export class RegularizedCCA {
       for (let iter = 0; iter < this.maxIter; iter++) {
         // wy = Sxy^T * wx / ||Sxy^T * wx||Syy
         const newWy = new Float64Array(q);
-        for (let k = 0; k < q; k++) for (let j = 0; j < p; j++) newWy[k]! += (SxyDefl[j]! as Float64Array)[k]! * (wx[j] ?? 0);
+        for (let k = 0; k < q; k++) for (let j = 0; j < p; j++) newWy[k]! += (SxyDefl[j] as Float64Array)[k]! * (wx[j] ?? 0);
         // Normalize under Syy: solve Syy * wy = newWy
         const syyNorm = Math.sqrt(newWy.reduce((s, v, k) => {
           let syyv = 0;
@@ -119,7 +119,7 @@ export class RegularizedCCA {
 
       // Deflate
       for (let j = 0; j < p; j++) for (let k = 0; k < q; k++) {
-        (SxyDefl[j]! as Float64Array)[k]! -= rho * (wx[j] ?? 0) * (wy[k] ?? 0);
+        (SxyDefl[j] as Float64Array)[k]! -= rho * (wx[j] ?? 0) * (wy[k] ?? 0);
       }
     }
 
@@ -182,7 +182,7 @@ export class KernelCCA {
     const Ky = Array.from({ length: n }, (_, i) => Float64Array.from({ length: n }, (_, j) => this._kernelFunc(Y[i] as Float64Array, Y[j] as Float64Array)));
 
     // Regularize
-    for (let i = 0; i < n; i++) { (Kx[i]! as Float64Array)[i]! += this.regParam; (Ky[i]! as Float64Array)[i]! += this.regParam; }
+    for (let i = 0; i < n; i++) { (Kx[i] as Float64Array)[i]! += this.regParam; (Ky[i] as Float64Array)[i]! += this.regParam; }
 
     // CCA in kernel space: approximate via simple SVD on Kx * Ky
     const KxKy = matMul(Kx, Ky);
@@ -201,7 +201,7 @@ export class KernelCCA {
       yW.push(new Float64Array(v));
       // Deflate
       const sigma = curr.map((row) => row.reduce((s, vi, j) => s + vi * (v[j] ?? 0), 0));
-      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) (curr[i]! as Float64Array)[j]! -= (sigma[i] ?? 0) * (v[j] ?? 0);
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) (curr[i] as Float64Array)[j]! -= (sigma[i] ?? 0) * (v[j] ?? 0);
     }
     this.xWeights_ = xW;
     this.yWeights_ = yW;

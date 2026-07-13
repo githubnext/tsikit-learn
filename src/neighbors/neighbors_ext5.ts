@@ -23,7 +23,7 @@ export class BallTree {
     const c = new Float64Array(p);
     for (const i of indices) {
       const row = this._X[i] as Float64Array;
-      for (let d = 0; d < p; d++) c[d]! += (row[d] ?? 0) / indices.length;
+      for (let d = 0; d < p; d++) c[d] = (c[d] ?? 0) + (row[d] ?? 0) / indices.length;
     }
     return c;
   }

@@ -149,7 +149,7 @@ export class ProductQuantizerExt {
             for (let j = 0; j < this.subDim_; j++) d += ((xi[j] ?? 0) - (centroids[c]![j] ?? 0)) ** 2;
             if (d < bestDist) { bestDist = d; best = c; }
           }
-          counts[best]!++;
+          counts[best] = (counts[best] ?? 0) + 1;
           for (let j = 0; j < this.subDim_; j++) sums[best]![j] = (sums[best]![j] ?? 0) + (xi[j] ?? 0);
         }
         centroids = centroids.map((_, c) => Float64Array.from({ length: this.subDim_ }, (__, j) => (sums[c]![j] ?? 0) / ((counts[c] ?? 1) + 1e-15)));
@@ -210,7 +210,7 @@ export class NearestCentroidExt {
     for (let i = 0; i < y.length; i++) classes.add(y[i] ?? 0);
     this.classes_ = Int32Array.from([...classes].sort((a, b) => a - b));
     const p = X[0]?.length ?? 0;
-    this.centroids_ = this.classes_.map(c => {
+    this.centroids_ = Array.from(this.classes_, c => {
       const sum = new Float64Array(p);
       let count = 0;
       for (let i = 0; i < y.length; i++) {

@@ -27,14 +27,14 @@ export class OnlineGaussianNB {
 
     for (let i = 0; i < X.length; i++) {
       const c = y[i] ?? 0;
-      (this.classCounts_ as Float64Array)[c]!++;
+      (this.classCounts_ as Float64Array)[c] = ((this.classCounts_ as Float64Array)[c] ?? 0) + 1;
       const count = (this.classCounts_ as Float64Array)[c] ?? 1;
       for (let j = 0; j < p; j++) {
         const x = X[i]?.[j] ?? 0;
         const delta = x - ((this.classMeans_[c] as Float64Array)[j] ?? 0);
-        (this.classMeans_[c]! as Float64Array)[j]! += delta / count;
+        (this.classMeans_[c] as Float64Array)[j] = ((this.classMeans_[c] as Float64Array)[j] ?? 0) + delta / count;
         const delta2 = x - ((this.classMeans_[c] as Float64Array)[j] ?? 0);
-        (M2[c]! as Float64Array)[j]! += delta * delta2;
+        (M2[c] as Float64Array)[j] = ((M2[c] as Float64Array)[j] ?? 0) + delta * delta2;
       }
     }
 
@@ -58,14 +58,14 @@ export class OnlineGaussianNB {
 
     for (let i = 0; i < X.length; i++) {
       const c = y[i] ?? 0;
-      (this.classCounts_ as Float64Array)[c]!++;
+      (this.classCounts_ as Float64Array)[c] = ((this.classCounts_ as Float64Array)[c] ?? 0) + 1;
       const count = (this.classCounts_ as Float64Array)[c] ?? 1;
       for (let j = 0; j < p; j++) {
         const x = X[i]?.[j] ?? 0;
         const delta = x - ((this.classMeans_![c] as Float64Array)[j] ?? 0);
-        (this.classMeans_![c] as Float64Array)[j]! += delta / count;
+        (this.classMeans_![c] as Float64Array)[j] = ((this.classMeans_![c] as Float64Array)[j] ?? 0) + delta / count;
         const delta2 = x - ((this.classMeans_![c] as Float64Array)[j] ?? 0);
-        (M2[c]! as Float64Array)[j]! += delta * delta2;
+        (M2[c] as Float64Array)[j] = ((M2[c] as Float64Array)[j] ?? 0) + delta * delta2;
       }
     }
     const total = (this.classCounts_ as Float64Array).reduce((s, v) => s + v, 0);
@@ -138,8 +138,8 @@ export class ComplementNB {
 
     for (let i = 0; i < n; i++) {
       const c = y[i] ?? 0;
-      classCounts[c]!++;
-      for (let j = 0; j < p; j++) (featureCounts[c]! as Float64Array)[j]! += X[i]?.[j] ?? 0;
+      classCounts[c] = (classCounts[c] ?? 0) + 1;
+      for (let j = 0; j < p; j++) (featureCounts[c] as Float64Array)[j] = ((featureCounts[c] as Float64Array)[j] ?? 0) + (X[i]?.[j] ?? 0);
     }
 
     this.classPriors_ = Float64Array.from(classCounts, (c) => Math.log(c / n));
@@ -148,7 +148,7 @@ export class ComplementNB {
     this.featureLogProb_ = Array.from({ length: this.nClasses }, (_, c) => {
       const complementCounts = new Float64Array(p);
       for (let c2 = 0; c2 < this.nClasses; c2++) {
-        if (c2 !== c) for (let j = 0; j < p; j++) complementCounts[j]! += (featureCounts[c2] as Float64Array)[j] ?? 0;
+        if (c2 !== c) for (let j = 0; j < p; j++) complementCounts[j] = (complementCounts[j] ?? 0) + ((featureCounts[c2] as Float64Array)[j] ?? 0);
       }
       const total = complementCounts.reduce((s, v) => s + v + this.alpha, 0);
       return complementCounts.map((v) => Math.log((v + this.alpha) / total));

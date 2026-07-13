@@ -176,7 +176,7 @@ export class OcTree {
       distSq += 1;
       const f = 1 / (distSq * Math.sqrt(distSq));
       for (let j = 0; j < d; j++)
-        force[j]! += ((p[j] ?? 0) - (point[j] ?? 0)) * f;
+        force[j] = (force[j] ?? 0) + ((p[j] ?? 0) - (point[j] ?? 0)) * f;
     }
     return force;
   }

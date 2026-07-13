@@ -10,7 +10,7 @@ function computeMeanAndCov(X: Float64Array[]): { mean: Float64Array; cov: Float6
   for (const row of X) {
     for (let j = 0; j < p; j++) {
       const dj = (row[j] ?? 0) - (mean[j] ?? 0);
-      for (let k = 0; k < p; k++) (cov[j]! as Float64Array)[k]! += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / Math.max(n - 1, 1);
+      for (let k = 0; k < p; k++) (cov[j] as Float64Array)[k]! += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / Math.max(n - 1, 1);
     }
   }
   return { mean, cov };
@@ -85,11 +85,11 @@ export class FlexibleLDA {
 
       // Accumulate pooled covariance
       const wc = classCounts[ci] ?? 0;
-      for (let j = 0; j < p; j++) for (let k = 0; k < p; k++) (pooledCov[j]! as Float64Array)[k]! += (wc / n) * ((shrinkCov[j] as Float64Array)[k] ?? 0);
+      for (let j = 0; j < p; j++) for (let k = 0; k < p; k++) (pooledCov[j] as Float64Array)[k]! += (wc / n) * ((shrinkCov[j] as Float64Array)[k] ?? 0);
     }
 
     // Add regularization
-    for (let j = 0; j < p; j++) (pooledCov[j]! as Float64Array)[j]! += this.regularization;
+    for (let j = 0; j < p; j++) (pooledCov[j] as Float64Array)[j]! += this.regularization;
     this._pooledCov = pooledCov;
 
     // Compute scalings (whitening transform of pooled cov, approximated by diagonal)
@@ -181,7 +181,7 @@ export class ReguarizedQDA {
       for (let ci = 0; ci < this.nClasses_; ci++) {
         const logPrior = Math.log(Math.max((this._classPriors as Float64Array)[ci] ?? 1e-15, 1e-15));
         const dist = mahalanobisFromCov(x, this._classMeans[ci] as Float64Array, this._classCovs[ci] as Float64Array[]);
-        const score = logPrior - 0.5 * dist - 0.5 * (this._logDets![ci] ?? 0);
+        const score = logPrior - 0.5 * dist - 0.5 * ((this._logDets?.[ci] ?? 0));
         if (score > bestScore) { bestScore = score; best = this.classes_?.[ci] ?? ci; }
       }
       return best;

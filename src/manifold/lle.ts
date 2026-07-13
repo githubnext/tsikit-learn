@@ -211,7 +211,7 @@ export class LocallyLinearEmbedding {
       let norm = 0;
       for (let i = 0; i < nSamples; i++) {
         v[i] = rand();
-        norm += v[i]! ** 2;
+        norm += (v[i] ?? 0) ** 2;
       }
       norm = Math.sqrt(norm) || 1;
       for (let i = 0; i < nSamples; i++) v[i] = (v[i] ?? 0) / norm;

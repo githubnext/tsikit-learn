@@ -106,7 +106,7 @@ export function finiteDifferenceGradient(fn: (x: Float64Array) => number, x: Flo
   const f0 = fn(x);
   for (let i = 0; i < x.length; i++) {
     const xh = new Float64Array(x);
-    xh[i]! += eps;
+    xh[i] = (xh[i] ?? 0) + eps;
     grad[i] = (fn(xh) - f0) / eps;
   }
   return grad;

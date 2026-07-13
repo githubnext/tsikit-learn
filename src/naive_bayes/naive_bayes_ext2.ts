@@ -142,7 +142,7 @@ export class CategoricalNBExt {
     for (const cats of this.categories_) cats.sort((a, b) => a - b);
     // Compute class priors
     const classCounts = new Int32Array(nClasses);
-    for (const c of y) { const ci = this.classes_.indexOf(c); if (ci >= 0) classCounts[ci]!++; }
+    for (const c of y) { const ci = this.classes_.indexOf(c); if (ci >= 0) classCounts[ci] = (classCounts[ci] ?? 0) + 1; }
     this.classPriors_ = new Float64Array(nClasses);
     for (let k = 0; k < nClasses; k++) this.classPriors_[k] = Math.log((classCounts[k] ?? 0 + this.alpha) / (n + nClasses * this.alpha));
     // Compute conditional log probs

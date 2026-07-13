@@ -131,7 +131,7 @@ export class LabelSpreadingExt {
 
     // Normalize: D^{-1/2} W D^{-1/2}
     const degree = new Float64Array(n);
-    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) degree[i]! += W[i]![j] ?? 0;
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) degree[i] = (degree[i] ?? 0) + (W[i]![j] ?? 0);
     const L: Float64Array[] = Array.from({ length: n }, (_, i) => {
       const row = new Float64Array(n);
       const di = Math.sqrt(degree[i] ?? 1) || 1;
@@ -150,7 +150,7 @@ export class LabelSpreadingExt {
       if (c >= 0) { const ci = classIndex.get(c) ?? 0; Y0[i]![ci] = 1; }
     }
 
-    let F = Y0.map((row) => Float64Array.from(row));
+    let F: Float64Array<ArrayBufferLike>[] = Y0.map((row) => Float64Array.from(row));
     for (let iter = 0; iter < this.maxIter; iter++) {
       const newF: Float64Array[] = Array.from({ length: n }, () => new Float64Array(nClasses));
       for (let i = 0; i < n; i++) {
@@ -166,7 +166,7 @@ export class LabelSpreadingExt {
       }
       let delta = 0;
       for (let i = 0; i < n; i++) for (let c = 0; c < nClasses; c++) delta += ((newF[i]![c] ?? 0) - (F[i]![c] ?? 0)) ** 2;
-      F = newF as Float64Array<ArrayBuffer>[];
+      F = newF;
       if (delta < this.tol) break;
     }
 

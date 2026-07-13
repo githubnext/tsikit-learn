@@ -87,11 +87,11 @@ export class PROCLUS {
     for (let i = 0; i < n; i++) {
       const ci = labels[i] ?? 0;
       counts[ci]!++;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ci]! as Float64Array)[f]! += ((X[i] as Float64Array)[f] ?? 0);
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f]! += ((X[i] as Float64Array)[f] ?? 0);
     }
     for (let ci = 0; ci < k; ci++) {
       const cnt = counts[ci] ?? 1;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ci]! as Float64Array)[f]! /= cnt;
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f]! /= cnt;
     }
     return this;
   }
@@ -153,11 +153,11 @@ export class ProjectedKMeans {
       for (let i = 0; i < n; i++) {
         const ci = newLabels[i] ?? 0;
         counts[ci]!++;
-        for (let j = 0; j < d; j++) (newCenters[ci]! as Float64Array)[j]! += ((Xproj[i] as Float64Array)[j] ?? 0);
+        for (let j = 0; j < d; j++) (newCenters[ci] as Float64Array)[j]! += ((Xproj[i] as Float64Array)[j] ?? 0);
       }
       for (let ki = 0; ki < this.nClusters; ki++) {
         const cnt = counts[ki] ?? 1;
-        for (let j = 0; j < d; j++) (newCenters[ki]! as Float64Array)[j]! /= cnt;
+        for (let j = 0; j < d; j++) (newCenters[ki] as Float64Array)[j]! /= cnt;
       }
       let changed = false;
       for (let i = 0; i < n; i++) if (newLabels[i] !== labels[i]) { changed = true; break; }
@@ -174,11 +174,11 @@ export class ProjectedKMeans {
     for (let i = 0; i < n; i++) {
       const ci = labels[i] ?? 0;
       finalCounts[ci]!++;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ci]! as Float64Array)[f]! += ((X[i] as Float64Array)[f] ?? 0);
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ci] as Float64Array)[f]! += ((X[i] as Float64Array)[f] ?? 0);
     }
     for (let ki = 0; ki < this.nClusters; ki++) {
       const cnt = finalCounts[ki] ?? 1;
-      for (let f = 0; f < p; f++) (this.clusterCenters_[ki]! as Float64Array)[f]! /= cnt;
+      for (let f = 0; f < p; f++) (this.clusterCenters_[ki] as Float64Array)[f]! /= cnt;
     }
     for (let i = 0; i < n; i++) {
       const ci = labels[i] ?? 0;

@@ -68,8 +68,9 @@ export function lassoPath(
   yMean /= n;
   const yc = Float64Array.from(y, (v) => v - yMean);
 
-  let alphasComputed: Float64Array;
-  if (!alphas) {
+  // Auto-generate alphas if not provided
+  let alphasPath = alphas;
+  if (!alphasPath) {
     let alphaMax = 0;
     for (let j = 0; j < p; j++) {
       let dot = 0;
@@ -80,22 +81,20 @@ export function lassoPath(
     const alphaMin = alphaMax * eps;
     const logMax = Math.log(alphaMax);
     const logMin = Math.log(alphaMin);
-    alphasComputed = Float64Array.from({ length: nAlphas }, (_, i) =>
+    alphasPath = Float64Array.from({ length: nAlphas }, (_, i) =>
       Math.exp(logMax + (i / (nAlphas - 1)) * (logMin - logMax)),
     );
-  } else {
-    alphasComputed = alphas;
   }
 
   const coefs: Float64Array[] = [];
-  const dualGaps = new Float64Array(alphasComputed.length);
+  const dualGaps = new Float64Array(alphasPath.length);
   const nIters: number[] = [];
 
   // Warm start
   const coef = new Float64Array(p);
 
-  for (let ai = 0; ai < alphasComputed.length; ai++) {
-    const alpha = alphasComputed[ai]! ?? 1e-3;
+  for (let ai = 0; ai < alphasPath.length; ai++) {
+    const alpha = alphasPath[ai]! ?? 1e-3;
     const l1Pen = alpha * l1Ratio;
     const l2Pen = alpha * (1 - l1Ratio);
 
@@ -140,7 +139,7 @@ export function lassoPath(
     coefs.push(new Float64Array(coef));
   }
 
-  return { alphas: alphasComputed, coefs, dualGaps, nIters };
+  return { alphas: alphasPath, coefs, dualGaps, nIters };
 }
 
 /**

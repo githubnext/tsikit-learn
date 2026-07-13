@@ -165,11 +165,11 @@ export class MultiTaskLassoCV extends BaseEstimator {
     this.cv = opts.cv ?? 5;
   }
 
-  fit(X: Float64Array[], Yinput: Float64Array[]): this {
+  fit(X: Float64Array[], Y: Float64Array[]): this {
     const n = X.length;
     const Xfit = X;
     let interceptMeans: Float64Array | null = null;
-    let Y = Yinput;
+    let Yfit = Y;
 
     if (this.fitIntercept) {
       const p = Y[0]?.length ?? 0;
@@ -179,17 +179,16 @@ export class MultiTaskLassoCV extends BaseEstimator {
           interceptMeans[k] = (interceptMeans[k] ?? 0) + (y[k] ?? 0);
       for (let k = 0; k < interceptMeans.length; k++)
         interceptMeans[k] = (interceptMeans[k] ?? 0) / n;
-      const Yc = Y.map((y) => {
+      Yfit = Y.map((y) => {
         const out = new Float64Array(y);
         for (let k = 0; k < out.length; k++)
           out[k] = (out[k] ?? 0) - (interceptMeans![k] ?? 0);
         return out;
       });
-      Y = Yc;
     }
 
     // Generate alpha path
-    const alphas = this.alphas ?? this._alphaGrid(Xfit, Y);
+    const alphas = this.alphas ?? this._alphaGrid(Xfit, Yfit);
     this.alphasPath_ = alphas;
 
     // CV over alphas
@@ -199,7 +198,7 @@ export class MultiTaskLassoCV extends BaseEstimator {
     for (let ai = 0; ai < alphas.length; ai++) {
       const score = cvScore(
         Xfit,
-        Y,
+        Yfit,
         alphas[ai] ?? 1,
         1,
         this.cv,
@@ -218,13 +217,13 @@ export class MultiTaskLassoCV extends BaseEstimator {
     // Refit on full data
     this.coef_ = blockCoordinateDescent(
       Xfit,
-      Y,
+      Yfit,
       bestAlpha,
       1,
       this.maxIter,
       this.tol,
     );
-    this.intercept_ = interceptMeans ?? new Float64Array(Y[0]?.length ?? 0);
+    this.intercept_ = interceptMeans ?? new Float64Array(Yfit[0]?.length ?? 0);
     return this;
   }
 

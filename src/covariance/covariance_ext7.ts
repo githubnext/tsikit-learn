@@ -11,7 +11,7 @@ export function sampleCovariance(X: Float64Array[]): Float64Array[] {
     for (let j = 0; j < p; j++) {
       const dj = (row[j] ?? 0) - (mean[j] ?? 0);
       for (let k = 0; k < p; k++) {
-        (cov[j]! as Float64Array)[k]! += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / (n - 1);
+        (cov[j] as Float64Array)[k]! += dj * ((row[k] ?? 0) - (mean[k] ?? 0)) / (n - 1);
       }
     }
   }

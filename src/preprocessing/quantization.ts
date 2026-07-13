@@ -92,39 +92,38 @@ export function squaredEuclideanDistances(
  */
 export function boxCox1d(
   y: Float64Array,
-  lmbdaParam: number | null = null,
+  lmbda: number | null = null,
 ): { transformed: Float64Array; lambda: number } {
   // Estimate lambda via MLE if null
   const n = y.length;
-  let lmbda: number;
 
-  if (lmbdaParam === null) {
-    // Grid search over lambda values
-    let bestLambda = 0;
-    let bestLogLik = -Number.POSITIVE_INFINITY;
-    for (let l = -2; l <= 2; l += 0.1) {
-      const t = _boxCoxTransform(y, l);
-      if (t === null) continue;
-      const mean = Array.from(t).reduce((s, v) => s + v, 0) / n;
-      let variance = 0;
-      for (const v of t) variance += (v - mean) ** 2;
-      variance /= n;
-      if (variance < 1e-10) continue;
-      const logLik =
-        -0.5 * n * Math.log(variance) +
-        (l - 1) * Array.from(y).reduce((s, v) => s + Math.log(v), 0);
-      if (logLik > bestLogLik) {
-        bestLogLik = logLik;
-        bestLambda = l;
-      }
-    }
-    lmbda = bestLambda;
-  } else {
-    lmbda = lmbdaParam;
-  }
+  const resolvedLambda =
+    lmbda !== null
+      ? lmbda
+      : (() => {
+          let bestLambda = 0;
+          let bestLogLik = -Number.POSITIVE_INFINITY;
+          for (let l = -2; l <= 2; l += 0.1) {
+            const t = _boxCoxTransform(y, l);
+            if (t === null) continue;
+            const mean = Array.from(t).reduce((s, v) => s + v, 0) / n;
+            let variance = 0;
+            for (const v of t) variance += (v - mean) ** 2;
+            variance /= n;
+            if (variance < 1e-10) continue;
+            const logLik =
+              -0.5 * n * Math.log(variance) +
+              (l - 1) * Array.from(y).reduce((s, v) => s + Math.log(v), 0);
+            if (logLik > bestLogLik) {
+              bestLogLik = logLik;
+              bestLambda = l;
+            }
+          }
+          return bestLambda;
+        })();
 
-  const transformed = _boxCoxTransform(y, lmbda) ?? y;
-  return { transformed, lambda: lmbda };
+  const transformed = _boxCoxTransform(y, resolvedLambda) ?? y;
+  return { transformed, lambda: resolvedLambda };
 }
 
 function _boxCoxTransform(y: Float64Array, lmbda: number): Float64Array | null {

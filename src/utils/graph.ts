@@ -21,13 +21,13 @@ export class UnionFind {
     for (let i = 0; i < n; i++) this.parent[i] = i;
   }
 
-  find(startX: number): number {
-    let x = startX;
-    while (this.parent[x] !== x) {
-      this.parent[x] = this.parent[this.parent[x] ?? x] ?? x;
-      x = this.parent[x] ?? x;
+  find(x: number): number {
+    let cur = x;
+    while (this.parent[cur] !== cur) {
+      this.parent[cur] = this.parent[this.parent[cur] ?? cur] ?? cur;
+      cur = this.parent[cur] ?? cur;
     }
-    return x;
+    return cur;
   }
 
   union(x: number, y: number): boolean {

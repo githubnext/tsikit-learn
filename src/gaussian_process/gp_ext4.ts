@@ -147,7 +147,7 @@ export class GaussianProcessRegressor {
     this._yTrain = y;
 
     const K = this._computeKernel(X, X);
-    for (let i = 0; i < n; i++) (K[i]! as Float64Array)[i]! += this.alpha + this.noiseLevel;
+    for (let i = 0; i < n; i++) (K[i] as Float64Array)[i]! += this.alpha + this.noiseLevel;
 
     this._L = this._cholesky(K);
     const Ly = this._solveLower(this._L, y);

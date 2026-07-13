@@ -72,8 +72,8 @@ export class DictionaryLearning extends DecompositionMixin {
         const xi = X[i] as Float64Array;
         const ci = codes[i] as Float64Array;
         for (let j = 0; j < k; j++) {
-          for (let l = 0; l < k; l++) (A[j]! as Float64Array)[l]! += (ci[j] ?? 0) * (ci[l] ?? 0) / n;
-          for (let f = 0; f < p; f++) (B[f]! as Float64Array)[j]! += (xi[f] ?? 0) * (ci[j] ?? 0) / n;
+          for (let l = 0; l < k; l++) (A[j] as Float64Array)[l]! += (ci[j] ?? 0) * (ci[l] ?? 0) / n;
+          for (let f = 0; f < p; f++) (B[f] as Float64Array)[j]! += (xi[f] ?? 0) * (ci[j] ?? 0) / n;
         }
       }
 

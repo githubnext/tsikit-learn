@@ -46,7 +46,7 @@ function svdTruncated(A: Float64Array[], k: number): { U: Float64Array[]; S: Flo
     // Deflate
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < m; j++) {
-        (Acopy[i]! as Float64Array)[j]! -= sigma * (uNorm[i] ?? 0) * (v[j] ?? 0);
+        (Acopy[i] as Float64Array)[j]! -= sigma * (uNorm[i] ?? 0) * (v[j] ?? 0);
       }
     }
   }
@@ -123,9 +123,9 @@ function kMeansLabels(X: Float64Array[], k: number, maxIter = 50): Int32Array {
     // Update centroids
     centroids = Array.from({ length: k }, (_, j) => {
       const members = Array.from({ length: n }, (__, i) => i).filter((i) => newLabels[i] === j);
-      if (members.length === 0) return centroids[j] as Float64Array;
+      if (members.length === 0) return centroids[j] as Float64Array<ArrayBuffer>;
       const p = (X[0] as Float64Array).length;
-      return Float64Array.from({ length: p }, (_, d) => members.reduce((s, i) => s + ((X[i] as Float64Array)[d] ?? 0), 0) / members.length);
+      return Float64Array.from({ length: p }, (_, d) => members.reduce((s, i) => s + ((X[i] as Float64Array)[d] ?? 0), 0) / members.length) as Float64Array<ArrayBuffer>;
     });
 
     if (newLabels.every((l, i) => l === labels[i])) break;

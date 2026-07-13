@@ -50,10 +50,10 @@ export class UMAPLite {
     return { indices, dists };
   }
 
-  private _fuzzyMembership(dists: Float64Array[], rho: Float64Array, sigma: Float64Array): Float64Array[][] {
+  private _fuzzyMembership(dists: Float64Array[], rho: Float64Array, sigma: Float64Array): Float64Array[] {
     const n = dists.length;
     const k = dists[0]?.length ?? 0;
-    return dists.map((di, i) => di.map((d) => Math.exp(-(Math.max(0, d - (rho[i] ?? 0)) / (sigma[i] ?? 1))))) as Float64Array<ArrayBufferLike>[][];
+    return dists.map((di, i) => di.map((d) => Math.exp(-(Math.max(0, d - (rho[i] ?? 0)) / (sigma[i] ?? 1)))));
   }
 
   private _abParams(minDist: number, spread: number): { a: number; b: number } {
@@ -184,12 +184,12 @@ export class TruncatedSNE {
         (P[i] as Float64Array)[j] = exp;
         sumExp += exp;
       }
-      for (let j = 0; j < n; j++) (P[i]! as Float64Array)[j]! /= Math.max(sumExp, 1e-12);
+      for (let j = 0; j < n; j++) (P[i] as Float64Array)[j]! /= Math.max(sumExp, 1e-12);
     }
     // Symmetrize
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < i; j++) {
-        const pij = ((P[i] as Float64Array)[j] ?? 0 + (P[j]! as Float64Array)[i]! ?? 0) / (2 * n);
+        const pij = (((P[i] as Float64Array)[j] ?? 0) + ((P[j] as Float64Array)[i] ?? 0)) / (2 * n);
         (P[i] as Float64Array)[j] = Math.max(pij, 1e-12);
         (P[j] as Float64Array)[i] = Math.max(pij, 1e-12);
       }
@@ -220,9 +220,9 @@ export class TruncatedSNE {
           if (i === j) continue;
           const pij = (P[i] as Float64Array)[j] ?? 0;
           const qij = (Q[i] as Float64Array)[j] ?? 0;
-          const factor = 4 * (pij - qij / sumQ) / (1 + (this.embedding_[i] as Float64Array).reduce((s, v, k) => s + (v - ((this.embedding_![j] as Float64Array)[k] ?? 0)) ** 2, 0));
+          const factor = 4 * (pij - qij / sumQ) / (1 + (this.embedding_![i] as Float64Array).reduce((s, v, k) => s + (v - ((this.embedding_![j] as Float64Array)[k]! ?? 0)) ** 2, 0));
           for (let k = 0; k < d; k++) {
-            (grad[i]! as Float64Array)[k]! += factor * ((this.embedding_[i] as Float64Array)[k] ?? 0 - (this.embedding_![j] as Float64Array)[k]! ?? 0);
+            (grad[i] as Float64Array)[k]! += factor * (((this.embedding_[i] as Float64Array)[k] ?? 0) - ((this.embedding_![j] as Float64Array)[k] ?? 0));
           }
         }
       }
@@ -232,7 +232,7 @@ export class TruncatedSNE {
         for (let k = 0; k < d; k++) {
           const g = (grad[i] as Float64Array)[k] ?? 0;
           const inc = (incs[i] as Float64Array)[k] ?? 0;
-          const gain = Math.max(0.1, ((g > 0) !== (inc > 0)) ? (gains[i]! as Float64Array)[k]! + 0.2 : (gains[i]! as Float64Array)[k]! * 0.8);
+          const gain = Math.max(0.1, ((g > 0) !== (inc > 0)) ? ((gains[i] as Float64Array)[k] ?? 0) + 0.2 : ((gains[i] as Float64Array)[k] ?? 0) * 0.8);
           (gains[i] as Float64Array)[k] = gain;
           const newInc = this.momentum * inc - this.learningRate * gain * g;
           (incs[i] as Float64Array)[k] = newInc;
