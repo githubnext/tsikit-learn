@@ -371,4 +371,8 @@ export class FunctionTransformerV2 {
   }
 }
 
-export { Binarizer, FunctionTransformer, QuantileTransformer } from "./binarizer.ts";
+export {
+  Binarizer,
+  FunctionTransformer,
+  QuantileTransformer,
+} from "./binarizer.js";
