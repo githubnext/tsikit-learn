@@ -370,3 +370,5 @@ export class FunctionTransformerV2 {
     return this.fit(X).transform(X);
   }
 }
+
+export { BinarizerV2 as Binarizer };
