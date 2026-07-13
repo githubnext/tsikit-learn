@@ -9,7 +9,8 @@ import { NotFittedError } from "../exceptions.js";
 function colMeans(X: Float64Array[]): Float64Array {
   const p = (X[0] ?? new Float64Array(0)).length;
   const m = new Float64Array(p);
-  for (const xi of X) for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (xi[j] ?? 0);
+  for (const xi of X)
+    for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (xi[j] ?? 0);
   for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) / X.length;
   return m;
 }
@@ -47,7 +48,8 @@ function matVec(M: Float64Array[], v: Float64Array): Float64Array {
   const out = new Float64Array(M.length);
   for (let i = 0; i < M.length; i++) {
     const row = M[i] ?? new Float64Array(0);
-    for (let j = 0; j < v.length; j++) out[i] = (out[i] ?? 0) + (row[j] ?? 0) * (v[j] ?? 0);
+    for (let j = 0; j < v.length; j++)
+      out[i] = (out[i] ?? 0) + (row[j] ?? 0) * (v[j] ?? 0);
   }
   return out;
 }
@@ -97,10 +99,16 @@ function nipals(
     normalize(vNew);
     const diff =
       norm(
-        Float64Array.from({ length: p }, (_, i) => (uNew[i] ?? 0) - (u[i] ?? 0)),
+        Float64Array.from(
+          { length: p },
+          (_, i) => (uNew[i] ?? 0) - (u[i] ?? 0),
+        ),
       ) +
       norm(
-        Float64Array.from({ length: q }, (_, i) => (vNew[i] ?? 0) - (v[i] ?? 0)),
+        Float64Array.from(
+          { length: q },
+          (_, i) => (vNew[i] ?? 0) - (v[i] ?? 0),
+        ),
       );
     u = uNew as Float64Array<ArrayBuffer>;
     v = vNew;
@@ -140,7 +148,7 @@ export class PLSRegression {
   ) {
     this.nComponents = options.nComponents ?? 2;
     this.maxIter = options.maxIter ?? 500;
-    this.tol = options.tol ?? 1e-06;
+    this.tol = options.tol ?? 1e-6;
     this.scale = options.scale ?? true;
   }
 
@@ -184,7 +192,8 @@ export class PLSRegression {
       const px = new Float64Array(p);
       for (let i = 0; i < n; i++) {
         const xi = Xc[i] ?? new Float64Array(p);
-        for (let j = 0; j < p; j++) px[j] = (px[j] ?? 0) + (xi[j] ?? 0) * (t[i] ?? 0);
+        for (let j = 0; j < p; j++)
+          px[j] = (px[j] ?? 0) + (xi[j] ?? 0) * (t[i] ?? 0);
       }
 
       // Y loadings: q_h = Yc^T s / ||s||^2
@@ -196,7 +205,8 @@ export class PLSRegression {
           qy[j] = (qy[j] ?? 0) + (yi[j] ?? 0) * (s[i] ?? 0);
         }
       }
-      if (sNorm2 > 1e-15) for (let j = 0; j < q; j++) qy[j] = (qy[j] ?? 0) / sNorm2;
+      if (sNorm2 > 1e-15)
+        for (let j = 0; j < q; j++) qy[j] = (qy[j] ?? 0) / sNorm2;
 
       this.xWeights_[comp] = u;
       this.yWeights_[comp] = v;
@@ -215,12 +225,14 @@ export class PLSRegression {
       }
       Xc = Xc.map((xi, i) => {
         const out = new Float64Array(p);
-        for (let j = 0; j < p; j++) out[j] = (xi[j] ?? 0) - (tFull[i] ?? 0) * (px[j] ?? 0);
+        for (let j = 0; j < p; j++)
+          out[j] = (xi[j] ?? 0) - (tFull[i] ?? 0) * (px[j] ?? 0);
         return out;
       });
       Yc = Yc.map((yi, i) => {
         const out = new Float64Array(q);
-        for (let j = 0; j < q; j++) out[j] = (yi[j] ?? 0) - (tFull[i] ?? 0) * (qy[j] ?? 0);
+        for (let j = 0; j < q; j++)
+          out[j] = (yi[j] ?? 0) - (tFull[i] ?? 0) * (qy[j] ?? 0);
         return out;
       });
     }
@@ -242,7 +254,10 @@ export class PLSRegression {
     const PtW = Array.from({ length: k }, () => new Float64Array(k));
     for (let i = 0; i < k; i++) {
       for (let j = 0; j < k; j++) {
-        PtW[i]![j] = dot(P[i] ?? new Float64Array(0), W[j] ?? new Float64Array(0));
+        PtW[i]![j] = dot(
+          P[i] ?? new Float64Array(0),
+          W[j] ?? new Float64Array(0),
+        );
       }
     }
 
@@ -278,12 +293,16 @@ export class PLSRegression {
       // Find pivot
       let maxRow = col;
       for (let row = col + 1; row < k; row++) {
-        if (Math.abs(aug[row]![col] ?? 0) > Math.abs(aug[maxRow]![col] ?? 0)) maxRow = row;
+        if (Math.abs(aug[row]![col] ?? 0) > Math.abs(aug[maxRow]![col] ?? 0))
+          maxRow = row;
       }
-      const tmpPls = aug[col]!; aug[col] = aug[maxRow]!; aug[maxRow] = tmpPls;
+      const tmpPls = aug[col]!;
+      aug[col] = aug[maxRow]!;
+      aug[maxRow] = tmpPls;
       const pivot = aug[col]![col] ?? 1e-12;
       if (Math.abs(pivot) < 1e-15) continue;
-      for (let j = 0; j < 2 * k; j++) aug[col]![j] = (aug[col]![j] ?? 0) / pivot;
+      for (let j = 0; j < 2 * k; j++)
+        aug[col]![j] = (aug[col]![j] ?? 0) / pivot;
       for (let row = 0; row < k; row++) {
         if (row === col) continue;
         const factor = aug[row]![col] ?? 0;
@@ -292,7 +311,9 @@ export class PLSRegression {
         }
       }
     }
-    return aug.map((row) => Float64Array.from({ length: k }, (_, j) => row[k + j] ?? 0));
+    return aug.map((row) =>
+      Float64Array.from({ length: k }, (_, j) => row[k + j] ?? 0),
+    );
   }
 
   predict(X: Float64Array[]): Float64Array[] {
@@ -307,7 +328,8 @@ export class PLSRegression {
       const out = new Float64Array(q);
       for (let j = 0; j < q; j++) {
         let s = 0;
-        for (let k = 0; k < p; k++) s += (xc[k] ?? 0) * (this.coef_![k]![j] ?? 0);
+        for (let k = 0; k < p; k++)
+          s += (xc[k] ?? 0) * (this.coef_![k]![j] ?? 0);
         out[j] = s + (this.yMean_![j] ?? 0);
       }
       return out;
@@ -315,7 +337,8 @@ export class PLSRegression {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.xWeights_ === null || this.xMean_ === null) throw new NotFittedError();
+    if (this.xWeights_ === null || this.xMean_ === null)
+      throw new NotFittedError();
     const k = this.xWeights_.length;
     const p = this.xMean_.length;
     return X.map((xi) => {
@@ -329,7 +352,10 @@ export class PLSRegression {
     });
   }
 
-  fitTransform(X: Float64Array[], Y: Float64Array[]): [Float64Array[], Float64Array[]] {
+  fitTransform(
+    X: Float64Array[],
+    Y: Float64Array[],
+  ): [Float64Array[], Float64Array[]] {
     this.fit(X, Y);
     return [this.xScores_!, this.yScores_!];
   }
@@ -385,19 +411,24 @@ export class PLSSVD {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.xWeights_ === null || this.xMean_ === null) throw new NotFittedError();
+    if (this.xWeights_ === null || this.xMean_ === null)
+      throw new NotFittedError();
     const k = this.xWeights_.length;
     const p = this.xMean_.length;
     return X.map((xi) => {
       const xc = new Float64Array(p);
       for (let j = 0; j < p; j++) xc[j] = (xi[j] ?? 0) - (this.xMean_![j] ?? 0);
       const out = new Float64Array(k);
-      for (let i = 0; i < k; i++) out[i] = dot(xc, this.xWeights_![i] ?? new Float64Array(0));
+      for (let i = 0; i < k; i++)
+        out[i] = dot(xc, this.xWeights_![i] ?? new Float64Array(0));
       return out;
     });
   }
 
-  fitTransform(X: Float64Array[], Y: Float64Array[]): [Float64Array[], Float64Array[]] {
+  fitTransform(
+    X: Float64Array[],
+    Y: Float64Array[],
+  ): [Float64Array[], Float64Array[]] {
     this.fit(X, Y);
     return [this.xScores_!, this.yScores_!];
   }

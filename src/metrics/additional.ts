@@ -90,9 +90,7 @@ export function fbetaScore(
     });
     const total = support.reduce((a, b) => a + b, 0);
     if (total === 0) return 0;
-    return (
-      scores.reduce((s, sc, i) => s + sc * (support[i] ?? 0), 0) / total
-    );
+    return scores.reduce((s, sc, i) => s + sc * (support[i] ?? 0), 0) / total;
   }
   // binary: use second class
   return scores[1] ?? scores[0] ?? 0;
@@ -195,7 +193,8 @@ export function hingeLoss(
   labels?: number[],
 ): number {
   // binary: map labels to {-1, +1}
-  const classes = labels ?? [...new Set<number>([...yTrue])].sort((a, b) => a - b);
+  const classes =
+    labels ?? [...new Set<number>([...yTrue])].sort((a, b) => a - b);
   if (classes.length === 2) {
     const neg = classes[0] ?? -1;
     let sum = 0;

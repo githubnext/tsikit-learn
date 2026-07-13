@@ -1,10 +1,32 @@
 import { describe, expect, it } from "bun:test";
-import { CountVectorizer, TfidfTransformer, TfidfVectorizer, HashingVectorizer } from "../src/feature_extraction/text.ts";
-import { RBFSampler, Nystroem, AdditiveChi2Sampler } from "../src/kernel_approximation/rbf_sampler.ts";
-import { EmpiricalCovariance, ShrunkCovariance, LedoitWolf } from "../src/covariance/covariance.ts";
+import {
+  EmpiricalCovariance,
+  LedoitWolf,
+  ShrunkCovariance,
+} from "../src/covariance/covariance.ts";
 import { PLSRegression, PLSSVD } from "../src/cross_decomposition/pls.ts";
-import { PowerTransformer, QuantileTransformer, Binarizer, FunctionTransformer } from "../src/preprocessing/power_transformer.ts";
-import { IncrementalPCA, KernelPCA, FactorAnalysis } from "../src/decomposition/advanced.ts";
+import {
+  FactorAnalysis,
+  IncrementalPCA,
+  KernelPCA,
+} from "../src/decomposition/advanced.ts";
+import {
+  CountVectorizer,
+  HashingVectorizer,
+  TfidfTransformer,
+  TfidfVectorizer,
+} from "../src/feature_extraction/text.ts";
+import {
+  AdditiveChi2Sampler,
+  Nystroem,
+  RBFSampler,
+} from "../src/kernel_approximation/rbf_sampler.ts";
+import {
+  Binarizer,
+  FunctionTransformer,
+  PowerTransformer,
+  QuantileTransformer,
+} from "../src/preprocessing/power_transformer.ts";
 
 const DOCS = [
   "the cat sat on the mat",
@@ -23,7 +45,7 @@ describe("CountVectorizer", () => {
     // 'the' should appear in most docs
     const theIdx = features.indexOf("the");
     if (theIdx >= 0) {
-      expect((X[0]![theIdx] ?? 0)).toBeGreaterThan(0);
+      expect(X[0]![theIdx] ?? 0).toBeGreaterThan(0);
     }
   });
 
@@ -127,10 +149,7 @@ describe("Nystroem", () => {
 });
 
 describe("AdditiveChi2Sampler", () => {
-  const X = [
-    new Float64Array([0.5, 0.3]),
-    new Float64Array([0.2, 0.8]),
-  ];
+  const X = [new Float64Array([0.5, 0.3]), new Float64Array([0.2, 0.8])];
 
   it("transforms to higher dimension", () => {
     const sampler = new AdditiveChi2Sampler({ sampleSteps: 2 });
@@ -154,8 +173,8 @@ describe("EmpiricalCovariance", () => {
     ec.fit(X);
     expect(ec.covariance_).toBeDefined();
     expect(ec.location_).toBeDefined();
-    expect((ec.location_![0] ?? 0)).toBeCloseTo(3, 5);
-    expect((ec.location_![1] ?? 0)).toBeCloseTo(4, 5);
+    expect(ec.location_![0] ?? 0).toBeCloseTo(3, 5);
+    expect(ec.location_![1] ?? 0).toBeCloseTo(4, 5);
   });
 
   it("computes mahalanobis distances", () => {
@@ -279,7 +298,10 @@ describe("PowerTransformer", () => {
   ];
 
   it("yeo-johnson transform", () => {
-    const pt = new PowerTransformer({ method: "yeo-johnson", standardize: true });
+    const pt = new PowerTransformer({
+      method: "yeo-johnson",
+      standardize: true,
+    });
     const Xt = pt.fitTransform(X);
     expect(Xt.length).toBe(4);
     expect(Xt[0]!.length).toBe(2);
@@ -291,8 +313,9 @@ describe("PowerTransformer", () => {
 });
 
 describe("QuantileTransformer", () => {
-  const X = Array.from({ length: 20 }, (_, i) =>
-    new Float64Array([i + 1, 20 - i]),
+  const X = Array.from(
+    { length: 20 },
+    (_, i) => new Float64Array([i + 1, 20 - i]),
   );
 
   it("uniform output", () => {
@@ -342,10 +365,7 @@ describe("Binarizer", () => {
 });
 
 describe("FunctionTransformer", () => {
-  const X = [
-    new Float64Array([1, 4]),
-    new Float64Array([9, 16]),
-  ];
+  const X = [new Float64Array([1, 4]), new Float64Array([9, 16])];
 
   it("applies custom function", () => {
     const ft = new FunctionTransformer({
@@ -365,8 +385,9 @@ describe("FunctionTransformer", () => {
 });
 
 describe("IncrementalPCA", () => {
-  const X = Array.from({ length: 20 }, (_, i) =>
-    new Float64Array([i, i * 2, i * 3]),
+  const X = Array.from(
+    { length: 20 },
+    (_, i) => new Float64Array([i, i * 2, i * 3]),
   );
 
   it("fits and transforms", () => {
@@ -408,8 +429,9 @@ describe("KernelPCA", () => {
 });
 
 describe("FactorAnalysis", () => {
-  const X = Array.from({ length: 15 }, (_, i) =>
-    new Float64Array([Math.sin(i), Math.cos(i), i * 0.1]),
+  const X = Array.from(
+    { length: 15 },
+    (_, i) => new Float64Array([Math.sin(i), Math.cos(i), i * 0.1]),
   );
 
   it("extracts factors", () => {

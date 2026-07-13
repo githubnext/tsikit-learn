@@ -14,7 +14,11 @@ export interface BinarySVM {
  * Trains K*(K-1)/2 binary classifiers, uses voting for prediction.
  */
 export class OvOSVM {
-  private _classifiers: Array<{ clf: BinarySVM; class0: number; class1: number }> = [];
+  private _classifiers: Array<{
+    clf: BinarySVM;
+    class0: number;
+    class1: number;
+  }> = [];
   private _classes: Int32Array | null = null;
 
   constructor(private readonly _baseClf: () => BinarySVM) {}
@@ -28,10 +32,13 @@ export class OvOSVM {
       for (let j = i + 1; j < classes.length; j++) {
         const c0 = classes[i]!;
         const c1 = classes[j]!;
-        const mask = Array.from(y).map((label, idx) => ({ idx, label }))
+        const mask = Array.from(y)
+          .map((label, idx) => ({ idx, label }))
           .filter(({ label }) => label === c0 || label === c1);
         const XBin = mask.map(({ idx }) => X[idx]!);
-        const yBin = Int32Array.from(mask, ({ label }) => label === c0 ? 0 : 1);
+        const yBin = Int32Array.from(mask, ({ label }) =>
+          label === c0 ? 0 : 1,
+        );
         const clf = this._baseClf();
         clf.fit(XBin, yBin);
         this._classifiers.push({ clf, class0: c0, class1: c1 });
@@ -57,7 +64,10 @@ export class OvOSVM {
       let best = classes[0]!;
       let bestVotes = -1;
       for (const [cls, count] of v) {
-        if (count > bestVotes) { bestVotes = count; best = cls; }
+        if (count > bestVotes) {
+          bestVotes = count;
+          best = cls;
+        }
       }
       return best;
     });
@@ -79,7 +89,7 @@ export class OvRSVM {
     this._classifiers = [];
 
     for (const cls of classes) {
-      const yBin = Int32Array.from(y, (label) => label === cls ? 1 : 0);
+      const yBin = Int32Array.from(y, (label) => (label === cls ? 1 : 0));
       const clf = this._baseClf();
       clf.fit(X, yBin);
       this._classifiers.push({ clf, cls });
@@ -103,7 +113,10 @@ export class OvRSVM {
       let bestScore = Number.NEGATIVE_INFINITY;
       for (let c = 0; c < this._classifiers.length; c++) {
         const s = scores[c]?.[i] ?? 0;
-        if (s > bestScore) { bestScore = s; best = this._classifiers[c]!.cls; }
+        if (s > bestScore) {
+          bestScore = s;
+          best = this._classifiers[c]!.cls;
+        }
       }
       return best;
     });

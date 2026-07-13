@@ -33,7 +33,7 @@ const OPENML_BASE_URL = "https://api.openml.org/api/v1/json";
  * Returns structured data suitable for machine learning.
  */
 export async function fetchOpenML(
-  options: FetchOpenMLOptions
+  options: FetchOpenMLOptions,
 ): Promise<OpenMLDataset> {
   const { name, version = "active", dataId } = options;
 
@@ -62,19 +62,20 @@ export async function fetchOpenML(
   // Parse the dataset list to find the actual dataset ID
   let actualDataId = dataId;
   if (actualDataId == null) {
-    const datasets = json["data"] as { dataset?: { did?: number }[] } | undefined;
+    const datasets = json.data as { dataset?: { did?: number }[] } | undefined;
     const did = datasets?.dataset?.[0]?.did;
-    if (did == null) throw new Error(`fetchOpenML: dataset "${name}" not found`);
+    if (did == null)
+      throw new Error(`fetchOpenML: dataset "${name}" not found`);
     actualDataId = did;
     void version; // version is used for filtering in production; simplified here
   }
 
   // Fetch dataset description
-  const descResponse = await fetch(
-    `${OPENML_BASE_URL}/data/${actualDataId}`
-  );
+  const descResponse = await fetch(`${OPENML_BASE_URL}/data/${actualDataId}`);
   if (!descResponse.ok) {
-    throw new Error(`fetchOpenML: HTTP ${descResponse.status} fetching dataset ${actualDataId}`);
+    throw new Error(
+      `fetchOpenML: HTTP ${descResponse.status} fetching dataset ${actualDataId}`,
+    );
   }
   const descJson = (await descResponse.json()) as {
     data_set_description?: {
@@ -95,14 +96,22 @@ export async function fetchOpenML(
 
   // Fetch the actual data file
   const dataUrl = desc.url;
-  if (!dataUrl) throw new Error("fetchOpenML: no data URL in dataset description");
+  if (!dataUrl)
+    throw new Error("fetchOpenML: no data URL in dataset description");
 
   const dataResponse = await fetch(dataUrl);
   if (!dataResponse.ok) {
-    throw new Error(`fetchOpenML: HTTP ${dataResponse.status} fetching data file`);
+    throw new Error(
+      `fetchOpenML: HTTP ${dataResponse.status} fetching data file`,
+    );
   }
   const text = await dataResponse.text();
-  return parseArff(text, targetCol as string, description, desc as Record<string, unknown>);
+  return parseArff(
+    text,
+    targetCol as string,
+    description,
+    desc as Record<string, unknown>,
+  );
 }
 
 /**
@@ -112,7 +121,7 @@ export function parseArff(
   arffText: string,
   targetColumn: string,
   description = "",
-  details: Record<string, unknown> = {}
+  details: Record<string, unknown> = {},
 ): OpenMLDataset {
   const lines = arffText.split(/\r?\n/);
   const attributes: Array<{ name: string; type: string }> = [];
@@ -135,15 +144,18 @@ export function parseArff(
   }
 
   const targetIdx = attributes.findIndex(
-    (a) => a.name.toLowerCase() === targetColumn.toLowerCase()
+    (a) => a.name.toLowerCase() === targetColumn.toLowerCase(),
   );
   const featureIdxs = attributes
     .map((_, i) => i)
     .filter((i) => i !== targetIdx);
 
   const featureNames = featureIdxs.map((i) => attributes[i]?.name ?? `f${i}`);
-  const data: Float64Array[] = rows.map((row) =>
-    new Float64Array(featureIdxs.map((i) => Number.parseFloat(row[i] ?? "0") || 0))
+  const data: Float64Array[] = rows.map(
+    (row) =>
+      new Float64Array(
+        featureIdxs.map((i) => Number.parseFloat(row[i] ?? "0") || 0),
+      ),
   );
 
   const targetAttr = targetIdx >= 0 ? attributes[targetIdx] : null;
@@ -156,14 +168,14 @@ export function parseArff(
     targetType.toUpperCase().startsWith("INTEGER")
   ) {
     target = new Float64Array(
-      rows.map((row) => Number.parseFloat(row[targetIdx] ?? "0") || 0)
+      rows.map((row) => Number.parseFloat(row[targetIdx] ?? "0") || 0),
     );
   } else {
     // Nominal — encode as integers
     const vals = new Set(rows.map((row) => row[targetIdx] ?? ""));
     const valMap = new Map([...vals].map((v, i) => [v, i]));
     target = new Int32Array(
-      rows.map((row) => valMap.get(row[targetIdx] ?? "") ?? 0)
+      rows.map((row) => valMap.get(row[targetIdx] ?? "") ?? 0),
     );
   }
 
@@ -180,31 +192,39 @@ export function parseArff(
 /**
  * List available OpenML datasets matching the given criteria.
  */
-export async function listOpenMLDatasets(options: {
-  tag?: string;
-  limit?: number;
-  offset?: number;
-} = {}): Promise<Array<{ id: number; name: string; version: number; status: string }>> {
+export async function listOpenMLDatasets(
+  options: {
+    tag?: string;
+    limit?: number;
+    offset?: number;
+  } = {},
+): Promise<
+  Array<{ id: number; name: string; version: number; status: string }>
+> {
   let url = `${OPENML_BASE_URL}/data/list`;
   const params: string[] = [];
   if (options.tag) params.push(`tag/${encodeURIComponent(options.tag)}`);
-  if (params.length > 0) url += "/" + params.join("/");
+  if (params.length > 0) url += `/${params.join("/")}`;
 
   const response = await fetch(url);
-  if (!response.ok) throw new Error(`listOpenMLDatasets: HTTP ${response.status}`);
+  if (!response.ok)
+    throw new Error(`listOpenMLDatasets: HTTP ${response.status}`);
 
   const json = (await response.json()) as {
     data?: {
-      dataset?: Array<{ did: number; name: string; version: number; status: string }>;
+      dataset?: Array<{
+        did: number;
+        name: string;
+        version: number;
+        status: string;
+      }>;
     };
   };
 
-  return (json.data?.dataset ?? [])
-    .slice(0, options.limit ?? 100)
-    .map((d) => ({
-      id: d.did,
-      name: d.name,
-      version: d.version,
-      status: d.status,
-    }));
+  return (json.data?.dataset ?? []).slice(0, options.limit ?? 100).map((d) => ({
+    id: d.did,
+    name: d.name,
+    version: d.version,
+    status: d.status,
+  }));
 }

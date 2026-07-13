@@ -21,7 +21,9 @@ export class OneVsRestClassifier {
   }
 
   fit(X: Float64Array[], y: Float64Array): this {
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     this.estimators_ = [];
 
@@ -30,7 +32,9 @@ export class OneVsRestClassifier {
       for (let i = 0; i < y.length; i++) {
         yBin[i] = (y[i] ?? 0) === cls ? 1 : 0;
       }
-      const est = Object.create(Object.getPrototypeOf(this.estimator) as object) as BinaryClassifier;
+      const est = Object.create(
+        Object.getPrototypeOf(this.estimator) as object,
+      ) as BinaryClassifier;
       Object.assign(est, this.estimator);
       est.fit(X, yBin);
       this.estimators_.push(est);
@@ -48,7 +52,9 @@ export class OneVsRestClassifier {
     const nClasses = classes.length;
 
     // Get decision scores for each class
-    const scores: Float64Array[] = this.estimators_.map((est) => est.predict(X));
+    const scores: Float64Array[] = this.estimators_.map((est) =>
+      est.predict(X),
+    );
 
     return new Float64Array(
       Array.from({ length: n }, (_, i) => {
@@ -87,7 +93,9 @@ export class OneVsOneClassifier {
   }
 
   fit(X: Float64Array[], y: Float64Array): this {
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     this.estimators_ = [];
     this.pairIndices_ = [];
@@ -104,9 +112,13 @@ export class OneVsOneClassifier {
           if ((y[k] ?? 0) === ci || (y[k] ?? 0) === cj) mask.push(k);
         }
         const XSub = mask.map((k) => X[k] ?? new Float64Array(0));
-        const ySub = new Float64Array(mask.map((k) => ((y[k] ?? 0) === ci ? 0 : 1)));
+        const ySub = new Float64Array(
+          mask.map((k) => ((y[k] ?? 0) === ci ? 0 : 1)),
+        );
 
-        const est = Object.create(Object.getPrototypeOf(this.estimator) as object) as BinaryClassifier;
+        const est = Object.create(
+          Object.getPrototypeOf(this.estimator) as object,
+        ) as BinaryClassifier;
         Object.assign(est, this.estimator);
         est.fit(XSub, ySub);
         this.estimators_.push(est);
@@ -117,7 +129,11 @@ export class OneVsOneClassifier {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (this.estimators_ === null || this.classes_ === null || this.pairIndices_ === null)
+    if (
+      this.estimators_ === null ||
+      this.classes_ === null ||
+      this.pairIndices_ === null
+    )
       throw new NotFittedError("OneVsOneClassifier");
 
     const classes = this.classes_;
@@ -130,7 +146,7 @@ export class OneVsOneClassifier {
         for (let e = 0; e < this.estimators_!.length; e++) {
           const est = this.estimators_![e] as BinaryClassifier;
           const [ci, cj] = this.pairIndices_![e] as [number, number];
-          const pred = (est.predict([X[i] ?? new Float64Array(0)]))[0] ?? 0;
+          const pred = est.predict([X[i] ?? new Float64Array(0)])[0] ?? 0;
           if (pred === 0) votes[ci] = (votes[ci] ?? 0) + 1;
           else votes[cj] = (votes[cj] ?? 0) + 1;
         }

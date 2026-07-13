@@ -67,7 +67,8 @@ export class EmpiricalCovariance {
   }
 
   score(X: Float64Array[]): number {
-    if (this.covariance_ === null || this.location_ === null) throw new NotFittedError();
+    if (this.covariance_ === null || this.location_ === null)
+      throw new NotFittedError();
     // Negative log-likelihood
     const n = X.length;
     const p = (X[0] ?? new Float64Array(0)).length;
@@ -79,7 +80,8 @@ export class EmpiricalCovariance {
     let trace = 0;
     for (const xi of X) {
       const centered = new Float64Array(p);
-      for (let j = 0; j < p; j++) centered[j] = (xi[j] ?? 0) - (this.location_![j] ?? 0);
+      for (let j = 0; j < p; j++)
+        centered[j] = (xi[j] ?? 0) - (this.location_![j] ?? 0);
       for (let j = 0; j < p; j++) {
         const cjj = this.covariance_![j]![j] ?? 1e-12;
         trace += (centered[j] ?? 0) ** 2 / (cjj || 1e-12);
@@ -89,7 +91,8 @@ export class EmpiricalCovariance {
   }
 
   mahalanobis(X: Float64Array[]): Float64Array {
-    if (this.covariance_ === null || this.location_ === null) throw new NotFittedError();
+    if (this.covariance_ === null || this.location_ === null)
+      throw new NotFittedError();
     const p = (X[0] ?? new Float64Array(0)).length;
     const dists = new Float64Array(X.length);
     for (let idx = 0; idx < X.length; idx++) {
@@ -125,7 +128,8 @@ export class ShrunkCovariance extends EmpiricalCovariance {
       for (let i = 0; i < p; i++) {
         for (let j = 0; j < p; j++) {
           if (i === j) continue;
-          this.covariance_[i]![j] = (this.covariance_![i]![j] ?? 0) * (1 - this.shrinkage);
+          this.covariance_[i]![j] =
+            (this.covariance_![i]![j] ?? 0) * (1 - this.shrinkage);
         }
       }
     }
@@ -173,7 +177,8 @@ export class LedoitWolf extends EmpiricalCovariance {
       for (let i = 0; i < p; i++) {
         for (let j = 0; j < p; j++) {
           this.covariance_![i]![j] =
-            (1 - alpha) * (this.covariance_![i]![j] ?? 0) + (i === j ? alpha * mu : 0);
+            (1 - alpha) * (this.covariance_![i]![j] ?? 0) +
+            (i === j ? alpha * mu : 0);
         }
       }
     }
@@ -215,7 +220,8 @@ export class OAS extends EmpiricalCovariance {
       for (let i = 0; i < p; i++) {
         for (let j = 0; j < p; j++) {
           this.covariance_![i]![j] =
-            (1 - rho) * (this.covariance_![i]![j] ?? 0) + (i === j ? rho * mu : 0);
+            (1 - rho) * (this.covariance_![i]![j] ?? 0) +
+            (i === j ? rho * mu : 0);
         }
       }
     }

@@ -21,7 +21,10 @@ export function denseToCsr(X: Float64Array[]): SparseMatrix {
     const row = X[i]!;
     for (let j = 0; j < nCols; j++) {
       const v = row[j] ?? 0;
-      if (v !== 0) { data.push(v); indices.push(j); }
+      if (v !== 0) {
+        data.push(v);
+        indices.push(j);
+      }
     }
     indptr.push(data.length);
   }
@@ -36,7 +39,10 @@ export function denseToCsr(X: Float64Array[]): SparseMatrix {
 /** Convert CSR sparse matrix back to dense. */
 export function csrToDense(sp: SparseMatrix): Float64Array[] {
   const [nRows, nCols] = sp.shape;
-  const result: Float64Array[] = Array.from({ length: nRows }, () => new Float64Array(nCols));
+  const result: Float64Array[] = Array.from(
+    { length: nRows },
+    () => new Float64Array(nCols),
+  );
   for (let i = 0; i < nRows; i++) {
     const start = sp.indptr[i] ?? 0;
     const end = sp.indptr[i + 1] ?? 0;
@@ -48,7 +54,10 @@ export function csrToDense(sp: SparseMatrix): Float64Array[] {
 }
 
 /** Compute mean of each column in a CSR sparse matrix. */
-export function meanVarianceAxis0(sp: SparseMatrix): { mean: Float64Array; variance: Float64Array } {
+export function meanVarianceAxis0(sp: SparseMatrix): {
+  mean: Float64Array;
+  variance: Float64Array;
+} {
   const [nRows, nCols] = sp.shape;
   const mean = new Float64Array(nCols);
   const variance = new Float64Array(nCols);
@@ -95,7 +104,10 @@ export function inplaceRowScale(sp: SparseMatrix, scales: Float64Array): void {
 }
 
 /** Inplace column-wise scaling: X[:, j] *= scales[j] */
-export function inplaceColumnScale(sp: SparseMatrix, scales: Float64Array): void {
+export function inplaceColumnScale(
+  sp: SparseMatrix,
+  scales: Float64Array,
+): void {
   for (let i = 0; i < sp.shape[0]; i++) {
     const start = sp.indptr[i] ?? 0;
     const end = sp.indptr[i + 1] ?? 0;
@@ -107,7 +119,10 @@ export function inplaceColumnScale(sp: SparseMatrix, scales: Float64Array): void
 }
 
 /** Compute min and max of each column in a CSR sparse matrix. */
-export function minMaxAxis(sp: SparseMatrix, axis: 0 | 1 = 0): { min: Float64Array; max: Float64Array } {
+export function minMaxAxis(
+  sp: SparseMatrix,
+  axis: 0 | 1 = 0,
+): { min: Float64Array; max: Float64Array } {
   const [nRows, nCols] = sp.shape;
   const size = axis === 0 ? nCols : nRows;
   const min = new Float64Array(size).fill(Number.POSITIVE_INFINITY);
@@ -128,8 +143,10 @@ export function minMaxAxis(sp: SparseMatrix, axis: 0 | 1 = 0): { min: Float64Arr
   }
   // Implicit zeros must be considered
   for (let idx = 0; idx < size; idx++) {
-    if (!(hasExplicit[idx] ?? 0)) { min[idx] = 0; max[idx] = 0; }
-    else {
+    if (!(hasExplicit[idx] ?? 0)) {
+      min[idx] = 0;
+      max[idx] = 0;
+    } else {
       if ((min[idx] ?? 0) > 0) min[idx] = 0;
       if ((max[idx] ?? 0) < 0) max[idx] = 0;
     }
@@ -138,7 +155,11 @@ export function minMaxAxis(sp: SparseMatrix, axis: 0 | 1 = 0): { min: Float64Arr
 }
 
 /** Compute L1/L2 norms of each row or column. */
-export function normAxis(sp: SparseMatrix, axis: 0 | 1 = 1, norm: 1 | 2 = 2): Float64Array {
+export function normAxis(
+  sp: SparseMatrix,
+  axis: 0 | 1 = 1,
+  norm: 1 | 2 = 2,
+): Float64Array {
   const [nRows, nCols] = sp.shape;
   const size = axis === 1 ? nRows : nCols;
   const out = new Float64Array(size);
@@ -152,7 +173,8 @@ export function normAxis(sp: SparseMatrix, axis: 0 | 1 = 1, norm: 1 | 2 = 2): Fl
       out[idx]! += norm === 1 ? Math.abs(v) : v * v;
     }
   }
-  if (norm === 2) for (let i = 0; i < size; i++) out[i]! = Math.sqrt(out[i] ?? 0);
+  if (norm === 2)
+    for (let i = 0; i < size; i++) out[i]! = Math.sqrt(out[i] ?? 0);
   return out;
 }
 
@@ -164,7 +186,8 @@ export function csrMatVec(sp: SparseMatrix, v: Float64Array): Float64Array {
     const start = sp.indptr[i] ?? 0;
     const end = sp.indptr[i + 1] ?? 0;
     let s = 0;
-    for (let k = start; k < end; k++) s += (sp.data[k] ?? 0) * (v[sp.indices[k] ?? 0] ?? 0);
+    for (let k = start; k < end; k++)
+      s += (sp.data[k] ?? 0) * (v[sp.indices[k] ?? 0] ?? 0);
     result[i] = s;
   }
   return result;

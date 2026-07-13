@@ -33,7 +33,7 @@ export class AgglomerativeClustering {
   fit(X: Float64Array[]): this {
     const n = X.length;
     // Initialize each point as its own cluster
-    let clusters: number[][] = X.map((_, i) => [i]);
+    const clusters: number[][] = X.map((_, i) => [i]);
 
     // Distance matrix
     const dist = (a: number[], b: number[]): number => {
@@ -42,17 +42,17 @@ export class AgglomerativeClustering {
         for (const i of a)
           for (const j of b) min = Math.min(min, euclidean(X[i]!, X[j]!));
         return min;
-      } else if (this.linkage === "complete") {
+      }
+      if (this.linkage === "complete") {
         let max = Number.NEGATIVE_INFINITY;
         for (const i of a)
           for (const j of b) max = Math.max(max, euclidean(X[i]!, X[j]!));
         return max;
-      } else {
-        // average and ward both use average distance here (simplified)
-        let sum = 0;
-        for (const i of a) for (const j of b) sum += euclidean(X[i]!, X[j]!);
-        return sum / (a.length * b.length);
       }
+      // average and ward both use average distance here (simplified)
+      let sum = 0;
+      for (const i of a) for (const j of b) sum += euclidean(X[i]!, X[j]!);
+      return sum / (a.length * b.length);
     };
 
     while (clusters.length > this.nClusters) {

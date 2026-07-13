@@ -48,7 +48,7 @@ export class SGDClassifier {
 
     const w = new Float64Array(p);
     let b = 0;
-    const posClass = (this.classes_[this.classes_.length - 1]) ?? 1;
+    const posClass = this.classes_[this.classes_.length - 1] ?? 1;
 
     for (let iter = 0; iter < this.maxIter; iter++) {
       let totalLoss = 0;
@@ -75,7 +75,9 @@ export class SGDClassifier {
         }
 
         for (let j = 0; j < p; j++) {
-          w[j] = (w[j] ?? 0) * (1 - this.eta0 * this.alpha) - this.eta0 * grad * (xi[j] ?? 0);
+          w[j] =
+            (w[j] ?? 0) * (1 - this.eta0 * this.alpha) -
+            this.eta0 * grad * (xi[j] ?? 0);
         }
         if (this.fitIntercept) {
           b -= this.eta0 * grad;
@@ -99,7 +101,9 @@ export class SGDClassifier {
         for (let j = 0; j < xi.length; j++) {
           dot += (coef[j] ?? 0) * (xi[j] ?? 0);
         }
-        return dot >= 0 ? (classes[classes.length - 1] ?? 1) : (classes[0] ?? 0);
+        return dot >= 0
+          ? (classes[classes.length - 1] ?? 1)
+          : (classes[0] ?? 0);
       }),
     );
   }
@@ -157,7 +161,9 @@ export class SGDRegressor {
         const err = pred - (y[i] ?? 0);
         totalLoss += err ** 2;
         for (let j = 0; j < p; j++) {
-          w[j] = (w[j] ?? 0) * (1 - this.eta0 * this.alpha) - this.eta0 * err * (xi[j] ?? 0);
+          w[j] =
+            (w[j] ?? 0) * (1 - this.eta0 * this.alpha) -
+            this.eta0 * err * (xi[j] ?? 0);
         }
         if (this.fitIntercept) {
           b -= this.eta0 * err;

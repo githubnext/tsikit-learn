@@ -17,7 +17,9 @@ export function silhouetteSamples(
   labels: Int32Array,
 ): Float64Array {
   const n = X.length;
-  const clusterIds = Array.from(new Set(Array.from(labels))).sort((a, b) => a - b);
+  const clusterIds = Array.from(new Set(Array.from(labels))).sort(
+    (a, b) => a - b,
+  );
   const scores = new Float64Array(n);
 
   for (let i = 0; i < n; i++) {
@@ -26,7 +28,8 @@ export function silhouetteSamples(
     const sameCluster = clusterIds
       .filter((c) => c === li)
       .map(() => {
-        let sum = 0, count = 0;
+        let sum = 0;
+        let count = 0;
         for (let j = 0; j < n; j++) {
           if (j !== i && labels[j] === li) {
             sum += euclidean(X[i]!, X[j]!);
@@ -41,15 +44,19 @@ export function silhouetteSamples(
     let b = Number.POSITIVE_INFINITY;
     for (const c of clusterIds) {
       if (c === li) continue;
-      let sum = 0, count = 0;
+      let sum = 0;
+      let count = 0;
       for (let j = 0; j < n; j++) {
-        if (labels[j] === c) { sum += euclidean(X[i]!, X[j]!); count++; }
+        if (labels[j] === c) {
+          sum += euclidean(X[i]!, X[j]!);
+          count++;
+        }
       }
       if (count > 0) b = Math.min(b, sum / count);
     }
 
-    const maxAB = Math.max(a, isFinite(b) ? b : 0);
-    scores[i] = maxAB < 1e-10 ? 0 : ((isFinite(b) ? b : 0) - a) / maxAB;
+    const maxAB = Math.max(a, Number.isFinite(b) ? b : 0);
+    scores[i] = maxAB < 1e-10 ? 0 : ((Number.isFinite(b) ? b : 0) - a) / maxAB;
   }
   return scores;
 }
@@ -78,7 +85,8 @@ export function calinskiHarabaszScore(
 
   const globalMean = new Float64Array(nFeatures);
   for (const row of X) {
-    for (let j = 0; j < nFeatures; j++) globalMean[j] = (globalMean[j] ?? 0) + (row[j] ?? 0) / n;
+    for (let j = 0; j < nFeatures; j++)
+      globalMean[j] = (globalMean[j] ?? 0) + (row[j] ?? 0) / n;
   }
 
   let trBw = 0; // Between-cluster scatter
@@ -90,7 +98,8 @@ export function calinskiHarabaszScore(
     if (nc === 0) continue;
     const centroid = new Float64Array(nFeatures);
     for (const p of clusterPoints) {
-      for (let j = 0; j < nFeatures; j++) centroid[j] = (centroid[j] ?? 0) + (p[j] ?? 0) / nc;
+      for (let j = 0; j < nFeatures; j++)
+        centroid[j] = (centroid[j] ?? 0) + (p[j] ?? 0) / nc;
     }
     for (let j = 0; j < nFeatures; j++) {
       trBw += nc * ((centroid[j] ?? 0) - (globalMean[j] ?? 0)) ** 2;
@@ -103,7 +112,7 @@ export function calinskiHarabaszScore(
   }
 
   if (trWw < 1e-10) return 1;
-  return (trBw / (k - 1)) / (trWw / (n - k));
+  return trBw / (k - 1) / (trWw / (n - k));
 }
 
 /**
@@ -126,7 +135,8 @@ export function daviesBouldinScore(
     const nc = pts.length;
     const centroid = new Float64Array(nFeatures);
     for (const p of pts) {
-      for (let j = 0; j < nFeatures; j++) centroid[j] = (centroid[j] ?? 0) + (p[j] ?? 0) / nc;
+      for (let j = 0; j < nFeatures; j++)
+        centroid[j] = (centroid[j] ?? 0) + (p[j] ?? 0) / nc;
     }
     centroids.push(centroid);
     dispersions.push(pts.reduce((s, p) => s + euclidean(p, centroid), 0) / nc);
@@ -139,7 +149,10 @@ export function daviesBouldinScore(
       if (i === j) continue;
       const dij = euclidean(centroids[i]!, centroids[j]!);
       if (dij > 1e-10) {
-        maxR = Math.max(maxR, ((dispersions[i] ?? 0) + (dispersions[j] ?? 0)) / dij);
+        maxR = Math.max(
+          maxR,
+          ((dispersions[i] ?? 0) + (dispersions[j] ?? 0)) / dij,
+        );
       }
     }
     db += maxR;

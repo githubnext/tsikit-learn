@@ -75,7 +75,9 @@ export class OutputCodeClassifier {
         return codeBook[ci]![col]! ?? 0;
       });
       const clf = Object.assign(
-        Object.create(Object.getPrototypeOf(this.estimator)) as BinaryClassifierOCC,
+        Object.create(
+          Object.getPrototypeOf(this.estimator),
+        ) as BinaryClassifierOCC,
         this.estimator,
       );
       return clf.fit(X, yBin);
@@ -92,22 +94,25 @@ export class OutputCodeClassifier {
     const nClasses = this.classes_.length;
 
     // Collect binary predictions [nCodes]
-    const binPreds: (Int32Array | Float64Array)[] = this.estimators_.map((clf) =>
-      clf.predict(X),
+    const binPreds: (Int32Array | Float64Array)[] = this.estimators_.map(
+      (clf) => clf.predict(X),
     );
 
     return Int32Array.from({ length: X.length }, (_, i) => {
       // Build output vector for sample i
       const outVec = new Float64Array(nCodes);
-      for (let col = 0; col < nCodes; col++) outVec[col]! = binPreds[col]![i]! ?? 0;
+      for (let col = 0; col < nCodes; col++)
+        outVec[col]! = binPreds[col]![i]! ?? 0;
 
       // Find nearest class by Hamming distance
       let bestClass = 0;
-      let bestDist = Infinity;
+      let bestDist = Number.POSITIVE_INFINITY;
       for (let ci = 0; ci < nClasses; ci++) {
         let dist = 0;
         for (let col = 0; col < nCodes; col++) {
-          dist += Math.abs((outVec[col]! ?? 0) - (this.code_book_![ci]![col]! ?? 0));
+          dist += Math.abs(
+            (outVec[col]! ?? 0) - (this.code_book_![ci]![col]! ?? 0),
+          );
         }
         if (dist < bestDist) {
           bestDist = dist;

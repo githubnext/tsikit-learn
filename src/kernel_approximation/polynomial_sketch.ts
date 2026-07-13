@@ -40,8 +40,8 @@ export class PolynomialCountSketch extends BaseEstimator {
   randomState: number;
 
   // Fitted attributes
-  indexHash_!: Int32Array[];   // [degree x nInputFeatures] hash indices
-  signHash_!: Int8Array[];     // [degree x nInputFeatures] ±1 signs
+  indexHash_!: Int32Array[]; // [degree x nInputFeatures] hash indices
+  signHash_!: Int8Array[]; // [degree x nInputFeatures] ±1 signs
   nFeaturesIn_!: number;
 
   constructor(options: PolynomialCountSketchOptions = {}) {

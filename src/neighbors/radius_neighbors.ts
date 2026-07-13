@@ -21,12 +21,14 @@ function dist(
   switch (metric) {
     case "manhattan": {
       let s = 0;
-      for (let i = 0; i < a.length; i++) s += Math.abs((a[i] ?? 0) - (b[i] ?? 0));
+      for (let i = 0; i < a.length; i++)
+        s += Math.abs((a[i] ?? 0) - (b[i] ?? 0));
       return s;
     }
     case "minkowski": {
       let s = 0;
-      for (let i = 0; i < a.length; i++) s += Math.abs((a[i] ?? 0) - (b[i] ?? 0)) ** p;
+      for (let i = 0; i < a.length; i++)
+        s += Math.abs((a[i] ?? 0) - (b[i] ?? 0)) ** p;
       return s ** (1 / p);
     }
     default: {
@@ -78,19 +80,24 @@ export class RadiusNeighborsClassifier {
       if (neighbors.length === 0) return this.outlierLabel;
       const votes = new Map<number, number>();
       for (const { label, d } of neighbors) {
-        const w = this.weights === "uniform" ? 1 : (d < 1e-10 ? 1e10 : 1 / d);
+        const w = this.weights === "uniform" ? 1 : d < 1e-10 ? 1e10 : 1 / d;
         votes.set(label, (votes.get(label) ?? 0) + w);
       }
       let best = this.outlierLabel;
       let bestW = -1;
       for (const [label, w] of votes) {
-        if (w > bestW) { bestW = w; best = label; }
+        if (w > bestW) {
+          bestW = w;
+          best = label;
+        }
       }
       return best;
     });
   }
 
-  radiusNeighbors(X: Float64Array[]): Array<{ indices: Int32Array; distances: Float64Array }> {
+  radiusNeighbors(
+    X: Float64Array[],
+  ): Array<{ indices: Int32Array; distances: Float64Array }> {
     if (this._XFit === null) throw new Error("Not fitted");
     const XFit = this._XFit;
     return X.map((xi) => {
@@ -103,7 +110,10 @@ export class RadiusNeighborsClassifier {
           distances.push(d);
         }
       }
-      return { indices: Int32Array.from(indices), distances: new Float64Array(distances) };
+      return {
+        indices: Int32Array.from(indices),
+        distances: new Float64Array(distances),
+      };
     });
   }
 }
@@ -145,9 +155,10 @@ export class RadiusNeighborsRegressor {
         }
       }
       if (neighbors.length === 0) return 0;
-      let sumW = 0, sumWY = 0;
+      let sumW = 0;
+      let sumWY = 0;
       for (const { val, d } of neighbors) {
-        const w = this.weights === "uniform" ? 1 : (d < 1e-10 ? 1e10 : 1 / d);
+        const w = this.weights === "uniform" ? 1 : d < 1e-10 ? 1e10 : 1 / d;
         sumW += w;
         sumWY += w * val;
       }

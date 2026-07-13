@@ -69,7 +69,9 @@ export class LocallyLinearEmbedding {
     let error = 0;
     for (let i = 0; i < nSamples; i++) {
       const xi = this.embedding_[i]!;
-      for (const [neighbor, wij] of neighbors[i]!.map((n, j) => [n, W[i]?.[j] ?? 0] as [number, number])) {
+      for (const [neighbor, wij] of neighbors[i]!.map(
+        (n, j) => [n, W[i]?.[j] ?? 0] as [number, number],
+      )) {
         const xj = this.embedding_[neighbor]!;
         for (let d2 = 0; d2 < xi.length; d2++) {
           error += ((xi[d2] ?? 0) - wij * (xj[d2] ?? 0)) ** 2;
@@ -86,9 +88,10 @@ export class LocallyLinearEmbedding {
     const nFeatures = X[0]?.length ?? 0;
     return X.map((xi, i) => {
       const dists = X.map((xj, j) => {
-        if (i === j) return Infinity;
+        if (i === j) return Number.POSITIVE_INFINITY;
         let d = 0;
-        for (let f = 0; f < nFeatures; f++) d += ((xi[f] ?? 0) - (xj[f] ?? 0)) ** 2;
+        for (let f = 0; f < nFeatures; f++)
+          d += ((xi[f] ?? 0) - (xj[f] ?? 0)) ** 2;
         return d;
       });
       return dists
@@ -99,7 +102,11 @@ export class LocallyLinearEmbedding {
     });
   }
 
-  private _computeWeights(X: Float64Array[], neighbors: number[][], k: number): Float64Array[] {
+  private _computeWeights(
+    X: Float64Array[],
+    neighbors: number[][],
+    k: number,
+  ): Float64Array[] {
     const nSamples = X.length;
     const nFeatures = X[0]?.length ?? 0;
     const W: Float64Array[] = [];
@@ -108,9 +115,10 @@ export class LocallyLinearEmbedding {
       const xi = X[i]!;
       const nbrs = neighbors[i]!;
       // Local covariance matrix C = Z^T Z where Z_j = x_i - x_neighbor_j
-      const Z = nbrs.map(n => {
+      const Z = nbrs.map((n) => {
         const z = new Float64Array(nFeatures);
-        for (let f = 0; f < nFeatures; f++) z[f] = (xi[f] ?? 0) - (X[n]?.[f] ?? 0);
+        for (let f = 0; f < nFeatures; f++)
+          z[f] = (xi[f] ?? 0) - (X[n]?.[f] ?? 0);
         return z;
       });
 
@@ -118,9 +126,10 @@ export class LocallyLinearEmbedding {
       const G = Array.from({ length: k }, (_, a) =>
         new Float64Array(k).map((_, b) => {
           let dot = 0;
-          for (let f = 0; f < nFeatures; f++) dot += (Z[a]?.[f] ?? 0) * (Z[b]?.[f] ?? 0);
+          for (let f = 0; f < nFeatures; f++)
+            dot += (Z[a]?.[f] ?? 0) * (Z[b]?.[f] ?? 0);
           return dot;
-        })
+        }),
       );
 
       // Regularize
@@ -132,7 +141,7 @@ export class LocallyLinearEmbedding {
 
       // Normalize
       const wSum = w.reduce((s, v) => s + v, 0);
-      const weights = new Float64Array(w.map(v => v / (wSum || 1)));
+      const weights = new Float64Array(w.map((v) => v / (wSum || 1)));
       W.push(weights);
     }
     return W;
@@ -141,34 +150,51 @@ export class LocallyLinearEmbedding {
   private _solveLinear(A: Float64Array[], b: Float64Array): Float64Array {
     const n = b.length;
     // Simple Gaussian elimination
-    const mat = A.map((row, i) => { const r = new Float64Array(n + 1); r.set(row); r[n] = b[i] ?? 0; return r; });
+    const mat = A.map((row, i) => {
+      const r = new Float64Array(n + 1);
+      r.set(row);
+      r[n] = b[i] ?? 0;
+      return r;
+    });
 
     for (let col = 0; col < n; col++) {
       // Find pivot
       let maxVal = Math.abs(mat[col]?.[col] ?? 0);
       let maxRow = col;
       for (let row = col + 1; row < n; row++) {
-        if (Math.abs(mat[row]?.[col] ?? 0) > maxVal) { maxVal = Math.abs(mat[row]?.[col] ?? 0); maxRow = row; }
+        if (Math.abs(mat[row]?.[col] ?? 0) > maxVal) {
+          maxVal = Math.abs(mat[row]?.[col] ?? 0);
+          maxRow = row;
+        }
       }
-      if (maxRow !== col) { const tmp = mat[col]!; mat[col] = mat[maxRow]!; mat[maxRow] = tmp; }
+      if (maxRow !== col) {
+        const tmp = mat[col]!;
+        mat[col] = mat[maxRow]!;
+        mat[maxRow] = tmp;
+      }
 
       const pivot = mat[col]?.[col] ?? 1e-10;
       for (let row = col + 1; row < n; row++) {
         const factor = (mat[row]?.[col] ?? 0) / (pivot || 1e-10);
-        for (let j = col; j <= n; j++) mat[row]![j] = (mat[row]![j] ?? 0) - factor * (mat[col]![j] ?? 0);
+        for (let j = col; j <= n; j++)
+          mat[row]![j] = (mat[row]![j] ?? 0) - factor * (mat[col]![j] ?? 0);
       }
     }
 
     const x = new Float64Array(n);
     for (let i = n - 1; i >= 0; i--) {
-      x[i] = (mat[i]?.[n] ?? 0);
+      x[i] = mat[i]?.[n] ?? 0;
       for (let j = i + 1; j < n; j++) x[i] -= (mat[i]?.[j] ?? 0) * (x[j] ?? 0);
       x[i] /= mat[i]?.[i] ?? 1e-10;
     }
     return x;
   }
 
-  private _computeEmbedding(W: Float64Array[], nSamples: number, d: number): Float64Array[] {
+  private _computeEmbedding(
+    W: Float64Array[],
+    nSamples: number,
+    d: number,
+  ): Float64Array[] {
     // Compute M = (I-W)^T (I-W) and find smallest non-zero eigenvectors
     // Use power iteration for dominant eigenvectors of M
 
@@ -183,7 +209,10 @@ export class LocallyLinearEmbedding {
     for (let c = 0; c <= d; c++) {
       const v = new Float64Array(nSamples);
       let norm = 0;
-      for (let i = 0; i < nSamples; i++) { v[i] = rand(); norm += v[i] ** 2; }
+      for (let i = 0; i < nSamples; i++) {
+        v[i] = rand();
+        norm += v[i] ** 2;
+      }
       norm = Math.sqrt(norm) || 1;
       for (let i = 0; i < nSamples; i++) v[i] = (v[i] ?? 0) / norm;
       vecs.push(v);
@@ -195,13 +224,15 @@ export class LocallyLinearEmbedding {
       const u = new Float64Array(nSamples);
       for (let i = 0; i < nSamples; i++) {
         u[i] = v[i] ?? 0;
-        for (let j = 0; j < W[i]!.length; j++) u[i] -= (W[i]![j] ?? 0) * (v[j] ?? 0);
+        for (let j = 0; j < W[i]!.length; j++)
+          u[i] -= (W[i]![j] ?? 0) * (v[j] ?? 0);
       }
       // (I-W)^T * u
       const Mvu = new Float64Array(nSamples);
       for (let i = 0; i < nSamples; i++) Mvu[i] = u[i] ?? 0;
       for (let i = 0; i < nSamples; i++) {
-        for (let j = 0; j < W[i]!.length; j++) Mvu[j] -= (W[i]![j] ?? 0) * (u[i] ?? 0);
+        for (let j = 0; j < W[i]!.length; j++)
+          Mvu[j] -= (W[i]![j] ?? 0) * (u[i] ?? 0);
       }
       return Mvu;
     };
@@ -215,8 +246,10 @@ export class LocallyLinearEmbedding {
         // Orthogonalize against previous
         for (const prev of eigenVecs) {
           let dot = 0;
-          for (let i = 0; i < nSamples; i++) dot += (v[i] ?? 0) * (prev[i] ?? 0);
-          for (let i = 0; i < nSamples; i++) v[i] = (v[i] ?? 0) - dot * (prev[i] ?? 0);
+          for (let i = 0; i < nSamples; i++)
+            dot += (v[i] ?? 0) * (prev[i] ?? 0);
+          for (let i = 0; i < nSamples; i++)
+            v[i] = (v[i] ?? 0) - dot * (prev[i] ?? 0);
         }
         let norm = 0;
         for (let i = 0; i < nSamples; i++) norm += (v[i] ?? 0) ** 2;
@@ -227,8 +260,10 @@ export class LocallyLinearEmbedding {
     }
 
     // Skip the trivial eigenvector (all-ones), use next d
-    const embedding = Array.from({ length: nSamples }, (_, i) =>
-      new Float64Array(eigenVecs.slice(1, d + 1).map(v => v[i] ?? 0))
+    const embedding = Array.from(
+      { length: nSamples },
+      (_, i) =>
+        new Float64Array(eigenVecs.slice(1, d + 1).map((v) => v[i] ?? 0)),
     );
 
     return embedding;

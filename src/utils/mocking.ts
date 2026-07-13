@@ -101,9 +101,10 @@ export class MockRegressor {
     } else if (this.strategy === "median") {
       const sorted = Array.from(y).sort((a, b) => a - b);
       const mid = Math.floor(sorted.length / 2);
-      this.prediction_ = sorted.length % 2 === 1
-        ? (sorted[mid] ?? 0)
-        : ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2;
+      this.prediction_ =
+        sorted.length % 2 === 1
+          ? (sorted[mid] ?? 0)
+          : ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2;
     } else {
       this.prediction_ = this.constant;
     }
@@ -155,7 +156,11 @@ export class CheckingClassifier {
     this.expectedFitParams = options.expectedFitParams ?? [];
   }
 
-  fit(X: Float64Array[], y: Int32Array, params?: Record<string, unknown>): this {
+  fit(
+    X: Float64Array[],
+    y: Int32Array,
+    params?: Record<string, unknown>,
+  ): this {
     if (this.checkX) this.checkX(X);
     if (this.checkY) this.checkY(y);
 

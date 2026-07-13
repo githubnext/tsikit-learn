@@ -4,7 +4,14 @@
  */
 
 /** Linkage methods supported by the `linkage` function. */
-export type LinkageMethod = "single" | "complete" | "average" | "ward" | "centroid" | "median" | "weighted";
+export type LinkageMethod =
+  | "single"
+  | "complete"
+  | "average"
+  | "ward"
+  | "centroid"
+  | "median"
+  | "weighted";
 
 /** A single row of a linkage matrix: [idx1, idx2, distance, count]. */
 export interface HierarchicalHierarchicalLinkageRow {
@@ -67,7 +74,11 @@ export function linkage(
       for (const j of active) {
         if (j <= i) continue;
         const d = bigD[i * maxN + j]!;
-        if (d < minDist) { minDist = d; a = i; b = j; }
+        if (d < minDist) {
+          minDist = d;
+          a = i;
+          b = j;
+        }
       }
     }
     if (a < 0) break;
@@ -85,20 +96,42 @@ export function linkage(
       const sC = sizes[c]!;
       let dNew: number;
       switch (method) {
-        case "single":   dNew = Math.min(dac, dbc); break;
-        case "complete": dNew = Math.max(dac, dbc); break;
-        case "average":  dNew = (sA * dac + sB * dbc) / sNew; break;
+        case "single":
+          dNew = Math.min(dac, dbc);
+          break;
+        case "complete":
+          dNew = Math.max(dac, dbc);
+          break;
+        case "average":
+          dNew = (sA * dac + sB * dbc) / sNew;
+          break;
         case "ward": {
           const dab = bigD[a * maxN + b]!;
           dNew = Math.sqrt(
-            ((sA + sC) * dac * dac + (sB + sC) * dbc * dbc - sC * dab * dab) / (sNew + sC),
+            ((sA + sC) * dac * dac + (sB + sC) * dbc * dbc - sC * dab * dab) /
+              (sNew + sC),
           );
           break;
         }
-        case "centroid": dNew = Math.sqrt((sA * dac * dac + sB * dbc * dbc) / sNew - (sA * sB * bigD[a * maxN + b]! * bigD[a * maxN + b]!) / (sNew * sNew)); break;
-        case "median":   dNew = Math.sqrt(0.5 * dac * dac + 0.5 * dbc * dbc - 0.25 * bigD[a * maxN + b]! * bigD[a * maxN + b]!); break;
-        case "weighted": dNew = 0.5 * dac + 0.5 * dbc; break;
-        default:         dNew = Math.min(dac, dbc);
+        case "centroid":
+          dNew = Math.sqrt(
+            (sA * dac * dac + sB * dbc * dbc) / sNew -
+              (sA * sB * bigD[a * maxN + b]! * bigD[a * maxN + b]!) /
+                (sNew * sNew),
+          );
+          break;
+        case "median":
+          dNew = Math.sqrt(
+            0.5 * dac * dac +
+              0.5 * dbc * dbc -
+              0.25 * bigD[a * maxN + b]! * bigD[a * maxN + b]!,
+          );
+          break;
+        case "weighted":
+          dNew = 0.5 * dac + 0.5 * dbc;
+          break;
+        default:
+          dNew = Math.min(dac, dbc);
       }
       bigD[nextId * maxN + c] = dNew;
       bigD[c * maxN + nextId] = dNew;
@@ -119,7 +152,11 @@ export function linkage(
  * Cuts a dendrogram at a given number of clusters.
  * Returns an Int32Array of cluster labels (length = n).
  */
-export function cutTree(rows: HierarchicalLinkageRow[], n: number, nClusters: number): Int32Array {
+export function cutTree(
+  rows: HierarchicalLinkageRow[],
+  n: number,
+  nClusters: number,
+): Int32Array {
   // Each leaf starts in its own cluster; merge bottom-up, stop early
   const parent = new Int32Array(2 * n).fill(-1);
   const mergeOrder = rows.slice(0, n - nClusters);
@@ -168,7 +205,11 @@ export function squareform(condensed: Float64Array, n: number): Float64Array {
  * Computes the cophenetic correlation coefficient for a linkage matrix.
  * Measures how faithfully the dendrogram preserves pairwise distances.
  */
-export function copheneticCorr(rows: HierarchicalLinkageRow[], condensed: Float64Array, n: number): number {
+export function copheneticCorr(
+  rows: HierarchicalLinkageRow[],
+  condensed: Float64Array,
+  n: number,
+): number {
   // Build cophenetic distance matrix from linkage
   const cophenetic = new Float64Array((n * (n - 1)) / 2);
   const clusterHeight = new Map<number, number>();
@@ -195,13 +236,23 @@ export function copheneticCorr(rows: HierarchicalLinkageRow[], condensed: Float6
 
   // Pearson correlation between condensed and cophenetic distances
   const m = condensed.length;
-  let mx = 0; let my = 0;
-  for (let i = 0; i < m; i++) { mx += condensed[i]!; my += cophenetic[i]!; }
-  mx /= m; my /= m;
-  let cov = 0; let sx = 0; let sy = 0;
+  let mx = 0;
+  let my = 0;
   for (let i = 0; i < m; i++) {
-    const dx = condensed[i]! - mx; const dy = cophenetic[i]! - my;
-    cov += dx * dy; sx += dx * dx; sy += dy * dy;
+    mx += condensed[i]!;
+    my += cophenetic[i]!;
+  }
+  mx /= m;
+  my /= m;
+  let cov = 0;
+  let sx = 0;
+  let sy = 0;
+  for (let i = 0; i < m; i++) {
+    const dx = condensed[i]! - mx;
+    const dy = cophenetic[i]! - my;
+    cov += dx * dy;
+    sx += dx * dx;
+    sy += dy * dy;
   }
   const denom = Math.sqrt(sx * sy);
   return denom === 0 ? 0 : cov / denom;

@@ -67,7 +67,11 @@ export class WeightedLeastSquares {
     return this;
   }
 
-  private _solveNormalEq(A: Float64Array, b: Float64Array, p: number): Float64Array {
+  private _solveNormalEq(
+    A: Float64Array,
+    b: Float64Array,
+    p: number,
+  ): Float64Array {
     // Cholesky-based solver (in-place)
     const L = new Float64Array(p * p);
     for (let j = 0; j < p; j++) {
@@ -80,7 +84,8 @@ export class WeightedLeastSquares {
       L[j * p + j] = Math.sqrt(s);
       for (let i = j + 1; i < p; i++) {
         let t = A[i * p + j] ?? 0;
-        for (let k = 0; k < j; k++) t -= (L[i * p + k] ?? 0) * (L[j * p + k] ?? 0);
+        for (let k = 0; k < j; k++)
+          t -= (L[i * p + k] ?? 0) * (L[j * p + k] ?? 0);
         L[i * p + j] = t / (L[j * p + j] ?? 1);
       }
     }
@@ -118,7 +123,11 @@ export class WeightedLeastSquares {
     return result;
   }
 
-  score(X: Float64Array[], y: Float64Array, sampleWeight?: Float64Array): number {
+  score(
+    X: Float64Array[],
+    y: Float64Array,
+    sampleWeight?: Float64Array,
+  ): number {
     const yPred = this.predict(X);
     let ssTot = 0;
     let ssRes = 0;
@@ -190,7 +199,7 @@ export class GeneralizedLeastSquares {
     this.nFeatures_ = X[0]?.length ?? 0;
 
     // Initialize with uniform weights
-    let weights = new Float64Array(nSamples).fill(1);
+    const weights = new Float64Array(nSamples).fill(1);
     let prevCoef: Float64Array | null = null;
 
     const wls = new WeightedLeastSquares({ fitIntercept: this.fitIntercept });
@@ -216,7 +225,10 @@ export class GeneralizedLeastSquares {
         let maxDiff = 0;
         const coef = wls.coef;
         for (let j = 0; j < coef.length; j++) {
-          maxDiff = Math.max(maxDiff, Math.abs((coef[j] ?? 0) - (prevCoef[j] ?? 0)));
+          maxDiff = Math.max(
+            maxDiff,
+            Math.abs((coef[j] ?? 0) - (prevCoef[j] ?? 0)),
+          );
         }
         if (maxDiff < this.tol) break;
       }
@@ -278,7 +290,10 @@ export function durbinWatson(residuals: Float64Array): number {
  * @param X Design matrix (used to test if residuals depend on X)
  * @returns Test statistic (chi-squared distributed under null)
  */
-export function breuschPaganTest(residuals: Float64Array, X: Float64Array[]): number {
+export function breuschPaganTest(
+  residuals: Float64Array,
+  X: Float64Array[],
+): number {
   const n = residuals.length;
   // Squared residuals
   const sqResid = new Float64Array(n);
@@ -307,7 +322,7 @@ export function breuschPaganTest(residuals: Float64Array, X: Float64Array[]): nu
     }
     if (varX > 0) {
       const corr = covXY / Math.sqrt(varX);
-      r2 += corr * corr / (n * meanSqResid * meanSqResid || 1);
+      r2 += (corr * corr) / (n * meanSqResid * meanSqResid || 1);
     }
   }
 

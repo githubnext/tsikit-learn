@@ -74,7 +74,12 @@ export interface TransformerTags {
 
 /** Combined estimator tags object. */
 export interface EstimatorTags {
-  estimatorType: "classifier" | "regressor" | "transformer" | "clusterer" | "other";
+  estimatorType:
+    | "classifier"
+    | "regressor"
+    | "transformer"
+    | "clusterer"
+    | "other";
   input: InputTags;
   target: TargetTags;
   classifier?: ClassifierTags;
@@ -89,7 +94,9 @@ export interface EstimatorTags {
 }
 
 /** Default input tags (conservative: only standard 2D float arrays). */
-export function defaultInputTags(overrides: Partial<InputTags> = {}): InputTags {
+export function defaultInputTags(
+  overrides: Partial<InputTags> = {},
+): InputTags {
   return {
     oneDArray: false,
     twoDArray: true,
@@ -103,7 +110,9 @@ export function defaultInputTags(overrides: Partial<InputTags> = {}): InputTags 
 }
 
 /** Default target tags. */
-export function defaultTargetTags(overrides: Partial<TargetTags> = {}): TargetTags {
+export function defaultTargetTags(
+  overrides: Partial<TargetTags> = {},
+): TargetTags {
   return {
     required: true,
     oneDimensional: true,
@@ -130,16 +139,22 @@ export function buildTags(
 }
 
 /** Type guard: returns true if the tags object belongs to a classifier. */
-export function isClassifierTags(tags: EstimatorTags): tags is EstimatorTags & { classifier: ClassifierTags } {
+export function isClassifierTags(
+  tags: EstimatorTags,
+): tags is EstimatorTags & { classifier: ClassifierTags } {
   return tags.estimatorType === "classifier" && tags.classifier !== undefined;
 }
 
 /** Type guard: returns true if the tags object belongs to a regressor. */
-export function isRegressorTags(tags: EstimatorTags): tags is EstimatorTags & { regressor: RegressorTags } {
+export function isRegressorTags(
+  tags: EstimatorTags,
+): tags is EstimatorTags & { regressor: RegressorTags } {
   return tags.estimatorType === "regressor" && tags.regressor !== undefined;
 }
 
 /** Type guard: returns true if the tags object belongs to a transformer. */
-export function isTransformerTags(tags: EstimatorTags): tags is EstimatorTags & { transformer: TransformerTags } {
+export function isTransformerTags(
+  tags: EstimatorTags,
+): tags is EstimatorTags & { transformer: TransformerTags } {
   return tags.estimatorType === "transformer" && tags.transformer !== undefined;
 }

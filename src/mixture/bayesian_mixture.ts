@@ -116,9 +116,7 @@ export class BayesianGaussianMixture {
 
       // E-step: compute log weights
       const alphaSum = alpha.reduce((a, b) => a + b, 0);
-      const logWeights = alpha.map(
-        (a) => Math.log(a) - Math.log(alphaSum),
-      );
+      const logWeights = alpha.map((a) => Math.log(a) - Math.log(alphaSum));
 
       // Update responsibilities
       let logLik = 0;
@@ -127,8 +125,7 @@ export class BayesianGaussianMixture {
         const logProbs = new Float64Array(K);
         for (let k = 0; k < K; k++) {
           logProbs[k] =
-            (logWeights[k] ?? 0) +
-            this._logNormal(X[i]!, means[k]!, covs[k]!);
+            (logWeights[k] ?? 0) + this._logNormal(X[i]!, means[k]!, covs[k]!);
         }
         const maxLog = Math.max(...logProbs);
         const probs = logProbs.map((lp) => Math.exp(lp - maxLog));
@@ -214,7 +211,9 @@ export class BayesianGaussianMixture {
       for (let k = 0; k < this.nComponents; k++) {
         sum +=
           (this.weights_![k] ?? 0) *
-          Math.exp(this._logNormal(x, this.means_![k]!, this.covariances_![k]!));
+          Math.exp(
+            this._logNormal(x, this.means_![k]!, this.covariances_![k]!),
+          );
       }
       logLik += Math.log(Math.max(sum, 1e-10));
     }

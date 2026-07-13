@@ -47,9 +47,15 @@ export abstract class BaseLink {
  */
 export class IdentityLink extends BaseLink {
   name = "identity";
-  link(mu: number): number { return mu; }
-  inverseLink(eta: number): number { return eta; }
-  inverseLinkDerivative(_eta: number): number { return 1; }
+  link(mu: number): number {
+    return mu;
+  }
+  inverseLink(eta: number): number {
+    return eta;
+  }
+  inverseLinkDerivative(_eta: number): number {
+    return 1;
+  }
 }
 
 /**
@@ -58,9 +64,15 @@ export class IdentityLink extends BaseLink {
  */
 export class LogLink extends BaseLink {
   name = "log";
-  link(mu: number): number { return Math.log(mu); }
-  inverseLink(eta: number): number { return Math.exp(eta); }
-  inverseLinkDerivative(eta: number): number { return Math.exp(eta); }
+  link(mu: number): number {
+    return Math.log(mu);
+  }
+  inverseLink(eta: number): number {
+    return Math.exp(eta);
+  }
+  inverseLinkDerivative(eta: number): number {
+    return Math.exp(eta);
+  }
 }
 
 /**
@@ -88,9 +100,15 @@ export class LogitLink extends BaseLink {
  */
 export class SqrtLink extends BaseLink {
   name = "sqrt";
-  link(mu: number): number { return Math.sqrt(mu); }
-  inverseLink(eta: number): number { return eta * eta; }
-  inverseLinkDerivative(eta: number): number { return 2 * eta; }
+  link(mu: number): number {
+    return Math.sqrt(mu);
+  }
+  inverseLink(eta: number): number {
+    return eta * eta;
+  }
+  inverseLinkDerivative(eta: number): number {
+    return 2 * eta;
+  }
 }
 
 /**
@@ -125,7 +143,7 @@ export abstract class BaseDistribution {
 
   /** Log-likelihood contribution for one observation */
   logLikelihood(y: number, mu: number, dispersion = 1): number {
-    return -0.5 * this.unitDeviance(y, mu) / dispersion;
+    return (-0.5 * this.unitDeviance(y, mu)) / dispersion;
   }
 
   /** Total deviance */
@@ -145,7 +163,9 @@ export class NormalDistribution extends BaseDistribution {
   unitDeviance(y: number, mu: number): number {
     return (y - mu) ** 2;
   }
-  variance(_mu: number): number { return 1; }
+  variance(_mu: number): number {
+    return 1;
+  }
 }
 
 /** Poisson distribution */
@@ -155,7 +175,9 @@ export class PoissonDistribution extends BaseDistribution {
     if (y === 0) return 2 * mu;
     return 2 * (y * Math.log(y / mu) - (y - mu));
   }
-  variance(mu: number): number { return mu; }
+  variance(mu: number): number {
+    return mu;
+  }
 }
 
 /** Gamma distribution */
@@ -164,13 +186,17 @@ export class GammaDistribution extends BaseDistribution {
   unitDeviance(y: number, mu: number): number {
     return 2 * ((y - mu) / mu - Math.log(y / mu));
   }
-  variance(mu: number): number { return mu * mu; }
+  variance(mu: number): number {
+    return mu * mu;
+  }
 }
 
 /** Tweedie distribution with power parameter p */
 export class TweedieDistribution extends BaseDistribution {
   name = "tweedie";
-  constructor(public power = 0) { super(); }
+  constructor(public power = 0) {
+    super();
+  }
 
   unitDeviance(y: number, mu: number): number {
     const p = this.power;
@@ -179,13 +205,16 @@ export class TweedieDistribution extends BaseDistribution {
     if (p === 2) return 2 * ((y - mu) / mu - Math.log(y / mu));
     const a = Math.max(0, y);
     const b = mu;
-    return 2 * (
-      (a ** (2 - p)) / ((1 - p) * (2 - p))
-      - (a * b ** (1 - p)) / (1 - p)
-      + (b ** (2 - p)) / (2 - p)
+    return (
+      2 *
+      (a ** (2 - p) / ((1 - p) * (2 - p)) -
+        (a * b ** (1 - p)) / (1 - p) +
+        b ** (2 - p) / (2 - p))
     );
   }
-  variance(mu: number): number { return mu ** this.power; }
+  variance(mu: number): number {
+    return mu ** this.power;
+  }
 }
 
 /** Bernoulli / Binomial distribution */
@@ -193,10 +222,12 @@ export class BinomialDistribution extends BaseDistribution {
   name = "binomial";
   unitDeviance(y: number, mu: number): number {
     const c1 = y > 0 ? y * Math.log(y / mu) : 0;
-    const c2 = (1 - y) > 0 ? (1 - y) * Math.log((1 - y) / (1 - mu)) : 0;
+    const c2 = 1 - y > 0 ? (1 - y) * Math.log((1 - y) / (1 - mu)) : 0;
     return 2 * (c1 + c2);
   }
-  variance(mu: number): number { return mu * (1 - mu); }
+  variance(mu: number): number {
+    return mu * (1 - mu);
+  }
 }
 
 // ── GeneralizedLinearRegressor ─────────────────────────────────────────────
@@ -227,9 +258,7 @@ function resolveLink(link: GLMOptions["link"]): BaseLink {
   return link;
 }
 
-function resolveDist(
-  dist: GLMOptions["distribution"],
-): BaseDistribution {
+function resolveDist(dist: GLMOptions["distribution"]): BaseDistribution {
   if (!dist || dist === "normal") return new NormalDistribution();
   if (dist === "poisson") return new PoissonDistribution();
   if (dist === "gamma") return new GammaDistribution();
@@ -274,7 +303,7 @@ export class GeneralizedLinearRegressor extends BaseEstimator {
     const pFull = this.fitIntercept ? p + 1 : p;
 
     // Build design matrix with optional intercept column
-    const Xfull: Float64Array[] = X.map(row => {
+    const Xfull: Float64Array[] = X.map((row) => {
       if (!this.fitIntercept) return row;
       const r = new Float64Array(pFull);
       r[0] = 1;
@@ -286,7 +315,7 @@ export class GeneralizedLinearRegressor extends BaseEstimator {
     let beta: Float64Array = new Float64Array(pFull);
     // Initialize mu as mean(y) for all samples
     const yMean = Array.from(y).reduce((s, v) => s + v, 0) / n;
-    let mu = new Float64Array(n).fill(Math.max(1e-4, yMean));
+    const mu = new Float64Array(n).fill(Math.max(1e-4, yMean));
 
     let prevDev = Number.POSITIVE_INFINITY;
 
@@ -302,7 +331,7 @@ export class GeneralizedLinearRegressor extends BaseEstimator {
         const muPrime = this.link.inverseLinkDerivative(eta[i]!);
         const V = this.distribution.variance(mu[i]!);
         const sw = sampleWeight ? (sampleWeight[i] ?? 1) : 1;
-        W[i] = sw * (muPrime * muPrime) / Math.max(1e-12, V);
+        W[i] = (sw * (muPrime * muPrime)) / Math.max(1e-12, V);
         z[i] = eta[i]! + (y[i]! - mu[i]!) / Math.max(1e-12, muPrime);
       }
 
@@ -390,7 +419,8 @@ export class GeneralizedLinearRegressor extends BaseEstimator {
     this._check_is_fitted(["coef_"]);
     const yPred = this.predict(X);
     const yMean = Array.from(y).reduce((s, v) => s + v, 0) / y.length;
-    let ssTot = 0, ssRes = 0;
+    let ssTot = 0;
+    let ssRes = 0;
     for (let i = 0; i < y.length; i++) {
       ssTot += (y[i]! - yMean) ** 2;
       ssRes += (y[i]! - yPred[i]!) ** 2;
@@ -414,9 +444,12 @@ function solveLinear(A: Float64Array[], b: Float64Array): Float64Array {
     // Pivot
     let maxRow = col;
     for (let row = col + 1; row < n; row++) {
-      if (Math.abs(M[row]![col] ?? 0) > Math.abs(M[maxRow]![col] ?? 0)) maxRow = row;
+      if (Math.abs(M[row]![col] ?? 0) > Math.abs(M[maxRow]![col] ?? 0))
+        maxRow = row;
     }
-    const tmp = M[col]!; M[col] = M[maxRow]!; M[maxRow] = tmp;
+    const tmp = M[col]!;
+    M[col] = M[maxRow]!;
+    M[maxRow] = tmp;
 
     const pivot = M[col]![col] ?? 0;
     if (Math.abs(pivot) < 1e-14) continue;

@@ -33,15 +33,18 @@ export function crossValidate(
   options: {
     cv?: CVSplitter | number;
     returnTrainScore?: boolean;
-    scoring?: (est: CVEstimator, X: Float64Array[], y: Float64Array | Int32Array) => number;
+    scoring?: (
+      est: CVEstimator,
+      X: Float64Array[],
+      y: Float64Array | Int32Array,
+    ) => number;
   } = {},
 ): CrossValidateResult {
   const { returnTrainScore = false, scoring } = options;
   const cv = options.cv ?? 5;
 
-  const splits = typeof cv === "number"
-    ? kFoldSplit(X.length, cv)
-    : cv.split(X, y);
+  const splits =
+    typeof cv === "number" ? kFoldSplit(X.length, cv) : cv.split(X, y);
 
   const testScores: number[] = [];
   const trainScores: number[] = [];
@@ -62,7 +65,9 @@ export function crossValidate(
     const testScore =
       scoring !== undefined
         ? scoring(fittedEst, XTest, yTest)
-        : (fittedEst.score !== undefined ? fittedEst.score(XTest, yTest) : 0);
+        : fittedEst.score !== undefined
+          ? fittedEst.score(XTest, yTest)
+          : 0;
     scoreTimes.push((Date.now() - scoreStart) / 1000);
     testScores.push(testScore);
 
@@ -70,7 +75,9 @@ export function crossValidate(
       const trainScore =
         scoring !== undefined
           ? scoring(fittedEst, XTrain, yTrain)
-          : (fittedEst.score !== undefined ? fittedEst.score(XTrain, yTrain) : 0);
+          : fittedEst.score !== undefined
+            ? fittedEst.score(XTrain, yTrain)
+            : 0;
       trainScores.push(trainScore);
     }
   }
@@ -93,27 +100,31 @@ export function crossValScore(
   estimator: CVEstimator,
   X: Float64Array[],
   y: Float64Array | Int32Array,
-  options: { cv?: number; scoring?: (est: CVEstimator, X: Float64Array[], y: Float64Array | Int32Array) => number } = {},
+  options: {
+    cv?: number;
+    scoring?: (
+      est: CVEstimator,
+      X: Float64Array[],
+      y: Float64Array | Int32Array,
+    ) => number;
+  } = {},
 ): Float64Array {
   return crossValidate(estimator, X, y, options).testScore;
 }
 
-function* kFoldSplit(
-  n: number,
-  k: number,
-): Iterable<[Int32Array, Int32Array]> {
+function* kFoldSplit(n: number, k: number): Iterable<[Int32Array, Int32Array]> {
   const foldSize = Math.floor(n / k);
   for (let fold = 0; fold < k; fold++) {
     const start = fold * foldSize;
     const end = fold === k - 1 ? n : start + foldSize;
-    const testIdx = Int32Array.from({ length: end - start }, (_, i) => start + i);
-    const trainIdx = Int32Array.from(
-      { length: n - testIdx.length },
-      (_, i) => {
-        const idx = i < start ? i : i + testIdx.length;
-        return idx;
-      },
+    const testIdx = Int32Array.from(
+      { length: end - start },
+      (_, i) => start + i,
     );
+    const trainIdx = Int32Array.from({ length: n - testIdx.length }, (_, i) => {
+      const idx = i < start ? i : i + testIdx.length;
+      return idx;
+    });
     yield [trainIdx, testIdx];
   }
 }

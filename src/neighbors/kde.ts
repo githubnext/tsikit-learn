@@ -3,8 +3,8 @@
  * Mirrors sklearn.neighbors.KernelDensity.
  */
 
-import { NotFittedError } from "../exceptions.js";
 import { BaseEstimator } from "../base.js";
+import { NotFittedError } from "../exceptions.js";
 
 export type KernelType =
   | "gaussian"
@@ -97,10 +97,10 @@ export class KernelDensity extends BaseEstimator {
     }
     meanStd /= p;
     if (this.bandwidthParam === "scott") {
-      return meanStd * Math.pow(n, -1 / (p + 4));
+      return meanStd * n ** (-1 / (p + 4));
     }
     // silverman
-    return meanStd * Math.pow(n * (p + 2) / 4, -1 / (p + 4));
+    return meanStd * ((n * (p + 2)) / 4) ** (-1 / (p + 4));
   }
 
   fit(X: Float64Array[]): this {

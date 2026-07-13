@@ -31,7 +31,10 @@ export class Pipeline {
         Xt = step.transform?.(Xt) ?? Xt;
       }
     }
-    const [, lastStep] = this.steps[this.steps.length - 1] as [string, PipelineStep];
+    const [, lastStep] = this.steps[this.steps.length - 1] as [
+      string,
+      PipelineStep,
+    ];
     if (y !== undefined) {
       lastStep.fit?.(Xt, y);
     } else {
@@ -47,7 +50,8 @@ export class Pipeline {
   transform(X: Float64Array[]): Float64Array[] {
     let Xt = X;
     for (const [, step] of this.steps) {
-      if (!step.transform) throw new Error("Step does not have transform method");
+      if (!step.transform)
+        throw new Error("Step does not have transform method");
       Xt = step.transform(Xt);
     }
     return Xt;
@@ -64,7 +68,10 @@ export class Pipeline {
       if (!step.transform) throw new NotFittedError("Pipeline");
       Xt = step.transform(Xt);
     }
-    const [, lastStep] = this.steps[this.steps.length - 1] as [string, PipelineStep];
+    const [, lastStep] = this.steps[this.steps.length - 1] as [
+      string,
+      PipelineStep,
+    ];
     if (!lastStep.predict) throw new Error("Last step has no predict method");
     return lastStep.predict(Xt);
   }
@@ -76,7 +83,10 @@ export class Pipeline {
       if (!step.transform) throw new NotFittedError("Pipeline");
       Xt = step.transform(Xt);
     }
-    const [, lastStep] = this.steps[this.steps.length - 1] as [string, PipelineStep];
+    const [, lastStep] = this.steps[this.steps.length - 1] as [
+      string,
+      PipelineStep,
+    ];
     if (!lastStep.score) throw new Error("Last step has no score method");
     return lastStep.score(Xt, y);
   }

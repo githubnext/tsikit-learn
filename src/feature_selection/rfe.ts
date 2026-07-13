@@ -33,7 +33,8 @@ export class RFE {
 
   private _getImportances(est: RFEEstimator, nFeatures: number): Float64Array {
     if (est.coef_) return new Float64Array(est.coef_.map(Math.abs));
-    if (est.featureImportances_) return new Float64Array(est.featureImportances_);
+    if (est.featureImportances_)
+      return new Float64Array(est.featureImportances_);
     return new Float64Array(nFeatures).fill(1);
   }
 
@@ -96,7 +97,10 @@ export class RFE {
     });
   }
 
-  fitTransform(X: Float64Array[], y: Float64Array | Int32Array): Float64Array[] {
+  fitTransform(
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 
@@ -142,10 +146,13 @@ export class RFECV {
     this.support_ = new Uint8Array(nFeatures);
     this.ranking_ = rfe.ranking_!;
     for (let j = 0; j < nFeatures; j++) {
-      if ((rfe.ranking_![j] ?? nFeatures + 1) <= medianRank) this.support_[j] = 1;
+      if ((rfe.ranking_![j] ?? nFeatures + 1) <= medianRank)
+        this.support_[j] = 1;
     }
     this.nFeatures_ = Array.from(this.support_).filter(Boolean).length;
-    this.cvResults_ = { meanTestScore: Array.from({ length: nFeatures }, (_, i) => i / nFeatures) };
+    this.cvResults_ = {
+      meanTestScore: Array.from({ length: nFeatures }, (_, i) => i / nFeatures),
+    };
     return this;
   }
 
@@ -161,7 +168,10 @@ export class RFECV {
     });
   }
 
-  fitTransform(X: Float64Array[], y: Float64Array | Int32Array): Float64Array[] {
+  fitTransform(
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 }
@@ -236,7 +246,10 @@ export class SelectFromModel {
     });
   }
 
-  fitTransform(X: Float64Array[], y: Float64Array | Int32Array): Float64Array[] {
+  fitTransform(
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ): Float64Array[] {
     return this.fit(X, y).transform(X);
   }
 

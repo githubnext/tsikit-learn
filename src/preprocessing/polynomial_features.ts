@@ -31,7 +31,12 @@ export class PolynomialFeatures {
     const degree = this.degree;
     const powers: number[][] = [];
 
-    const gen = (fi: number, rem: number, cur: number[], targetDeg: number): void => {
+    const gen = (
+      fi: number,
+      rem: number,
+      cur: number[],
+      targetDeg: number,
+    ): void => {
       if (fi === nFeatures) {
         const sum = cur.reduce((a, b) => a + b, 0);
         if (sum !== targetDeg) return;

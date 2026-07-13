@@ -32,8 +32,8 @@ function plattScale(scores: Float64Array, y: Float64Array): [number, number] {
       gradA += err * (scores[i] ?? 0);
       gradB += err;
     }
-    A -= lr * gradA / n;
-    B -= lr * gradB / n;
+    A -= (lr * gradA) / n;
+    B -= (lr * gradB) / n;
   }
 
   return [A, B];
@@ -44,11 +44,13 @@ export class CalibratedClassifierCV {
   method: string;
   cv: number;
 
-  calibratedEstimators_: {
-    estimator: Classifier;
-    A: number;
-    B: number;
-  }[] | null = null;
+  calibratedEstimators_:
+    | {
+        estimator: Classifier;
+        A: number;
+        B: number;
+      }[]
+    | null = null;
   classes_: Float64Array | null = null;
 
   constructor(
@@ -62,7 +64,9 @@ export class CalibratedClassifierCV {
 
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     const posClass = uniqueClasses[uniqueClasses.length - 1] ?? 1;
 
@@ -88,7 +92,9 @@ export class CalibratedClassifierCV {
       const XTest = testIdx.map((i) => X[i] ?? new Float64Array(0));
       const yTest = new Float64Array(testIdx.map((i) => yBin[i] ?? 0));
 
-      const est = Object.create(Object.getPrototypeOf(this.baseEstimator) as object) as Classifier;
+      const est = Object.create(
+        Object.getPrototypeOf(this.baseEstimator) as object,
+      ) as Classifier;
       Object.assign(est, this.baseEstimator);
       est.fit(XTrain, yTrain);
 
@@ -102,7 +108,8 @@ export class CalibratedClassifierCV {
   }
 
   predictProba(X: Float64Array[]): Float64Array[] {
-    if (this.calibratedEstimators_ === null) throw new NotFittedError("CalibratedClassifierCV");
+    if (this.calibratedEstimators_ === null)
+      throw new NotFittedError("CalibratedClassifierCV");
 
     const n = X.length;
     const probs = new Float64Array(n);
@@ -122,12 +129,15 @@ export class CalibratedClassifierCV {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (this.classes_ === null) throw new NotFittedError("CalibratedClassifierCV");
+    if (this.classes_ === null)
+      throw new NotFittedError("CalibratedClassifierCV");
     const classes = this.classes_;
     const proba = this.predictProba(X);
     const posClass = classes[classes.length - 1] ?? 1;
     const negClass = classes[0] ?? 0;
-    return new Float64Array(proba.map((p) => ((p[1] ?? 0) >= 0.5 ? posClass : negClass)));
+    return new Float64Array(
+      proba.map((p) => ((p[1] ?? 0) >= 0.5 ? posClass : negClass)),
+    );
   }
 
   score(X: Float64Array[], y: Float64Array): number {

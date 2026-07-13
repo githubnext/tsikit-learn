@@ -37,17 +37,22 @@ export class Bunch {
  * Check that X is a 2D array of Float64Arrays.
  * Throws if input is malformed. Mirrors sklearn.utils.check_array (simplified).
  */
-export function checkArray2D(X: unknown, options: { ensureMinSamples?: number; ensureMinFeatures?: number } = {}): Float64Array[] {
+export function checkArray2D(
+  X: unknown,
+  options: { ensureMinSamples?: number; ensureMinFeatures?: number } = {},
+): Float64Array[] {
   if (!Array.isArray(X)) throw new Error("Input must be an array.");
   if (X.length === 0) return [];
 
   const minSamples = options.ensureMinSamples ?? 1;
   const minFeatures = options.ensureMinFeatures ?? 1;
 
-  if (X.length < minSamples) throw new Error(`Input must have at least ${minSamples} samples.`);
+  if (X.length < minSamples)
+    throw new Error(`Input must have at least ${minSamples} samples.`);
 
   const p = (X[0] as Float64Array | number[]).length ?? 0;
-  if (p < minFeatures) throw new Error(`Input must have at least ${minFeatures} features.`);
+  if (p < minFeatures)
+    throw new Error(`Input must have at least ${minFeatures} features.`);
 
   return X.map((row, i) => {
     if (row instanceof Float64Array) return row;
@@ -70,7 +75,10 @@ export function columnOr1d(y: unknown): Float64Array {
 /**
  * Return indices that would sort an array. Mirrors numpy.argsort.
  */
-export function argsort(arr: Float64Array | number[], reverse = false): Int32Array {
+export function argsort(
+  arr: Float64Array | number[],
+  reverse = false,
+): Int32Array {
   const idx = Array.from({ length: arr.length }, (_, i) => i);
   const a = Array.from(arr);
   if (reverse) idx.sort((i, j) => (a[j] ?? 0) - (a[i] ?? 0));
@@ -89,7 +97,9 @@ export function shuffle<T>(arr: T[], randomState?: number): T[] {
   };
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
-    const tmp = arr[i]!; arr[i] = arr[j]!; arr[j] = tmp;
+    const tmp = arr[i]!;
+    arr[i] = arr[j]!;
+    arr[j] = tmp;
   }
   return arr;
 }
@@ -97,7 +107,10 @@ export function shuffle<T>(arr: T[], randomState?: number): T[] {
 /**
  * Resample arrays (with optional replacement). Mirrors sklearn.utils.resample.
  */
-export function resample<T>(arr: T[], options: { nSamples?: number; replace?: boolean; randomState?: number } = {}): T[] {
+export function resample<T>(
+  arr: T[],
+  options: { nSamples?: number; replace?: boolean; randomState?: number } = {},
+): T[] {
   const n = arr.length;
   const nSamples = options.nSamples ?? n;
   const replace = options.replace ?? true;
@@ -116,13 +129,18 @@ export function resample<T>(arr: T[], options: { nSamples?: number; replace?: bo
   const indices = Array.from({ length: n }, (_, i) => i);
   for (let i = n - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
-    const tmp = indices[i]!; indices[i] = indices[j]!; indices[j] = tmp;
+    const tmp = indices[i]!;
+    indices[i] = indices[j]!;
+    indices[j] = tmp;
   }
   return indices.slice(0, nSamples).map((i) => arr[i]!);
 }
 
 /** Compute unique values and counts. Mirrors numpy.unique with return_counts. */
-export function unique(arr: Int32Array | number[]): { values: Int32Array; counts: Int32Array } {
+export function unique(arr: Int32Array | number[]): {
+  values: Int32Array;
+  counts: Int32Array;
+} {
   const counts = new Map<number, number>();
   for (const v of arr) counts.set(v, (counts.get(v) ?? 0) + 1);
   const sortedValues = Array.from(counts.keys()).sort((a, b) => a - b);

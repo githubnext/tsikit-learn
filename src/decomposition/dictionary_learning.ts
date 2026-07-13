@@ -52,7 +52,10 @@ export class DictionaryLearning {
     const k = this.nComponents;
 
     let rng = this.randomState;
-    const nextRng = () => { rng = (rng * 1664525 + 1013904223) >>> 0; return (rng / 4294967296) * 2 - 1; };
+    const nextRng = () => {
+      rng = (rng * 1664525 + 1013904223) >>> 0;
+      return (rng / 4294967296) * 2 - 1;
+    };
 
     // Initialize dictionary as random rows from X
     const D: Float64Array[] = Array.from({ length: k }, () => {
@@ -106,7 +109,8 @@ export class DictionaryLearning {
       for (let i = 0; i < n; i++) {
         for (let ff = 0; ff < p; ff++) {
           let approx = 0;
-          for (let j = 0; j < k; j++) approx += (codes[i]![j] ?? 0) * (D[j]![ff] ?? 0);
+          for (let j = 0; j < k; j++)
+            approx += (codes[i]![j] ?? 0) * (D[j]![ff] ?? 0);
           err += ((X[i]![ff] ?? 0) - approx) ** 2;
         }
       }
@@ -120,7 +124,12 @@ export class DictionaryLearning {
     return this;
   }
 
-  private _lasso(D: Float64Array[], xi: Float64Array, p: number, k: number): Float64Array {
+  private _lasso(
+    D: Float64Array[],
+    xi: Float64Array,
+    p: number,
+    k: number,
+  ): Float64Array {
     // Simple proximal gradient for lasso: minimize 0.5||xi - c@D||^2 + alpha*||c||_1
     const c = new Float64Array(k);
     const lr = 0.01;
@@ -147,7 +156,8 @@ export class DictionaryLearning {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.components_) throw new NotFittedError("DictionaryLearning is not fitted");
+    if (!this.components_)
+      throw new NotFittedError("DictionaryLearning is not fitted");
     const k = this.nComponents;
     const p = this.nFeatureIn_;
     return X.map((xi) => this._lasso(this.components_!, xi, p, k));
@@ -204,11 +214,22 @@ export class SparsePCA {
 
     // Compute mean and center
     const mean = new Float64Array(p);
-    for (let i = 0; i < n; i++) for (let j = 0; j < p; j++) mean[j]! += (X[i]![j] ?? 0) / n;
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < p; j++) mean[j]! += (X[i]![j] ?? 0) / n;
     this.mean_ = mean;
-    const Xc = X.map((xi) => { const r = new Float64Array(p); for (let j = 0; j < p; j++) r[j]! = (xi[j] ?? 0) - (mean[j] ?? 0); return r; });
+    const Xc = X.map((xi) => {
+      const r = new Float64Array(p);
+      for (let j = 0; j < p; j++) r[j]! = (xi[j] ?? 0) - (mean[j] ?? 0);
+      return r;
+    });
 
-    const dl = new DictionaryLearning({ nComponents: this.nComponents, alpha: this.alpha, maxIter: this.maxIter, tol: this.tol, randomState: this.randomState });
+    const dl = new DictionaryLearning({
+      nComponents: this.nComponents,
+      alpha: this.alpha,
+      maxIter: this.maxIter,
+      tol: this.tol,
+      randomState: this.randomState,
+    });
     dl.fit(Xc);
     this.components_ = dl.components_;
     this.nIter_ = dl.nIter_;
@@ -217,11 +238,21 @@ export class SparsePCA {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.components_ || !this.mean_) throw new NotFittedError("SparsePCA is not fitted");
+    if (!this.components_ || !this.mean_)
+      throw new NotFittedError("SparsePCA is not fitted");
     const p = this.nFeatureIn_;
     const mean = this.mean_;
-    const Xc = X.map((xi) => { const r = new Float64Array(p); for (let j = 0; j < p; j++) r[j]! = (xi[j] ?? 0) - (mean[j] ?? 0); return r; });
-    const dl = new DictionaryLearning({ nComponents: this.nComponents, alpha: this.alpha, maxIter: 50, randomState: this.randomState });
+    const Xc = X.map((xi) => {
+      const r = new Float64Array(p);
+      for (let j = 0; j < p; j++) r[j]! = (xi[j] ?? 0) - (mean[j] ?? 0);
+      return r;
+    });
+    const dl = new DictionaryLearning({
+      nComponents: this.nComponents,
+      alpha: this.alpha,
+      maxIter: 50,
+      randomState: this.randomState,
+    });
     dl.components_ = this.components_;
     dl.nFeatureIn_ = p;
     return dl.transform(Xc);

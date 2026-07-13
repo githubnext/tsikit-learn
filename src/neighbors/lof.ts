@@ -68,7 +68,12 @@ export class LocalOutlierFactor {
     const kNbrIndices: number[][] = [];
 
     for (let i = 0; i < n; i++) {
-      const { indices, distances } = knnQuery(X[i] ?? new Float64Array(0), X, k + 1, true);
+      const { indices, distances } = knnQuery(
+        X[i] ?? new Float64Array(0),
+        X,
+        k + 1,
+        true,
+      );
       kNbrIndices.push(indices);
       kDistances[i] = distances[k - 1] ?? 0;
     }
@@ -79,7 +84,10 @@ export class LocalOutlierFactor {
       const nbrs = kNbrIndices[i] ?? [];
       let reachSum = 0;
       for (const j of nbrs) {
-        const dist = euclidean(X[i] ?? new Float64Array(0), X[j] ?? new Float64Array(0));
+        const dist = euclidean(
+          X[i] ?? new Float64Array(0),
+          X[j] ?? new Float64Array(0),
+        );
         reachSum += Math.max(kDistances[j] ?? 0, dist);
       }
       lrd[i] = nbrs.length > 0 ? nbrs.length / Math.max(reachSum, 1e-10) : 1;
@@ -122,7 +130,12 @@ export class LocalOutlierFactor {
     const lrdTrain = new Float64Array(n);
 
     for (let i = 0; i < n; i++) {
-      const { indices, distances } = knnQuery(trainX[i] ?? new Float64Array(0), trainX, k + 1, true);
+      const { indices, distances } = knnQuery(
+        trainX[i] ?? new Float64Array(0),
+        trainX,
+        k + 1,
+        true,
+      );
       kNbrIndicesTrain.push(indices);
       kDistancesTrain[i] = distances[k - 1] ?? 0;
     }
@@ -130,23 +143,34 @@ export class LocalOutlierFactor {
       const nbrs = kNbrIndicesTrain[i] ?? [];
       let reachSum = 0;
       for (const j of nbrs) {
-        const dist = euclidean(trainX[i] ?? new Float64Array(0), trainX[j] ?? new Float64Array(0));
+        const dist = euclidean(
+          trainX[i] ?? new Float64Array(0),
+          trainX[j] ?? new Float64Array(0),
+        );
         reachSum += Math.max(kDistancesTrain[j] ?? 0, dist);
       }
-      lrdTrain[i] = nbrs.length > 0 ? nbrs.length / Math.max(reachSum, 1e-10) : 1;
+      lrdTrain[i] =
+        nbrs.length > 0 ? nbrs.length / Math.max(reachSum, 1e-10) : 1;
     }
 
     const scores = new Float64Array(X.length);
     for (let qi = 0; qi < X.length; qi++) {
-      const { indices, distances } = knnQuery(X[qi] ?? new Float64Array(0), trainX, k, false);
+      const { indices, distances } = knnQuery(
+        X[qi] ?? new Float64Array(0),
+        trainX,
+        k,
+        false,
+      );
       let reachSum = 0;
       for (let ni = 0; ni < indices.length; ni++) {
         const j = indices[ni] ?? 0;
         reachSum += Math.max(kDistancesTrain[j] ?? 0, distances[ni] ?? 0);
       }
-      const lrdQuery = indices.length > 0 ? indices.length / Math.max(reachSum, 1e-10) : 1;
+      const lrdQuery =
+        indices.length > 0 ? indices.length / Math.max(reachSum, 1e-10) : 1;
       let lrdRatioSum = 0;
-      for (const j of indices) lrdRatioSum += (lrdTrain[j] ?? 1) / Math.max(lrdQuery, 1e-10);
+      for (const j of indices)
+        lrdRatioSum += (lrdTrain[j] ?? 1) / Math.max(lrdQuery, 1e-10);
       const lof = indices.length > 0 ? lrdRatioSum / indices.length : 1;
       scores[qi] = -lof;
     }
@@ -161,7 +185,8 @@ export class LocalOutlierFactor {
   predict(X: Float64Array[]): Int32Array {
     if (!this.novelty) {
       // In non-novelty mode, return training scores
-      if (this.negativeLofScores_ === null) throw new NotFittedError("LocalOutlierFactor");
+      if (this.negativeLofScores_ === null)
+        throw new NotFittedError("LocalOutlierFactor");
       return new Int32Array(
         this.negativeLofScores_.map((s) => (s >= this.offset_ ? 1 : -1)),
       );
@@ -172,7 +197,8 @@ export class LocalOutlierFactor {
 
   fitPredict(X: Float64Array[]): Int32Array {
     this.fit(X);
-    if (this.negativeLofScores_ === null) throw new NotFittedError("LocalOutlierFactor");
+    if (this.negativeLofScores_ === null)
+      throw new NotFittedError("LocalOutlierFactor");
     return new Int32Array(
       this.negativeLofScores_.map((s) => (s >= this.offset_ ? 1 : -1)),
     );

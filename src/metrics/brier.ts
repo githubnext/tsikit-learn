@@ -211,7 +211,9 @@ export function expectedCalibrationError(
   let ece = 0;
   for (let b = 0; b < result.probPred.length; b++) {
     const count = binCounts[b] ?? 0;
-    ece += (count / n) * Math.abs((result.probTrue[b] ?? 0) - (result.probPred[b] ?? 0));
+    ece +=
+      (count / n) *
+      Math.abs((result.probTrue[b] ?? 0) - (result.probPred[b] ?? 0));
   }
   return ece;
 }

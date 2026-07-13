@@ -64,7 +64,8 @@ export class RadiusNeighborsClassifier {
 
         const votes = new Map<number, number>();
         for (const { dist, label } of neighbors) {
-          const w = this.weights === "distance" ? (dist > 0 ? 1 / dist : 1e10) : 1;
+          const w =
+            this.weights === "distance" ? (dist > 0 ? 1 / dist : 1e10) : 1;
           votes.set(label, (votes.get(label) ?? 0) + w);
         }
 
@@ -98,9 +99,7 @@ export class RadiusNeighborsRegressor {
   XTrain_: Float64Array[] | null = null;
   yTrain_: Float64Array | null = null;
 
-  constructor(
-    options: { radius?: number; weights?: string } = {},
-  ) {
+  constructor(options: { radius?: number; weights?: string } = {}) {
     this.radius = options.radius ?? 1.0;
     this.weights = options.weights ?? "uniform";
   }

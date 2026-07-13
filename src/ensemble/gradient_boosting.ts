@@ -78,7 +78,8 @@ export class GradientBoostingRegressor {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (this.estimators_ === null) throw new NotFittedError("GradientBoostingRegressor");
+    if (this.estimators_ === null)
+      throw new NotFittedError("GradientBoostingRegressor");
     const pred = new Float64Array(X.length).fill(this.initialPred_);
     for (const tree of this.estimators_) {
       const tp = tree.predict(X);
@@ -125,7 +126,9 @@ export class GradientBoostingClassifier {
 
   fit(X: Float64Array[], y: Float64Array): this {
     const n = X.length;
-    const uniqueClasses = Array.from(new Set(Array.from(y))).sort((a, b) => a - b);
+    const uniqueClasses = Array.from(new Set(Array.from(y))).sort(
+      (a, b) => a - b,
+    );
     this.classes_ = new Float64Array(uniqueClasses);
     const posClass = uniqueClasses[uniqueClasses.length - 1] ?? 1;
 
@@ -161,7 +164,8 @@ export class GradientBoostingClassifier {
   }
 
   predictProba(X: Float64Array[]): Float64Array[] {
-    if (this.estimators_ === null) throw new NotFittedError("GradientBoostingClassifier");
+    if (this.estimators_ === null)
+      throw new NotFittedError("GradientBoostingClassifier");
     const F = new Float64Array(X.length).fill(this.initialPred_);
     for (const tree of this.estimators_) {
       const tp = tree.predict(X);
@@ -176,12 +180,15 @@ export class GradientBoostingClassifier {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (this.classes_ === null) throw new NotFittedError("GradientBoostingClassifier");
+    if (this.classes_ === null)
+      throw new NotFittedError("GradientBoostingClassifier");
     const classes = this.classes_;
     const proba = this.predictProba(X);
     const posClass = classes[classes.length - 1] ?? 1;
     const negClass = classes[0] ?? 0;
-    return new Float64Array(proba.map((p) => ((p[1] ?? 0) >= 0.5 ? posClass : negClass)));
+    return new Float64Array(
+      proba.map((p) => ((p[1] ?? 0) >= 0.5 ? posClass : negClass)),
+    );
   }
 
   score(X: Float64Array[], y: Float64Array): number {

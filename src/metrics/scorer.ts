@@ -7,7 +7,11 @@ import { NotFittedError } from "../exceptions.js";
 
 /** A scorer callable that wraps a metric function. */
 export interface Scorer {
-  (estimator: Estimator, X: Float64Array[], y: Float64Array | Int32Array): number;
+  (
+    estimator: Estimator,
+    X: Float64Array[],
+    y: Float64Array | Int32Array,
+  ): number;
   _sign: number;
   _scoreFn: MetricFn;
   _kwargs: Record<string, unknown>;
@@ -80,21 +84,32 @@ export function makeScorer(
 /** Built-in scoring metric functions. */
 
 /** Mean squared error (negated for scoring). */
-function _mseFn(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array): number {
+function _mseFn(
+  yTrue: Float64Array | Int32Array,
+  yPred: Float64Array | Int32Array,
+): number {
   let s = 0;
-  for (let i = 0; i < yTrue.length; i++) s += ((yTrue[i] ?? 0) - (yPred[i] ?? 0)) ** 2;
+  for (let i = 0; i < yTrue.length; i++)
+    s += ((yTrue[i] ?? 0) - (yPred[i] ?? 0)) ** 2;
   return s / yTrue.length;
 }
 
 /** Mean absolute error. */
-function _maeFn(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array): number {
+function _maeFn(
+  yTrue: Float64Array | Int32Array,
+  yPred: Float64Array | Int32Array,
+): number {
   let s = 0;
-  for (let i = 0; i < yTrue.length; i++) s += Math.abs((yTrue[i] ?? 0) - (yPred[i] ?? 0));
+  for (let i = 0; i < yTrue.length; i++)
+    s += Math.abs((yTrue[i] ?? 0) - (yPred[i] ?? 0));
   return s / yTrue.length;
 }
 
 /** R² score. */
-function _r2Fn(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array): number {
+function _r2Fn(
+  yTrue: Float64Array | Int32Array,
+  yPred: Float64Array | Int32Array,
+): number {
   const mean = Array.from(yTrue).reduce((a, b) => a + b, 0) / yTrue.length;
   let ssRes = 0;
   let ssTot = 0;
@@ -106,14 +121,21 @@ function _r2Fn(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Arra
 }
 
 /** Accuracy score. */
-function _accuracyFn(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array): number {
+function _accuracyFn(
+  yTrue: Float64Array | Int32Array,
+  yPred: Float64Array | Int32Array,
+): number {
   let correct = 0;
-  for (let i = 0; i < yTrue.length; i++) if ((yTrue[i] ?? 0) === (yPred[i] ?? 0)) correct++;
+  for (let i = 0; i < yTrue.length; i++)
+    if ((yTrue[i] ?? 0) === (yPred[i] ?? 0)) correct++;
   return correct / yTrue.length;
 }
 
 /** F1 score (binary). */
-function _f1Fn(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Array): number {
+function _f1Fn(
+  yTrue: Float64Array | Int32Array,
+  yPred: Float64Array | Int32Array,
+): number {
   let tp = 0;
   let fp = 0;
   let fn = 0;
@@ -126,7 +148,7 @@ function _f1Fn(yTrue: Float64Array | Int32Array, yPred: Float64Array | Int32Arra
   }
   const prec = tp + fp > 0 ? tp / (tp + fp) : 0;
   const rec = tp + fn > 0 ? tp / (tp + fn) : 0;
-  return prec + rec > 0 ? 2 * prec * rec / (prec + rec) : 0;
+  return prec + rec > 0 ? (2 * prec * rec) / (prec + rec) : 0;
 }
 
 /** Registry of built-in scorers. */
@@ -164,7 +186,10 @@ export function checkScoring(
 
   if (typeof scoring === "string") {
     const s = _SCORERS[scoring];
-    if (!s) throw new Error(`Unknown scorer: ${scoring}. Available: ${Object.keys(_SCORERS).join(", ")}`);
+    if (!s)
+      throw new Error(
+        `Unknown scorer: ${scoring}. Available: ${Object.keys(_SCORERS).join(", ")}`,
+      );
     return s;
   }
 
@@ -177,7 +202,10 @@ export function checkScoring(
  */
 export function getScorer(name: string): Scorer {
   const s = _SCORERS[name];
-  if (!s) throw new Error(`Unknown scorer: ${name}. Available: ${Object.keys(_SCORERS).join(", ")}`);
+  if (!s)
+    throw new Error(
+      `Unknown scorer: ${name}. Available: ${Object.keys(_SCORERS).join(", ")}`,
+    );
   return s;
 }
 

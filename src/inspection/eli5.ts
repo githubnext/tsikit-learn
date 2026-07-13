@@ -43,7 +43,9 @@ export function explainWeights(
 
     const inter = Array.isArray(intercept)
       ? (intercept[cls] ?? 0)
-      : (typeof intercept === "number" ? intercept : 0);
+      : typeof intercept === "number"
+        ? intercept
+        : 0;
 
     targets.push({
       target: cls,
@@ -97,9 +99,13 @@ export function explainPredictionLinear(
   const distances: number[] = [];
 
   for (let i = 0; i < nSamples; i++) {
-    const sample = Float64Array.from(instance, (v) => v + (rng() * 2 - 1) * 0.1);
+    const sample = Float64Array.from(
+      instance,
+      (v) => v + (rng() * 2 - 1) * 0.1,
+    );
     let d = 0;
-    for (let j = 0; j < nFeatures; j++) d += ((sample[j] ?? 0) - (instance[j] ?? 0)) ** 2;
+    for (let j = 0; j < nFeatures; j++)
+      d += ((sample[j] ?? 0) - (instance[j] ?? 0)) ** 2;
     distances.push(Math.sqrt(d));
     samples.push(sample);
   }
@@ -111,7 +117,9 @@ export function explainPredictionLinear(
   const preds = estimator.predict(samples);
 
   // Weighted least squares (ridge) for local explanation
-  const WX = samples.map((s, i) => Float64Array.from(s, (v) => v * Math.sqrt(weights[i] ?? 1)));
+  const WX = samples.map((s, i) =>
+    Float64Array.from(s, (v) => v * Math.sqrt(weights[i] ?? 1)),
+  );
   const wy = Float64Array.from(preds, (v, i) => v * Math.sqrt(weights[i] ?? 1));
 
   // Normal equations: (X^T X + I) w = X^T y (simple ridge)

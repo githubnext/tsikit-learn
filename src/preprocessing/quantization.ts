@@ -38,7 +38,7 @@ export function winsorize(
     uppers[j] = getQuantile(col, upperQuantile);
   }
 
-  return X.map(row => {
+  return X.map((row) => {
     const out = new Float64Array(p);
     for (let j = 0; j < p; j++) {
       const v = row[j] ?? 0;
@@ -52,7 +52,7 @@ export function winsorize(
  * Subtract the per-sample mean (center each sample individually).
  */
 export function meanCenter(X: Float64Array[]): Float64Array[] {
-  return X.map(row => {
+  return X.map((row) => {
     const mean = Array.from(row).reduce((s, v) => s + v, 0) / row.length;
     const out = new Float64Array(row.length);
     for (let j = 0; j < row.length; j++) out[j] = (row[j] ?? 0) - mean;
@@ -92,12 +92,13 @@ export function squaredEuclideanDistances(
  */
 export function boxCox1d(
   y: Float64Array,
-  lmbda: number | null = null,
+  lmbdaParam: number | null = null,
 ): { transformed: Float64Array; lambda: number } {
   // Estimate lambda via MLE if null
   const n = y.length;
+  let lmbda: number;
 
-  if (lmbda === null) {
+  if (lmbdaParam === null) {
     // Grid search over lambda values
     let bestLambda = 0;
     let bestLogLik = -Number.POSITIVE_INFINITY;
@@ -109,11 +110,17 @@ export function boxCox1d(
       for (const v of t) variance += (v - mean) ** 2;
       variance /= n;
       if (variance < 1e-10) continue;
-      const logLik = -0.5 * n * Math.log(variance)
-        + (l - 1) * Array.from(y).reduce((s, v) => s + Math.log(v), 0);
-      if (logLik > bestLogLik) { bestLogLik = logLik; bestLambda = l; }
+      const logLik =
+        -0.5 * n * Math.log(variance) +
+        (l - 1) * Array.from(y).reduce((s, v) => s + Math.log(v), 0);
+      if (logLik > bestLogLik) {
+        bestLogLik = logLik;
+        bestLambda = l;
+      }
     }
     lmbda = bestLambda;
+  } else {
+    lmbda = lmbdaParam;
   }
 
   const transformed = _boxCoxTransform(y, lmbda) ?? y;
@@ -133,21 +140,17 @@ function _boxCoxTransform(y: Float64Array, lmbda: number): Float64Array | null {
 /**
  * Yeo-Johnson transform (works with both positive and negative values).
  */
-export function yeoJohnson1d(
-  y: Float64Array,
-  lmbda = 0.0,
-): Float64Array {
+export function yeoJohnson1d(y: Float64Array, lmbda = 0.0): Float64Array {
   const out = new Float64Array(y.length);
   for (let i = 0; i < y.length; i++) {
     const v = y[i] ?? 0;
     if (v >= 0) {
-      out[i] = lmbda === 0
-        ? Math.log1p(v)
-        : ((v + 1) ** lmbda - 1) / lmbda;
+      out[i] = lmbda === 0 ? Math.log1p(v) : ((v + 1) ** lmbda - 1) / lmbda;
     } else {
-      out[i] = lmbda === 2
-        ? -Math.log1p(-v)
-        : -((-v + 1) ** (2 - lmbda) - 1) / (2 - lmbda);
+      out[i] =
+        lmbda === 2
+          ? -Math.log1p(-v)
+          : -((-v + 1) ** (2 - lmbda) - 1) / (2 - lmbda);
     }
   }
   return out;
@@ -162,11 +165,16 @@ export function estimateNBins(
 ): number {
   if (n <= 1) return 1;
   switch (method) {
-    case "sturges": return Math.ceil(Math.log2(n)) + 1;
-    case "rice": return Math.ceil(2 * n ** (1 / 3));
-    case "sqrt": return Math.ceil(Math.sqrt(n));
-    case "fd": return Math.ceil(2 * n ** (1 / 3)); // simplified
-    default: return Math.ceil(Math.log2(n)) + 1;
+    case "sturges":
+      return Math.ceil(Math.log2(n)) + 1;
+    case "rice":
+      return Math.ceil(2 * n ** (1 / 3));
+    case "sqrt":
+      return Math.ceil(Math.sqrt(n));
+    case "fd":
+      return Math.ceil(2 * n ** (1 / 3)); // simplified
+    default:
+      return Math.ceil(Math.log2(n)) + 1;
   }
 }
 
@@ -196,7 +204,8 @@ export function computeBinEdges(
       const idx = q * (sorted.length - 1);
       const lo = Math.floor(idx);
       const hi = Math.ceil(idx);
-      edges[i] = (sorted[lo] ?? 0) * (1 - (idx - lo)) + (sorted[hi] ?? 0) * (idx - lo);
+      edges[i] =
+        (sorted[lo] ?? 0) * (1 - (idx - lo)) + (sorted[hi] ?? 0) * (idx - lo);
     }
   }
 
@@ -217,7 +226,10 @@ export function digitize(
     const v = values[i] ?? 0;
     let bin = nBins - 1;
     for (let b = 0; b < nBins; b++) {
-      if (v < (edges[b + 1] ?? Number.POSITIVE_INFINITY)) { bin = b; break; }
+      if (v < (edges[b + 1] ?? Number.POSITIVE_INFINITY)) {
+        bin = b;
+        break;
+      }
     }
     result[i] = Math.min(nBins - 1, Math.max(0, bin));
   }

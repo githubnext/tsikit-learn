@@ -6,10 +6,16 @@
 
 import { NotFittedError } from "../exceptions.js";
 
-export type ScoreFn = (X: Float64Array[], y: Float64Array) => [Float64Array, Float64Array];
+export type ScoreFn = (
+  X: Float64Array[],
+  y: Float64Array,
+) => [Float64Array, Float64Array];
 
 /** F-score for classification (ANOVA F-test). */
-export function fClassif(X: Float64Array[], y: Float64Array): [Float64Array, Float64Array] {
+export function fClassif(
+  X: Float64Array[],
+  y: Float64Array,
+): [Float64Array, Float64Array] {
   const n = X.length;
   const p = (X[0] ?? new Float64Array(0)).length;
   const uniqueClasses = Array.from(new Set(Array.from(y)));
@@ -27,9 +33,12 @@ export function fClassif(X: Float64Array[], y: Float64Array): [Float64Array, Flo
 
     for (const cls of uniqueClasses) {
       const groupVals = Array.from(y)
-        .map((yi, i) => (yi === cls ? (X[i] ?? new Float64Array(p))[j] ?? 0 : null))
+        .map((yi, i) =>
+          yi === cls ? ((X[i] ?? new Float64Array(p))[j] ?? 0) : null,
+        )
         .filter((v): v is number => v !== null);
-      const groupMean = groupVals.reduce((a, b) => a + b, 0) / (groupVals.length || 1);
+      const groupMean =
+        groupVals.reduce((a, b) => a + b, 0) / (groupVals.length || 1);
       ssBetween += groupVals.length * (groupMean - grandMean) ** 2;
       ssWithin += groupVals.reduce((s, v) => s + (v - groupMean) ** 2, 0);
     }
@@ -48,7 +57,10 @@ export function fClassif(X: Float64Array[], y: Float64Array): [Float64Array, Flo
 }
 
 /** F-score for regression. */
-export function fRegression(X: Float64Array[], y: Float64Array): [Float64Array, Float64Array] {
+export function fRegression(
+  X: Float64Array[],
+  y: Float64Array,
+): [Float64Array, Float64Array] {
   const n = X.length;
   const p = (X[0] ?? new Float64Array(0)).length;
   const yMean = Array.from(y).reduce((a, b) => a + b, 0) / n;
@@ -86,7 +98,7 @@ export function fRegression(X: Float64Array[], y: Float64Array): [Float64Array, 
     }
 
     const r2 = ssTot > 0 ? 1 - ssRes / ssTot : 0;
-    fScores[j] = r2 > 0 && r2 < 1 ? (r2 / 1) / ((1 - r2) / (n - 2)) : 0;
+    fScores[j] = r2 > 0 && r2 < 1 ? r2 / 1 / ((1 - r2) / (n - 2)) : 0;
     pValues[j] = Math.exp(-(fScores[j] ?? 0) / 2);
   }
 
@@ -94,7 +106,10 @@ export function fRegression(X: Float64Array[], y: Float64Array): [Float64Array, 
 }
 
 /** Chi-squared test statistic for non-negative features. */
-export function chi2(X: Float64Array[], y: Float64Array): [Float64Array, Float64Array] {
+export function chi2(
+  X: Float64Array[],
+  y: Float64Array,
+): [Float64Array, Float64Array] {
   const n = X.length;
   const p = (X[0] ?? new Float64Array(0)).length;
   const uniqueClasses = Array.from(new Set(Array.from(y)));
@@ -105,11 +120,14 @@ export function chi2(X: Float64Array[], y: Float64Array): [Float64Array, Float64
   for (let j = 0; j < p; j++) {
     let chi = 0;
     for (const cls of uniqueClasses) {
-      const classIdx = Array.from(y).map((yi, i) => yi === cls ? i : -1).filter(i => i >= 0);
+      const classIdx = Array.from(y)
+        .map((yi, i) => (yi === cls ? i : -1))
+        .filter((i) => i >= 0);
       const expected = classIdx.length / n;
-      for (let i of classIdx) {
+      for (const i of classIdx) {
         const obs = (X[i] ?? new Float64Array(p))[j] ?? 0;
-        const exp = expected * Array.from(X).reduce((s, xi) => s + (xi[j] ?? 0), 0) / n;
+        const exp =
+          (expected * Array.from(X).reduce((s, xi) => s + (xi[j] ?? 0), 0)) / n;
         if (exp > 0) chi += (obs - exp) ** 2 / exp;
       }
     }
@@ -128,10 +146,7 @@ export class SelectKBest {
   pValues_: Float64Array | null = null;
   selectedIndices_: number[] | null = null;
 
-  constructor(
-    scoreFunc: ScoreFn = fClassif,
-    options: { k?: number } = {},
-  ) {
+  constructor(scoreFunc: ScoreFn = fClassif, options: { k?: number } = {}) {
     this.scoreFunc = scoreFunc;
     this.k = options.k ?? 10;
   }
@@ -195,7 +210,8 @@ export class SelectPercentile {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.selectedIndices_ === null) throw new NotFittedError("SelectPercentile");
+    if (this.selectedIndices_ === null)
+      throw new NotFittedError("SelectPercentile");
     const sel = this.selectedIndices_;
     return X.map((xi) => new Float64Array(sel.map((j) => xi[j] ?? 0)));
   }
@@ -237,7 +253,8 @@ export class VarianceThreshold {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.selectedIndices_ === null) throw new NotFittedError("VarianceThreshold");
+    if (this.selectedIndices_ === null)
+      throw new NotFittedError("VarianceThreshold");
     const sel = this.selectedIndices_;
     return X.map((xi) => new Float64Array(sel.map((j) => xi[j] ?? 0)));
   }

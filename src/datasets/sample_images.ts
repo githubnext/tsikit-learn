@@ -39,7 +39,8 @@ function generateSyntheticImage(
         data[base + 2] = Math.floor(235 * (1 - t * 0.3) + rng() * 20);
       } else {
         // Flower: radial gradient
-        const cx = 0.5, cy = 0.5;
+        const cx = 0.5;
+        const cy = 0.5;
         const r = Math.sqrt((j / width - cx) ** 2 + (i / height - cy) ** 2);
         const angle = Math.atan2(i / height - cy, j / width - cx);
         const petal = Math.sin(angle * 6) > 0 ? 1 : 0;

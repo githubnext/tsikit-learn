@@ -46,7 +46,10 @@ function computeClassMetrics(
   }
   const precision = tp + fp > 0 ? tp / (tp + fp) : 0;
   const recall = tp + fn > 0 ? tp / (tp + fn) : 0;
-  const f1Score = precision + recall > 0 ? 2 * precision * recall / (precision + recall) : 0;
+  const f1Score =
+    precision + recall > 0
+      ? (2 * precision * recall) / (precision + recall)
+      : 0;
   return { precision, recall, f1Score, support };
 }
 
@@ -57,7 +60,8 @@ export function classificationReport(
 ): ClassificationReportResult {
   const classSet = new Set<number>();
   for (let i = 0; i < yTrue.length; i++) classSet.add(yTrue[i] ?? 0);
-  const labels = opts.labels ?? Int32Array.from(Array.from(classSet).sort((a, b) => a - b));
+  const labels =
+    opts.labels ?? Int32Array.from(Array.from(classSet).sort((a, b) => a - b));
 
   const classes: Record<string, ClassMetrics> = {};
   for (let li = 0; li < labels.length; li++) {
@@ -74,16 +78,21 @@ export function classificationReport(
   const totalSupport = allMetrics.reduce((s, m) => s + m.support, 0);
 
   const macroAvg: ClassMetrics = {
-    precision: allMetrics.reduce((s, m) => s + m.precision, 0) / allMetrics.length,
+    precision:
+      allMetrics.reduce((s, m) => s + m.precision, 0) / allMetrics.length,
     recall: allMetrics.reduce((s, m) => s + m.recall, 0) / allMetrics.length,
     f1Score: allMetrics.reduce((s, m) => s + m.f1Score, 0) / allMetrics.length,
     support: totalSupport,
   };
 
   const weightedAvg: ClassMetrics = {
-    precision: allMetrics.reduce((s, m) => s + m.precision * m.support, 0) / totalSupport,
-    recall: allMetrics.reduce((s, m) => s + m.recall * m.support, 0) / totalSupport,
-    f1Score: allMetrics.reduce((s, m) => s + m.f1Score * m.support, 0) / totalSupport,
+    precision:
+      allMetrics.reduce((s, m) => s + m.precision * m.support, 0) /
+      totalSupport,
+    recall:
+      allMetrics.reduce((s, m) => s + m.recall * m.support, 0) / totalSupport,
+    f1Score:
+      allMetrics.reduce((s, m) => s + m.f1Score * m.support, 0) / totalSupport,
     support: totalSupport,
   };
 
@@ -93,16 +102,22 @@ export function classificationReport(
 export function precisionRecallFscoreSupport(
   yTrue: Int32Array,
   yPred: Int32Array,
-  opts: { average?: "macro" | "weighted" | "micro" | null; labels?: Int32Array } = {},
-): { precision: number; recall: number; fScore: number; support: number } | {
-  precisions: Float64Array;
-  recalls: Float64Array;
-  fScores: Float64Array;
-  supports: Int32Array;
-} {
+  opts: {
+    average?: "macro" | "weighted" | "micro" | null;
+    labels?: Int32Array;
+  } = {},
+):
+  | { precision: number; recall: number; fScore: number; support: number }
+  | {
+      precisions: Float64Array;
+      recalls: Float64Array;
+      fScores: Float64Array;
+      supports: Int32Array;
+    } {
   const classSet = new Set<number>();
   for (let i = 0; i < yTrue.length; i++) classSet.add(yTrue[i] ?? 0);
-  const labels = opts.labels ?? Int32Array.from(Array.from(classSet).sort((a, b) => a - b));
+  const labels =
+    opts.labels ?? Int32Array.from(Array.from(classSet).sort((a, b) => a - b));
 
   const metrics = Array.from({ length: labels.length }, (_, li) =>
     computeClassMetrics(yTrue, yPred, labels[li] ?? 0),
@@ -135,15 +150,21 @@ export function precisionRecallFscoreSupport(
     }
     const precision = tp + fp > 0 ? tp / (tp + fp) : 0;
     const recall = tp + fn > 0 ? tp / (tp + fn) : 0;
-    const fScore = precision + recall > 0 ? 2 * precision * recall / (precision + recall) : 0;
+    const fScore =
+      precision + recall > 0
+        ? (2 * precision * recall) / (precision + recall)
+        : 0;
     return { precision, recall, fScore, support: totalSupport };
   }
 
   if (opts.average === "weighted") {
     return {
-      precision: metrics.reduce((s, m) => s + m.precision * m.support, 0) / totalSupport,
-      recall: metrics.reduce((s, m) => s + m.recall * m.support, 0) / totalSupport,
-      fScore: metrics.reduce((s, m) => s + m.f1Score * m.support, 0) / totalSupport,
+      precision:
+        metrics.reduce((s, m) => s + m.precision * m.support, 0) / totalSupport,
+      recall:
+        metrics.reduce((s, m) => s + m.recall * m.support, 0) / totalSupport,
+      fScore:
+        metrics.reduce((s, m) => s + m.f1Score * m.support, 0) / totalSupport,
       support: totalSupport,
     };
   }

@@ -46,7 +46,10 @@ export function makeClassification(
   const nInformative = Math.min(options.nInformative ?? 2, nFeatures);
   const noise = options.noise ?? 0.0;
 
-  const X: Float64Array[] = Array.from({ length: nSamples }, () => new Float64Array(nFeatures));
+  const X: Float64Array[] = Array.from(
+    { length: nSamples },
+    () => new Float64Array(nFeatures),
+  );
   const y = new Float64Array(nSamples);
 
   // Cluster centers for each class
@@ -170,12 +173,22 @@ export function makeMoons(
 
   for (let i = 0; i < half; i++) {
     const angle = (Math.PI * i) / half;
-    X.push(new Float64Array([Math.cos(angle) + randn() * noise, Math.sin(angle) + randn() * noise]));
+    X.push(
+      new Float64Array([
+        Math.cos(angle) + randn() * noise,
+        Math.sin(angle) + randn() * noise,
+      ]),
+    );
     y.push(0);
   }
   for (let i = 0; i < nSamples - half; i++) {
     const angle = (Math.PI * i) / (nSamples - half);
-    X.push(new Float64Array([1 - Math.cos(angle) + randn() * noise, 1 - Math.sin(angle) - 0.5 + randn() * noise]));
+    X.push(
+      new Float64Array([
+        1 - Math.cos(angle) + randn() * noise,
+        1 - Math.sin(angle) - 0.5 + randn() * noise,
+      ]),
+    );
     y.push(1);
   }
 
@@ -199,12 +212,22 @@ export function makeCircles(
 
   for (let i = 0; i < half; i++) {
     const angle = (2 * Math.PI * i) / half;
-    X.push(new Float64Array([Math.cos(angle) + randn() * noise, Math.sin(angle) + randn() * noise]));
+    X.push(
+      new Float64Array([
+        Math.cos(angle) + randn() * noise,
+        Math.sin(angle) + randn() * noise,
+      ]),
+    );
     y.push(0);
   }
   for (let i = 0; i < nSamples - half; i++) {
     const angle = (2 * Math.PI * i) / (nSamples - half);
-    X.push(new Float64Array([factor * Math.cos(angle) + randn() * noise, factor * Math.sin(angle) + randn() * noise]));
+    X.push(
+      new Float64Array([
+        factor * Math.cos(angle) + randn() * noise,
+        factor * Math.sin(angle) + randn() * noise,
+      ]),
+    );
     y.push(1);
   }
 

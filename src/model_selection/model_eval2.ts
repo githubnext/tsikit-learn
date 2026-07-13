@@ -28,7 +28,9 @@ export function biasVarianceDecomposition(
     return sum / k;
   });
 
-  let avgBias2 = 0, avgVar = 0, avgLoss = 0;
+  let avgBias2 = 0;
+  let avgVar = 0;
+  let avgLoss = 0;
   for (let j = 0; j < n; j++) {
     const yj = yTest[j] ?? 0;
     const mj = meanPred[j] ?? 0;
@@ -59,7 +61,9 @@ export function learningCurveData(
   testScoresAll: Float64Array[],
   nTotal: number,
 ): LearningCurveResult {
-  const trainSizes = Int32Array.from(trainSizesFrac.map((f) => Math.round(f * nTotal)));
+  const trainSizes = Int32Array.from(
+    trainSizesFrac.map((f) => Math.round(f * nTotal)),
+  );
   return { trainSizes, trainScores: trainScoresAll, testScores: testScoresAll };
 }
 
@@ -78,10 +82,13 @@ export function optimizeThreshold(
     let score = 0;
     if (metric === "accuracy") {
       let correct = 0;
-      for (let i = 0; i < yTrue.length; i++) if ((yTrue[i] ?? 0) === (yPred[i] ?? 0)) correct++;
+      for (let i = 0; i < yTrue.length; i++)
+        if ((yTrue[i] ?? 0) === (yPred[i] ?? 0)) correct++;
       score = correct / yTrue.length;
     } else if (metric === "f1") {
-      let tp = 0, fp = 0, fn = 0;
+      let tp = 0;
+      let fp = 0;
+      let fn = 0;
       for (let i = 0; i < yTrue.length; i++) {
         if ((yTrue[i] ?? 0) === 1 && (yPred[i] ?? 0) === 1) tp++;
         else if ((yTrue[i] ?? 0) === 0 && (yPred[i] ?? 0) === 1) fp++;
@@ -89,21 +96,28 @@ export function optimizeThreshold(
       }
       const prec = tp / (tp + fp + 1e-10);
       const rec = tp / (tp + fn + 1e-10);
-      score = 2 * prec * rec / (prec + rec + 1e-10);
+      score = (2 * prec * rec) / (prec + rec + 1e-10);
     } else {
       // balanced_accuracy
       const classes = [0, 1];
       let sumRecall = 0;
       for (const c of classes) {
-        let tp = 0, total = 0;
+        let tp = 0;
+        let total = 0;
         for (let i = 0; i < yTrue.length; i++) {
-          if ((yTrue[i] ?? 0) === c) { total++; if ((yPred[i] ?? 0) === c) tp++; }
+          if ((yTrue[i] ?? 0) === c) {
+            total++;
+            if ((yPred[i] ?? 0) === c) tp++;
+          }
         }
         if (total > 0) sumRecall += tp / total;
       }
       score = sumRecall / classes.length;
     }
-    if (score > bestScore) { bestScore = score; bestThreshold = t; }
+    if (score > bestScore) {
+      bestScore = score;
+      bestThreshold = t;
+    }
   }
   return bestThreshold;
 }
@@ -127,8 +141,10 @@ export function expectedCalibrationError(
       if (p >= lo && p < hi) inBin.push(i);
     }
     if (inBin.length === 0) continue;
-    const avgConf = inBin.reduce((s, i) => s + (yProba[i] ?? 0), 0) / inBin.length;
-    const avgAcc = inBin.filter((i) => (yTrue[i] ?? 0) === 1).length / inBin.length;
+    const avgConf =
+      inBin.reduce((s, i) => s + (yProba[i] ?? 0), 0) / inBin.length;
+    const avgAcc =
+      inBin.filter((i) => (yTrue[i] ?? 0) === 1).length / inBin.length;
     ece += (inBin.length / n) * Math.abs(avgConf - avgAcc);
   }
   return ece;
@@ -153,8 +169,10 @@ export function maximumCalibrationError(
       if (p >= lo && p < hi) inBin.push(i);
     }
     if (inBin.length === 0) continue;
-    const avgConf = inBin.reduce((s, i) => s + (yProba[i] ?? 0), 0) / inBin.length;
-    const avgAcc = inBin.filter((i) => (yTrue[i] ?? 0) === 1).length / inBin.length;
+    const avgConf =
+      inBin.reduce((s, i) => s + (yProba[i] ?? 0), 0) / inBin.length;
+    const avgAcc =
+      inBin.filter((i) => (yTrue[i] ?? 0) === 1).length / inBin.length;
     const err = Math.abs(avgConf - avgAcc);
     if (err > mce) mce = err;
   }

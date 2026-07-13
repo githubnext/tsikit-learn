@@ -16,15 +16,17 @@ export class Interval {
     if (typeof value !== "number" || Number.isNaN(value)) return false;
     if (this.type === "integer" && !Number.isInteger(value)) return false;
     if (this.left !== null) {
-      const leftOk = this.closed === "left" || this.closed === "both"
-        ? value >= this.left
-        : value > this.left;
+      const leftOk =
+        this.closed === "left" || this.closed === "both"
+          ? value >= this.left
+          : value > this.left;
       if (!leftOk) return false;
     }
     if (this.right !== null) {
-      const rightOk = this.closed === "right" || this.closed === "both"
-        ? value <= this.right
-        : value < this.right;
+      const rightOk =
+        this.closed === "right" || this.closed === "both"
+          ? value <= this.right
+          : value < this.right;
       if (!rightOk) return false;
     }
     return true;
@@ -48,7 +50,9 @@ export class StrOptions {
   }
 
   toString(): string {
-    return `{${Array.from(this.options).map(s => `'${s}'`).join(", ")}}`;
+    return `{${Array.from(this.options)
+      .map((s) => `'${s}'`)
+      .join(", ")}}`;
   }
 }
 
@@ -61,7 +65,9 @@ export class Options {
   }
 
   toString(): string {
-    return `{${Array.from(this.options).map(v => JSON.stringify(v)).join(", ")}}`;
+    return `{${Array.from(this.options)
+      .map((v) => JSON.stringify(v))
+      .join(", ")}}`;
   }
 }
 
@@ -79,10 +85,12 @@ export class Callable {
 /** Constraint requiring value to be an array/typed array */
 export class ArrayLike {
   isValid(value: unknown): boolean {
-    return Array.isArray(value)
-      || value instanceof Float64Array
-      || value instanceof Int32Array
-      || value instanceof Float32Array;
+    return (
+      Array.isArray(value) ||
+      value instanceof Float64Array ||
+      value instanceof Int32Array ||
+      value instanceof Float32Array
+    );
   }
 
   toString(): string {
@@ -104,10 +112,10 @@ export class InvalidParameterError extends Error {
     public readonly constraints: Constraint[],
     estimatorName?: string,
   ) {
-    const constraintStr = constraints.map(c => c.toString()).join(" or ");
+    const constraintStr = constraints.map((c) => c.toString()).join(" or ");
     const prefix = estimatorName ? `${estimatorName}: ` : "";
     super(
-      `${prefix}Parameter '${paramName}' must be ${constraintStr}; got ${JSON.stringify(value)} instead.`
+      `${prefix}Parameter '${paramName}' must be ${constraintStr}; got ${JSON.stringify(value)} instead.`,
     );
     this.name = "InvalidParameterError";
   }
@@ -125,20 +133,33 @@ export function validateParams(
   for (const [name, constraintList] of Object.entries(constraints)) {
     if (!(name in params)) continue;
     const value = params[name];
-    const valid = constraintList.some(c => c.isValid(value));
+    const valid = constraintList.some((c) => c.isValid(value));
     if (!valid) {
-      throw new InvalidParameterError(name, value, constraintList, estimatorName);
+      throw new InvalidParameterError(
+        name,
+        value,
+        constraintList,
+        estimatorName,
+      );
     }
   }
 }
 
 /** Convenience factory for a real-valued closed interval */
-export function realInterval(left: number | null, right: number | null, closed: "left" | "right" | "both" | "neither" = "both"): Interval {
+export function realInterval(
+  left: number | null,
+  right: number | null,
+  closed: "left" | "right" | "both" | "neither" = "both",
+): Interval {
   return new Interval("numeric", left, right, closed);
 }
 
 /** Convenience factory for an integer interval */
-export function intInterval(left: number | null, right: number | null, closed: "left" | "right" | "both" | "neither" = "both"): Interval {
+export function intInterval(
+  left: number | null,
+  right: number | null,
+  closed: "left" | "right" | "both" | "neither" = "both",
+): Interval {
   return new Interval("integer", left, right, closed);
 }
 

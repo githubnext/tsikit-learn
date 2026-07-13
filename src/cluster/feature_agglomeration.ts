@@ -50,7 +50,9 @@ function agglomerateCols(
     let minDist = Number.POSITIVE_INFINITY;
     let mergeA = -1;
     let mergeB = -1;
-    const activeIds = [...new Set(Array.from(assignments))].sort((a, b) => a - b);
+    const activeIds = [...new Set(Array.from(assignments))].sort(
+      (a, b) => a - b,
+    );
     for (let ai = 0; ai < activeIds.length; ai++) {
       for (let bi = ai + 1; bi < activeIds.length; bi++) {
         const ca = activeIds[ai] ?? 0;
@@ -131,15 +133,19 @@ export class FeatureAgglomeration extends BaseEstimator {
       const out = new Float64Array(k);
       for (let c = 0; c < k; c++) {
         const vals = groups[c] ?? [];
-        if (vals.length === 0) { out[c] = 0; continue; }
+        if (vals.length === 0) {
+          out[c] = 0;
+          continue;
+        }
         if (this.poolingFunc === "mean") {
           out[c] = vals.reduce((a, b) => a + b, 0) / vals.length;
         } else if (this.poolingFunc === "median") {
           const s = [...vals].sort((a, b) => a - b);
           const m = Math.floor(s.length / 2);
-          out[c] = s.length % 2 === 0
-            ? ((s[m - 1] ?? 0) + (s[m] ?? 0)) / 2
-            : (s[m] ?? 0);
+          out[c] =
+            s.length % 2 === 0
+              ? ((s[m - 1] ?? 0) + (s[m] ?? 0)) / 2
+              : (s[m] ?? 0);
         } else if (this.poolingFunc === "max") {
           out[c] = Math.max(...vals);
         } else {

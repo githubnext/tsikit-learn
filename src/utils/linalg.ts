@@ -8,8 +8,14 @@ export function qrDecomposition(A: Float64Array[]): {
 } {
   const m = A.length;
   const n = A[0]?.length ?? 0;
-  const Q: Float64Array[] = Array.from({ length: m }, () => new Float64Array(n));
-  const R: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+  const Q: Float64Array[] = Array.from(
+    { length: m },
+    () => new Float64Array(n),
+  );
+  const R: Float64Array[] = Array.from(
+    { length: n },
+    () => new Float64Array(n),
+  );
 
   // Gram-Schmidt
   const cols: Float64Array[] = Array.from({ length: n }, (_, j) => {
@@ -20,7 +26,7 @@ export function qrDecomposition(A: Float64Array[]): {
 
   const qCols: Float64Array[] = [];
   for (let j = 0; j < n; j++) {
-    let v = Float64Array.from(cols[j] ?? new Float64Array(m));
+    const v = Float64Array.from(cols[j] ?? new Float64Array(m));
     for (let k = 0; k < j; k++) {
       const qk = qCols[k] ?? new Float64Array(m);
       const r = dot(qk, cols[j] ?? new Float64Array(m));
@@ -44,7 +50,10 @@ function dot(a: Float64Array, b: Float64Array): number {
   return s;
 }
 
-export function solveLinearSystem(A: Float64Array[], b: Float64Array): Float64Array {
+export function solveLinearSystem(
+  A: Float64Array[],
+  b: Float64Array,
+): Float64Array {
   const n = A.length;
   // Gaussian elimination with partial pivoting
   const aug: Float64Array[] = A.map((row, i) => {
@@ -59,7 +68,10 @@ export function solveLinearSystem(A: Float64Array[], b: Float64Array): Float64Ar
     let maxVal = Math.abs(aug[col]![col] ?? 0);
     for (let row = col + 1; row < n; row++) {
       const v = Math.abs(aug[row]![col] ?? 0);
-      if (v > maxVal) { maxVal = v; maxRow = row; }
+      if (v > maxVal) {
+        maxVal = v;
+        maxRow = row;
+      }
     }
     const tmp = aug[col]!;
     aug[col] = aug[maxRow]!;
@@ -88,7 +100,10 @@ export function solveLinearSystem(A: Float64Array[], b: Float64Array): Float64Ar
 
 export function choleskyDecompositionExt(A: Float64Array[]): Float64Array[] {
   const n = A.length;
-  const L: Float64Array[] = Array.from({ length: n }, () => new Float64Array(n));
+  const L: Float64Array[] = Array.from(
+    { length: n },
+    () => new Float64Array(n),
+  );
   for (let i = 0; i < n; i++) {
     for (let j = 0; j <= i; j++) {
       let sum = A[i]![j] ?? 0;
@@ -119,14 +134,17 @@ export function matrixExp(A: Float64Array[], terms = 20): Float64Array[] {
         let s = 0;
         for (let k = 0; k < n; k++) s += (X[i]![k] ?? 0) * (Y[k]![j] ?? 0);
         return s;
-      })
+      }),
     );
 
   const matScale = (X: Float64Array[], s: number): Float64Array[] =>
     X.map((row) => row.map((v) => v * s) as unknown as Float64Array);
 
   const matAdd = (X: Float64Array[], Y: Float64Array[]): Float64Array[] =>
-    X.map((row, i) => row.map((v, j) => v + (Y[i]![j] ?? 0)) as unknown as Float64Array);
+    X.map(
+      (row, i) =>
+        row.map((v, j) => v + (Y[i]![j] ?? 0)) as unknown as Float64Array,
+    );
 
   let result = identity();
   let term = identity();
@@ -142,20 +160,24 @@ export function eigenDecomposition2x2(A: Float64Array[]): {
   eigenvectors: Float64Array[];
 } {
   if (A.length !== 2) throw new Error("Only 2x2 supported");
-  const a = A[0]![0] ?? 0, b = A[0]![1] ?? 0;
-  const c = A[1]![0] ?? 0, d = A[1]![1] ?? 0;
+  const a = A[0]![0] ?? 0;
+  const b = A[0]![1] ?? 0;
+  const c = A[1]![0] ?? 0;
+  const d = A[1]![1] ?? 0;
   const trace = a + d;
   const det = a * d - b * c;
   const disc = Math.sqrt(Math.max(0, (trace / 2) ** 2 - det));
   const l1 = trace / 2 + disc;
   const l2 = trace / 2 - disc;
   const eigenvalues = new Float64Array([l1, l2]);
-  const v1 = Math.abs(b) > 1e-10
-    ? new Float64Array([b, l1 - a])
-    : new Float64Array([1, 0]);
-  const v2 = Math.abs(b) > 1e-10
-    ? new Float64Array([b, l2 - a])
-    : new Float64Array([0, 1]);
+  const v1 =
+    Math.abs(b) > 1e-10
+      ? new Float64Array([b, l1 - a])
+      : new Float64Array([1, 0]);
+  const v2 =
+    Math.abs(b) > 1e-10
+      ? new Float64Array([b, l2 - a])
+      : new Float64Array([0, 1]);
   const n1 = Math.sqrt((v1[0] ?? 0) ** 2 + (v1[1] ?? 0) ** 2) || 1;
   const n2 = Math.sqrt((v2[0] ?? 0) ** 2 + (v2[1] ?? 0) ** 2) || 1;
   return {

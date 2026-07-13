@@ -43,7 +43,10 @@ export class RobustScaler {
     this.scale_ = new Float64Array(p);
 
     for (let j = 0; j < p; j++) {
-      const col = Array.from({ length: n }, (_, i) => (X[i] as Float64Array)[j] ?? 0).sort((a, b) => a - b);
+      const col = Array.from(
+        { length: n },
+        (_, i) => (X[i] as Float64Array)[j] ?? 0,
+      ).sort((a, b) => a - b);
       this.center_[j] = this._percentile(col, 50);
       const iqr = this._percentile(col, qHigh) - this._percentile(col, qLow);
       this.scale_[j] = iqr === 0 ? 1 : iqr;
@@ -52,8 +55,9 @@ export class RobustScaler {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.center_ || !this.scale_) throw new NotFittedError("RobustScaler is not fitted.");
-    return X.map(xi => {
+    if (!this.center_ || !this.scale_)
+      throw new NotFittedError("RobustScaler is not fitted.");
+    return X.map((xi) => {
       const out = new Float64Array(xi.length);
       for (let j = 0; j < xi.length; j++) {
         let v = xi[j] ?? 0;
@@ -70,8 +74,9 @@ export class RobustScaler {
   }
 
   inverseTransform(X: Float64Array[]): Float64Array[] {
-    if (!this.center_ || !this.scale_) throw new NotFittedError("RobustScaler is not fitted.");
-    return X.map(xi => {
+    if (!this.center_ || !this.scale_)
+      throw new NotFittedError("RobustScaler is not fitted.");
+    return X.map((xi) => {
       const out = new Float64Array(xi.length);
       for (let j = 0; j < xi.length; j++) {
         let v = xi[j] ?? 0;
@@ -103,8 +108,11 @@ export class MaxAbsScaler {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.maxAbsVals_) throw new NotFittedError("MaxAbsScaler is not fitted.");
-    return X.map(xi => Float64Array.from(xi.map((v, j) => v / (this.maxAbsVals_![j] ?? 1))));
+    if (!this.maxAbsVals_)
+      throw new NotFittedError("MaxAbsScaler is not fitted.");
+    return X.map((xi) =>
+      Float64Array.from(xi.map((v, j) => v / (this.maxAbsVals_![j] ?? 1))),
+    );
   }
 
   fitTransform(X: Float64Array[]): Float64Array[] {
@@ -112,7 +120,10 @@ export class MaxAbsScaler {
   }
 
   inverseTransform(X: Float64Array[]): Float64Array[] {
-    if (!this.maxAbsVals_) throw new NotFittedError("MaxAbsScaler is not fitted.");
-    return X.map(xi => Float64Array.from(xi.map((v, j) => v * (this.maxAbsVals_![j] ?? 1))));
+    if (!this.maxAbsVals_)
+      throw new NotFittedError("MaxAbsScaler is not fitted.");
+    return X.map((xi) =>
+      Float64Array.from(xi.map((v, j) => v * (this.maxAbsVals_![j] ?? 1))),
+    );
   }
 }

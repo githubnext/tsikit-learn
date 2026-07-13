@@ -114,9 +114,7 @@ export class PCA {
   explainedVarianceRatio_: Float64Array | null = null;
   mean_: Float64Array | null = null;
 
-  constructor(
-    options: { nComponents?: number; whiten?: boolean } = {},
-  ) {
+  constructor(options: { nComponents?: number; whiten?: boolean } = {}) {
     this.nComponents = options.nComponents ?? 2;
     this.whiten = options.whiten ?? false;
   }
@@ -132,7 +130,10 @@ export class PCA {
       return row;
     });
 
-    const { components, explainedVariance } = randomizedSVD(centered, this.nComponents);
+    const { components, explainedVariance } = randomizedSVD(
+      centered,
+      this.nComponents,
+    );
     this.components_ = components;
     this.explainedVariance_ = explainedVariance;
     const totalVar = Array.from(explainedVariance).reduce((a, b) => a + b, 0);
@@ -152,13 +153,16 @@ export class PCA {
     return X.map((xi) => {
       const result = new Float64Array(k);
       for (let c = 0; c < k; c++) {
-        const comp = (this.components_ as Float64Array[])[c] ?? new Float64Array(p);
+        const comp =
+          (this.components_ as Float64Array[])[c] ?? new Float64Array(p);
         let dot = 0;
         for (let j = 0; j < p; j++) {
-          dot += ((xi[j] ?? 0) - ((this.mean_ as Float64Array)[j] ?? 0)) * (comp[j] ?? 0);
+          dot +=
+            ((xi[j] ?? 0) - ((this.mean_ as Float64Array)[j] ?? 0)) *
+            (comp[j] ?? 0);
         }
         if (this.whiten) {
-          const ev = ((this.explainedVariance_ as Float64Array)[c] ?? 1);
+          const ev = (this.explainedVariance_ as Float64Array)[c] ?? 1;
           result[c] = ev > 0 ? dot / Math.sqrt(ev) : dot;
         } else {
           result[c] = dot;
@@ -180,9 +184,11 @@ export class PCA {
     return X.map((xi) => {
       const result = new Float64Array(p);
       for (let c = 0; c < k; c++) {
-        const comp = (this.components_ as Float64Array[])[c] ?? new Float64Array(p);
+        const comp =
+          (this.components_ as Float64Array[])[c] ?? new Float64Array(p);
         const scale = this.whiten
-          ? (xi[c] ?? 0) * Math.sqrt((this.explainedVariance_ as Float64Array)[c] ?? 1)
+          ? (xi[c] ?? 0) *
+            Math.sqrt((this.explainedVariance_ as Float64Array)[c] ?? 1)
           : (xi[c] ?? 0);
         for (let j = 0; j < p; j++) {
           result[j] = (result[j] ?? 0) + scale * (comp[j] ?? 0);
@@ -204,15 +210,17 @@ export class TruncatedSVD {
   explainedVariance_: Float64Array | null = null;
   explainedVarianceRatio_: Float64Array | null = null;
 
-  constructor(
-    options: { nComponents?: number; nIter?: number } = {},
-  ) {
+  constructor(options: { nComponents?: number; nIter?: number } = {}) {
     this.nComponents = options.nComponents ?? 2;
     this.nIter = options.nIter ?? 5;
   }
 
   fit(X: Float64Array[]): this {
-    const { components, explainedVariance } = randomizedSVD(X, this.nComponents, this.nIter);
+    const { components, explainedVariance } = randomizedSVD(
+      X,
+      this.nComponents,
+      this.nIter,
+    );
     this.components_ = components;
     this.explainedVariance_ = explainedVariance;
     const totalVar = Array.from(explainedVariance).reduce((a, b) => a + b, 0);
@@ -229,7 +237,8 @@ export class TruncatedSVD {
     return X.map((xi) => {
       const result = new Float64Array(k);
       for (let c = 0; c < k; c++) {
-        const comp = (this.components_ as Float64Array[])[c] ?? new Float64Array(p);
+        const comp =
+          (this.components_ as Float64Array[])[c] ?? new Float64Array(p);
         let dot = 0;
         for (let j = 0; j < p; j++) dot += (xi[j] ?? 0) * (comp[j] ?? 0);
         result[c] = dot;

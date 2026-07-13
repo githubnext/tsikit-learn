@@ -179,7 +179,7 @@ export class TweedieRegressor {
   /** Variance function V(mu) for Tweedie: mu^power */
   private _variance(mu: number): number {
     if (this.power === 0) return 1;
-    return Math.pow(Math.max(mu, 1e-8), this.power);
+    return Math.max(mu, 1e-8) ** this.power;
   }
 
   fit(X: Float64Array[], y: Float64Array): this {
@@ -204,7 +204,7 @@ export class TweedieRegressor {
         const mu = this._mu(eta);
         const V = this._variance(mu);
         const dmu = this._useLog() ? mu : 1;
-        weights[i] = dmu * dmu / Math.max(V, 1e-10);
+        weights[i] = (dmu * dmu) / Math.max(V, 1e-10);
         z[i] = eta + ((y[i] ?? 0) - mu) / Math.max(dmu, 1e-10);
       }
 

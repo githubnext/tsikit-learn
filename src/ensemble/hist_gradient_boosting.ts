@@ -38,12 +38,13 @@ function buildTree(
   maxDepth: number,
   l2Reg: number,
   indices: Int32Array,
-  depth: number
+  depth: number,
 ): HistNode {
   const n = indices.length;
   const p = X[0]?.length ?? 0;
 
-  let sumG = 0, sumH = 0;
+  let sumG = 0;
+  let sumH = 0;
   for (let i = 0; i < n; i++) {
     const idx = indices[i]!;
     sumG += gradients[idx] ?? 0;
@@ -52,7 +53,14 @@ function buildTree(
   const leafValue = -sumG / (sumH + l2Reg);
 
   if (n < 2 * minSamplesLeaf || depth >= maxDepth || maxLeafNodes <= 1) {
-    return { featureIndex: 0, threshold: 0, left: null, right: null, value: leafValue, isLeaf: true };
+    return {
+      featureIndex: 0,
+      threshold: 0,
+      left: null,
+      right: null,
+      value: leafValue,
+      isLeaf: true,
+    };
   }
 
   let bestGain = 0;
@@ -65,7 +73,8 @@ function buildTree(
     const vals = Array.from(indices).map((i) => ({ v: X[i]![j] ?? 0, i }));
     vals.sort((a, b) => a.v - b.v);
 
-    let leftG = 0, leftH = 0;
+    let leftG = 0;
+    let leftH = 0;
     for (let t = 0; t < n - 1; t++) {
       const idx = vals[t]!.i;
       leftG += gradients[idx] ?? 0;
@@ -75,9 +84,12 @@ function buildTree(
 
       if (leftH + l2Reg < 1e-6 || rightH + l2Reg < 1e-6) continue;
       if (t + 1 < minSamplesLeaf || n - t - 1 < minSamplesLeaf) continue;
-      if ((vals[t]!.v) === (vals[t + 1]!.v)) continue;
+      if (vals[t]!.v === vals[t + 1]!.v) continue;
 
-      const gain = leftG * leftG / (leftH + l2Reg) + rightG * rightG / (rightH + l2Reg) - sumG * sumG / (sumH + l2Reg);
+      const gain =
+        (leftG * leftG) / (leftH + l2Reg) +
+        (rightG * rightG) / (rightH + l2Reg) -
+        (sumG * sumG) / (sumH + l2Reg);
       if (gain > bestGain) {
         bestGain = gain;
         bestFeature = j;
@@ -91,14 +103,41 @@ function buildTree(
   }
 
   if (bestFeature < 0 || !bestLeftIdx || !bestRightIdx) {
-    return { featureIndex: 0, threshold: 0, left: null, right: null, value: leafValue, isLeaf: true };
+    return {
+      featureIndex: 0,
+      threshold: 0,
+      left: null,
+      right: null,
+      value: leafValue,
+      isLeaf: true,
+    };
   }
 
   return {
     featureIndex: bestFeature,
     threshold: bestThreshold,
-    left: buildTree(X, gradients, hessians, maxLeafNodes - 1, minSamplesLeaf, maxDepth, l2Reg, bestLeftIdx, depth + 1),
-    right: buildTree(X, gradients, hessians, maxLeafNodes - 1, minSamplesLeaf, maxDepth, l2Reg, bestRightIdx, depth + 1),
+    left: buildTree(
+      X,
+      gradients,
+      hessians,
+      maxLeafNodes - 1,
+      minSamplesLeaf,
+      maxDepth,
+      l2Reg,
+      bestLeftIdx,
+      depth + 1,
+    ),
+    right: buildTree(
+      X,
+      gradients,
+      hessians,
+      maxLeafNodes - 1,
+      minSamplesLeaf,
+      maxDepth,
+      l2Reg,
+      bestRightIdx,
+      depth + 1,
+    ),
     value: leafValue,
     isLeaf: false,
   };
@@ -107,7 +146,8 @@ function buildTree(
 function predictTree(node: HistNode, x: Float64Array): number {
   if (node.isLeaf) return node.value;
   const v = x[node.featureIndex] ?? 0;
-  if (v <= node.threshold) return node.left ? predictTree(node.left, x) : node.value;
+  if (v <= node.threshold)
+    return node.left ? predictTree(node.left, x) : node.value;
   return node.right ? predictTree(node.right, x) : node.value;
 }
 
@@ -154,21 +194,34 @@ export class HistGradientBoostingRegressor {
       for (let i = 0; i < n; i++) gradients[i]! = (F[i] ?? 0) - (y[i] ?? 0);
 
       const indices = new Int32Array(n).map((_, i) => i);
-      const tree = buildTree(X, gradients, hessians, this.maxLeafNodes, this.minSamplesLeaf, this.maxDepth, this.l2Regularization, indices, 0);
+      const tree = buildTree(
+        X,
+        gradients,
+        hessians,
+        this.maxLeafNodes,
+        this.minSamplesLeaf,
+        this.maxDepth,
+        this.l2Regularization,
+        indices,
+        0,
+      );
       this._trees.push(tree);
 
-      for (let i = 0; i < n; i++) F[i]! += this.learningRate * predictTree(tree, X[i]!);
+      for (let i = 0; i < n; i++)
+        F[i]! += this.learningRate * predictTree(tree, X[i]!);
       this.nIter_ = iter + 1;
     }
     return this;
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (this._trees.length === 0) throw new NotFittedError("HistGradientBoostingRegressor is not fitted");
+    if (this._trees.length === 0)
+      throw new NotFittedError("HistGradientBoostingRegressor is not fitted");
     const n = X.length;
     const out = new Float64Array(n).fill(this._baseScore);
     for (const tree of this._trees) {
-      for (let i = 0; i < n; i++) out[i]! += this.learningRate * predictTree(tree, X[i]!);
+      for (let i = 0; i < n; i++)
+        out[i]! += this.learningRate * predictTree(tree, X[i]!);
     }
     return out;
   }
@@ -176,7 +229,9 @@ export class HistGradientBoostingRegressor {
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
     const n = y.length;
-    let ssTot = 0, ssRes = 0, yMean = 0;
+    let ssTot = 0;
+    let ssRes = 0;
+    let yMean = 0;
     for (let i = 0; i < n; i++) yMean += y[i] ?? 0;
     yMean /= n;
     for (let i = 0; i < n; i++) {
@@ -222,7 +277,8 @@ export class HistGradientBoostingClassifier {
 
     // Binary classification: encode as {-1, 1}, use log-loss gradients
     const yBin = new Float64Array(n);
-    for (let i = 0; i < n; i++) yBin[i]! = (y[i] ?? 0) === (classSet[1] ?? 1) ? 1 : 0;
+    for (let i = 0; i < n; i++)
+      yBin[i]! = (y[i] ?? 0) === (classSet[1] ?? 1) ? 1 : 0;
 
     // Base score: log-odds of class 1
     let p1 = 0;
@@ -246,21 +302,34 @@ export class HistGradientBoostingClassifier {
       }
 
       const indices = new Int32Array(n).map((_, i) => i);
-      const tree = buildTree(X, gradients, hessians, this.maxLeafNodes, this.minSamplesLeaf, this.maxDepth, this.l2Regularization, indices, 0);
+      const tree = buildTree(
+        X,
+        gradients,
+        hessians,
+        this.maxLeafNodes,
+        this.minSamplesLeaf,
+        this.maxDepth,
+        this.l2Regularization,
+        indices,
+        0,
+      );
       this._trees.push(tree);
 
-      for (let i = 0; i < n; i++) F[i]! += this.learningRate * predictTree(tree, X[i]!);
+      for (let i = 0; i < n; i++)
+        F[i]! += this.learningRate * predictTree(tree, X[i]!);
       this.nIter_ = iter + 1;
     }
     return this;
   }
 
   private _rawScore(X: Float64Array[]): Float64Array {
-    if (this._trees.length === 0) throw new NotFittedError("HistGradientBoostingClassifier is not fitted");
+    if (this._trees.length === 0)
+      throw new NotFittedError("HistGradientBoostingClassifier is not fitted");
     const n = X.length;
     const out = new Float64Array(n).fill(this._baseScore);
     for (const tree of this._trees) {
-      for (let i = 0; i < n; i++) out[i]! += this.learningRate * predictTree(tree, X[i]!);
+      for (let i = 0; i < n; i++)
+        out[i]! += this.learningRate * predictTree(tree, X[i]!);
     }
     return out;
   }
@@ -274,7 +343,8 @@ export class HistGradientBoostingClassifier {
   }
 
   predict(X: Float64Array[]): Int32Array {
-    if (!this._classes) throw new NotFittedError("HistGradientBoostingClassifier is not fitted");
+    if (!this._classes)
+      throw new NotFittedError("HistGradientBoostingClassifier is not fitted");
     const raw = this._rawScore(X);
     const out = new Int32Array(raw.length);
     const c0 = this._classes[0] ?? 0;
@@ -286,12 +356,14 @@ export class HistGradientBoostingClassifier {
   score(X: Float64Array[], y: Int32Array): number {
     const pred = this.predict(X);
     let correct = 0;
-    for (let i = 0; i < y.length; i++) if ((pred[i] ?? 0) === (y[i] ?? 0)) correct++;
+    for (let i = 0; i < y.length; i++)
+      if ((pred[i] ?? 0) === (y[i] ?? 0)) correct++;
     return correct / y.length;
   }
 
   get classes_(): Int32Array {
-    if (!this._classes) throw new NotFittedError("HistGradientBoostingClassifier is not fitted");
+    if (!this._classes)
+      throw new NotFittedError("HistGradientBoostingClassifier is not fitted");
     return this._classes;
   }
 }

@@ -14,7 +14,10 @@ export function laplacianKernel(
   const Ymat = Y ?? X;
   const n = X.length;
   const m = Ymat.length;
-  const K: Float64Array[] = Array.from({ length: n }, () => new Float64Array(m));
+  const K: Float64Array[] = Array.from(
+    { length: n },
+    () => new Float64Array(m),
+  );
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < m; j++) {
       let dist = 0;
@@ -41,7 +44,10 @@ export function sigmoidKernel(
   const Ymat = Y ?? X;
   const n = X.length;
   const m = Ymat.length;
-  const K: Float64Array[] = Array.from({ length: n }, () => new Float64Array(m));
+  const K: Float64Array[] = Array.from(
+    { length: n },
+    () => new Float64Array(m),
+  );
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < m; j++) {
       let dot = 0;
@@ -67,7 +73,10 @@ export function additiveChi2Kernel(
   const Ymat = Y ?? X;
   const n = X.length;
   const m = Ymat.length;
-  const K: Float64Array[] = Array.from({ length: n }, () => new Float64Array(m));
+  const K: Float64Array[] = Array.from(
+    { length: n },
+    () => new Float64Array(m),
+  );
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < m; j++) {
       let k_val = 0;
@@ -77,7 +86,7 @@ export function additiveChi2Kernel(
         const xk = xi[k] ?? 0;
         const yk = yj[k] ?? 0;
         const denom = xk + yk;
-        if (denom > 0) k_val += 2 * xk * yk / denom;
+        if (denom > 0) k_val += (2 * xk * yk) / denom;
       }
       K[i]![j] = k_val;
     }
@@ -96,7 +105,10 @@ export function chi2Kernel(
   const Ymat = Y ?? X;
   const n = X.length;
   const m = Ymat.length;
-  const K: Float64Array[] = Array.from({ length: n }, () => new Float64Array(m));
+  const K: Float64Array[] = Array.from(
+    { length: n },
+    () => new Float64Array(m),
+  );
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < m; j++) {
       let chi2 = 0;
@@ -173,9 +185,12 @@ function dot(a: Float64Array, b: Float64Array): number {
   return s;
 }
 
-function linearKernelLocal(X: Float64Array[], Y?: Float64Array[]): Float64Array[] {
+function linearKernelLocal(
+  X: Float64Array[],
+  Y?: Float64Array[],
+): Float64Array[] {
   const Ymat = Y ?? X;
-  return X.map(xi => {
+  return X.map((xi) => {
     const row = new Float64Array(Ymat.length);
     for (let j = 0; j < Ymat.length; j++) row[j] = dot(xi, Ymat[j]!);
     return row;
@@ -190,7 +205,7 @@ function polynomialKernelLocal(
   coef0 = 1.0,
 ): Float64Array[] {
   const Ymat = Y ?? X;
-  return X.map(xi => {
+  return X.map((xi) => {
     const row = new Float64Array(Ymat.length);
     for (let j = 0; j < Ymat.length; j++) {
       row[j] = (gamma * dot(xi, Ymat[j]!) + coef0) ** degree;
@@ -205,12 +220,13 @@ function rbfKernelLocal(
   gamma = 1.0,
 ): Float64Array[] {
   const Ymat = Y ?? X;
-  return X.map(xi => {
+  return X.map((xi) => {
     const row = new Float64Array(Ymat.length);
     for (let j = 0; j < Ymat.length; j++) {
       let d2 = 0;
       const yj = Ymat[j]!;
-      for (let k = 0; k < xi.length; k++) d2 += ((xi[k] ?? 0) - (yj[k] ?? 0)) ** 2;
+      for (let k = 0; k < xi.length; k++)
+        d2 += ((xi[k] ?? 0) - (yj[k] ?? 0)) ** 2;
       row[j] = Math.exp(-gamma * d2);
     }
     return row;
@@ -222,8 +238,8 @@ function cosineKernelLocal(
   Y?: Float64Array[],
 ): Float64Array[] {
   const Ymat = Y ?? X;
-  const normX = X.map(xi => Math.sqrt(dot(xi, xi)) || 1e-12);
-  const normY = Ymat.map(yi => Math.sqrt(dot(yi, yi)) || 1e-12);
+  const normX = X.map((xi) => Math.sqrt(dot(xi, xi)) || 1e-12);
+  const normY = Ymat.map((yi) => Math.sqrt(dot(yi, yi)) || 1e-12);
   return X.map((xi, i) => {
     const row = new Float64Array(Ymat.length);
     for (let j = 0; j < Ymat.length; j++) {
@@ -241,12 +257,13 @@ export function pairwiseEuclideanDistances(
   Y?: Float64Array[],
 ): Float64Array[] {
   const Ymat = Y ?? X;
-  return X.map(xi => {
+  return X.map((xi) => {
     const row = new Float64Array(Ymat.length);
     for (let j = 0; j < Ymat.length; j++) {
       let d2 = 0;
       const yj = Ymat[j]!;
-      for (let k = 0; k < xi.length; k++) d2 += ((xi[k] ?? 0) - (yj[k] ?? 0)) ** 2;
+      for (let k = 0; k < xi.length; k++)
+        d2 += ((xi[k] ?? 0) - (yj[k] ?? 0)) ** 2;
       row[j] = Math.sqrt(d2);
     }
     return row;
@@ -262,16 +279,19 @@ export function haversineKernel(
   Y?: Float64Array[],
 ): Float64Array[] {
   const Ymat = Y ?? X;
-  return X.map(xi => {
+  return X.map((xi) => {
     const row = new Float64Array(Ymat.length);
     for (let j = 0; j < Ymat.length; j++) {
       const yj = Ymat[j]!;
-      const lat1 = xi[0] ?? 0, lon1 = xi[1] ?? 0;
-      const lat2 = yj[0] ?? 0, lon2 = yj[1] ?? 0;
+      const lat1 = xi[0] ?? 0;
+      const lon1 = xi[1] ?? 0;
+      const lat2 = yj[0] ?? 0;
+      const lon2 = yj[1] ?? 0;
       const dlat = lat2 - lat1;
       const dlon = lon2 - lon1;
-      const a = Math.sin(dlat / 2) ** 2
-        + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+      const a =
+        Math.sin(dlat / 2) ** 2 +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
       row[j] = 2 * Math.asin(Math.sqrt(a));
     }
     return row;

@@ -29,7 +29,8 @@ export class Binarizer {
     const p = X[0]?.length ?? 0;
     return X.map((xi) => {
       const row = new Float64Array(p);
-      for (let j = 0; j < p; j++) row[j]! = (xi[j] ?? 0) > this.threshold ? 1 : 0;
+      for (let j = 0; j < p; j++)
+        row[j]! = (xi[j] ?? 0) > this.threshold ? 1 : 0;
       return row;
     });
   }
@@ -121,7 +122,9 @@ export class QuantileTransformer {
 
     // Compute quantiles for each feature
     this.quantiles_ = Array.from({ length: p }, (_, j) => {
-      const vals = Array.from({ length: n }, (_, i) => X[i]![j] ?? 0).sort((a, b) => a - b);
+      const vals = Array.from({ length: n }, (_, i) => X[i]![j] ?? 0).sort(
+        (a, b) => a - b,
+      );
       const qs = new Float64Array(this.nQuantiles_);
       for (let q = 0; q < this.nQuantiles_; q++) {
         const pos = (q / (this.nQuantiles_ - 1)) * (vals.length - 1);
@@ -135,13 +138,15 @@ export class QuantileTransformer {
 
     // Reference quantiles (uniform [0,1] grid)
     this.references_ = new Float64Array(this.nQuantiles_);
-    for (let q = 0; q < this.nQuantiles_; q++) this.references_[q]! = q / (this.nQuantiles_ - 1);
+    for (let q = 0; q < this.nQuantiles_; q++)
+      this.references_[q]! = q / (this.nQuantiles_ - 1);
 
     return this;
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.quantiles_ || !this.references_) throw new NotFittedError("QuantileTransformer is not fitted");
+    if (!this.quantiles_ || !this.references_)
+      throw new NotFittedError("QuantileTransformer is not fitted");
     const p = this.nFeatureIn_;
     const nQ = this.nQuantiles_;
 
@@ -152,10 +157,12 @@ export class QuantileTransformer {
         const qs = this.quantiles_![j]!;
 
         // Find position via binary search
-        let lo = 0, hi = nQ - 1;
+        let lo = 0;
+        let hi = nQ - 1;
         while (lo < hi) {
           const mid = (lo + hi) >> 1;
-          if ((qs[mid] ?? 0) < v) lo = mid + 1; else hi = mid;
+          if ((qs[mid] ?? 0) < v) lo = mid + 1;
+          else hi = mid;
         }
 
         let quantile: number;
@@ -171,7 +178,7 @@ export class QuantileTransformer {
           if (q1 - q0 < 1e-12) {
             quantile = r0;
           } else {
-            quantile = r0 + (v - q0) / (q1 - q0) * (r1 - r0);
+            quantile = r0 + ((v - q0) / (q1 - q0)) * (r1 - r0);
           }
         }
         quantile = Math.max(0, Math.min(1, quantile));
@@ -195,13 +202,14 @@ export class QuantileTransformer {
     const sign = p < 0.5 ? -1 : 1;
     const q = p < 0.5 ? p : 1 - p;
     const t = Math.sqrt(-2 * Math.log(q));
-    const num = (a[0]! + t * (a[1]! + t * a[2]!));
-    const den = (1 + t * (b[0]! + t * (b[1]! + t * b[2]!)));
+    const num = a[0]! + t * (a[1]! + t * a[2]!);
+    const den = 1 + t * (b[0]! + t * (b[1]! + t * b[2]!));
     return sign * (t - num / den);
   }
 
   inverseTransform(X: Float64Array[]): Float64Array[] {
-    if (!this.quantiles_ || !this.references_) throw new NotFittedError("QuantileTransformer is not fitted");
+    if (!this.quantiles_ || !this.references_)
+      throw new NotFittedError("QuantileTransformer is not fitted");
     const p = this.nFeatureIn_;
     const nQ = this.nQuantiles_;
 
@@ -219,10 +227,12 @@ export class QuantileTransformer {
         const refs = this.references_!;
 
         // Find position in references
-        let lo = 0, hi = nQ - 1;
+        let lo = 0;
+        let hi = nQ - 1;
         while (lo < hi) {
           const mid = (lo + hi) >> 1;
-          if ((refs[mid] ?? 0) < q) lo = mid + 1; else hi = mid;
+          if ((refs[mid] ?? 0) < q) lo = mid + 1;
+          else hi = mid;
         }
 
         if (lo === 0) {
@@ -237,7 +247,7 @@ export class QuantileTransformer {
           if (r1 - r0 < 1e-12) {
             row[j]! = q0;
           } else {
-            row[j]! = q0 + (q - r0) / (r1 - r0) * (q1 - q0);
+            row[j]! = q0 + ((q - r0) / (r1 - r0)) * (q1 - q0);
           }
         }
       }
@@ -246,7 +256,9 @@ export class QuantileTransformer {
   }
 
   private _normCDF(x: number): number {
-    return 0.5 * (1 + Math.sign(x) * Math.sqrt(1 - Math.exp(-2 * x * x / Math.PI)));
+    return (
+      0.5 * (1 + Math.sign(x) * Math.sqrt(1 - Math.exp((-2 * x * x) / Math.PI)))
+    );
   }
 
   fitTransform(X: Float64Array[]): Float64Array[] {

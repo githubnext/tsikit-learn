@@ -3,7 +3,13 @@
  * Mirrors sklearn.utils.metadata_routing.
  */
 
-export type MethodName = "fit" | "predict" | "transform" | "score" | "fit_transform" | "predict_proba";
+export type MethodName =
+  | "fit"
+  | "predict"
+  | "transform"
+  | "score"
+  | "fit_transform"
+  | "predict_proba";
 
 export interface MethodMappingEntry {
   caller: string;
@@ -52,7 +58,11 @@ export class MetadataRouter {
     this.owner = owner;
   }
 
-  addMethodMapping(name: string, estimator: object, methodMapping: MethodMapping): this {
+  addMethodMapping(
+    name: string,
+    estimator: object,
+    methodMapping: MethodMapping,
+  ): this {
     this.routes.set(name, { estimator, methodMapping });
     return this;
   }
@@ -61,7 +71,11 @@ export class MetadataRouter {
     return this.routes.get(name);
   }
 
-  route(name: string, method: string, _kwargs: Record<string, unknown>): Record<string, unknown> {
+  route(
+    name: string,
+    method: string,
+    _kwargs: Record<string, unknown>,
+  ): Record<string, unknown> {
     const entry = this.routes.get(name);
     if (!entry) return {};
     const result: Record<string, unknown> = {};
@@ -89,7 +103,9 @@ export class MetadataRouter {
       }
       if (!found) {
         // In sklearn, unrouted kwargs cause ValueError; here we just warn
-        console.warn(`MetadataRouter: unknown kwarg '${key}' for method '${method}'`);
+        console.warn(
+          `MetadataRouter: unknown kwarg '${key}' for method '${method}'`,
+        );
       }
     }
   }
@@ -111,7 +127,7 @@ export function getRoutingForObject(estimator: object): MetadataRouter {
 export function processRouting(
   obj: { metadataRouter?: MetadataRouter },
   method: string,
-  kwargs: Record<string, unknown>
+  kwargs: Record<string, unknown>,
 ): Record<string, Record<string, unknown>> {
   if (!obj.metadataRouter) return {};
   const result: Record<string, Record<string, unknown>> = {};

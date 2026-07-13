@@ -52,31 +52,38 @@ export class ARDRegression {
     const nSamples = X.length;
     const nFeatures = X[0]?.length ?? 0;
 
-    let xMean = new Float64Array(nFeatures);
+    const xMean = new Float64Array(nFeatures);
     let yMean = 0;
 
     if (this.fitIntercept) {
       for (const row of X) {
-        for (let j = 0; j < nFeatures; j++) xMean[j] = (xMean[j] ?? 0) + (row[j] ?? 0);
+        for (let j = 0; j < nFeatures; j++)
+          xMean[j] = (xMean[j] ?? 0) + (row[j] ?? 0);
       }
       for (let j = 0; j < nFeatures; j++) xMean[j] = (xMean[j] ?? 0) / nSamples;
       for (const v of y) yMean += v;
       yMean /= nSamples;
     }
 
-    const Xc = X.map(row => new Float64Array(row).map((v, j) => v - (xMean[j] ?? 0)));
-    const yc = new Float64Array(y.map(v => v - yMean));
+    const Xc = X.map((row) =>
+      new Float64Array(row).map((v, j) => v - (xMean[j] ?? 0)),
+    );
+    const yc = new Float64Array(y.map((v) => v - yMean));
 
     // Initialize hyperparameters
     let alpha = this.alphaInit;
     const lambda = new Float64Array(nFeatures).fill(this.lambdaInit);
 
     // Compute X^T X (Gram matrix)
-    const XtX: Float64Array[] = Array.from({ length: nFeatures }, () => new Float64Array(nFeatures));
+    const XtX: Float64Array[] = Array.from(
+      { length: nFeatures },
+      () => new Float64Array(nFeatures),
+    );
     for (let i = 0; i < nSamples; i++) {
       for (let j = 0; j < nFeatures; j++) {
         for (let k = 0; k < nFeatures; k++) {
-          XtX[j]![k] = (XtX[j]![k] ?? 0) + (Xc[i]?.[j] ?? 0) * (Xc[i]?.[k] ?? 0);
+          XtX[j]![k] =
+            (XtX[j]![k] ?? 0) + (Xc[i]?.[j] ?? 0) * (Xc[i]?.[k] ?? 0);
         }
       }
     }
@@ -84,7 +91,8 @@ export class ARDRegression {
     // Compute X^T y
     const Xty = new Float64Array(nFeatures);
     for (let i = 0; i < nSamples; i++) {
-      for (let j = 0; j < nFeatures; j++) Xty[j] = (Xty[j] ?? 0) + (Xc[i]?.[j] ?? 0) * (yc[i] ?? 0);
+      for (let j = 0; j < nFeatures; j++)
+        Xty[j] = (Xty[j] ?? 0) + (Xc[i]?.[j] ?? 0) * (yc[i] ?? 0);
     }
 
     let coef = new Float64Array(nFeatures);
@@ -108,7 +116,8 @@ export class ARDRegression {
       // Update alpha (noise precision)
       const residuals = new Float64Array(nSamples).map((_, i) => {
         let pred = 0;
-        for (let j = 0; j < nFeatures; j++) pred += (Xc[i]?.[j] ?? 0) * (coef[j] ?? 0);
+        for (let j = 0; j < nFeatures; j++)
+          pred += (Xc[i]?.[j] ?? 0) * (coef[j] ?? 0);
         return (yc[i] ?? 0) - pred;
       });
       const ssResid = residuals.reduce((s, v) => s + v ** 2, 0);
@@ -122,11 +131,14 @@ export class ARDRegression {
       // Check convergence
       let maxChange = 0;
       for (let j = 0; j < nFeatures; j++) {
-        maxChange = Math.max(maxChange, Math.abs((coef[j] ?? 0) - (prevCoef[j] ?? 0)));
+        maxChange = Math.max(
+          maxChange,
+          Math.abs((coef[j] ?? 0) - (prevCoef[j] ?? 0)),
+        );
       }
 
       this.nIter_ = iter + 1;
-      if (this.computeScore) scores.push(-ssResid * alpha / 2);
+      if (this.computeScore) scores.push((-ssResid * alpha) / 2);
       if (maxChange < this.tol) break;
     }
 
@@ -143,7 +155,8 @@ export class ARDRegression {
 
     if (this.fitIntercept) {
       let intercept = yMean;
-      for (let j = 0; j < nFeatures; j++) intercept -= (coef[j] ?? 0) * (xMean[j] ?? 0);
+      for (let j = 0; j < nFeatures; j++)
+        intercept -= (coef[j] ?? 0) * (xMean[j] ?? 0);
       this.intercept_ = intercept;
     }
 
@@ -152,20 +165,33 @@ export class ARDRegression {
 
   private _solveSystem(A: Float64Array[], b: Float64Array): Float64Array {
     const n = b.length;
-    const mat = A.map((row, i) => { const r = new Float64Array(n + 1); r.set(row); r[n] = b[i] ?? 0; return r; });
+    const mat = A.map((row, i) => {
+      const r = new Float64Array(n + 1);
+      r.set(row);
+      r[n] = b[i] ?? 0;
+      return r;
+    });
 
     for (let col = 0; col < n; col++) {
       let maxVal = Math.abs(mat[col]?.[col] ?? 0);
       let maxRow = col;
       for (let row = col + 1; row < n; row++) {
-        if (Math.abs(mat[row]?.[col] ?? 0) > maxVal) { maxVal = Math.abs(mat[row]?.[col] ?? 0); maxRow = row; }
+        if (Math.abs(mat[row]?.[col] ?? 0) > maxVal) {
+          maxVal = Math.abs(mat[row]?.[col] ?? 0);
+          maxRow = row;
+        }
       }
-      if (maxRow !== col) { const tmp = mat[col]!; mat[col] = mat[maxRow]!; mat[maxRow] = tmp; }
+      if (maxRow !== col) {
+        const tmp = mat[col]!;
+        mat[col] = mat[maxRow]!;
+        mat[maxRow] = tmp;
+      }
 
       const pivot = mat[col]?.[col] ?? 1e-10;
       for (let row = col + 1; row < n; row++) {
         const f = (mat[row]?.[col] ?? 0) / (pivot || 1e-10);
-        for (let j = col; j <= n; j++) mat[row]![j] = (mat[row]![j] ?? 0) - f * (mat[col]![j] ?? 0);
+        for (let j = col; j <= n; j++)
+          mat[row]![j] = (mat[row]![j] ?? 0) - f * (mat[col]![j] ?? 0);
       }
     }
 
@@ -180,17 +206,21 @@ export class ARDRegression {
 
   predict(X: Float64Array[]): Float64Array {
     if (!this.coef_) throw new Error("ARDRegression not fitted");
-    return new Float64Array(X.map(row => {
-      let pred = this.intercept_;
-      for (let j = 0; j < this.coef_!.length; j++) pred += (row[j] ?? 0) * (this.coef_![j] ?? 0);
-      return pred;
-    }));
+    return new Float64Array(
+      X.map((row) => {
+        let pred = this.intercept_;
+        for (let j = 0; j < this.coef_!.length; j++)
+          pred += (row[j] ?? 0) * (this.coef_![j] ?? 0);
+        return pred;
+      }),
+    );
   }
 
   score(X: Float64Array[], y: Float64Array): number {
     const yPred = this.predict(X);
     const yMean = y.reduce((s, v) => s + v, 0) / y.length;
-    let ssRes = 0, ssTot = 0;
+    let ssRes = 0;
+    let ssTot = 0;
     for (let i = 0; i < y.length; i++) {
       ssRes += ((y[i] ?? 0) - (yPred[i] ?? 0)) ** 2;
       ssTot += ((y[i] ?? 0) - yMean) ** 2;

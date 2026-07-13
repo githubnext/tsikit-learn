@@ -94,15 +94,20 @@ export class OrthogonalMatchingPursuit {
 
     let Xc = X;
     let yc = y;
-    let xMeans = new Float64Array(p);
+    const xMeans = new Float64Array(p);
     let yMean = 0;
 
     if (this.fitIntercept) {
-      for (const xi of X) for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0);
+      for (const xi of X)
+        for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) + (xi[j] ?? 0);
       for (let j = 0; j < p; j++) xMeans[j] = (xMeans[j] ?? 0) / n;
-      for (let i = 0; i < n; i++) yMean += (y[i] ?? 0);
+      for (let i = 0; i < n; i++) yMean += y[i] ?? 0;
       yMean /= n;
-      Xc = X.map((xi) => { const r = new Float64Array(p); for (let j = 0; j < p; j++) r[j] = (xi[j] ?? 0) - (xMeans[j] ?? 0); return r; });
+      Xc = X.map((xi) => {
+        const r = new Float64Array(p);
+        for (let j = 0; j < p; j++) r[j] = (xi[j] ?? 0) - (xMeans[j] ?? 0);
+        return r;
+      });
       yc = new Float64Array(n);
       for (let i = 0; i < n; i++) yc[i] = (y[i] ?? 0) - yMean;
     }
@@ -125,18 +130,24 @@ export class OrthogonalMatchingPursuit {
         const nrm = norm2(colF);
         if (nrm < 1e-14) continue;
         const c = Math.abs(dot(colF, residual)) / nrm;
-        if (c > bestCorr) { bestCorr = c; bestJ = j; }
+        if (c > bestCorr) {
+          bestCorr = c;
+          bestJ = j;
+        }
       }
       if (bestJ === -1) break;
       supportSet.push(bestJ);
 
       // OLS on support set
-      const subA = supportSet.map((j) => new Float64Array(Xc.map((xi) => xi[j] ?? 0)));
+      const subA = supportSet.map(
+        (j) => new Float64Array(Xc.map((xi) => xi[j] ?? 0)),
+      );
       // Transpose: subA[j][i] → need column matrix
       const subACols: Float64Array[] = [];
       for (const j of supportSet) {
         const col = new Float64Array(n);
-        for (let i = 0; i < n; i++) col[i] = (Xc[i] ?? new Float64Array(0))[j] ?? 0;
+        for (let i = 0; i < n; i++)
+          col[i] = (Xc[i] ?? new Float64Array(0))[j] ?? 0;
         subACols.push(col);
       }
       const subCoef = leastSquares(subACols, yc);
@@ -145,7 +156,9 @@ export class OrthogonalMatchingPursuit {
       for (let i = 0; i < n; i++) {
         let pred = 0;
         for (let ki = 0; ki < supportSet.length; ki++) {
-          pred += ((Xc[i] ?? new Float64Array(0))[supportSet[ki] ?? 0] ?? 0) * (subCoef[ki] ?? 0);
+          pred +=
+            ((Xc[i] ?? new Float64Array(0))[supportSet[ki] ?? 0] ?? 0) *
+            (subCoef[ki] ?? 0);
         }
         residual[i] = (yc[i] ?? 0) - pred;
       }
@@ -168,7 +181,8 @@ export class OrthogonalMatchingPursuit {
 
     if (this.fitIntercept) {
       this.intercept_ = yMean;
-      for (let j = 0; j < p; j++) this.intercept_ -= (coefFull[j] ?? 0) * (xMeans[j] ?? 0);
+      for (let j = 0; j < p; j++)
+        this.intercept_ -= (coefFull[j] ?? 0) * (xMeans[j] ?? 0);
     } else {
       this.intercept_ = 0;
     }
@@ -177,17 +191,22 @@ export class OrthogonalMatchingPursuit {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (!this.coef_) throw new NotFittedError("OrthogonalMatchingPursuit is not fitted yet.");
-    return new Float64Array(X.map((xi) => {
-      let s = this.intercept_;
-      for (let j = 0; j < xi.length; j++) s += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
-      return s;
-    }));
+    if (!this.coef_)
+      throw new NotFittedError("OrthogonalMatchingPursuit is not fitted yet.");
+    return new Float64Array(
+      X.map((xi) => {
+        let s = this.intercept_;
+        for (let j = 0; j < xi.length; j++)
+          s += (this.coef_![j] ?? 0) * (xi[j] ?? 0);
+        return s;
+      }),
+    );
   }
 
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
-    let ssTot = 0, ssRes = 0;
+    let ssTot = 0;
+    let ssRes = 0;
     let yMean = 0;
     for (let i = 0; i < y.length; i++) yMean += y[i] ?? 0;
     yMean /= y.length;

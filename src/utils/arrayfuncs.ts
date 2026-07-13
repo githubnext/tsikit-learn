@@ -27,7 +27,11 @@ export function minPos(arr: Float64Array): number {
 }
 
 /** In-place L1 normalization of each row of a 2-D matrix (nRows x nCols). */
-export function inplaceRowNormalizeL1(X: Float64Array, nRows: number, nCols: number): void {
+export function inplaceRowNormalizeL1(
+  X: Float64Array,
+  nRows: number,
+  nCols: number,
+): void {
   for (let i = 0; i < nRows; i++) {
     let sum = 0;
     for (let j = 0; j < nCols; j++) sum += Math.abs(X[i * nCols + j]!);
@@ -37,7 +41,11 @@ export function inplaceRowNormalizeL1(X: Float64Array, nRows: number, nCols: num
 }
 
 /** In-place L2 normalization of each row of a 2-D matrix (nRows x nCols). */
-export function inplaceRowNormalizeL2(X: Float64Array, nRows: number, nCols: number): void {
+export function inplaceRowNormalizeL2(
+  X: Float64Array,
+  nRows: number,
+  nCols: number,
+): void {
   for (let i = 0; i < nRows; i++) {
     let sum = 0;
     for (let j = 0; j < nCols; j++) {
@@ -59,14 +67,14 @@ export function inplaceColumnScale(
 ): void {
   for (let i = 0; i < nRows; i++) {
     for (let j = 0; j < nCols; j++) {
-      X[i * nCols + j]! *= scale[j]!;
+      X[i * nCols + j]! *= scale[j];
     }
   }
 }
 
 /** Computes cumulative sum in-place (modifies arr). */
 export function cumsum(arr: Float64Array): Float64Array {
-  for (let i = 1; i < arr.length; i++) arr[i]! += arr[i - 1]!;
+  for (let i = 1; i < arr.length; i++) arr[i]! += arr[i - 1];
   return arr;
 }
 
@@ -74,7 +82,12 @@ export function cumsum(arr: Float64Array): Float64Array {
  * Fast row-wise dot product: returns a Float64Array of length nRows where
  * result[i] = sum_j X[i,j] * w[j].
  */
-export function rowDot(X: Float64Array, nRows: number, nCols: number, w: Float64Array): Float64Array {
+export function rowDot(
+  X: Float64Array,
+  nRows: number,
+  nCols: number,
+  w: Float64Array,
+): Float64Array {
   const out = new Float64Array(nRows);
   for (let i = 0; i < nRows; i++) {
     let s = 0;

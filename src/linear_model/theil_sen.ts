@@ -52,9 +52,12 @@ export class TheilSenRegressor {
 
     // Use a simple LCG for reproducible subsampling
     let rng = this.randomState;
-    const nextRng = () => { rng = (rng * 1664525 + 1013904223) >>> 0; return rng / 4294967296; };
+    const nextRng = () => {
+      rng = (rng * 1664525 + 1013904223) >>> 0;
+      return rng / 4294967296;
+    };
 
-    const nPairs = Math.min(nSub * (nSub - 1) / 2, this.maxSubpopulation);
+    const nPairs = Math.min((nSub * (nSub - 1)) / 2, this.maxSubpopulation);
     const indices: number[] = Array.from({ length: n }, (_, i) => i);
 
     for (let t = 0; t < nPairs; t++) {
@@ -76,7 +79,7 @@ export class TheilSenRegressor {
       if (denom < 1e-12) continue;
       const dy = yj - yi;
       for (let j = 0; j < p; j++) {
-        slope[j]! = dy * ((xj[j] ?? 0) - (xi[j] ?? 0)) / denom;
+        slope[j]! = (dy * ((xj[j] ?? 0) - (xi[j] ?? 0))) / denom;
       }
       slopes.push(slope);
     }
@@ -91,9 +94,10 @@ export class TheilSenRegressor {
     for (let j = 0; j < p; j++) {
       const vals = slopes.map((s) => s[j] ?? 0).sort((a, b) => a - b);
       const mid = Math.floor(vals.length / 2);
-      coef[j]! = vals.length % 2 === 0
-        ? ((vals[mid - 1] ?? 0) + (vals[mid] ?? 0)) / 2
-        : (vals[mid] ?? 0);
+      coef[j]! =
+        vals.length % 2 === 0
+          ? ((vals[mid - 1] ?? 0) + (vals[mid] ?? 0)) / 2
+          : (vals[mid] ?? 0);
     }
 
     this.coef_ = coef;
@@ -108,9 +112,10 @@ export class TheilSenRegressor {
       }
       residuals.sort((a, b) => a - b);
       const mid = Math.floor(residuals.length / 2);
-      this.intercept_ = residuals.length % 2 === 0
-        ? ((residuals[mid - 1] ?? 0) + (residuals[mid] ?? 0)) / 2
-        : (residuals[mid] ?? 0);
+      this.intercept_ =
+        residuals.length % 2 === 0
+          ? ((residuals[mid - 1] ?? 0) + (residuals[mid] ?? 0)) / 2
+          : (residuals[mid] ?? 0);
     }
 
     this.breakdown_ = 0.5;
@@ -119,7 +124,8 @@ export class TheilSenRegressor {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (!this.coef_) throw new NotFittedError("TheilSenRegressor is not fitted");
+    if (!this.coef_)
+      throw new NotFittedError("TheilSenRegressor is not fitted");
     const n = X.length;
     const p = this.coef_.length;
     const out = new Float64Array(n);
@@ -135,7 +141,9 @@ export class TheilSenRegressor {
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
     const n = y.length;
-    let ssTot = 0, ssRes = 0, yMean = 0;
+    let ssTot = 0;
+    let ssRes = 0;
+    let yMean = 0;
     for (let i = 0; i < n; i++) yMean += y[i] ?? 0;
     yMean /= n;
     for (let i = 0; i < n; i++) {
@@ -196,7 +204,10 @@ export class RANSACRegressor {
     const residThresh = this.residualThreshold ?? this._mad(y) * 1.4826;
 
     let rng = this.randomState;
-    const nextRng = () => { rng = (rng * 1664525 + 1013904223) >>> 0; return rng / 4294967296; };
+    const nextRng = () => {
+      rng = (rng * 1664525 + 1013904223) >>> 0;
+      return rng / 4294967296;
+    };
 
     let bestScore = -1;
     let bestInliers: Uint8Array = new Uint8Array(n);
@@ -210,7 +221,7 @@ export class RANSACRegressor {
       for (let i = 0; i < minSamp; i++) {
         const idx = Math.floor(nextRng() * (pool.length - i));
         const tmp = pool[pool.length - 1 - i]!;
-        pool[pool.length - 1 - i]! = pool[idx]!;
+        pool[pool.length - 1 - i]! = pool[idx];
         pool[idx]! = tmp;
         sample.push(pool[pool.length - 1 - i]!);
       }
@@ -248,7 +259,9 @@ export class RANSACRegressor {
     // Refit on all inliers
     const inlierX = X.filter((_, i) => bestInliers[i] === 1);
     const inlierY = new Float64Array(
-      Array.from({ length: n }, (_, i) => i).filter((i) => bestInliers[i] === 1).map((i) => y[i] ?? 0)
+      Array.from({ length: n }, (_, i) => i)
+        .filter((i) => bestInliers[i] === 1)
+        .map((i) => y[i] ?? 0),
     );
 
     if (inlierX.length > p) {
@@ -267,16 +280,21 @@ export class RANSACRegressor {
   private _mad(y: Float64Array): number {
     const sorted = Array.from(y).sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
-    const median = sorted.length % 2 === 0
-      ? ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2
-      : (sorted[mid] ?? 0);
+    const median =
+      sorted.length % 2 === 0
+        ? ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2
+        : (sorted[mid] ?? 0);
     const devs = sorted.map((v) => Math.abs(v - median)).sort((a, b) => a - b);
     return devs.length % 2 === 0
       ? ((devs[mid - 1] ?? 0) + (devs[mid] ?? 0)) / 2
       : (devs[mid] ?? 0);
   }
 
-  private _ols(X: Float64Array[], y: Float64Array, p: number): { coef: Float64Array; intercept: number } {
+  private _ols(
+    X: Float64Array[],
+    y: Float64Array,
+    p: number,
+  ): { coef: Float64Array; intercept: number } {
     const n = X.length;
     let yMean = 0;
     const xMean = new Float64Array(p);
@@ -295,7 +313,8 @@ export class RANSACRegressor {
       for (let j = 0; j < p; j++) {
         const xij = (xi[j] ?? 0) - (xMean[j] ?? 0);
         Xty[j]! += xij * yi;
-        for (let k = 0; k < p; k++) XtX[j * p + k]! += xij * ((xi[k] ?? 0) - (xMean[k] ?? 0));
+        for (let k = 0; k < p; k++)
+          XtX[j * p + k]! += xij * ((xi[k] ?? 0) - (xMean[k] ?? 0));
       }
     }
     for (let j = 0; j < p; j++) XtX[j * p + j]! += 1e-10;
@@ -306,7 +325,11 @@ export class RANSACRegressor {
     return { coef, intercept };
   }
 
-  private _solveLinear(A: Float64Array, b: Float64Array, n: number): Float64Array {
+  private _solveLinear(
+    A: Float64Array,
+    b: Float64Array,
+    n: number,
+  ): Float64Array {
     const M = new Float64Array(n * (n + 1));
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) M[i * (n + 1) + j]! = A[i * n + j] ?? 0;
@@ -315,7 +338,11 @@ export class RANSACRegressor {
     for (let col = 0; col < n; col++) {
       let maxRow = col;
       for (let row = col + 1; row < n; row++) {
-        if (Math.abs(M[row * (n + 1) + col] ?? 0) > Math.abs(M[maxRow * (n + 1) + col] ?? 0)) maxRow = row;
+        if (
+          Math.abs(M[row * (n + 1) + col] ?? 0) >
+          Math.abs(M[maxRow * (n + 1) + col] ?? 0)
+        )
+          maxRow = row;
       }
       for (let k = col; k <= n; k++) {
         const tmp = M[col * (n + 1) + k] ?? 0;
@@ -327,7 +354,8 @@ export class RANSACRegressor {
       for (let row = 0; row < n; row++) {
         if (row === col) continue;
         const factor = (M[row * (n + 1) + col] ?? 0) / pivot;
-        for (let k = col; k <= n; k++) M[row * (n + 1) + k]! -= factor * (M[col * (n + 1) + k] ?? 0);
+        for (let k = col; k <= n; k++)
+          M[row * (n + 1) + k]! -= factor * (M[col * (n + 1) + k] ?? 0);
       }
     }
     const x = new Float64Array(n);
@@ -339,14 +367,16 @@ export class RANSACRegressor {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    if (!this.estimator_coef_) throw new NotFittedError("RANSACRegressor is not fitted");
+    if (!this.estimator_coef_)
+      throw new NotFittedError("RANSACRegressor is not fitted");
     const n = X.length;
     const p = this.estimator_coef_.length;
     const out = new Float64Array(n);
     for (let i = 0; i < n; i++) {
       let pred = this.estimator_intercept_;
       const xi = X[i]!;
-      for (let j = 0; j < p; j++) pred += (this.estimator_coef_[j] ?? 0) * (xi[j] ?? 0);
+      for (let j = 0; j < p; j++)
+        pred += (this.estimator_coef_[j] ?? 0) * (xi[j] ?? 0);
       out[i]! = pred;
     }
     return out;
@@ -355,7 +385,9 @@ export class RANSACRegressor {
   score(X: Float64Array[], y: Float64Array): number {
     const pred = this.predict(X);
     const n = y.length;
-    let ssTot = 0, ssRes = 0, yMean = 0;
+    let ssTot = 0;
+    let ssRes = 0;
+    let yMean = 0;
     for (let i = 0; i < n; i++) yMean += y[i] ?? 0;
     yMean /= n;
     for (let i = 0; i < n; i++) {

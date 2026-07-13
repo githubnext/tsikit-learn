@@ -26,7 +26,9 @@ export function wardLinkage(X: Float64Array[]): LinkageRow[] {
 
   let nextCluster = n;
   const result: LinkageRow[] = [];
-  const activeClusters = new Set<number>(Array.from({ length: n }, (_, i) => i));
+  const activeClusters = new Set<number>(
+    Array.from({ length: n }, (_, i) => i),
+  );
 
   function centroid(indices: number[]): Float64Array {
     const d = X[0]!.length;
@@ -51,7 +53,7 @@ export function wardLinkage(X: Float64Array[]): LinkageRow[] {
       const diff = (ca[j] ?? 0) - (cb[j] ?? 0);
       sq += diff * diff;
     }
-    return Math.sqrt((na * nb) / (na + nb) * sq);
+    return Math.sqrt(((na * nb) / (na + nb)) * sq);
   }
 
   while (activeClusters.size > 1) {
@@ -63,7 +65,11 @@ export function wardLinkage(X: Float64Array[]): LinkageRow[] {
     for (let i = 0; i < active.length; i++) {
       for (let j = i + 1; j < active.length; j++) {
         const d = wardDist(active[i]!, active[j]!);
-        if (d < minDist) { minDist = d; bestA = active[i]!; bestB = active[j]!; }
+        if (d < minDist) {
+          minDist = d;
+          bestA = active[i]!;
+          bestB = active[j]!;
+        }
       }
     }
 
@@ -73,7 +79,12 @@ export function wardLinkage(X: Float64Array[]): LinkageRow[] {
     clusterPoints.set(nextCluster, merged);
     centroids.set(nextCluster, centroid(merged));
 
-    result.push({ clusterA: bestA, clusterB: bestB, distance: minDist, size: merged.length });
+    result.push({
+      clusterA: bestA,
+      clusterB: bestB,
+      distance: minDist,
+      size: merged.length,
+    });
     activeClusters.delete(bestA);
     activeClusters.delete(bestB);
     activeClusters.add(nextCluster);
@@ -84,9 +95,16 @@ export function wardLinkage(X: Float64Array[]): LinkageRow[] {
 }
 
 /** Flatten the linkage matrix to cluster labels (fcluster with criterion='maxclust'). */
-export function fcluster(linkage: LinkageRow[], nClusters: number, nPoints: number): Int32Array {
+export function fcluster(
+  linkage: LinkageRow[],
+  nClusters: number,
+  nPoints: number,
+): Int32Array {
   const labels = new Int32Array(nPoints);
-  if (nClusters >= nPoints) { for (let i = 0; i < nPoints; i++) labels[i] = i; return labels; }
+  if (nClusters >= nPoints) {
+    for (let i = 0; i < nPoints; i++) labels[i] = i;
+    return labels;
+  }
 
   // Track which top-level cluster each point belongs to
   const children: Map<number, [number, number]> = new Map();
@@ -99,12 +117,18 @@ export function fcluster(linkage: LinkageRow[], nClusters: number, nPoints: numb
   // BFS to assign labels — cut the tree to produce nClusters clusters
   const cutAt = linkage.length - nClusters; // cut after this many merges from the root
   const mergeCount = linkage.length;
-  const cutThreshold = mergeCount >= nClusters ? linkage[mergeCount - nClusters]?.distance ?? 0 : 0;
+  const cutThreshold =
+    mergeCount >= nClusters
+      ? (linkage[mergeCount - nClusters]?.distance ?? 0)
+      : 0;
 
   // Assign label by DFS
   let nextLabel = 0;
   function assign(node: number, label: number): void {
-    if (node < nPoints) { labels[node] = label; return; }
+    if (node < nPoints) {
+      labels[node] = label;
+      return;
+    }
     const ch = children.get(node);
     if (!ch) return;
     assign(ch[0], label);
@@ -113,11 +137,20 @@ export function fcluster(linkage: LinkageRow[], nClusters: number, nPoints: numb
 
   // Walk from root, splitting where distance > cutThreshold
   function split(node: number, rowIdx: number): void {
-    if (node < nPoints) { labels[node] = nextLabel++; return; }
+    if (node < nPoints) {
+      labels[node] = nextLabel++;
+      return;
+    }
     const ch = children.get(node);
-    if (!ch) { assign(node, nextLabel++); return; }
+    if (!ch) {
+      assign(node, nextLabel++);
+      return;
+    }
     const row = linkage[rowIdx];
-    if (!row) { assign(node, nextLabel++); return; }
+    if (!row) {
+      assign(node, nextLabel++);
+      return;
+    }
     if (row.distance > cutThreshold && nextLabel < nClusters) {
       split(ch[0], rowIdx - 1 - (linkage.length - 1 - rowIdx));
       split(ch[1], rowIdx - 1);
@@ -145,7 +178,10 @@ export function fcluster(linkage: LinkageRow[], nClusters: number, nPoints: numb
 }
 
 /** Compute cophenetic distances from linkage matrix. */
-export function copheneticDistances(linkage: LinkageRow[], nPoints: number): Float64Array {
+export function copheneticDistances(
+  linkage: LinkageRow[],
+  nPoints: number,
+): Float64Array {
   const n = nPoints;
   const dist = new Float64Array(n * n);
   // For each pair of points, find when they first merge
@@ -168,19 +204,29 @@ export function copheneticDistances(linkage: LinkageRow[], nPoints: number): Flo
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
       const d = findMerge(i, j);
-      dist[i * n + j] = d; dist[j * n + i] = d;
+      dist[i * n + j] = d;
+      dist[j * n + i] = d;
     }
   }
   return dist;
 }
 
-function isIn(point: number, cluster: number, nPoints: number, linkage: LinkageRow[], upTo: number): boolean {
+function isIn(
+  point: number,
+  cluster: number,
+  nPoints: number,
+  linkage: LinkageRow[],
+  upTo: number,
+): boolean {
   if (cluster === point) return true;
   if (cluster < nPoints) return false;
   const idx = cluster - nPoints;
   if (idx >= upTo) return false;
   const row = linkage[idx]!;
-  return isIn(point, row.clusterA, nPoints, linkage, idx) || isIn(point, row.clusterB, nPoints, linkage, idx);
+  return (
+    isIn(point, row.clusterA, nPoints, linkage, idx) ||
+    isIn(point, row.clusterB, nPoints, linkage, idx)
+  );
 }
 
 export type { LinkageRow as WardLinkageRow };

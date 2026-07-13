@@ -9,7 +9,8 @@ import { NotFittedError } from "../exceptions.js";
 function colMeans(X: Float64Array[]): Float64Array {
   const p = (X[0] ?? new Float64Array(0)).length;
   const m = new Float64Array(p);
-  for (const xi of X) for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (xi[j] ?? 0);
+  for (const xi of X)
+    for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) + (xi[j] ?? 0);
   for (let j = 0; j < p; j++) m[j] = (m[j] ?? 0) / X.length;
   return m;
 }
@@ -63,12 +64,14 @@ function eigenDecomp(
   for (let comp = 0; comp < k; comp++) {
     // Random init
     let v = new Float64Array(p);
-    for (let j = 0; j < p; j++) v[j] = (j === comp ? 1 : 0.01 * Math.sin(j + comp));
+    for (let j = 0; j < p; j++)
+      v[j] = j === comp ? 1 : 0.01 * Math.sin(j + comp);
     let eigenval = 0;
     for (let iter = 0; iter < nIter; iter++) {
       const Mv = new Float64Array(p);
       for (let i = 0; i < p; i++) {
-        for (let j = 0; j < p; j++) Mv[i] = (Mv[i] ?? 0) + (Mwork[i]![j] ?? 0) * (v[j] ?? 0);
+        for (let j = 0; j < p; j++)
+          Mv[i] = (Mv[i] ?? 0) + (Mwork[i]![j] ?? 0) * (v[j] ?? 0);
       }
       eigenval = 0;
       for (let j = 0; j < p; j++) eigenval += (v[j] ?? 0) * (Mv[j] ?? 0);
@@ -77,7 +80,9 @@ function eigenDecomp(
       norm = Math.sqrt(norm);
       if (norm < 1e-15) break;
       const vNew = Float64Array.from(Mv, (x) => x / norm);
-      const diff = Math.sqrt(vNew.reduce((s, x, i) => s + (x - (v[i] ?? 0)) ** 2, 0));
+      const diff = Math.sqrt(
+        vNew.reduce((s, x, i) => s + (x - (v[i] ?? 0)) ** 2, 0),
+      );
       v = vNew;
       if (diff < 1e-10) break;
     }
@@ -86,7 +91,8 @@ function eigenDecomp(
     // Deflate
     for (let i = 0; i < p; i++) {
       for (let j = 0; j < p; j++) {
-        Mwork[i]![j] = (Mwork[i]![j] ?? 0) - eigenval * (v[i] ?? 0) * (v[j] ?? 0);
+        Mwork[i]![j] =
+          (Mwork[i]![j] ?? 0) - eigenval * (v[i] ?? 0) * (v[j] ?? 0);
       }
     }
   }
@@ -136,7 +142,8 @@ export class IncrementalPCA {
       const totalN = prevN + n;
       const newMean = new Float64Array(p);
       for (let j = 0; j < p; j++) {
-        newMean[j] = ((this.mean_[j] ?? 0) * prevN + (batchMean[j] ?? 0) * n) / totalN;
+        newMean[j] =
+          ((this.mean_[j] ?? 0) * prevN + (batchMean[j] ?? 0) * n) / totalN;
       }
       this.mean_ = newMean;
       this.nSamplesSeen_ = totalN;
@@ -191,7 +198,8 @@ export class IncrementalPCA {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.components_ === null || this.mean_ === null) throw new NotFittedError();
+    if (this.components_ === null || this.mean_ === null)
+      throw new NotFittedError();
     const k = this.components_.length;
     const p = this.mean_.length;
     return X.map((xi) => {
@@ -267,13 +275,16 @@ export class KernelPCA {
         for (let j = 0; j < p; j++) dist += ((a[j] ?? 0) - (b[j] ?? 0)) ** 2;
         return Math.exp(-gamma * dist);
       }
-      case "poly": return (gamma * dot + this.coef0) ** this.degree;
-      case "sigmoid": return Math.tanh(gamma * dot + this.coef0);
+      case "poly":
+        return (gamma * dot + this.coef0) ** this.degree;
+      case "sigmoid":
+        return Math.tanh(gamma * dot + this.coef0);
       case "cosine": {
         const denom = Math.sqrt(normA) * Math.sqrt(normB);
         return denom > 1e-15 ? dot / denom : 0;
       }
-      default: return dot;
+      default:
+        return dot;
     }
   }
 
@@ -285,7 +296,10 @@ export class KernelPCA {
     const K = Array.from({ length: n }, () => new Float64Array(n));
     for (let i = 0; i < n; i++) {
       for (let j = i; j < n; j++) {
-        const val = this._kernelFunc(X[i] ?? new Float64Array(0), X[j] ?? new Float64Array(0));
+        const val = this._kernelFunc(
+          X[i] ?? new Float64Array(0),
+          X[j] ?? new Float64Array(0),
+        );
         K[i]![j] = val;
         K[j]![i] = val;
       }
@@ -293,7 +307,8 @@ export class KernelPCA {
     // Center kernel matrix
     const rowMeans = new Float64Array(n);
     for (let i = 0; i < n; i++) {
-      for (let j = 0; j < n; j++) rowMeans[i] = (rowMeans[i] ?? 0) + (K[i]![j] ?? 0);
+      for (let j = 0; j < n; j++)
+        rowMeans[i] = (rowMeans[i] ?? 0) + (K[i]![j] ?? 0);
       rowMeans[i] = (rowMeans[i] ?? 0) / n;
     }
     let grandMean = 0;
@@ -302,7 +317,8 @@ export class KernelPCA {
     const Kc = Array.from({ length: n }, () => new Float64Array(n));
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
-        Kc[i]![j] = (K[i]![j] ?? 0) - (rowMeans[i] ?? 0) - (rowMeans[j] ?? 0) + grandMean;
+        Kc[i]![j] =
+          (K[i]![j] ?? 0) - (rowMeans[i] ?? 0) - (rowMeans[j] ?? 0) + grandMean;
       }
     }
     this.kFitRows_ = Array.from({ length: n }, (_, i) => {
@@ -324,7 +340,11 @@ export class KernelPCA {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.alphas_ === null || this.xFit_ === null || this.kFitRows_ === null) {
+    if (
+      this.alphas_ === null ||
+      this.xFit_ === null ||
+      this.kFitRows_ === null
+    ) {
       throw new NotFittedError();
     }
     const nTrain = this.xFit_.length;
@@ -393,7 +413,9 @@ export class FactorAnalysis {
 
     // Initialize W (p x k) and psi (noise variances, p)
     const W = Array.from({ length: p }, (_, i) =>
-      Float64Array.from({ length: k }, (_, j) => (i === j ? 1 : 0.1 * Math.sin(i + j))),
+      Float64Array.from({ length: k }, (_, j) =>
+        i === j ? 1 : 0.1 * Math.sin(i + j),
+      ),
     );
     const psi = new Float64Array(p).fill(1);
 
@@ -406,7 +428,9 @@ export class FactorAnalysis {
         M[a]![a] = 1;
         for (let b = 0; b < k; b++) {
           for (let j = 0; j < p; j++) {
-            M[a]![b] = (M[a]![b] ?? 0) + (W[j]![a] ?? 0) * (W[j]![b] ?? 0) / ((psi[j] ?? 1) || 1);
+            M[a]![b] =
+              (M[a]![b] ?? 0) +
+              ((W[j]![a] ?? 0) * (W[j]![b] ?? 0)) / ((psi[j] ?? 1) || 1);
           }
         }
       }
@@ -417,7 +441,10 @@ export class FactorAnalysis {
       // Compute E[z|x] = Minv W^T Psi^-1 x
       // WtPsiInv = W^T Psi^-1 (k x p)
       const WtPsiInv = Array.from({ length: k }, (_, a) =>
-        Float64Array.from({ length: p }, (_, j) => (W[j]![a] ?? 0) / ((psi[j] ?? 1) || 1)),
+        Float64Array.from(
+          { length: p },
+          (_, j) => (W[j]![a] ?? 0) / ((psi[j] ?? 1) || 1),
+        ),
       );
 
       // Ez (n x k): Ez[i] = Minv WtPsiInv Xc[i]
@@ -426,8 +453,10 @@ export class FactorAnalysis {
         const out = new Float64Array(k);
         for (let a = 0; a < k; a++) {
           let s = 0;
-          for (let j = 0; j < p; j++) s += (WtPsiInv[a]![j] ?? 0) * (xi[j] ?? 0);
-          for (let b = 0; b < k; b++) out[a] = (out[a] ?? 0) + (Minv[a]![b] ?? 0) * s;
+          for (let j = 0; j < p; j++)
+            s += (WtPsiInv[a]![j] ?? 0) * (xi[j] ?? 0);
+          for (let b = 0; b < k; b++)
+            out[a] = (out[a] ?? 0) + (Minv[a]![b] ?? 0) * s;
         }
         return out;
       });
@@ -438,7 +467,8 @@ export class FactorAnalysis {
         for (let b = 0; b < k; b++) {
           Ezz[a]![b] = n * (Minv[a]![b] ?? 0);
           for (let i = 0; i < n; i++) {
-            Ezz[a]![b] = (Ezz[a]![b] ?? 0) + (Ez[i]![a] ?? 0) * (Ez[i]![b] ?? 0);
+            Ezz[a]![b] =
+              (Ezz[a]![b] ?? 0) + (Ez[i]![a] ?? 0) * (Ez[i]![b] ?? 0);
           }
         }
       }
@@ -475,7 +505,10 @@ export class FactorAnalysis {
       let maxDiff = 0;
       for (let j = 0; j < p; j++) {
         for (let a = 0; a < k; a++) {
-          maxDiff = Math.max(maxDiff, Math.abs((WnewArr[j]![a] ?? 0) - (W[j]![a] ?? 0)));
+          maxDiff = Math.max(
+            maxDiff,
+            Math.abs((WnewArr[j]![a] ?? 0) - (W[j]![a] ?? 0)),
+          );
         }
       }
 
@@ -506,12 +539,16 @@ export class FactorAnalysis {
     for (let col = 0; col < k; col++) {
       let maxRow = col;
       for (let row = col + 1; row < k; row++) {
-        if (Math.abs(aug[row]![col] ?? 0) > Math.abs(aug[maxRow]![col] ?? 0)) maxRow = row;
+        if (Math.abs(aug[row]![col] ?? 0) > Math.abs(aug[maxRow]![col] ?? 0))
+          maxRow = row;
       }
-      const tmpAdv = aug[col]!; aug[col] = aug[maxRow]!; aug[maxRow] = tmpAdv;
+      const tmpAdv = aug[col]!;
+      aug[col] = aug[maxRow]!;
+      aug[maxRow] = tmpAdv;
       const pivot = aug[col]![col] ?? 1e-12;
       if (Math.abs(pivot) < 1e-15) continue;
-      for (let j = 0; j < 2 * k; j++) aug[col]![j] = (aug[col]![j] ?? 0) / pivot;
+      for (let j = 0; j < 2 * k; j++)
+        aug[col]![j] = (aug[col]![j] ?? 0) / pivot;
       for (let row = 0; row < k; row++) {
         if (row === col) continue;
         const factor = aug[row]![col] ?? 0;
@@ -520,11 +557,14 @@ export class FactorAnalysis {
         }
       }
     }
-    return aug.map((row) => Float64Array.from({ length: k }, (_, j) => row[k + j] ?? 0));
+    return aug.map((row) =>
+      Float64Array.from({ length: k }, (_, j) => row[k + j] ?? 0),
+    );
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (this.components_ === null || this.mean_ === null) throw new NotFittedError();
+    if (this.components_ === null || this.mean_ === null)
+      throw new NotFittedError();
     const k = this.components_.length;
     const p = this.mean_.length;
     return X.map((xi) => {

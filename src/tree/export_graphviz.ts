@@ -77,11 +77,15 @@ export function exportGraphviz(
     if (!isLeaf) {
       if (node.left !== null) {
         const leftId = writeNode(node.left, depth + 1);
-        lines.push(`${id} -> ${leftId} [labeldistance=2.5, labelangle=45, headlabel="True"] ;`);
+        lines.push(
+          `${id} -> ${leftId} [labeldistance=2.5, labelangle=45, headlabel="True"] ;`,
+        );
       }
       if (node.right !== null) {
         const rightId = writeNode(node.right, depth + 1);
-        lines.push(`${id} -> ${rightId} [labeldistance=2.5, labelangle=-45, headlabel="False"] ;`);
+        lines.push(
+          `${id} -> ${rightId} [labeldistance=2.5, labelangle=-45, headlabel="False"] ;`,
+        );
       }
     }
     return id;
@@ -97,7 +101,11 @@ export function exportGraphviz(
  */
 export function exportText(
   tree: TreeNode,
-  options: { featureNames?: string[]; maxDepth?: number; decimals?: number } = {},
+  options: {
+    featureNames?: string[];
+    maxDepth?: number;
+    decimals?: number;
+  } = {},
 ): string {
   const { featureNames, maxDepth, decimals = 2 } = options;
   const lines: string[] = [];
@@ -113,7 +121,9 @@ export function exportText(
         featureNames !== undefined
           ? (featureNames[node.feature] ?? `feature_${node.feature}`)
           : `feature_${node.feature}`;
-      lines.push(`${indent}|--- ${feat} <= ${node.threshold.toFixed(decimals)}`);
+      lines.push(
+        `${indent}|--- ${feat} <= ${node.threshold.toFixed(decimals)}`,
+      );
       if (node.left !== null) recurse(node.left, depth + 1);
       lines.push(`${indent}|--- ${feat} > ${node.threshold.toFixed(decimals)}`);
       if (node.right !== null) recurse(node.right, depth + 1);

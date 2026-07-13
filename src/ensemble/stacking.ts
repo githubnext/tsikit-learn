@@ -55,14 +55,16 @@ export class StackingClassifier {
 
     // Build meta-features
     const metaX: Float64Array[] = Array.from({ length: n }, (_, i) => {
-      const baseFeats = this.fittedEstimators_!.map((est) => {
+      const baseFeats = this.fittedEstimators_!.flatMap((est) => {
         if (est.predictProba) {
           return Array.from(est.predictProba(X)[i] ?? new Float64Array(0));
         }
         const pred = est.predict(X);
         return [pred[i] ?? 0];
-      }).flat();
-      const extra = this.passthrough ? Array.from(X[i] ?? new Float64Array(0)) : [];
+      });
+      const extra = this.passthrough
+        ? Array.from(X[i] ?? new Float64Array(0))
+        : [];
       return Float64Array.from([...baseFeats, ...extra]);
     });
 
@@ -74,14 +76,16 @@ export class StackingClassifier {
     if (!this.fittedEstimators_) throw new NotFittedError("StackingClassifier");
     const n = X.length;
     const metaX: Float64Array[] = Array.from({ length: n }, (_, i) => {
-      const baseFeats = this.fittedEstimators_!.map((est) => {
+      const baseFeats = this.fittedEstimators_!.flatMap((est) => {
         if (est.predictProba) {
           return Array.from(est.predictProba(X)[i] ?? new Float64Array(0));
         }
         const pred = est.predict(X);
         return [pred[i] ?? 0];
-      }).flat();
-      const extra = this.passthrough ? Array.from(X[i] ?? new Float64Array(0)) : [];
+      });
+      const extra = this.passthrough
+        ? Array.from(X[i] ?? new Float64Array(0))
+        : [];
       return Float64Array.from([...baseFeats, ...extra]);
     });
     return this.finalEstimator.predict(metaX);
@@ -124,11 +128,13 @@ export class StackingRegressor {
     });
 
     const metaX: Float64Array[] = Array.from({ length: n }, (_, i) => {
-      const baseFeats = this.fittedEstimators_!.map((est) => {
+      const baseFeats = this.fittedEstimators_!.flatMap((est) => {
         const pred = est.predict(X);
         return [pred[i] ?? 0];
-      }).flat();
-      const extra = this.passthrough ? Array.from(X[i] ?? new Float64Array(0)) : [];
+      });
+      const extra = this.passthrough
+        ? Array.from(X[i] ?? new Float64Array(0))
+        : [];
       return Float64Array.from([...baseFeats, ...extra]);
     });
 
@@ -140,11 +146,13 @@ export class StackingRegressor {
     if (!this.fittedEstimators_) throw new NotFittedError("StackingRegressor");
     const n = X.length;
     const metaX: Float64Array[] = Array.from({ length: n }, (_, i) => {
-      const baseFeats = this.fittedEstimators_!.map((est) => {
+      const baseFeats = this.fittedEstimators_!.flatMap((est) => {
         const pred = est.predict(X);
         return [pred[i] ?? 0];
-      }).flat();
-      const extra = this.passthrough ? Array.from(X[i] ?? new Float64Array(0)) : [];
+      });
+      const extra = this.passthrough
+        ? Array.from(X[i] ?? new Float64Array(0))
+        : [];
       return Float64Array.from([...baseFeats, ...extra]);
     });
     return this.finalEstimator.predict(metaX);
@@ -185,7 +193,9 @@ class DecisionStump {
     for (let f = 0; f < d; f++) {
       const vals = X.map((xi) => xi[f] ?? 0);
       const sorted = [...vals].sort((a, b) => a - b);
-      const thresholds = sorted.slice(0, -1).map((v, i) => (v + (sorted[i + 1] ?? v)) / 2);
+      const thresholds = sorted
+        .slice(0, -1)
+        .map((v, i) => (v + (sorted[i + 1] ?? v)) / 2);
 
       for (const thresh of thresholds) {
         for (const pol of [1, -1]) {
@@ -236,7 +246,9 @@ export class AdaBoostClassifier {
     this.classes_ = classes;
 
     // Binary AdaBoost: map classes to +1/-1
-    const yBin = Int32Array.from(y, (label) => (label === (classes[1] ?? 1) ? 1 : -1));
+    const yBin = Int32Array.from(y, (label) =>
+      label === (classes[1] ?? 1) ? 1 : -1,
+    );
 
     const weights = new Float64Array(n).fill(1 / n);
     const alphas = new Float64Array(this.nEstimators);
@@ -271,7 +283,8 @@ export class AdaBoostClassifier {
   }
 
   predict(X: Float64Array[]): Int32Array {
-    if (!this.estimatorWeights_ || !this.classes_) throw new NotFittedError("AdaBoostClassifier");
+    if (!this.estimatorWeights_ || !this.classes_)
+      throw new NotFittedError("AdaBoostClassifier");
     const n = X.length;
     const scores = new Float64Array(n);
     for (let t = 0; t < this.estimators_.length; t++) {
@@ -279,7 +292,9 @@ export class AdaBoostClassifier {
       const preds = this.estimators_[t]!.predict(X);
       for (let i = 0; i < n; i++) scores[i]! += alpha * (preds[i] ?? 0);
     }
-    return Int32Array.from(scores, (s) => (s >= 0 ? (this.classes_![1] ?? 1) : (this.classes_![0] ?? 0)));
+    return Int32Array.from(scores, (s) =>
+      s >= 0 ? (this.classes_![1] ?? 1) : (this.classes_![0] ?? 0),
+    );
   }
 
   score(X: Float64Array[], y: Int32Array): number {
@@ -312,14 +327,32 @@ class RegressionStump {
     for (let f = 0; f < d; f++) {
       const vals = X.map((xi) => xi[f] ?? 0);
       const sorted = [...vals].sort((a, b) => a - b);
-      const thresholds = sorted.slice(0, -1).map((v, i) => (v + (sorted[i + 1] ?? v)) / 2);
+      const thresholds = sorted
+        .slice(0, -1)
+        .map((v, i) => (v + (sorted[i + 1] ?? v)) / 2);
       for (const thresh of thresholds) {
-        const leftIdxs = vals.map((v, i) => (v <= thresh ? i : -1)).filter((i) => i >= 0);
-        const rightIdxs = vals.map((v, i) => (v > thresh ? i : -1)).filter((i) => i >= 0);
+        const leftIdxs = vals
+          .map((v, i) => (v <= thresh ? i : -1))
+          .filter((i) => i >= 0);
+        const rightIdxs = vals
+          .map((v, i) => (v > thresh ? i : -1))
+          .filter((i) => i >= 0);
         const wLeft = leftIdxs.reduce((s, i) => s + (weights[i] ?? 0), 0);
         const wRight = rightIdxs.reduce((s, i) => s + (weights[i] ?? 0), 0);
-        const lv = wLeft > 0 ? leftIdxs.reduce((s, i) => s + (weights[i] ?? 0) * (y[i] ?? 0), 0) / wLeft : 0;
-        const rv = wRight > 0 ? rightIdxs.reduce((s, i) => s + (weights[i] ?? 0) * (y[i] ?? 0), 0) / wRight : 0;
+        const lv =
+          wLeft > 0
+            ? leftIdxs.reduce(
+                (s, i) => s + (weights[i] ?? 0) * (y[i] ?? 0),
+                0,
+              ) / wLeft
+            : 0;
+        const rv =
+          wRight > 0
+            ? rightIdxs.reduce(
+                (s, i) => s + (weights[i] ?? 0) * (y[i] ?? 0),
+                0,
+              ) / wRight
+            : 0;
         let loss = 0;
         for (let i = 0; i < n; i++) {
           const pred = (vals[i] ?? 0) <= thresh ? lv : rv;
@@ -339,7 +372,9 @@ class RegressionStump {
 
   predict(X: Float64Array[]): Float64Array {
     return Float64Array.from(X, (xi) =>
-      (xi[this.featureIdx] ?? 0) <= this.threshold ? this.leftVal : this.rightVal,
+      (xi[this.featureIdx] ?? 0) <= this.threshold
+        ? this.leftVal
+        : this.rightVal,
     );
   }
 }
@@ -373,12 +408,18 @@ export class AdaBoostRegressor {
         Math.abs((y[i] ?? 0) - (preds[i] ?? 0)),
       );
       const maxErr = errors.reduce((mx, v) => Math.max(mx, v), 0);
-      const normErrors = maxErr > 0 ? Float64Array.from(errors, (e) => e / maxErr) : errors;
+      const normErrors =
+        maxErr > 0 ? Float64Array.from(errors, (e) => e / maxErr) : errors;
 
       let loss = 0;
       for (let i = 0; i < n; i++) {
         const e = normErrors[i] ?? 0;
-        const lossFn = this.loss === "square" ? e * e : this.loss === "exponential" ? 1 - Math.exp(-e) : e;
+        const lossFn =
+          this.loss === "square"
+            ? e * e
+            : this.loss === "exponential"
+              ? 1 - Math.exp(-e)
+              : e;
         loss += (weights[i] ?? 0) * lossFn;
       }
       loss = Math.min(Math.max(loss, 1e-10), 1 - 1e-10);
@@ -389,8 +430,13 @@ export class AdaBoostRegressor {
       let sumW = 0;
       for (let i = 0; i < n; i++) {
         const e = normErrors[i] ?? 0;
-        const lossFn = this.loss === "square" ? e * e : this.loss === "exponential" ? 1 - Math.exp(-e) : e;
-        weights[i]! = (weights[i] ?? 0) * Math.pow(beta, 1 - lossFn);
+        const lossFn =
+          this.loss === "square"
+            ? e * e
+            : this.loss === "exponential"
+              ? 1 - Math.exp(-e)
+              : e;
+        weights[i]! = (weights[i] ?? 0) * beta ** (1 - lossFn);
         sumW += weights[i]!;
       }
       if (sumW > 0) for (let i = 0; i < n; i++) weights[i]! /= sumW;
@@ -406,7 +452,10 @@ export class AdaBoostRegressor {
     // Weighted median
     const allPreds: Float64Array[] = this.estimators_.map((e) => e.predict(X));
     return Float64Array.from({ length: n }, (_, i) => {
-      const pairs = allPreds.map((p, t) => ({ val: p[i] ?? 0, w: this.estimatorWeights_![t] ?? 0 }));
+      const pairs = allPreds.map((p, t) => ({
+        val: p[i] ?? 0,
+        w: this.estimatorWeights_![t] ?? 0,
+      }));
       pairs.sort((a, b) => a.val - b.val);
       const totalW = pairs.reduce((s, p) => s + p.w, 0);
       let cumW = 0;
@@ -447,7 +496,8 @@ function createDefaultClassifier(): StackableClassifier {
         for (let i = 0; i < n; i++) {
           const xi = X[i] as Float64Array;
           let logit = bias;
-          for (let j = 0; j < d; j++) logit += (weights![j] ?? 0) * (xi[j] ?? 0);
+          for (let j = 0; j < d; j++)
+            logit += (weights![j] ?? 0) * (xi[j] ?? 0);
           const pred = 1 / (1 + Math.exp(-logit));
           const err = (y[i] ?? 0) - pred;
           bias += lr * err;

@@ -37,7 +37,9 @@ export function estimateBandwidth(
     indices = Array.from({ length: n }, (_, i) => i);
     for (let i = n - 1; i > 0; i--) {
       const j = Math.floor(rand() * (i + 1));
-      const tmp = indices[i]!; indices[i] = indices[j]!; indices[j] = tmp;
+      const tmp = indices[i]!;
+      indices[i] = indices[j]!;
+      indices[j] = tmp;
     }
     indices = indices.slice(0, nSamples);
   } else {
@@ -137,7 +139,10 @@ export function assignBins(
       for (let k = 0; k < xi.length; k++) {
         d2 += ((xi[k] ?? 0) - (seed[k] ?? 0)) ** 2;
       }
-      if (d2 < bestDist) { bestDist = d2; bestJ = j; }
+      if (d2 < bestDist) {
+        bestDist = d2;
+        bestJ = j;
+      }
     }
     result[i] = bestJ;
   }
@@ -209,7 +214,10 @@ export function mergeSeeds(
       for (let k = 0; k < seed.length; k++) {
         d2 += ((seed[k] ?? 0) - (center[k] ?? 0)) ** 2;
       }
-      if (d2 <= bw2) { isNew = false; break; }
+      if (d2 <= bw2) {
+        isNew = false;
+        break;
+      }
     }
     if (isNew) merged.push(seed);
   }
@@ -236,7 +244,10 @@ export function clusterLabels(
       for (let k = 0; k < xi.length; k++) {
         d2 += ((xi[k] ?? 0) - (c[k] ?? 0)) ** 2;
       }
-      if (d2 < bestDist) { bestDist = d2; best = j; }
+      if (d2 < bestDist) {
+        bestDist = d2;
+        best = j;
+      }
     }
     labels[i] = best;
   }
@@ -273,7 +284,10 @@ export function computeCenters(
   nClusters: number,
 ): Float64Array[] {
   const d = X[0]?.length ?? 0;
-  const sums: Float64Array[] = Array.from({ length: nClusters }, () => new Float64Array(d));
+  const sums: Float64Array[] = Array.from(
+    { length: nClusters },
+    () => new Float64Array(d),
+  );
   const counts = new Int32Array(nClusters);
 
   for (let i = 0; i < X.length; i++) {

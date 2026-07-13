@@ -13,7 +13,8 @@ export class RandomState {
 
   /** Uniform float in [0, 1). */
   random(): number {
-    let s = (this.seed += 0x6d2b79f5);
+    this.seed += 0x6d2b79f5;
+    let s = this.seed;
     s = Math.imul(s ^ (s >>> 15), s | 1);
     s ^= s + Math.imul(s ^ (s >>> 7), s | 61);
     return ((s ^ (s >>> 14)) >>> 0) / 4294967296;
@@ -50,7 +51,7 @@ export class RandomState {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = this.randint(0, i + 1);
       const tmp = arr[i]!;
-      arr[i]! = arr[j]!;
+      arr[i]! = arr[j];
       arr[j]! = tmp;
     }
     return arr;
@@ -61,7 +62,7 @@ export class RandomState {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = this.randint(0, i + 1);
       const tmp = arr[i]!;
-      arr[i]! = arr[j]!;
+      arr[i]! = arr[j];
       arr[j]! = tmp;
     }
   }
@@ -69,14 +70,16 @@ export class RandomState {
   /** Draw `nSamples` indices in [0, nTotal) with replacement. */
   choice(nTotal: number, nSamples: number, replace = true): Int32Array {
     if (replace) {
-      return Int32Array.from({ length: nSamples }, () => this.randint(0, nTotal));
+      return Int32Array.from({ length: nSamples }, () =>
+        this.randint(0, nTotal),
+      );
     }
     // Without replacement: partial Fisher-Yates
     const pool = Int32Array.from({ length: nTotal }, (_, i) => i);
     for (let i = 0; i < nSamples; i++) {
       const j = i + this.randint(0, nTotal - i);
       const tmp = pool[i]!;
-      pool[i]! = pool[j]!;
+      pool[i]! = pool[j];
       pool[j]! = tmp;
     }
     return pool.slice(0, nSamples);
@@ -90,7 +93,9 @@ export class RandomState {
  * - `number` → reproducible `RandomState(seed)`.
  * - `RandomState` → returned as-is.
  */
-export function checkRandomState(seed?: number | RandomState | null): RandomState {
+export function checkRandomState(
+  seed?: number | RandomState | null,
+): RandomState {
   if (seed == null) return new RandomState(Math.floor(Math.random() * 2 ** 31));
   if (typeof seed === "number") return new RandomState(seed);
   return seed;

@@ -19,10 +19,15 @@ export class ParameterGrid {
   }
 
   *[Symbol.iterator](): Generator<Record<string, unknown>> {
-    const grids = Array.isArray(this.paramGrid) ? this.paramGrid : [this.paramGrid];
+    const grids = Array.isArray(this.paramGrid)
+      ? this.paramGrid
+      : [this.paramGrid];
     for (const grid of grids) {
       const keys = Object.keys(grid);
-      if (keys.length === 0) { yield {}; continue; }
+      if (keys.length === 0) {
+        yield {};
+        continue;
+      }
       const values = keys.map((k) => grid[k]!);
       const counts = values.map((v) => v.length);
       const total = counts.reduce((a, b) => a * b, 1);
@@ -44,7 +49,9 @@ export class ParameterGrid {
   }
 
   get length(): number {
-    const grids = Array.isArray(this.paramGrid) ? this.paramGrid : [this.paramGrid];
+    const grids = Array.isArray(this.paramGrid)
+      ? this.paramGrid
+      : [this.paramGrid];
     let total = 0;
     for (const grid of grids) {
       const keys = Object.keys(grid);
@@ -66,12 +73,18 @@ export interface ParameterSamplerOptions {
  * Supports distributions (objects with rvs method) or lists of values.
  */
 export class ParameterSampler {
-  paramDistributions: Record<string, unknown[] | { rvs(seed: number): unknown }>;
+  paramDistributions: Record<
+    string,
+    unknown[] | { rvs(seed: number): unknown }
+  >;
   nIter: number;
   randomState: number;
 
   constructor(
-    paramDistributions: Record<string, unknown[] | { rvs(seed: number): unknown }>,
+    paramDistributions: Record<
+      string,
+      unknown[] | { rvs(seed: number): unknown }
+    >,
     opts: ParameterSamplerOptions,
   ) {
     this.paramDistributions = paramDistributions;
@@ -131,10 +144,15 @@ export class ShuffleSplit {
 
   *split(X: unknown[]): Generator<ShuffleSplitFold> {
     const n = X.length;
-    const nTest = Math.floor(this.testSize < 1 ? n * this.testSize : this.testSize);
-    const nTrain = this.trainSize !== null
-      ? (this.trainSize < 1 ? Math.floor(n * this.trainSize) : this.trainSize)
-      : n - nTest;
+    const nTest = Math.floor(
+      this.testSize < 1 ? n * this.testSize : this.testSize,
+    );
+    const nTrain =
+      this.trainSize !== null
+        ? this.trainSize < 1
+          ? Math.floor(n * this.trainSize)
+          : this.trainSize
+        : n - nTest;
     let seed = this.randomState;
 
     for (let split = 0; split < this.nSplits; split++) {
@@ -191,7 +209,10 @@ export class GroupKFold {
         if (testGroups.has(grps[i]!)) testIdx.push(i);
         else trainIdx.push(i);
       }
-      yield { trainIndex: new Int32Array(trainIdx), testIndex: new Int32Array(testIdx) };
+      yield {
+        trainIndex: new Int32Array(trainIdx),
+        testIndex: new Int32Array(testIdx),
+      };
     }
   }
 }
@@ -258,7 +279,9 @@ export class LeaveOneOut {
   *split(X: unknown[]): Generator<LeaveOneOutFold> {
     const n = X.length;
     for (let i = 0; i < n; i++) {
-      const trainIdx = Array.from({ length: n - 1 }, (_, k) => (k >= i ? k + 1 : k));
+      const trainIdx = Array.from({ length: n - 1 }, (_, k) =>
+        k >= i ? k + 1 : k,
+      );
       yield {
         trainIndex: new Int32Array(trainIdx),
         testIndex: new Int32Array([i]),
@@ -270,5 +293,3 @@ export class LeaveOneOut {
     return X.length;
   }
 }
-
-

@@ -3,8 +3,8 @@
  * Mirrors sklearn.linear_model.OrthogonalMatchingPursuitCV.
  */
 
-import { NotFittedError } from "../exceptions.js";
 import { BaseEstimator } from "../base.js";
+import { NotFittedError } from "../exceptions.js";
 
 export interface OMPCVParams {
   copy?: boolean;
@@ -28,14 +28,14 @@ function ompFit(
   X: Float64Array[],
   y: Float64Array,
   nNonzero: number,
-  fitIntercept: boolean
+  fitIntercept: boolean,
 ): { coef: Float64Array; intercept: number } {
   const n = X.length;
   const p = X[0]?.length ?? 0;
 
   let Xc = X;
   let yc = y;
-  let xMean = new Float64Array(p);
+  const xMean = new Float64Array(p);
   let yMean = 0;
 
   if (fitIntercept) {
@@ -84,7 +84,11 @@ function ompFit(
     const G = Array.from({ length: k }, () => new Float64Array(k));
     const h = new Float64Array(k);
     for (let a = 0; a < k; a++) {
-      for (let b = 0; b < k; b++) G[a]![b] = dot(activeX[a] ?? new Float64Array(n), activeX[b] ?? new Float64Array(n));
+      for (let b = 0; b < k; b++)
+        G[a]![b] = dot(
+          activeX[a] ?? new Float64Array(n),
+          activeX[b] ?? new Float64Array(n),
+        );
       h[a] = dot(activeX[a] ?? new Float64Array(n), yc);
     }
 
@@ -94,7 +98,8 @@ function ompFit(
     for (let col = 0; col < k; col++) {
       let pivot = col;
       for (let row = col + 1; row < k; row++) {
-        if (Math.abs(A[row]![col] ?? 0) > Math.abs(A[pivot]![col] ?? 0)) pivot = row;
+        if (Math.abs(A[row]![col] ?? 0) > Math.abs(A[pivot]![col] ?? 0))
+          pivot = row;
       }
       const tmp = A[col];
       A[col] = A[pivot]!;
@@ -107,12 +112,14 @@ function ompFit(
       for (let row = 0; row < k; row++) {
         if (row === col) continue;
         const factor = (A[row]![col] ?? 0) / diag;
-        for (let kk = 0; kk < k; kk++) A[row]![kk]! -= factor * (A[col]![kk] ?? 0);
+        for (let kk = 0; kk < k; kk++)
+          A[row]![kk]! -= factor * (A[col]![kk] ?? 0);
         bv[row]! -= factor * (bv[col] ?? 0);
       }
     }
     const alpha = new Float64Array(k);
-    for (let i = 0; i < k; i++) alpha[i] = (A[i]![i] ?? 0) !== 0 ? (bv[i] ?? 0) / (A[i]![i] ?? 1) : 0;
+    for (let i = 0; i < k; i++)
+      alpha[i] = (A[i]![i] ?? 0) !== 0 ? (bv[i] ?? 0) / (A[i]![i] ?? 1) : 0;
 
     // Update coef and residual
     coef.fill(0);
@@ -192,7 +199,7 @@ export class OrthogonalMatchingPursuitCV extends BaseEstimator {
           trainX,
           new Float64Array(trainY),
           nnz,
-          this.fitIntercept
+          this.fitIntercept,
         );
         for (let i = 0; i < valX.length; i++) {
           let pred = intercept;

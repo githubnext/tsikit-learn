@@ -57,16 +57,21 @@ function buildTree(
   criterion: "gini" | "mse",
 ): TreeNode {
   const leafValue =
-    criterion === "gini"
-      ? classificationLeafValue(y)
-      : regressionLeafValue(y);
+    criterion === "gini" ? classificationLeafValue(y) : regressionLeafValue(y);
 
   if (
     depth >= maxDepth ||
     y.length < minSamplesSplit ||
     new Set(y).size === 1
   ) {
-    return { featureIndex: -1, threshold: 0, left: null, right: null, value: leafValue, isLeaf: true };
+    return {
+      featureIndex: -1,
+      threshold: 0,
+      left: null,
+      right: null,
+      value: leafValue,
+      isLeaf: true,
+    };
   }
 
   const nFeatures = (X[0] ?? new Float64Array(0)).length;
@@ -91,8 +96,10 @@ function buildTree(
       if (leftY.length === 0 || rightY.length === 0) continue;
 
       const n = y.length;
-      const leftImpurity = criterion === "gini" ? giniImpurity(leftY) : mse(leftY);
-      const rightImpurity = criterion === "gini" ? giniImpurity(rightY) : mse(rightY);
+      const leftImpurity =
+        criterion === "gini" ? giniImpurity(leftY) : mse(leftY);
+      const rightImpurity =
+        criterion === "gini" ? giniImpurity(rightY) : mse(rightY);
       const gain =
         currentImpurity -
         (leftY.length / n) * leftImpurity -
@@ -107,7 +114,14 @@ function buildTree(
   }
 
   if (bestGain <= 0) {
-    return { featureIndex: -1, threshold: 0, left: null, right: null, value: leafValue, isLeaf: true };
+    return {
+      featureIndex: -1,
+      threshold: 0,
+      left: null,
+      right: null,
+      value: leafValue,
+      isLeaf: true,
+    };
   }
 
   const leftIdx: number[] = [];
@@ -126,8 +140,22 @@ function buildTree(
   return {
     featureIndex: bestFeature,
     threshold: bestThreshold,
-    left: buildTree(leftX, leftY, depth + 1, maxDepth, minSamplesSplit, criterion),
-    right: buildTree(rightX, rightY, depth + 1, maxDepth, minSamplesSplit, criterion),
+    left: buildTree(
+      leftX,
+      leftY,
+      depth + 1,
+      maxDepth,
+      minSamplesSplit,
+      criterion,
+    ),
+    right: buildTree(
+      rightX,
+      rightY,
+      depth + 1,
+      maxDepth,
+      minSamplesSplit,
+      criterion,
+    ),
     value: leafValue,
     isLeaf: false,
   };
@@ -179,7 +207,9 @@ export class DecisionTreeClassifier {
 
   predict(X: Float64Array[]): Float64Array {
     if (this.tree_ === null) throw new NotFittedError("DecisionTreeClassifier");
-    return new Float64Array(X.map((xi) => predict1(this.tree_ as TreeNode, xi)));
+    return new Float64Array(
+      X.map((xi) => predict1(this.tree_ as TreeNode, xi)),
+    );
   }
 
   score(X: Float64Array[], y: Float64Array): number {
@@ -212,9 +242,7 @@ export class DecisionTreeRegressor {
   tree_: TreeNode | null = null;
   nFeatures_: number = 0;
 
-  constructor(
-    options: { maxDepth?: number; minSamplesSplit?: number } = {},
-  ) {
+  constructor(options: { maxDepth?: number; minSamplesSplit?: number } = {}) {
     this.maxDepth = options.maxDepth ?? Number.POSITIVE_INFINITY;
     this.minSamplesSplit = options.minSamplesSplit ?? 2;
   }
@@ -234,7 +262,9 @@ export class DecisionTreeRegressor {
 
   predict(X: Float64Array[]): Float64Array {
     if (this.tree_ === null) throw new NotFittedError("DecisionTreeRegressor");
-    return new Float64Array(X.map((xi) => predict1(this.tree_ as TreeNode, xi)));
+    return new Float64Array(
+      X.map((xi) => predict1(this.tree_ as TreeNode, xi)),
+    );
   }
 
   score(X: Float64Array[], y: Float64Array): number {

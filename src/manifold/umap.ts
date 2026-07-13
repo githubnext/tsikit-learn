@@ -52,7 +52,9 @@ export class UMAP {
   private _dist(a: Float64Array, b: Float64Array): number {
     switch (this.metric) {
       case "cosine": {
-        let dot = 0, na = 0, nb = 0;
+        let dot = 0;
+        let na = 0;
+        let nb = 0;
         for (let i = 0; i < a.length; i++) {
           dot += (a[i] ?? 0) * (b[i] ?? 0);
           na += (a[i] ?? 0) ** 2;
@@ -62,12 +64,14 @@ export class UMAP {
       }
       case "manhattan": {
         let s = 0;
-        for (let i = 0; i < a.length; i++) s += Math.abs((a[i] ?? 0) - (b[i] ?? 0));
+        for (let i = 0; i < a.length; i++)
+          s += Math.abs((a[i] ?? 0) - (b[i] ?? 0));
         return s;
       }
       default: {
         let s = 0;
-        for (let i = 0; i < a.length; i++) s += ((a[i] ?? 0) - (b[i] ?? 0)) ** 2;
+        for (let i = 0; i < a.length; i++)
+          s += ((a[i] ?? 0) - (b[i] ?? 0)) ** 2;
         return Math.sqrt(s);
       }
     }
@@ -87,7 +91,13 @@ export class UMAP {
     const neighbors: number[][] = Array.from({ length: n }, (_, i) => {
       const dists = Array.from({ length: n }, (__, j) => ({
         j,
-        d: i !== j ? this._dist(X[i] ?? new Float64Array(0), X[j] ?? new Float64Array(0)) : Number.POSITIVE_INFINITY,
+        d:
+          i !== j
+            ? this._dist(
+                X[i] ?? new Float64Array(0),
+                X[j] ?? new Float64Array(0),
+              )
+            : Number.POSITIVE_INFINITY,
       }));
       dists.sort((a, b) => a.d - b.d);
       return dists.slice(0, k).map((x) => x.j);

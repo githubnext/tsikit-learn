@@ -61,7 +61,7 @@ export function computeFeatureNorms(X: Float64Array[]): Float64Array {
   const norms = new Float64Array(p);
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < p; j++) {
-      norms[j]! += ((X[i]![j] ?? 0) ** 2) / n;
+      norms[j]! += (X[i]![j] ?? 0) ** 2 / n;
     }
   }
   return norms;
@@ -111,8 +111,9 @@ export function cdEnetPath(
   const alphas =
     options.alphas ??
     new Float64Array(
-      Array.from({ length: nAlphas }, (_, k) =>
-        alphaMax * Math.pow(eps, k / (nAlphas - 1)),
+      Array.from(
+        { length: nAlphas },
+        (_, k) => alphaMax * eps ** (k / (nAlphas - 1)),
       ),
     );
 
@@ -130,7 +131,15 @@ export function cdEnetPath(
     for (let iter = 0; iter < maxIter; iter++) {
       let maxChange = 0;
       for (let j = 0; j < p; j++) {
-        const delta = coordinateDescentUpdate(j, X, residual, coef, alpha, l1Ratio, norm2);
+        const delta = coordinateDescentUpdate(
+          j,
+          X,
+          residual,
+          coef,
+          alpha,
+          l1Ratio,
+          norm2,
+        );
         if (Math.abs(delta) > maxChange) maxChange = Math.abs(delta);
         if (delta !== 0) {
           for (let i = 0; i < n; i++) {
@@ -179,7 +188,7 @@ export function istaLasso(
     let norm = 0;
     for (const x of Av) norm += x * x;
     norm = Math.sqrt(norm) || 1;
-    v = Av.map(x => x / norm);
+    v = Av.map((x) => x / norm);
   }
   let L = 0;
   const Xv2 = new Float64Array(n);
@@ -214,4 +223,3 @@ export function istaLasso(
   }
   return coef;
 }
-

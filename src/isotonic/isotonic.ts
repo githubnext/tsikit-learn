@@ -6,7 +6,10 @@
 import { NotFittedError } from "../exceptions.js";
 
 /** Pool Adjacent Violators (PAV) algorithm for isotonic regression. */
-function poolAdjacentViolators(y: Float64Array, increasing: boolean): Float64Array {
+function poolAdjacentViolators(
+  y: Float64Array,
+  increasing: boolean,
+): Float64Array {
   const n = y.length;
   const result = new Float64Array(y);
 
@@ -16,7 +19,11 @@ function poolAdjacentViolators(y: Float64Array, increasing: boolean): Float64Arr
     changed = false;
     let i = 0;
     while (i < n - 1) {
-      if (increasing ? (result[i] ?? 0) > (result[i + 1] ?? 0) : (result[i] ?? 0) < (result[i + 1] ?? 0)) {
+      if (
+        increasing
+          ? (result[i] ?? 0) > (result[i + 1] ?? 0)
+          : (result[i] ?? 0) < (result[i + 1] ?? 0)
+      ) {
         // Merge block
         const mean = ((result[i] ?? 0) + (result[i + 1] ?? 0)) / 2;
         result[i] = mean;
@@ -85,7 +92,8 @@ export class IsotonicRegression {
     return new Float64Array(
       Array.from(X).map((xi) => {
         if (xi <= (xThresh[0] ?? xi)) return yThresh[0] ?? 0;
-        if (xi >= (xThresh[xThresh.length - 1] ?? xi)) return yThresh[yThresh.length - 1] ?? 0;
+        if (xi >= (xThresh[xThresh.length - 1] ?? xi))
+          return yThresh[yThresh.length - 1] ?? 0;
 
         // Binary search for interpolation
         let lo = 0;

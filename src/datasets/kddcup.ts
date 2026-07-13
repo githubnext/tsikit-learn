@@ -13,18 +13,56 @@ export interface KDDCupDataset {
 }
 
 export const KDD_FEATURE_NAMES = [
-  "duration", "protocol_type", "service", "flag", "src_bytes", "dst_bytes",
-  "land", "wrong_fragment", "urgent", "hot", "num_failed_logins", "logged_in",
-  "num_compromised", "root_shell", "su_attempted", "num_root", "num_file_creations",
-  "num_shells", "num_access_files", "num_outbound_cmds", "is_host_login", "is_guest_login",
-  "count", "srv_count", "serror_rate", "srv_serror_rate", "rerror_rate", "srv_rerror_rate",
-  "same_srv_rate", "diff_srv_rate", "srv_diff_host_rate", "dst_host_count",
-  "dst_host_srv_count", "dst_host_same_srv_rate", "dst_host_diff_srv_rate",
-  "dst_host_same_src_port_rate", "dst_host_srv_diff_host_rate", "dst_host_serror_rate",
-  "dst_host_srv_serror_rate", "dst_host_rerror_rate", "dst_host_srv_rerror_rate",
+  "duration",
+  "protocol_type",
+  "service",
+  "flag",
+  "src_bytes",
+  "dst_bytes",
+  "land",
+  "wrong_fragment",
+  "urgent",
+  "hot",
+  "num_failed_logins",
+  "logged_in",
+  "num_compromised",
+  "root_shell",
+  "su_attempted",
+  "num_root",
+  "num_file_creations",
+  "num_shells",
+  "num_access_files",
+  "num_outbound_cmds",
+  "is_host_login",
+  "is_guest_login",
+  "count",
+  "srv_count",
+  "serror_rate",
+  "srv_serror_rate",
+  "rerror_rate",
+  "srv_rerror_rate",
+  "same_srv_rate",
+  "diff_srv_rate",
+  "srv_diff_host_rate",
+  "dst_host_count",
+  "dst_host_srv_count",
+  "dst_host_same_srv_rate",
+  "dst_host_diff_srv_rate",
+  "dst_host_same_src_port_rate",
+  "dst_host_srv_diff_host_rate",
+  "dst_host_serror_rate",
+  "dst_host_srv_serror_rate",
+  "dst_host_rerror_rate",
+  "dst_host_srv_rerror_rate",
 ] as const;
 
-export const KDD_TARGET_NAMES = ["normal", "dos", "probe", "r2l", "u2r"] as const;
+export const KDD_TARGET_NAMES = [
+  "normal",
+  "dos",
+  "probe",
+  "r2l",
+  "u2r",
+] as const;
 
 export function makeKDDCupSynthetic(nSamples = 500, seed = 42): KDDCupDataset {
   const rng = seededRng(seed);
@@ -74,13 +112,17 @@ export function makeKDDCupSynthetic(nSamples = 500, seed = 42): KDDCupDataset {
     targetNames: [...KDD_TARGET_NAMES],
     nSamples,
     nFeatures,
-    description: "Synthetic KDD Cup 1999 network intrusion dataset. Each row is a network connection with class labels: normal, dos, probe, r2l, u2r.",
+    description:
+      "Synthetic KDD Cup 1999 network intrusion dataset. Each row is a network connection with class labels: normal, dos, probe, r2l, u2r.",
   };
 }
 
 function seededRng(seed: number): () => number {
   let s = seed;
-  return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
 }
 
 export function loadKDDCup99(nSamples = 494021, seed = 42): KDDCupDataset {

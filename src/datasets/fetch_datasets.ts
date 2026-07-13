@@ -17,10 +17,12 @@ export interface FetchedDataset {
  * Synthetic version of the California Housing dataset.
  * Real dataset: 20,640 samples, 8 features.
  */
-export function fetchCaliforniaHousing(options: {
-  nSamples?: number;
-  seed?: number;
-} = {}): FetchedDataset {
+export function fetchCaliforniaHousing(
+  options: {
+    nSamples?: number;
+    seed?: number;
+  } = {},
+): FetchedDataset {
   const n = options.nSamples ?? 100;
   let seed = options.seed ?? 42;
   function rand(): number {
@@ -28,7 +30,16 @@ export function fetchCaliforniaHousing(options: {
     return (seed >>> 0) / 0xffffffff;
   }
 
-  const featureNames = ["MedInc", "HouseAge", "AveRooms", "AveBedrms", "Population", "AveOccup", "Latitude", "Longitude"];
+  const featureNames = [
+    "MedInc",
+    "HouseAge",
+    "AveRooms",
+    "AveBedrms",
+    "Population",
+    "AveOccup",
+    "Latitude",
+    "Longitude",
+  ];
   const data: Float64Array[] = [];
   const target = new Float64Array(n);
 
@@ -42,18 +53,38 @@ export function fetchCaliforniaHousing(options: {
     const latitude = 32 + rand() * 10;
     const longitude = -124 + rand() * 10;
 
-    data.push(new Float64Array([medInc, houseAge, aveRooms, aveBedrms, population, aveOccup, latitude, longitude]));
+    data.push(
+      new Float64Array([
+        medInc,
+        houseAge,
+        aveRooms,
+        aveBedrms,
+        population,
+        aveOccup,
+        latitude,
+        longitude,
+      ]),
+    );
     target[i] = 0.5 + medInc * 0.3 + rand() * 0.5;
   }
 
-  return { data, target, featureNames, description: "California Housing dataset (synthetic)", nSamples: n, nFeatures: 8 };
+  return {
+    data,
+    target,
+    featureNames,
+    description: "California Housing dataset (synthetic)",
+    nSamples: n,
+    nFeatures: 8,
+  };
 }
 
 /**
  * Synthetic version of the Forest Cover Type dataset.
  * Real dataset: 581,012 samples, 54 features, 7 classes.
  */
-export function fetchCovtype(options: { nSamples?: number; seed?: number } = {}): FetchedDataset {
+export function fetchCovtype(
+  options: { nSamples?: number; seed?: number } = {},
+): FetchedDataset {
   const n = options.nSamples ?? 100;
   let seed = options.seed ?? 42;
   function rand(): number {
@@ -73,22 +104,34 @@ export function fetchCovtype(options: { nSamples?: number; seed?: number } = {})
   }
 
   return {
-    data, target,
+    data,
+    target,
     featureNames: Array.from({ length: nFeatures }, (_, j) => `feature_${j}`),
-    targetNames: ["Spruce/Fir", "Lodgepole Pine", "Ponderosa Pine", "Cottonwood/Willow", "Aspen", "Douglas-fir", "Krummholz"],
+    targetNames: [
+      "Spruce/Fir",
+      "Lodgepole Pine",
+      "Ponderosa Pine",
+      "Cottonwood/Willow",
+      "Aspen",
+      "Douglas-fir",
+      "Krummholz",
+    ],
     description: "Forest Cover Type dataset (synthetic)",
-    nSamples: n, nFeatures
+    nSamples: n,
+    nFeatures,
   };
 }
 
 /**
  * Synthetic version of the KDD Cup 1999 dataset.
  */
-export function fetchKddcup99(options: {
-  subset?: "http" | "smtp" | "SF" | "SA" | null;
-  nSamples?: number;
-  seed?: number;
-} = {}): FetchedDataset {
+export function fetchKddcup99(
+  options: {
+    subset?: "http" | "smtp" | "SF" | "SA" | null;
+    nSamples?: number;
+    seed?: number;
+  } = {},
+): FetchedDataset {
   const n = options.nSamples ?? 100;
   let seed = options.seed ?? 42;
   function rand(): number {
@@ -108,23 +151,27 @@ export function fetchKddcup99(options: {
   }
 
   return {
-    data, target,
+    data,
+    target,
     featureNames: Array.from({ length: nFeatures }, (_, j) => `feature_${j}`),
     targetNames: ["normal", "attack"],
     description: `KDD Cup 99 dataset${options.subset ? ` (${options.subset} subset)` : ""} (synthetic)`,
-    nSamples: n, nFeatures
+    nSamples: n,
+    nFeatures,
   };
 }
 
 /**
  * Synthetic version of the Labeled Faces in the Wild (LFW) dataset.
  */
-export function fetchLfw(options: {
-  minFacesPerPerson?: number;
-  nComponents?: number;
-  nSamples?: number;
-  seed?: number;
-} = {}): FetchedDataset {
+export function fetchLfw(
+  options: {
+    minFacesPerPerson?: number;
+    nComponents?: number;
+    nSamples?: number;
+    seed?: number;
+  } = {},
+): FetchedDataset {
   const n = options.nSamples ?? 50;
   const nFeatures = options.nComponents ?? 50 * 37;
   let seed = options.seed ?? 42;
@@ -146,11 +193,13 @@ export function fetchLfw(options: {
   }
 
   return {
-    data, target,
+    data,
+    target,
     featureNames: Array.from({ length: nFeatures }, (_, j) => `pixel_${j}`),
     targetNames: Array.from({ length: nPersons }, (_, i) => `person_${i}`),
     description: "Labeled Faces in the Wild dataset (synthetic)",
-    nSamples: n, nFeatures
+    nSamples: n,
+    nFeatures,
   };
 }
 
@@ -158,7 +207,9 @@ export function fetchLfw(options: {
  * Synthetic version of the Olivetti Faces dataset.
  * Real dataset: 400 samples, 4096 features (64x64), 40 classes.
  */
-export function fetchOlivettiFaces(options: { seed?: number } = {}): FetchedDataset {
+export function fetchOlivettiFaces(
+  options: { seed?: number } = {},
+): FetchedDataset {
   const n = 40;
   const nFeatures = 4096;
   let seed = options.seed ?? 42;
@@ -177,10 +228,12 @@ export function fetchOlivettiFaces(options: { seed?: number } = {}): FetchedData
   }
 
   return {
-    data, target,
+    data,
+    target,
     featureNames: Array.from({ length: nFeatures }, (_, j) => `pixel_${j}`),
     description: "Olivetti Faces dataset (synthetic)",
-    nSamples: n, nFeatures
+    nSamples: n,
+    nFeatures,
   };
 }
 
@@ -188,16 +241,22 @@ export function fetchOlivettiFaces(options: { seed?: number } = {}): FetchedData
  * Fetch a sample of the 20 Newsgroups dataset.
  * Returns feature vectors (TF-IDF like) for text classification.
  */
-export function fetch20Newsgroups(options: {
-  nSamples?: number;
-  nFeatures?: number;
-  seed?: number;
-  categories?: string[] | null;
-} = {}): FetchedDataset {
+export function fetch20Newsgroups(
+  options: {
+    nSamples?: number;
+    nFeatures?: number;
+    seed?: number;
+    categories?: string[] | null;
+  } = {},
+): FetchedDataset {
   const n = options.nSamples ?? 100;
   const nFeatures = options.nFeatures ?? 100;
   const categories = options.categories ?? [
-    "alt.atheism", "comp.graphics", "sci.med", "soc.religion.christian", "talk.politics.guns"
+    "alt.atheism",
+    "comp.graphics",
+    "sci.med",
+    "soc.religion.christian",
+    "talk.politics.guns",
   ];
   const nClasses = categories.length;
   let seed = options.seed ?? 42;
@@ -217,10 +276,12 @@ export function fetch20Newsgroups(options: {
   }
 
   return {
-    data, target,
+    data,
+    target,
     featureNames: Array.from({ length: nFeatures }, (_, j) => `word_${j}`),
     targetNames: categories,
     description: "20 Newsgroups dataset (synthetic TF-IDF)",
-    nSamples: n, nFeatures
+    nSamples: n,
+    nFeatures,
   };
 }

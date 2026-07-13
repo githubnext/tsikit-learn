@@ -45,7 +45,9 @@ export class MissingIndicator {
     this.nFeatures_ = nFeats;
 
     if (this.features === "all") {
-      this.features_ = new Int32Array(Array.from({ length: nFeats }, (_, i) => i));
+      this.features_ = new Int32Array(
+        Array.from({ length: nFeats }, (_, i) => i),
+      );
     } else {
       // "missing-only": only columns with at least one missing value
       const hasMissing: boolean[] = new Array(nFeats).fill(false) as boolean[];
@@ -55,14 +57,15 @@ export class MissingIndicator {
         }
       }
       this.features_ = new Int32Array(
-        hasMissing.map((v, i) => (v ? i : -1)).filter((v) => v >= 0)
+        hasMissing.map((v, i) => (v ? i : -1)).filter((v) => v >= 0),
       );
     }
     return this;
   }
 
   transform(X: Float64Array[]): Uint8Array[] {
-    if (!this.features_) throw new NotFittedError("MissingIndicator is not fitted");
+    if (!this.features_)
+      throw new NotFittedError("MissingIndicator is not fitted");
     const nOut = this.features_.length;
 
     return X.map((row) => {
@@ -88,12 +91,12 @@ export class MissingIndicator {
   }
 
   setParams(params: Record<string, unknown>): this {
-    if (params["missingValues"] !== undefined)
-      this.missingValues = params["missingValues"] as number;
-    if (params["features"] !== undefined)
-      this.features = params["features"] as "missing-only" | "all";
-    if (params["errorOnNew"] !== undefined)
-      this.errorOnNew = params["errorOnNew"] as boolean;
+    if (params.missingValues !== undefined)
+      this.missingValues = params.missingValues as number;
+    if (params.features !== undefined)
+      this.features = params.features as "missing-only" | "all";
+    if (params.errorOnNew !== undefined)
+      this.errorOnNew = params.errorOnNew as boolean;
     return this;
   }
 }

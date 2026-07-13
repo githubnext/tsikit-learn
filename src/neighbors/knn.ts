@@ -79,7 +79,8 @@ export class KNeighborsClassifier {
 
         const votes = new Map<number, number>();
         for (const { dist, label } of neighbors) {
-          const w = this.weights === "distance" ? (dist > 0 ? 1 / dist : 1e10) : 1;
+          const w =
+            this.weights === "distance" ? (dist > 0 ? 1 / dist : 1e10) : 1;
           votes.set(label, (votes.get(label) ?? 0) + w);
         }
 
@@ -154,7 +155,8 @@ export class KNeighborsRegressor {
         let wSum = 0;
         let ySum = 0;
         for (const { dist, y: yVal } of neighbors) {
-          const w = this.weights === "distance" ? (dist > 0 ? 1 / dist : 1e10) : 1;
+          const w =
+            this.weights === "distance" ? (dist > 0 ? 1 / dist : 1e10) : 1;
           wSum += w;
           ySum += w * yVal;
         }

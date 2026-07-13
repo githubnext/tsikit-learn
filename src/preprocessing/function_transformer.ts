@@ -7,7 +7,10 @@
  * validate, feature_names_out, and kw_args support.
  */
 
-export type TransformFn = (X: Float64Array[], kwargs?: Record<string, unknown>) => Float64Array[];
+export type TransformFn = (
+  X: Float64Array[],
+  kwargs?: Record<string, unknown>,
+) => Float64Array[];
 export type FeatureNamesOutFn = (inputFeatureNames: string[]) => string[];
 
 export interface AdvancedFunctionTransformerOptions {
@@ -60,7 +63,7 @@ export class AdvancedFunctionTransformer {
       const nFeatures = X[0]?.length ?? 0;
       if (nFeatures !== this.nFeaturesIn_) {
         throw new Error(
-          `Expected ${this.nFeaturesIn_} features, got ${nFeatures}`
+          `Expected ${this.nFeaturesIn_} features, got ${nFeatures}`,
         );
       }
     }
@@ -68,7 +71,10 @@ export class AdvancedFunctionTransformer {
       // Identity transform
       return X;
     }
-    return this.func(X, Object.keys(this.kwArgs).length > 0 ? this.kwArgs : undefined);
+    return this.func(
+      X,
+      Object.keys(this.kwArgs).length > 0 ? this.kwArgs : undefined,
+    );
   }
 
   fitTransform(X: Float64Array[]): Float64Array[] {
@@ -80,15 +86,20 @@ export class AdvancedFunctionTransformer {
       // Identity
       return X;
     }
-    return this.inverseFunc(X, Object.keys(this.invKwArgs).length > 0 ? this.invKwArgs : undefined);
+    return this.inverseFunc(
+      X,
+      Object.keys(this.invKwArgs).length > 0 ? this.invKwArgs : undefined,
+    );
   }
 
   getFeatureNamesOut(inputFeatures?: string[]): string[] {
-    const features = inputFeatures ?? Array.from(
-      { length: this.nFeaturesIn_ ?? 0 },
-      (_, i) => `x${i}`,
-    );
-    if (this.featureNamesOut === null || this.featureNamesOut === "one-to-one") {
+    const features =
+      inputFeatures ??
+      Array.from({ length: this.nFeaturesIn_ ?? 0 }, (_, i) => `x${i}`);
+    if (
+      this.featureNamesOut === null ||
+      this.featureNamesOut === "one-to-one"
+    ) {
       return features;
     }
     return this.featureNamesOut(features);
@@ -103,7 +114,9 @@ export class AdvancedFunctionTransformer {
 /**
  * Convenience function to create a log-transforming FunctionTransformer.
  */
-export function makeLogTransformer(base?: "e" | "2" | "10"): AdvancedFunctionTransformer {
+export function makeLogTransformer(
+  base?: "e" | "2" | "10",
+): AdvancedFunctionTransformer {
   const logFn: TransformFn = (X) =>
     X.map((row) => {
       const out = new Float64Array(row.length);
@@ -121,8 +134,8 @@ export function makeLogTransformer(base?: "e" | "2" | "10"): AdvancedFunctionTra
       const out = new Float64Array(row.length);
       for (let j = 0; j < row.length; j++) {
         const v = row[j] ?? 0;
-        if (base === "2") out[j] = Math.pow(2, v);
-        else if (base === "10") out[j] = Math.pow(10, v);
+        if (base === "2") out[j] = 2 ** v;
+        else if (base === "10") out[j] = 10 ** v;
         else out[j] = Math.exp(v);
       }
       return out;
@@ -136,18 +149,21 @@ export function makeLogTransformer(base?: "e" | "2" | "10"): AdvancedFunctionTra
  */
 export function makeSqrtTransformer(): AdvancedFunctionTransformer {
   return new AdvancedFunctionTransformer({
-    func: (X) => X.map((row) => {
-      const out = new Float64Array(row.length);
-      for (let j = 0; j < row.length; j++) out[j] = Math.sqrt(Math.max(0, row[j] ?? 0));
-      return out;
-    }),
-    inverseFunc: (X) => X.map((row) => {
-      const out = new Float64Array(row.length);
-      for (let j = 0; j < row.length; j++) {
-        const v = row[j] ?? 0;
-        out[j] = v * v;
-      }
-      return out;
-    }),
+    func: (X) =>
+      X.map((row) => {
+        const out = new Float64Array(row.length);
+        for (let j = 0; j < row.length; j++)
+          out[j] = Math.sqrt(Math.max(0, row[j] ?? 0));
+        return out;
+      }),
+    inverseFunc: (X) =>
+      X.map((row) => {
+        const out = new Float64Array(row.length);
+        for (let j = 0; j < row.length; j++) {
+          const v = row[j] ?? 0;
+          out[j] = v * v;
+        }
+        return out;
+      }),
   });
 }
