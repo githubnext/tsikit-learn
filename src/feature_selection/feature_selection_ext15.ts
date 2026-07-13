@@ -97,7 +97,7 @@ export class RFECV extends RFE {
       this.cvScores_[fi] = totalScore / this.cv;
     }
     const bestIdx = Array.from(this.cvScores_).reduce((best, v, i) => v > (this.cvScores_[best] ?? 0) ? i : best, 0);
-    this['nFeaturesToSelect' as keyof typeof this] = nFeaturesArr[bestIdx] as unknown as this[keyof this];
+    (this as unknown as { nFeaturesToSelect: number }).nFeaturesToSelect = nFeaturesArr[bestIdx]!;
     return this.fit(X, y);
   }
 

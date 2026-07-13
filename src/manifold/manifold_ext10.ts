@@ -45,7 +45,7 @@ export class DiffusionMap extends BaseEstimator {
 
     // Compute epsilon
     const eps = this.epsilon === "auto"
-      ? Array.from(dist).flatMap(row => Array.from(row)).sort((a, b) => a - b)[Math.floor(n * n * 0.05)] ?? 1
+      ? dist.flatMap(row => Array.from(row)).sort((a, b) => a - b)[Math.floor(n * n * 0.05)] ?? 1
       : this.epsilon;
 
     // Kernel matrix W = exp(-dist^2 / eps)

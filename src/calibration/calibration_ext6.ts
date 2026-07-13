@@ -31,6 +31,8 @@ export class IsotonicCalibrator extends BaseEstimator implements CalibrationBase
   private isotonics_!: Array<{ xKnots: number[]; yKnots: number[] }>;
   private fitted_ = false;
 
+  constructor() { super(); }
+
   fit(_X: Float64Array[]): this { return this; }
 
   fitCalibration(
