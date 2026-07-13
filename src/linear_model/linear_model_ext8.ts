@@ -66,11 +66,11 @@ export class LassoLars extends BaseEstimator {
   }
 
   predict(X: Float64Array[]): Float64Array {
-    return X.map(row => {
+    return new Float64Array(X.map(row => {
       let s = 0;
       for (let j = 0; j < row.length; j++) s += (row[j] ?? 0) * (this.coef_[j] ?? 0);
       return s;
-    });
+    }));
   }
 }
 

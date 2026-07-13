@@ -127,8 +127,6 @@ export class PHATE {
   getEmbedding(): Float64Array[] {
     return this.embedding_;
   }
-  // nLandmark is stored but not used in simplified version
-  private _nLandmark = this.nLandmark;
 }
 
 export class ForceAtlas2 {

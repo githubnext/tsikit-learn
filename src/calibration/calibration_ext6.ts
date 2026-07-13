@@ -2,7 +2,7 @@
  * Isotonic calibration and histogram-based calibration.
  */
 
-import type { BaseEstimator } from "../base.js";
+import { BaseEstimator } from "../base.js";
 
 export interface CalibrationBase extends BaseEstimator {
   predictProba(X: Float64Array[]): Float64Array[];
@@ -27,12 +27,9 @@ function isotonicRegression(y: number[]): number[] {
   return result;
 }
 
-export class IsotonicCalibrator implements CalibrationBase {
+export class IsotonicCalibrator extends BaseEstimator implements CalibrationBase {
   private isotonics_!: Array<{ xKnots: number[]; yKnots: number[] }>;
   private fitted_ = false;
-  readonly params: Record<string, unknown>;
-
-  constructor() { this.params = {}; }
 
   fit(_X: Float64Array[]): this { return this; }
 

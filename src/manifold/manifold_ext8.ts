@@ -95,7 +95,7 @@ export class PHATE extends BaseEstimator {
     );
   }
 
-  private _mds(dist: Float64Array[][], n: number): Float64Array[] {
+  private _mds(dist: Float64Array[], n: number): Float64Array[] {
     // Classical MDS
     const nc = this.n_components;
     const D2 = dist.map((row) => row.map((v) => v * v));

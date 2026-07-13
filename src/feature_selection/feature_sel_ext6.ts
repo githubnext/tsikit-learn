@@ -64,9 +64,9 @@ export class BorutaSelector {
 
     // Binomial test approximation: expected successes = totalTrials * 0.5
     const threshold = totalTrials * 0.5 + 1.96 * Math.sqrt(totalTrials * 0.25);
-    this.confirmed_ = hitCounts.map((h) => h > threshold ? 1 : 0);
-    this.tentative_ = hitCounts.map((h, j) => h > totalTrials * 0.3 && (this.confirmed_?.[j] ?? 0) === 0 ? 1 : 0);
-    this.rejected_ = hitCounts.map((h, j) => (this.confirmed_?.[j] ?? 0) === 0 && (this.tentative_?.[j] ?? 0) === 0 ? 1 : 0);
+    this.confirmed_ = Uint8Array.from(hitCounts, (h) => h > threshold ? 1 : 0);
+    this.tentative_ = Uint8Array.from(hitCounts, (h, j) => h > totalTrials * 0.3 && (this.confirmed_?.[j] ?? 0) === 0 ? 1 : 0);
+    this.rejected_ = Uint8Array.from(hitCounts, (h, j) => (this.confirmed_?.[j] ?? 0) === 0 && (this.tentative_?.[j] ?? 0) === 0 ? 1 : 0);
     return this;
   }
 
@@ -134,7 +134,7 @@ export class PermutationImportanceSelector {
       return Math.sqrt(imp.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(this.nRepeats - 1, 1));
     });
     this.importances_ = this.importancesMean_;
-    this.support_ = this.importancesMean_.map((v) => v > this.threshold ? 1 : 0);
+    this.support_ = Uint8Array.from(this.importancesMean_, (v) => v > this.threshold ? 1 : 0);
     return this;
   }
 

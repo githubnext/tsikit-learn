@@ -77,7 +77,7 @@ export function crossValidate(
     if (returnTrainScore && trainScores) trainScores[fold] = estimator.score(XTrain, yTrain);
     scoreTime[fold] = (Date.now() - t1) / 1000;
   }
-  return { testScores, trainScores, fitTime, scoreTime };
+  return { testScores, ...(trainScores !== undefined ? { trainScores } : {}), fitTime, scoreTime };
 }
 
 export function learningCurve(

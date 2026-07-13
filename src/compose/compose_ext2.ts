@@ -15,7 +15,7 @@ export class LambdaTransformer {
     inverseFn?: (X: Float64Array[]) => Float64Array[]
   ) {
     this.fn = fn;
-    this.inverseFn = inverseFn;
+    if (inverseFn !== undefined) this.inverseFn = inverseFn;
   }
 
   fit(_X: Float64Array[]): this { return this; }

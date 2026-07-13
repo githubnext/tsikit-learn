@@ -14,7 +14,7 @@ export function kernelSHAPExt(
   background: Float64Array[],
   nSamples: number = 100,
   randomState: number = 42
-): Float64Array[][] {
+): Float64Array[] {
   const n = X.length;
   const p = X[0]?.length ?? 0;
   let rng = randomState;
@@ -49,7 +49,7 @@ export function treeSHAPApprox(
   predictions: Float64Array,
   X: Float64Array[],
   baseValue: number
-): Float64Array[][] {
+): Float64Array[] {
   const n = X.length, p = X[0]?.length ?? 0;
   const totalImportance = featureImportances.reduce((s, v) => s + v, 0) + 1e-10;
   const normalizedImp = featureImportances.map(v => v / totalImportance);
@@ -71,7 +71,7 @@ export function individualConditionalExpectation(
   const gridValues = new Float64Array(gridPoints).map((_, i) => minV + (i / (gridPoints - 1)) * (maxV - minV));
 
   const iceLines = X.map(row => {
-    const preds = model.predict(gridValues.map(v => {
+    const preds = model.predict(Array.from(gridValues, v => {
       const r = row.slice();
       r[featureIdx] = v;
       return r;
@@ -98,7 +98,7 @@ export function partialDependence2D(
   X: Float64Array[],
   features: [number, number],
   gridPoints: number = 20
-): { grid0: Float64Array; grid1: Float64Array; averagePredictions: Float64Array[][] } {
+): { grid0: Float64Array; grid1: Float64Array; averagePredictions: Float64Array[] } {
   const [f0, f1] = features;
   const vals0 = X.map(row => row[f0] ?? 0);
   const vals1 = X.map(row => row[f1] ?? 0);
@@ -118,7 +118,7 @@ export function partialDependence2D(
       return preds.reduce((s, v) => s + v, 0) / preds.length;
     })
   );
-  return { grid0, grid1, averagePredictions } as Float64Array<ArrayBufferLike>[][];
+  return { grid0, grid1, averagePredictions };
 }
 
 export function hStatisticExt(

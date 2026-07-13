@@ -51,7 +51,7 @@ export function loadDigits(
     const seed = cls * 17;
     for (let px = 0; px < nFeatures; px++) {
       const r =
-        (seed * 6364136223846793005n + BigInt(px) * 2862933555777941757n) &
+        (BigInt(seed) * 6364136223846793005n + BigInt(px) * 2862933555777941757n) &
         0xffffffffffffn;
       proto[px] = Number(r % 17n); // 0-16
     }

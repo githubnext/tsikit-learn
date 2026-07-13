@@ -25,7 +25,7 @@ export function elbowMethod(
 ): ElbowResult {
   const inertias: number[] = [];
   for (const k of kRange) {
-    const km = new KMeansClass({ nClusters: k, randomState });
+    const km = new KMeansClass({ nClusters: k, ...(randomState !== undefined ? { randomState } : {}) });
     km.fit(X);
     inertias.push(km.inertia_);
   }

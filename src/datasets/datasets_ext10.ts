@@ -9,8 +9,8 @@ export function makeCheckerboard(shape: [number, number] = [100, 100], nClusters
   const rowLabels = new Int32Array(nRows);
   const colLabels = new Int32Array(nCols);
 
-  for (let i = 0; i < nRows; i++) rowLabels[i] = i % nRowClusters;
-  for (let j = 0; j < nCols; j++) colLabels[j] = j % nColClusters;
+  for (let i = 0; i < nRows; i++) rowLabels[i] = i % (nRowClusters ?? 1);
+  for (let j = 0; j < nCols; j++) colLabels[j] = j % (nColClusters ?? 1);
 
   for (let i = 0; i < nRows; i++) {
     const row = new Float64Array(nCols).map((_, j) => {

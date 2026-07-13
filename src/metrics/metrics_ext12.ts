@@ -21,7 +21,7 @@ export function labelRankingAveragePrecisionExt(y: number[][], yScore: Float64Ar
   let ap = 0;
   for (let i = 0; i < n; i++) {
     const relevantSet = new Set(y[i]);
-    const scores = yScore[i] as Float64Array;
+    const scores = yScore[i] as unknown as Float64Array;
     const sortedIdx = Array.from({ length: scores.length }, (_, j) => j)
       .sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
     let cumRel = 0, sumAP = 0, rank = 0;
@@ -133,7 +133,7 @@ export function coverageError(y: Int32Array[], yScore: Float64Array[][]): number
   for (let i = 0; i < n; i++) {
     const relevantLabels = Array.from({ length: nLabels }, (_, j) => j).filter((j) => (y[i]?.[j] ?? 0) === 1);
     if (relevantLabels.length === 0) continue;
-    const scores = yScore[i] as Float64Array;
+    const scores = yScore[i] as unknown as Float64Array;
     const sortedIdx = Array.from({ length: scores.length }, (_, j) => j).sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
     const maxRank = Math.max(...relevantLabels.map((j) => sortedIdx.indexOf(j) + 1));
     totalCoverage += maxRank;
@@ -147,7 +147,7 @@ export function ndcgScoreMultiLabel(y: Int32Array[], yScore: Float64Array[][], k
   const topK = k ?? nLabels;
   let totalNdcg = 0;
   for (let i = 0; i < n; i++) {
-    const scores = yScore[i] as Float64Array;
+    const scores = yScore[i] as unknown as Float64Array;
     const sortedIdx = Array.from({ length: scores.length }, (_, j) => j).sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0)).slice(0, topK);
     let dcg = 0;
     for (let rank = 0; rank < sortedIdx.length; rank++) {

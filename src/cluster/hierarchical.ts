@@ -21,6 +21,10 @@ export interface HierarchicalHierarchicalLinkageRow {
   count: number;
 }
 
+/** Alias for {@link HierarchicalHierarchicalLinkageRow}. */
+// biome-ignore lint/suspicious/noTypeOnlyExport: used as value alias
+export type HierarchicalLinkageRow = HierarchicalHierarchicalLinkageRow;
+
 /**
  * Computes a hierarchical clustering linkage matrix from a condensed distance matrix.
  *
