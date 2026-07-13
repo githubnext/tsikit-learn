@@ -40,7 +40,7 @@ export function enEtCoordDescent(
   // Precompute column norms
   const colNorms = new Float64Array(d);
   for (let j = 0; j < d; j++) {
-    for (let i = 0; i < n; i++) colNorms[j] += (X[i]?.[j] ?? 0) ** 2;
+    for (let i = 0; i < n; i++) colNorms[j]! += (X[i]?.[j] ?? 0) ** 2;
     colNorms[j]! /= n;
   }
 
@@ -126,7 +126,7 @@ export function sparseCdFast(
   const colNorms = new Float64Array(d);
   for (let j = 0; j < d; j++) {
     for (let i = 0; i < n; i++)
-      colNorms[j] += (sampleWeight[i] ?? 1) * (X[i]?.[j] ?? 0) ** 2;
+      colNorms[j]! += (sampleWeight[i] ?? 1) * (X[i]?.[j] ?? 0) ** 2;
   }
 
   for (nIter = 0; nIter < maxIter; nIter++) {

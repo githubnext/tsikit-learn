@@ -59,7 +59,7 @@ export class QuadraticDiscriminantAnalysis {
       // Class mean
       const mean = new Float64Array(nFeatures);
       for (const x of classX) {
-        for (let j = 0; j < nFeatures; j++) mean[j] += (x[j] ?? 0) / nc;
+        for (let j = 0; j < nFeatures; j++) mean[j]! += (x[j] ?? 0) / nc;
       }
       this.means_.push(mean);
 
@@ -71,14 +71,14 @@ export class QuadraticDiscriminantAnalysis {
       for (const x of classX) {
         for (let j = 0; j < nFeatures; j++) {
           for (let k = 0; k < nFeatures; k++) {
-            cov[j]![k] +=
+            cov[j]![k]! +=
               (((x[j] ?? 0) - mean[j]!) * ((x[k] ?? 0) - mean[k]!)) / (nc - 1);
           }
         }
       }
       // Regularization
       if (this.regParam > 0) {
-        for (let j = 0; j < nFeatures; j++) cov[j]![j] += this.regParam;
+        for (let j = 0; j < nFeatures; j++) cov[j]![j]! += this.regParam;
       }
 
       if (this.storeCovariance) this.covariance_.push(cov);

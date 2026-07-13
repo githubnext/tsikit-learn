@@ -134,7 +134,7 @@ export class BayesianGaussianMixture {
         newResp.push(r);
         logLik += Math.log(sum || 1e-10) + maxLog;
       }
-      resp = newResp;
+      resp = newResp as Float64Array<ArrayBuffer>[];
 
       // Check convergence
       if (Math.abs(logLik - prevLogLik) < this.tol) {

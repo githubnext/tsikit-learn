@@ -31,12 +31,12 @@ export function qrDecomposition(A: Float64Array[]): {
       const qk = qCols[k] ?? new Float64Array(m);
       const r = dot(qk, cols[j] ?? new Float64Array(m));
       R[k]![j] = r;
-      for (let i = 0; i < m; i++) v[i] -= r * (qk[i] ?? 0);
+      for (let i = 0; i < m; i++) v[i]! -= r * (qk[i] ?? 0);
     }
     const norm = Math.sqrt(dot(v, v));
     R[j]![j] = norm;
     if (norm > 1e-10) {
-      for (let i = 0; i < m; i++) v[i] /= norm;
+      for (let i = 0; i < m; i++) v[i]! /= norm;
     }
     qCols.push(v);
     for (let i = 0; i < m; i++) Q[i]![j] = v[i] ?? 0;
