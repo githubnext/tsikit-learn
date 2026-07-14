@@ -118,7 +118,7 @@ export class ANNClassifier {
   private yTrain_!: Int32Array;
   private fitted_ = false;
 
-  constructor(private k = 5, private nTrees_ = 5) {}
+  constructor(private k = 5, private nTrees = 5) {}
 
   fit(X: Float64Array[], y: Int32Array): this {
     this.XTrain_ = X;
@@ -143,6 +143,4 @@ export class ANNClassifier {
       return [...votes.entries()].reduce((best, [c, v]) => v > best.v ? { c, v } : best, { c: 0, v: -1 }).c;
     }));
   }
-
-  get nTrees(): number { return this.nTrees_; }
 }
