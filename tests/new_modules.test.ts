@@ -50,14 +50,16 @@ describe("CountVectorizer", () => {
   });
 
   it("respects minDf filter", () => {
-    const cv = new CountVectorizer({ minDf: 3 });
+    const cv = new CountVectorizer({ minDf: 2 });
     cv.fit(DOCS);
     const features = cv.getFeatureNames();
-    // Only terms appearing in >= 3 docs
+    // Only terms appearing in >= 2 docs
     expect(features.length).toBeGreaterThan(0);
     for (const f of features) {
-      const count = DOCS.filter((d) => d.includes(f)).length;
-      expect(count).toBeGreaterThanOrEqual(3);
+      const count = DOCS.filter((d) =>
+        d.toLowerCase().match(/\b[a-z0-9]+\b/g)?.includes(f) ?? false
+      ).length;
+      expect(count).toBeGreaterThanOrEqual(2);
     }
   });
 
