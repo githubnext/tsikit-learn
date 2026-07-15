@@ -1,0 +1,1 @@
+export const ext26992Pre = "sklearn.preprocessing.ext26992" as const;

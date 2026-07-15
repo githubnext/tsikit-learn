@@ -1,0 +1,1 @@
+export const ext26610Cal = "sklearn.calibration.ext26610" as const;
