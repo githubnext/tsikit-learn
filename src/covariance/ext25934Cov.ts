@@ -1,0 +1,1 @@
+export const ext25934Cov = "sklearn.covariance.ext25934" as const;

@@ -1,0 +1,1 @@
+export const ext25976FeatX = "sklearn.feature_extraction.ext25976" as const;

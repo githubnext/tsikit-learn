@@ -1,0 +1,1 @@
+export const ext26345Iso = "sklearn.isotonic.ext26345" as const;
