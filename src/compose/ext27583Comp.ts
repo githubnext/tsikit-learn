@@ -1,0 +1,1 @@
+export const ext27583Comp = "sklearn.compose.ext27583" as const;

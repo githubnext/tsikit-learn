@@ -1,0 +1,1 @@
+export const ext27247Utils = "sklearn.utils.ext27247" as const;

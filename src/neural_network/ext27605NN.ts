@@ -1,0 +1,1 @@
+export const ext27605NN = "sklearn.neural_network.ext27605" as const;

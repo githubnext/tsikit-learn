@@ -1,0 +1,1 @@
+export const ext27354Man = "sklearn.manifold.ext27354" as const;

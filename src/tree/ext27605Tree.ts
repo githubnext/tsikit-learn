@@ -1,0 +1,1 @@
+export const ext27605Tree = "sklearn.tree.ext27605" as const;
