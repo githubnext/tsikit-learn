@@ -3,7 +3,7 @@
  * JohnsonLindenstrauss lemma utilities.
  */
 
-export function johnsonLindenstraussMinDim(nSamples: number, eps = 0.1): number {
+export function johnsonLindenstraussMinDimExt(nSamples: number, eps = 0.1): number {
   return Math.ceil(4 * Math.log(nSamples) / (eps ** 2 / 2 - eps ** 3 / 3));
 }
 
@@ -20,7 +20,7 @@ export class GaussianRandomProjectionExt {
   fit(X: Float64Array[]): this {
     this.nFeaturesIn_ = X[0]?.length ?? 0;
     const n = X.length;
-    const k = this.nComponents === "auto" ? johnsonLindenstraussMinDim(n, this.eps) : this.nComponents;
+    const k = this.nComponents === "auto" ? johnsonLindenstraussMinDimExt(n, this.eps) : this.nComponents;
     const rng = this._seededRng(this.seed);
     this.components_ = Array.from({ length: k }, () => {
       const row = new Float64Array(this.nFeaturesIn_);
@@ -65,7 +65,7 @@ export class SparseRandomProjectionExt {
   fit(X: Float64Array[]): this {
     this.nFeaturesIn_ = X[0]?.length ?? 0;
     const n = X.length;
-    const k = this.nComponents === "auto" ? johnsonLindenstraussMinDim(n, this.eps) : this.nComponents;
+    const k = this.nComponents === "auto" ? johnsonLindenstraussMinDimExt(n, this.eps) : this.nComponents;
     const d = this.density === "auto" ? 1 / Math.sqrt(this.nFeaturesIn_) : this.density;
     const rng = this._seededRng(this.seed);
     const scale = Math.sqrt(1 / (d * k));
@@ -99,5 +99,5 @@ export class SparseRandomProjectionExt {
 }
 
 export function estimateJLTransformDimension(nSamples: number, eps: number): number {
-  return johnsonLindenstraussMinDim(nSamples, eps);
+  return johnsonLindenstraussMinDimExt(nSamples, eps);
 }

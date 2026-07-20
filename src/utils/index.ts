@@ -13,15 +13,7 @@ export * from "./optimize.js";
 export * from "./multiarray.js";
 export * from "./metaestimators.js";
 export * from "./persistence.js";
-export {
-  minPosIndex,
-  minPos,
-  inplaceRowNormalizeL1,
-  inplaceRowNormalizeL2,
-  cumsum,
-  rowDot,
-  clipInplace,
-} from "./arrayfuncs.js";
+export * from "./arrayfuncs.js";
 export * from "./tags.js";
 export * from "./deprecation.js";
 export * from "./validation_ext.js";
@@ -29,15 +21,5 @@ export * from "./estimator_html.js";
 export * from "./mocking.js";
 export * from "./fixes.js";
 export * from "./validation_params.js";
-export {
-  type OutputType,
-  type SetOutputConfig,
-  configContext,
-  type SetOutputMixin,
-  augmentWithSetOutput,
-  wrapOutput,
-  type ConfigEntry,
-  GlobalConfig,
-  globalConfig,
-} from "./set_output.js";
+export * from "./set_output.js";
 export * from "./metadata_routing.js";

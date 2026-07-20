@@ -23,6 +23,7 @@ export interface ExtraTreeClassifierOptions {
  */
 export class ExtraTreeClassifier extends DecisionTreeClassifier {
   constructor(options: ExtraTreeClassifierOptions = {}) {
+    // ExtraTrees use sqrt features by default and random splits
     super({
       ...(options.maxDepth != null ? { maxDepth: options.maxDepth } : {}),
       minSamplesSplit: options.minSamplesSplit ?? 2,

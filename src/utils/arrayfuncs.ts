@@ -58,8 +58,8 @@ export function inplaceRowNormalizeL2(
   }
 }
 
-/** In-place column scaling: multiplies column j of X (nRows x nCols) by scale[j]. */
-export function inplaceColumnScale(
+/** In-place column scaling on dense flat 2D arrays: multiplies column j of X (nRows x nCols) by scale[j]. */
+export function inplaceDenseColumnScale(
   X: Float64Array,
   nRows: number,
   nCols: number,

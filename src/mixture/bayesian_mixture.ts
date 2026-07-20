@@ -120,7 +120,7 @@ export class BayesianGaussianMixture {
 
       // Update responsibilities
       let logLik = 0;
-      const newResp: Float64Array[] = [];
+      const newResp: Float64Array<ArrayBuffer>[] = [];
       for (let i = 0; i < n; i++) {
         const logProbs = new Float64Array(K);
         for (let k = 0; k < K; k++) {
@@ -134,7 +134,7 @@ export class BayesianGaussianMixture {
         newResp.push(r);
         logLik += Math.log(sum || 1e-10) + maxLog;
       }
-      resp = newResp as Float64Array<ArrayBuffer>[];
+      resp = newResp;
 
       // Check convergence
       if (Math.abs(logLik - prevLogLik) < this.tol) {

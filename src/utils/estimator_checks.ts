@@ -168,13 +168,13 @@ const _config: Record<string, unknown> = {
   displayDiagram: "on",
 };
 
-/** Get the current global configuration. */
-export function getConfig(): Record<string, unknown> {
+/** Get the current estimator checks configuration. */
+export function getChecksConfig(): Record<string, unknown> {
   return { ..._config };
 }
 
-/** Set global configuration options. */
-export function setConfig(options: Record<string, unknown>): void {
+/** Set estimator checks configuration options. */
+export function setChecksConfig(options: Record<string, unknown>): void {
   for (const [k, v] of Object.entries(options)) {
     _config[k] = v;
   }

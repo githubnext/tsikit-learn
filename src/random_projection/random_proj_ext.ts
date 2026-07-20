@@ -4,7 +4,7 @@
  */
 
 /** Johnson-Lindenstrauss minimum dimensions estimate. */
-export function johnsonLindenstraussMinDim(
+export function johnsonLindenstraussMinDimRP(
   nSamples: number,
   eps: number,
 ): number {
@@ -14,7 +14,7 @@ export function johnsonLindenstraussMinDim(
 }
 
 /** Gaussian Random Projection. */
-export class GaussianRandomProjection {
+export class GaussianRandomProjectionRP {
   nComponents: number | "auto";
   eps: number;
   components_?: Float64Array[];
@@ -32,7 +32,7 @@ export class GaussianRandomProjection {
     this.nFeaturesIn_ = d;
     this.nComponentsActual_ =
       this.nComponents === "auto"
-        ? Math.min(johnsonLindenstraussMinDim(n, this.eps), d)
+        ? Math.min(johnsonLindenstraussMinDimRP(n, this.eps), d)
         : (this.nComponents as number);
 
     const k = this.nComponentsActual_;
@@ -68,7 +68,7 @@ function gaussNormal(mean: number, std: number): number {
 }
 
 /** Sparse Random Projection (±1/sqrt(s) entries). */
-export class SparseRandomProjection {
+export class SparseRandomProjectionRP {
   nComponents: number | "auto";
   density: number | "auto";
   eps: number;
@@ -88,7 +88,7 @@ export class SparseRandomProjection {
     this.nFeaturesIn_ = d;
     this.nComponentsActual_ =
       this.nComponents === "auto"
-        ? Math.min(johnsonLindenstraussMinDim(n, this.eps), d)
+        ? Math.min(johnsonLindenstraussMinDimRP(n, this.eps), d)
         : (this.nComponents as number);
 
     const dens = this.density === "auto" ? 1 / Math.sqrt(d) : (this.density as number);

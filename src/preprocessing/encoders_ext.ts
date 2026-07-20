@@ -101,7 +101,7 @@ export class BinaryEncoder {
       for (const x of X) cats.add(x[f] ?? 0);
       const sortedCats = [...cats].sort((a, b) => a - b);
       const catMap = new Map(sortedCats.map((c, i) => [c, i]));
-      this.categoryMaps_.push(catMap);
+      this.categoryMaps_.push(new Map(catMap));
       this.nBits_.push(Math.max(1, Math.ceil(Math.log2(cats.size + 1))));
     }
     return this;
