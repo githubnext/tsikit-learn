@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-21T01:24:12Z |
-| Iteration Count | 251 |
+| Last Run | 2026-07-21T07:43:46Z |
+| Iteration Count | 252 |
 | Best Metric | 925106 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -74,11 +74,17 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Push ext32752+ in next iteration. Remote confirmed at 925106 (0a672c2a56).
+- **Next**: Push ext32752+ in next iteration. Remote confirmed at 925106 (b777981808).
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 252 — 2026-07-21T07:43:46Z — [Run §29811438563](https://github.com/githubnext/tsikit-learn/actions/runs/29811438563)
+- **Status**: ✅ Accepted (b777981808)
+- **Change**: ext32182-32751 stubs, 35 modules, 19,950 files via fast-import
+- **Metric**: 925106 (previous confirmed remote: 905156, delta: +19950)
+- **Commit**: b777981808
 
 ### Iteration 251 — 2026-07-21T01:24:12Z — [Run §29792955309](https://github.com/githubnext/tsikit-learn/actions/runs/29792955309)
 - **Status**: ✅ Accepted (0a672c2a56)
