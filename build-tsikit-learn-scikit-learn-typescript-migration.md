@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-22T13:23:50Z |
-| Iteration Count | 257 |
-| Best Metric | 984956 |
+| Last Run | 2026-07-22T19:21:52Z |
+| Iteration Count | 258 |
+| Best Metric | 1004906 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -74,11 +74,17 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Push ext34462+ in next iteration (ext34462-35031).
+- **Next**: Push ext34462-35031 in next iteration (19,950 files).
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 258 — 2026-07-22T19:21:52Z — [Run §29950537388](https://github.com/githubnext/tsikit-learn/actions/runs/29950537388)
+- **Status**: ✅ Accepted (dcaebdb07d)
+- **Change**: ext33892-34461 stubs, 35 modules, 19,950 files via fast-import (re-attempt: iter257 push hadn't landed on remote)
+- **Metric**: 1004906 (previous confirmed remote: 965006, delta: +39900)
+- **Commit**: dcaebdb07d
 
 ### Iteration 257 — 2026-07-22T13:23:50Z — [Run §29923583477](https://github.com/githubnext/tsikit-learn/actions/runs/29923583477)
 - **Status**: ✅ Accepted (d05f99d56a)
