@@ -78,7 +78,7 @@ export class FunctionTransformerExt4 {
 		validate?: boolean;
 	}) {
 		this.func = options.func;
-		this.inverseFunc = options.inverseFunc;
+		if (options.inverseFunc !== undefined) this.inverseFunc = options.inverseFunc;
 		this.validate = options.validate ?? false;
 	}
 

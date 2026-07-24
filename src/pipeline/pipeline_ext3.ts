@@ -123,11 +123,6 @@ export class TransformerPipeline {
 }
 
 export class FeatureUnionExt3 {
-  transformerList: Array<[string, Transformer]>;
-  private fitted_ = false;
-
-  constructor(opts: { transformerList?: Array<[string, Transformer]> } = {}) {
-    this.transformerList = opts.transformerList ?? [];
   }
 
   fit(X: Float64Array[], y?: Int32Array): this {

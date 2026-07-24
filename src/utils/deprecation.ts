@@ -116,7 +116,6 @@ export function deprecatedClass(options: DeprecationOptions = {}) {
   ): T => {
     const name = ctx?.name ?? Base.name;
     return class extends Base {
-      // biome-ignore lint/suspicious/noExplicitAny: mixin class requires any[] per TypeScript spec
       constructor(...args: any[]) {
         super(...args);
         warn(name, options);
