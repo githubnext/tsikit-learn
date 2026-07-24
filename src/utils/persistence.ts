@@ -70,9 +70,9 @@ function deserializeValue(v: unknown): unknown {
   }
   if (typeof v === "object") {
     const obj = v as Record<string, unknown>;
-    if (obj['__typedArray'] === true) {
-      const type = obj['type'] as string;
-      const data = obj['data'] as number[];
+    if (obj.__typedArray === true) {
+      const type = obj.type as string;
+      const data = obj.data as number[];
       switch (type) {
         case "Float64Array":
           return new Float64Array(data);
