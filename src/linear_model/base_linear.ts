@@ -43,7 +43,7 @@ export function preprocessData(
 
   // Compute column means
   for (let i = 0; i < nSamples; i++) {
-    for (let j = 0; j < nFeatures; j++) xMean[j]! += Xout[i * nFeatures + j];
+    for (let j = 0; j < nFeatures; j++) xMean[j]! += Xout[i * nFeatures + j] ?? 0;
     yMean += yOut[i]!;
   }
   for (let j = 0; j < nFeatures; j++) xMean[j]! /= nSamples;
@@ -51,7 +51,7 @@ export function preprocessData(
 
   // Center
   for (let i = 0; i < nSamples; i++) {
-    for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! -= xMean[j];
+    for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! -= xMean[j] ?? 0;
     yOut[i]! -= yMean;
   }
 
@@ -68,7 +68,7 @@ export function preprocessData(
       xScale[j] = s > 0 ? s : 1;
     }
     for (let i = 0; i < nSamples; i++) {
-      for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! /= xScale[j];
+      for (let j = 0; j < nFeatures; j++) Xout[i * nFeatures + j]! /= xScale[j] ?? 1;
     }
   }
 
