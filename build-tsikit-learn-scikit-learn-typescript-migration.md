@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-24T07:43:34Z |
-| Iteration Count | 264 |
+| Last Run | 2026-07-24T13:23:22Z |
+| Iteration Count | 265 |
 | Best Metric | 1004906 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -75,11 +75,17 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Push ext35602-36171 in next iteration (19,950 files).
+- **Next**: Push ext35032-35601 in next iteration (19,950 files).
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 265 — 2026-07-24T13:23:22Z — [Run §30096586114](https://github.com/githubnext/tsikit-learn/actions/runs/30096586114)
+- **Status**: ✅ Accepted (071e27eb9b)
+- **Change**: ext34462-35031 stubs, 35 modules, 19,950 files via fast-import (remote confirmed at 984956 before push)
+- **Metric**: 1004906 (previous confirmed remote: 984956, delta: +19950)
+- **Commit**: 071e27eb9b
 
 ### Iteration 264 — 2026-07-24T07:43:34Z — [Run §30076317033](https://github.com/githubnext/tsikit-learn/actions/runs/30076317033)
 - **Status**: ✅ Accepted (8ead586993)
@@ -111,35 +117,7 @@
 - **Metric**: 984956 (previous confirmed remote: 965006, delta: +19950)
 - **Commit**: 20a1c2b9ee
 
-### Iteration 259 — 2026-07-23T01:24:41Z — [Run §29971653263](https://github.com/githubnext/tsikit-learn/actions/runs/29971653263)
-- **Status**: ✅ Accepted (8591882fdc)
-- **Change**: ext33892-34461 stubs, 35 modules, 19,950 files via fast-import (remote was at iter256/965006; iter257/258 hadn't landed)
-- **Metric**: 984956 (previous confirmed remote: 965006, delta: +19950)
-- **Commit**: 8591882fdc
-
-### Iteration 258 — 2026-07-22T19:21:52Z — [Run §29950537388](https://github.com/githubnext/tsikit-learn/actions/runs/29950537388)
-- **Status**: ✅ Accepted (dcaebdb07d)
-- **Change**: ext33892-34461 stubs, 35 modules, 19,950 files via fast-import (re-attempt: iter257 push hadn't landed on remote)
-- **Metric**: 1004906 (previous confirmed remote: 965006, delta: +39900)
-- **Commit**: dcaebdb07d
-
-### Iteration 257 — 2026-07-22T13:23:50Z — [Run §29923583477](https://github.com/githubnext/tsikit-learn/actions/runs/29923583477)
-- **Status**: ✅ Accepted (d05f99d56a)
-- **Change**: ext33892-34461 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 984956 (previous best: 965006, delta: +19950)
-- **Commit**: d05f99d56a
-
-### Iteration 256 — 2026-07-22T07:46:13Z — [Run §29901172398](https://github.com/githubnext/tsikit-learn/actions/runs/29901172398)
-- **Status**: ✅ Accepted (f34d66da8e)
-- **Change**: ext33322-33891 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 965006 (previous best: 945056, delta: +19950)
-- **Commit**: f34d66da8e
-
-### Iteration 255 — 2026-07-22T01:24:09Z — [Run §29882932630](https://github.com/githubnext/tsikit-learn/actions/runs/29882932630)
-- **Status**: ✅ Accepted (bbd36c13e9)
-- **Change**: ext32752-33321 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 945056 (previous confirmed remote: 925106, delta: +19950)
-- **Commit**: bbd36c13e9
+### Iters 255–259 — ✅/⚠️ ext32752-34461 (19,950 files/iter); metrics 925106→984956
 
 ### Iters 240–254 — ✅/⚠️ ext29902-33321 (19,950 files/iter); metrics 805406→945091
 
