@@ -37,22 +37,22 @@ export function computeColumnStats(X: Float64Array[]): ColumnStats {
   const min = new Float64Array(d).fill(Number.POSITIVE_INFINITY);
   const max = new Float64Array(d).fill(Number.NEGATIVE_INFINITY);
 
-	for (const x of X) {
-		for (let j = 0; j < d; j++) {
-			const v = x[j] ?? 0;
-			mean[j] = (mean[j] ?? 0) + v / n;
-			if (v < min[j]!) min[j] = v;
-			if (v > max[j]!) max[j] = v;
-		}
-	}
+  for (const x of X) {
+    for (let j = 0; j < d; j++) {
+      const v = x[j] ?? 0;
+      mean[j] = (mean[j] ?? 0) + v / n;
+      if (v < min[j]!) min[j] = v;
+      if (v > max[j]!) max[j] = v;
+    }
+  }
 
-	const std = new Float64Array(d);
-	for (const x of X) {
-		for (let j = 0; j < d; j++) {
-			std[j] = (std[j] ?? 0) + ((x[j] ?? 0) - mean[j]!) ** 2 / n;
-		}
-	}
-	for (let j = 0; j < d; j++) std[j] = Math.sqrt(std[j]!);
+  const std = new Float64Array(d);
+  for (const x of X) {
+    for (let j = 0; j < d; j++) {
+      std[j] = (std[j] ?? 0) + ((x[j] ?? 0) - mean[j]!) ** 2 / n;
+    }
+  }
+  for (let j = 0; j < d; j++) std[j] = Math.sqrt(std[j]!);
 
   return { mean, std, min, max, nSamples: n };
 }
@@ -147,19 +147,20 @@ export function meanAndStd(
   const std = withStd ? new Float64Array(d) : null;
   const n = X.length;
 
-	if (withMean && mean) {
-		for (const x of X) for (let j = 0; j < d; j++) mean[j] = (mean[j] ?? 0) + (x[j] ?? 0) / n;
-	}
+  if (withMean && mean) {
+    for (const x of X)
+      for (let j = 0; j < d; j++) mean[j] = (mean[j] ?? 0) + (x[j] ?? 0) / n;
+  }
 
-	if (withStd && std) {
-		for (const x of X) {
-			for (let j = 0; j < d; j++) {
-				const v = (x[j] ?? 0) - (mean ? mean[j]! : 0);
-				std[j] = (std[j] ?? 0) + v * v / n;
-			}
-		}
-		for (let j = 0; j < d; j++) std[j] = Math.sqrt(std[j]!);
-	}
+  if (withStd && std) {
+    for (const x of X) {
+      for (let j = 0; j < d; j++) {
+        const v = (x[j] ?? 0) - (mean ? mean[j]! : 0);
+        std[j] = (std[j] ?? 0) + (v * v) / n;
+      }
+    }
+    for (let j = 0; j < d; j++) std[j] = Math.sqrt(std[j]!);
+  }
 
   return { mean, std };
 }

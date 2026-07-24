@@ -27,12 +27,13 @@ function svd2(
     for (let _iter = 0; _iter < 30; _iter++) {
       const u = new Float64Array(m);
       for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) u[i] += (matrix[i]?.[j] ?? 0) * (v[j] ?? 0);
+        for (let j = 0; j < n; j++)
+          u[i]! += (matrix[i]?.[j] ?? 0) * (v[j] ?? 0);
       }
       const newV = new Float64Array(n);
       for (let i = 0; i < m; i++) {
         for (let j = 0; j < n; j++)
-          newV[j] += (matrix[i]?.[j] ?? 0) * (u[i] ?? 0);
+          newV[j]! += (matrix[i]?.[j] ?? 0) * (u[i] ?? 0);
       }
       let norm = 0;
       for (let j = 0; j < n; j++) norm += (newV[j] ?? 0) ** 2;
@@ -42,7 +43,7 @@ function svd2(
     }
     const u = new Float64Array(m);
     for (let i = 0; i < m; i++) {
-      for (let j = 0; j < n; j++) u[i] += (matrix[i]?.[j] ?? 0) * (v[j] ?? 0);
+      for (let j = 0; j < n; j++) u[i]! += (matrix[i]?.[j] ?? 0) * (v[j] ?? 0);
     }
     let sigma = 0;
     for (let i = 0; i < m; i++) sigma += (u[i] ?? 0) ** 2;
@@ -95,12 +96,12 @@ function kmeansSimple(X: Float64Array[], k: number, maxIter = 100): Int32Array {
     for (let j = 0; j < k; j++) centers[j] = new Float64Array(d);
     for (let i = 0; i < n; i++) {
       const c = labels[i]!;
-      counts[c]++;
+      counts[c]!++;
       for (let l = 0; l < d; l++) centers[c]![l]! += X[i]?.[l] ?? 0;
     }
     for (let j = 0; j < k; j++) {
       if ((counts[j] ?? 0) > 0) {
-        for (let l = 0; l < d; l++) centers[j]![l]! /= counts[j];
+        for (let l = 0; l < d; l++) centers[j]![l]! /= counts[j] ?? 1;
       }
     }
   }
@@ -196,8 +197,8 @@ export class SpectralCoclustering {
     const colSums = new Float64Array(nCols);
     for (let i = 0; i < nRows; i++) {
       for (let j = 0; j < nCols; j++) {
-        rowSums[i] += X[i]?.[j] ?? 0;
-        colSums[j] += X[i]?.[j] ?? 0;
+        rowSums[i]! += X[i]?.[j] ?? 0;
+        colSums[j]! += X[i]?.[j] ?? 0;
       }
     }
     const normalized = X.map((row, i) => {

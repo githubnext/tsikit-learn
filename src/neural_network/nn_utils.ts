@@ -129,11 +129,13 @@ export class BatchNormLayer {
     if (training) {
       const mean = new Float64Array(this.nFeatures);
       for (const row of X)
-        for (let j = 0; j < this.nFeatures; j++) mean[j] += (row[j] ?? 0) / n;
+        for (let j = 0; j < this.nFeatures; j++)
+          mean[j] = (mean[j] ?? 0) + (row[j] ?? 0) / n;
       const variance = new Float64Array(this.nFeatures);
       for (const row of X)
         for (let j = 0; j < this.nFeatures; j++)
-          variance[j] += ((row[j] ?? 0) - (mean[j] ?? 0)) ** 2 / n;
+          variance[j] =
+            (variance[j] ?? 0) + ((row[j] ?? 0) - (mean[j] ?? 0)) ** 2 / n;
       for (let j = 0; j < this.nFeatures; j++) {
         this.runningMean[j] =
           (1 - this.momentum) * (this.runningMean[j] ?? 0) +

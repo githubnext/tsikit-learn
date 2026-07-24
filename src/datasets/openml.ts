@@ -64,7 +64,7 @@ export async function fetchOpenML(
   // Parse the dataset list to find the actual dataset ID
   let actualDataId = dataId;
   if (actualDataId == null) {
-    const datasets = json.data as { dataset?: { did?: number }[] } | undefined;
+    const datasets = json.data;
     const did = datasets?.dataset?.[0]?.did;
     if (did == null)
       throw new Error(`fetchOpenML: dataset "${name}" not found`);

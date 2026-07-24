@@ -16,4 +16,8 @@ export * from "./cluster_ext.js";
 export * from "./pairwise_kernels.js";
 export * from "./pairwise_ext.js";
 export type { DetCurveResult, CalibrationCurveResult } from "./brier.js";
-export { calibrationCurve, logLoss, expectedCalibrationError } from "./brier.js";
+export {
+  calibrationCurve,
+  logLoss,
+  expectedCalibrationError,
+} from "./brier.js";

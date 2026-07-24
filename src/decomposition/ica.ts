@@ -101,7 +101,7 @@ export class FastICA {
         for (let j = 0; j < p; j++) {
           for (let l = j; l < p; l++) {
             cov[j]![l]! += (Xc[i]![j] ?? 0) * (Xc[i]![l] ?? 0);
-            if (l !== j) cov[l]![j]! = cov[j]![l];
+            if (l !== j) cov[l]![j] = cov[j]![l] ?? 0;
           }
         }
       }

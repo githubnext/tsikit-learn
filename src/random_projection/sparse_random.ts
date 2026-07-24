@@ -19,11 +19,11 @@ export interface SparseRandomProjectionParams {
  * Port of sklearn.random_projection.SparseRandomProjection
  */
 export class SparseRandomProjectionBase {
-	nComponents: number | "auto";
-	density: number | "auto";
-	epsSparse: number;
-	denseOutput: boolean;
-	randomState: number | null;
+  nComponents: number | "auto";
+  density: number | "auto";
+  epsSparse: number;
+  denseOutput: boolean;
+  randomState: number | null;
 
   nComponents_?: number;
   density_?: number;
@@ -115,9 +115,9 @@ export interface GaussianRandomProjectionParams {
  * Port of sklearn.random_projection.GaussianRandomProjection
  */
 export class GaussianRandomProjectionBase {
-	nComponents: number | "auto";
-	eps: number;
-	randomState: number | null;
+  nComponents: number | "auto";
+  eps: number;
+  randomState: number | null;
 
   nComponents_?: number;
   components_?: Float64Array[];
@@ -189,8 +189,11 @@ export class GaussianRandomProjectionBase {
  * Johnson-Lindenstrauss lemma: minimum number of components.
  * Port of sklearn.random_projection.johnson_lindenstrauss_min_dim
  */
-export function johnsonLindenstraussMinDimBase(nSamples: number, eps = 0.1): number {
-	const denominator = eps ** 2 / 2 - eps ** 3 / 3;
-	if (denominator <= 0) throw new Error("eps must be in (0, 1)");
-	return Math.ceil(4 * Math.log(nSamples) / denominator);
+export function johnsonLindenstraussMinDimBase(
+  nSamples: number,
+  eps = 0.1,
+): number {
+  const denominator = eps ** 2 / 2 - eps ** 3 / 3;
+  if (denominator <= 0) throw new Error("eps must be in (0, 1)");
+  return Math.ceil((4 * Math.log(nSamples)) / denominator);
 }

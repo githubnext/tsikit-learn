@@ -110,16 +110,17 @@ export class AveragedWeightVector {
     return this.current.dot(x);
   }
 
-	addScaled(x: Float64Array, c: number): void {
-		this.current.addScaled(x, c);
-		const curr = this.current.toArray();
-		this.nUpdates++;
-		const t = this.nUpdates;
-		// Polyak-Ruppert averaging: a_t = a_{t-1} + (w_t - a_{t-1}) / t
-		for (let j = 0; j < this.nFeatures; j++) {
-			this.average[j] = (this.average[j] ?? 0) + ((curr[j] ?? 0) - (this.average[j] ?? 0)) / t;
-		}
-	}
+  addScaled(x: Float64Array, c: number): void {
+    this.current.addScaled(x, c);
+    const curr = this.current.toArray();
+    this.nUpdates++;
+    const t = this.nUpdates;
+    // Polyak-Ruppert averaging: a_t = a_{t-1} + (w_t - a_{t-1}) / t
+    for (let j = 0; j < this.nFeatures; j++) {
+      this.average[j] =
+        (this.average[j] ?? 0) + ((curr[j] ?? 0) - (this.average[j] ?? 0)) / t;
+    }
+  }
 
   scale(c: number): void {
     this.current.scale(c);

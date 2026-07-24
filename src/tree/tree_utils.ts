@@ -134,19 +134,20 @@ export function findBestSplit(
   let bestThreshold = sortedValues[0]!;
   let bestImprovement = -Number.POSITIVE_INFINITY;
 
-	// Current impurity
-	let parentImpurity: number;
-	if (isClassification) {
-		const classSet = Array.from(new Set(Array.from(y as Int32Array)));
-		const counts = new Float64Array(classSet.length);
-		for (let i = 0; i < n; i++) {
-			const ci = classSet.indexOf((y as Int32Array)[i]!);
-			if (ci >= 0) counts[ci] = (counts[ci] ?? 0) + 1;
-		}
-		parentImpurity = criterion === "gini" ? giniImpurity(counts) : entropyImpurity(counts);
-	} else {
-		parentImpurity = mseImpurity(y as Float64Array);
-	}
+  // Current impurity
+  let parentImpurity: number;
+  if (isClassification) {
+    const classSet = Array.from(new Set(Array.from(y as Int32Array)));
+    const counts = new Float64Array(classSet.length);
+    for (let i = 0; i < n; i++) {
+      const ci = classSet.indexOf((y as Int32Array)[i]!);
+      if (ci >= 0) counts[ci] = (counts[ci] ?? 0) + 1;
+    }
+    parentImpurity =
+      criterion === "gini" ? giniImpurity(counts) : entropyImpurity(counts);
+  } else {
+    parentImpurity = mseImpurity(y as Float64Array);
+  }
 
   for (let ti = 0; ti < sortedValues.length - 1; ti++) {
     const threshold = (sortedValues[ti]! + sortedValues[ti + 1]!) / 2;
@@ -159,24 +160,34 @@ export function findBestSplit(
     let leftImpurity: number;
     let rightImpurity: number;
 
-		if (isClassification) {
-			const classSet = Array.from(new Set(Array.from(y as Int32Array)));
-			const leftCounts = new Float64Array(classSet.length);
-			const rightCounts = new Float64Array(classSet.length);
-			for (let i = 0; i < n; i++) {
-				const ci = classSet.indexOf((y as Int32Array)[i]!);
-				if (ci < 0) continue;
-				if (leftMask[i]) leftCounts[ci] = (leftCounts[ci] ?? 0) + 1;
-				else rightCounts[ci] = (rightCounts[ci] ?? 0) + 1;
-			}
-			leftImpurity = criterion === "gini" ? giniImpurity(leftCounts) : entropyImpurity(leftCounts);
-			rightImpurity = criterion === "gini" ? giniImpurity(rightCounts) : entropyImpurity(rightCounts);
-		} else {
-			const leftY = new Float64Array(Array.from(y as Float64Array).filter((_, i) => leftMask[i]));
-			const rightY = new Float64Array(Array.from(y as Float64Array).filter((_, i) => !leftMask[i]));
-			leftImpurity = mseImpurity(leftY);
-			rightImpurity = mseImpurity(rightY);
-		}
+    if (isClassification) {
+      const classSet = Array.from(new Set(Array.from(y as Int32Array)));
+      const leftCounts = new Float64Array(classSet.length);
+      const rightCounts = new Float64Array(classSet.length);
+      for (let i = 0; i < n; i++) {
+        const ci = classSet.indexOf((y as Int32Array)[i]!);
+        if (ci < 0) continue;
+        if (leftMask[i]) leftCounts[ci] = (leftCounts[ci] ?? 0) + 1;
+        else rightCounts[ci] = (rightCounts[ci] ?? 0) + 1;
+      }
+      leftImpurity =
+        criterion === "gini"
+          ? giniImpurity(leftCounts)
+          : entropyImpurity(leftCounts);
+      rightImpurity =
+        criterion === "gini"
+          ? giniImpurity(rightCounts)
+          : entropyImpurity(rightCounts);
+    } else {
+      const leftY = new Float64Array(
+        Array.from(y as Float64Array).filter((_, i) => leftMask[i]),
+      );
+      const rightY = new Float64Array(
+        Array.from(y as Float64Array).filter((_, i) => !leftMask[i]),
+      );
+      leftImpurity = mseImpurity(leftY);
+      rightImpurity = mseImpurity(rightY);
+    }
 
     const improvement =
       parentImpurity - (nLeft * leftImpurity + nRight * rightImpurity) / n;
@@ -196,18 +207,24 @@ export function computeFeatureImportances(
   tree: TreeStructure,
   nFeatures: number,
 ): Float64Array {
-	const importances = new Float64Array(nFeatures);
-	for (const node of tree.nodes) {
-		if (!node.isLeaf) {
-			const improvement = node.impurity * node.nNodeSamples;
-			const leftImpurity = (tree.nodes[node.leftChild]?.impurity ?? 0) *
-				(tree.nodes[node.leftChild]?.nNodeSamples ?? 0);
-			const rightImpurity = (tree.nodes[node.rightChild]?.impurity ?? 0) *
-				(tree.nodes[node.rightChild]?.nNodeSamples ?? 0);
-			importances[node.feature] = (importances[node.feature] ?? 0) + improvement - leftImpurity - rightImpurity;
-		}
-	}
-	const total = importances.reduce((s, v) => s + v, 0);
-	if (total > 0) for (let j = 0; j < nFeatures; j++) importances[j]! /= total;
-	return importances;
+  const importances = new Float64Array(nFeatures);
+  for (const node of tree.nodes) {
+    if (!node.isLeaf) {
+      const improvement = node.impurity * node.nNodeSamples;
+      const leftImpurity =
+        (tree.nodes[node.leftChild]?.impurity ?? 0) *
+        (tree.nodes[node.leftChild]?.nNodeSamples ?? 0);
+      const rightImpurity =
+        (tree.nodes[node.rightChild]?.impurity ?? 0) *
+        (tree.nodes[node.rightChild]?.nNodeSamples ?? 0);
+      importances[node.feature] =
+        (importances[node.feature] ?? 0) +
+        improvement -
+        leftImpurity -
+        rightImpurity;
+    }
+  }
+  const total = importances.reduce((s, v) => s + v, 0);
+  if (total > 0) for (let j = 0; j < nFeatures; j++) importances[j]! /= total;
+  return importances;
 }

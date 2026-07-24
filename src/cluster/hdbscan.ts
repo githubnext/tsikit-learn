@@ -123,7 +123,7 @@ export class HDBSCAN {
           !inMST[v] &&
           mrd[u]![v]! < (minEdge[v] ?? Number.POSITIVE_INFINITY)
         ) {
-          minEdge[v]! = mrd[u]![v];
+          minEdge[v] = mrd[u]![v] ?? 0;
           parent[v]! = u;
         }
       }
@@ -137,7 +137,7 @@ export class HDBSCAN {
     const find = (x: number): number => {
       let cur = x;
       while (uf[cur] !== cur) {
-        uf[cur]! = uf[uf[cur]!];
+        uf[cur] = uf[uf[cur]!] ?? cur;
         cur = uf[cur]!;
       }
       return cur;
@@ -177,7 +177,7 @@ export class HDBSCAN {
       const sz = clusterSizes[root] ?? 1;
       if (sz >= this.minClusterSize) {
         if (!rootToCluster.has(root)) rootToCluster.set(root, nextCluster++);
-        labels[i]! = rootToCluster.get(root);
+        labels[i] = rootToCluster.get(root) ?? -1;
       }
     }
 

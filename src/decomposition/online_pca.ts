@@ -109,12 +109,12 @@ export class IncrementalPCAOnline {
         const u = new Float64Array(rows);
         for (let i = 0; i < rows; i++) {
           for (let j = 0; j < cols; j++)
-            u[i] += (augmented[i]?.[j] ?? 0) * (V[c]?.[j] ?? 0);
+            u[i]! += (augmented[i]?.[j] ?? 0) * (V[c]?.[j] ?? 0);
         }
         const vNew = new Float64Array(cols);
         for (let i = 0; i < rows; i++) {
           for (let j = 0; j < cols; j++)
-            vNew[j] += (augmented[i]?.[j] ?? 0) * (u[i] ?? 0);
+            vNew[j]! += (augmented[i]?.[j] ?? 0) * (u[i] ?? 0);
         }
         // Orthogonalize against previous
         for (let p = 0; p < c; p++) {
