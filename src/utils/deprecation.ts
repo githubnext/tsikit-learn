@@ -109,11 +109,7 @@ export function deprecated<T extends (...args: unknown[]) => unknown>(
  * whenever the class is instantiated.
  */
 export function deprecatedClass(options: DeprecationOptions = {}) {
-  // biome-ignore lint/suspicious/noExplicitAny: mixin class requires any[] per TypeScript spec
-  return <T extends new (...args: any[]) => object>(
-    Base: T,
-    ctx?: { name?: string },
-  ): T => {
+  return <T extends new (...args: unknown[]) => object>(Base: T, ctx?: { name?: string }): T => {
     const name = ctx?.name ?? Base.name;
     return class extends Base {
       constructor(...args: any[]) {
