@@ -204,6 +204,8 @@ export class PLSRegression {
           qy[j] = (qy[j] ?? 0) + (yi[j] ?? 0) * (t[i] ?? 0);
         }
       }
+      if (sNorm2 > 1e-15)
+        for (let j = 0; j < q; j++) qy[j] = (qy[j] ?? 0) / sNorm2;
 
       this.xWeights_[comp] = u;
       this.yWeights_[comp] = v;
@@ -218,13 +220,13 @@ export class PLSRegression {
       Xc = Xc.map((xi, i) => {
         const out = new Float64Array(p);
         for (let j = 0; j < p; j++)
-          out[j] = (xi[j] ?? 0) - (t[i] ?? 0) * (px[j] ?? 0);
+          out[j] = (xi[j] ?? 0) - (tFull[i] ?? 0) * (px[j] ?? 0);
         return out;
       });
       Yc = Yc.map((yi, i) => {
         const out = new Float64Array(q);
         for (let j = 0; j < q; j++)
-          out[j] = (yi[j] ?? 0) - (t[i] ?? 0) * (qy[j] ?? 0);
+          out[j] = (yi[j] ?? 0) - (tFull[i] ?? 0) * (qy[j] ?? 0);
         return out;
       });
     }

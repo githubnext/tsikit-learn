@@ -221,7 +221,7 @@ export class RANSACRegressor {
       for (let i = 0; i < minSamp; i++) {
         const idx = Math.floor(nextRng() * (pool.length - i));
         const tmp = pool[pool.length - 1 - i]!;
-        pool[pool.length - 1 - i] = pool[idx]!;
+        pool[pool.length - 1 - i]! = pool[idx];
         pool[idx]! = tmp;
         sample.push(pool[pool.length - 1 - i]!);
       }

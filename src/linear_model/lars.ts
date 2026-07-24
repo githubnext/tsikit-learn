@@ -286,7 +286,7 @@ export class LarsCV {
           }
         }
         const model = new LassoLars({
-          ...(alphas[ai] !== undefined ? { alpha: alphas[ai]! } : {}),
+          alpha: alphas[ai],
           fitIntercept: this.fitIntercept,
           eps: this.eps,
         });

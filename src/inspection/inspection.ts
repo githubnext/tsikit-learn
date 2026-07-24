@@ -76,7 +76,7 @@ export function permutationImportance(
       for (let i = n - 1; i > 0; i--) {
         const j = Math.floor(rand() * (i + 1));
         const tmp = indices[i]!;
-        indices[i] = indices[j] ?? i;
+        indices[i]! = indices[j];
         indices[j]! = tmp;
       }
 

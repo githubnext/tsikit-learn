@@ -91,14 +91,12 @@ export class MissingIndicator {
   }
 
   setParams(params: Record<string, unknown>): this {
-    const p = params as {
-      missingValues?: number;
-      features?: "missing-only" | "all";
-      errorOnNew?: boolean;
-    };
-    if (p.missingValues !== undefined) this.missingValues = p.missingValues;
-    if (p.features !== undefined) this.features = p.features;
-    if (p.errorOnNew !== undefined) this.errorOnNew = p.errorOnNew;
+    if (params.missingValues !== undefined)
+      this.missingValues = params.missingValues as number;
+    if (params.features !== undefined)
+      this.features = params.features as "missing-only" | "all";
+    if (params.errorOnNew !== undefined)
+      this.errorOnNew = params.errorOnNew as boolean;
     return this;
   }
 }

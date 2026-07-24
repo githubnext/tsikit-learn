@@ -184,8 +184,8 @@ export class LocallyLinearEmbedding {
     const x = new Float64Array(n);
     for (let i = n - 1; i >= 0; i--) {
       x[i] = mat[i]?.[n] ?? 0;
-      for (let j = i + 1; j < n; j++) x[i]! -= (mat[i]?.[j] ?? 0) * (x[j] ?? 0);
-      x[i]! /= mat[i]?.[i] ?? 1e-10;
+      for (let j = i + 1; j < n; j++) x[i] -= (mat[i]?.[j] ?? 0) * (x[j] ?? 0);
+      x[i] /= mat[i]?.[i] ?? 1e-10;
     }
     return x;
   }
@@ -211,7 +211,7 @@ export class LocallyLinearEmbedding {
       let norm = 0;
       for (let i = 0; i < nSamples; i++) {
         v[i] = rand();
-        norm += (v[i] ?? 0) ** 2;
+        norm += v[i] ** 2;
       }
       norm = Math.sqrt(norm) || 1;
       for (let i = 0; i < nSamples; i++) v[i] = (v[i] ?? 0) / norm;
@@ -225,14 +225,14 @@ export class LocallyLinearEmbedding {
       for (let i = 0; i < nSamples; i++) {
         u[i] = v[i] ?? 0;
         for (let j = 0; j < W[i]!.length; j++)
-          u[i]! -= (W[i]![j] ?? 0) * (v[j] ?? 0);
+          u[i] -= (W[i]![j] ?? 0) * (v[j] ?? 0);
       }
       // (I-W)^T * u
       const Mvu = new Float64Array(nSamples);
       for (let i = 0; i < nSamples; i++) Mvu[i] = u[i] ?? 0;
       for (let i = 0; i < nSamples; i++) {
         for (let j = 0; j < W[i]!.length; j++)
-          Mvu[j]! -= (W[i]![j] ?? 0) * (u[i] ?? 0);
+          Mvu[j] -= (W[i]![j] ?? 0) * (u[i] ?? 0);
       }
       return Mvu;
     };
