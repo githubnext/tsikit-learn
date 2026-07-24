@@ -43,7 +43,7 @@ export class PHATE extends BaseEstimator {
     const P = this._markovNormalize(knnGraph, n);
     // Step 3: Diffuse t steps
     const tSteps = this.t === "auto" ? Math.max(1, Math.floor(Math.sqrt(n))) : this.t;
-    let Pt = P.map((row) => row.slice());
+    let Pt: Float64Array[] = P.map((row) => row.slice());
     for (let step = 1; step < tSteps; step++) {
       Pt = this._matMul(Pt, P, n) as Float64Array<ArrayBuffer>[];
     }

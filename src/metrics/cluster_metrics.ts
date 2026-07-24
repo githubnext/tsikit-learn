@@ -30,8 +30,7 @@ export function calinskiHarabaszScore(
     const cm = new Float64Array(d);
     for (let i = 0; i < n; i++)
       if (mask[i])
-        for (let j = 0; j < d; j++)
-          cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
+        for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
     for (let j = 0; j < d; j++) bcd += nc * (cm[j]! - globalMean[j]!) ** 2;
   }
 
@@ -44,8 +43,7 @@ export function calinskiHarabaszScore(
     const cm = new Float64Array(d);
     for (let i = 0; i < n; i++)
       if (mask[i])
-        for (let j = 0; j < d; j++)
-          cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
+        for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
     for (let i = 0; i < n; i++) {
       if (!mask[i]) continue;
       for (let j = 0; j < d; j++) wcd += ((X[i]?.[j] ?? 0) - cm[j]!) ** 2;
@@ -78,8 +76,7 @@ export function daviesBouldinScore(
     const cm = new Float64Array(d);
     for (let i = 0; i < n; i++)
       if (mask[i])
-        for (let j = 0; j < d; j++)
-          cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
+        for (let j = 0; j < d; j++) cm[j] = (cm[j] ?? 0) + (X[i]?.[j] ?? 0) / nc;
     centroids.push(cm);
     let scatter = 0;
     for (let i = 0; i < n; i++) {
@@ -176,9 +173,7 @@ export function xieBeniIndex(
     }
   }
   for (let c = 0; c < k; c++) {
-    for (let j = 0; j < d; j++)
-      centroids[c]![j] =
-        (centroids[c]![j] ?? 0) / ((membershipSums[c] ?? 1) || 1);
+    for (let j = 0; j < d; j++) centroids[c]![j] = (centroids[c]![j] ?? 0) / ((membershipSums[c] ?? 1) || 1);
   }
 
   // Compactness
