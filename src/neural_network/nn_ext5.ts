@@ -263,7 +263,7 @@ export class TransformerEncoder {
 
   forward(X: Float64Array[]): Float64Array[] {
     if (!this.attention_) this.initialize();
-    let out = X.map(x => x.slice());
+    let out: Float64Array<ArrayBufferLike>[] = X.map(x => x.slice());
     for (let l = 0; l < this.nLayers; l++) {
       const attended = this.attention_![l]!.forward(out, out, out);
       out = out.map((x, i) => this.norm1_![l]!.forward(Float64Array.from(x.map((v, j) => (v ?? 0) + (attended[i]![j] ?? 0))))) as Float64Array<ArrayBuffer>[];
