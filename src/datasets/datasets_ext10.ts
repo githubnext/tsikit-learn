@@ -4,7 +4,8 @@
 
 export function makeCheckerboard(shape: [number, number] = [100, 100], nClusters = [4, 3], noise = 0.5, shuffle = true): { data: Float64Array[]; rows: Int32Array; cols: Int32Array } {
   const [nRows, nCols] = shape;
-  const [nRowClusters, nColClusters] = nClusters;
+  const nRowClusters = nClusters[0] ?? 1;
+  const nColClusters = nClusters[1] ?? 1;
   const data: Float64Array[] = [];
   const rowLabels = new Int32Array(nRows);
   const colLabels = new Int32Array(nCols);
