@@ -371,4 +371,4 @@ export class FunctionTransformerV2 {
   }
 }
 
-
+export { BinarizerV2 as Binarizer };
