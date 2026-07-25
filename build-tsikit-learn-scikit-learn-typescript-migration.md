@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-25T13:25:15Z |
-| Iteration Count | 269 |
+| Last Run | 2026-07-25T19:20:35Z |
+| Iteration Count | 270 |
 | Best Metric | 1064756 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -75,13 +75,19 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Push ext37312-37881 in next iteration (19,950 files).
+- **Next**: Push ext36742-37311 in next iteration (19,950 files).
 
 ---
 
 - **fast-import working tree**: After `git fast-import`, run `git reset --hard HEAD` to sync working tree before running evaluation.
 
 ## 📊 Iteration History
+
+### Iteration 270 — 2026-07-25T19:20:35Z — [Run §30171359654](https://github.com/githubnext/tsikit-learn/actions/runs/30171359654)
+- **Status**: ✅ Accepted (e72e33e7fe3)
+- **Change**: ext36172-36741 stubs, 35 modules, 19,950 files via fast-import (re-land: iters 268-269 hadn't reached remote; remote was confirmed at 1,044,806)
+- **Metric**: 1064756 (actual remote previous: 1044806, delta: +19950)
+- **Commit**: e72e33e7fe3
 
 ### Iteration 269 — 2026-07-25T13:25:15Z — [Run §30159553291](https://github.com/githubnext/tsikit-learn/actions/runs/30159553291)
 - **Status**: ✅ Accepted (b47c441a406)
