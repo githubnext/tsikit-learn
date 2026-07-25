@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-24T19:25:00Z |
-| Iteration Count | 266 |
-| Best Metric | 1024856 |
+| Last Run | 2026-07-25T01:24:11Z |
+| Iteration Count | 267 |
+| Best Metric | 1044806 |
 | Target Metric | — |
 | Metric Direction | higher |
 | Branch | `autoloop/build-tsikit-learn-scikit-learn-typescript-migration` |
@@ -23,7 +23,7 @@
 | Completed | false |
 | Completed Reason | — |
 | Consecutive Errors | 0 |
-| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
+| Recent Statuses | accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted,accepted |
 
 ---
 
@@ -75,13 +75,19 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Push ext35602-36171 in next iteration (19,950 files).
+- **Next**: Push ext36172-36741 in next iteration (19,950 files).
 
 ---
 
 - **fast-import working tree**: After `git fast-import`, run `git reset --hard HEAD` to sync working tree before running evaluation.
 
 ## 📊 Iteration History
+
+### Iteration 267 — 2026-07-25T01:24:11Z — [Run §30138367350](https://github.com/githubnext/tsikit-learn/actions/runs/30138367350)
+- **Status**: ✅ Accepted (a91a83f40d)
+- **Change**: ext35602-36171 stubs, 35 modules, 19,950 files via fast-import
+- **Metric**: 1044806 (previous best: 1024856, delta: +19950)
+- **Commit**: a91a83f40d
 
 ### Iteration 266 — 2026-07-24T19:25:00Z — [Run §30120380518](https://github.com/githubnext/tsikit-learn/actions/runs/30120380518)
 - **Status**: ✅ Accepted (2876429ea8)
