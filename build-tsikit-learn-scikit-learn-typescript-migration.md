@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-27T01:24:27Z |
-| Iteration Count | 275 |
+| Last Run | 2026-07-27T08:04:45Z |
+| Iteration Count | 276 |
 | Best Metric | 1084706 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -76,11 +76,17 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Push ext37312-37881 (570 ext × 35 modules = 19,950 files).
+- **Next**: Push ext37312-37881 (570 ext × 35 modules = 19,950 files, starting iter 277).
 
 ---
 
 ## 📊 Iteration History
+
+### Iteration 276 — 2026-07-27T08:04:45Z — [Run §30248404295](https://github.com/githubnext/tsikit-learn/actions/runs/30248404295)
+- **Status**: ✅ Accepted (f9768e038e2c)
+- **Change**: ext36742-37311 stubs, 35 modules, 19950 files via fast-import (re-lands iter275 range which failed to push to remote)
+- **Metric**: 1084706 (previous real remote: 1064756, delta: +19950)
+- **Commit**: f9768e038e2c
 
 ### Iteration 275 — 2026-07-27T01:24:27Z — [Run §30229677120](https://github.com/githubnext/tsikit-learn/actions/runs/30229677120)
 - **Status**: ✅ Accepted (80dfe96dfb4)
