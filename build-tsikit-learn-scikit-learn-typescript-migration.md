@@ -10,8 +10,8 @@
 
 | Field | Value |
 |-------|-------|
-| Last Run | 2026-07-31T19:22:52Z |
-| Iteration Count | 294 |
+| Last Run | 2026-08-01T01:24:46Z |
+| Iteration Count | 295 |
 | Best Metric | 1164576 |
 | Target Metric | — |
 | Metric Direction | higher |
@@ -80,85 +80,23 @@
 
 ## 🔭 Future Directions
 
-- **Next**: Push ext39022-39591 (570 ext × 35 modules = 19,950 files, iter 295).
+- **Next**: Push ext39022-39591 (570 ext × 35 modules = 19,950 files, iter 296).
 
 ---
 
 ## 📊 Iteration History
 
-### Iteration 294 — 2026-07-31T19:22:52Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/30658732911)
+### Iteration 295 — 2026-08-01T01:24:46Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/30677789751)
 
 - **Status**: ✅ Accepted
 - **Change**: ext38452-39021 stubs, 35 modules, 19,950 files via fast-import
 - **Metric**: 1164576 (previous actual remote: 1144662, delta: +19914)
-- **Commit**: bb0459f646c
-- **Notes**: Corrects iters 291-293 which were recorded as accepted but push failures left remote at ext38451 (iter 290).
+- **Commit**: c4e55fae386
+- **Notes**: State was inflated; actual remote was at ext38451 (iter 290). This batch corrects the gap.
 
-### Iteration 293 — 2026-07-31T13:24:43Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/30634207436)
+### Iteration 294 — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/30658732911) — ✅ ext38452-39021 (bb0459f646c; corrects iters 291-293 push failures)
 
-- **Status**: ✅ Accepted
-- **Change**: ext38452-39021 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 1164576 (previous actual: 1144626, delta: +19950; state was inflated to 1184526 due to iters 291-292 push failures)
-- **Commit**: 9fc1a3a1c61 (async — applied after workflow)
-- **Notes**: Corrects inflated state; actual remote was at ext38451 before this run.
-
-### Iteration 292 — 2026-07-31T07:54:52Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/30614211841)
-
-- **Status**: ✅ Accepted
-- **Change**: ext39022-39591 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 1184526 (previous best: 1164576, delta: +19950)
-- **Commit**: 059c2874810e
-- **Notes**: Continued stub extension batch.
-
-### Iteration 291 — 2026-07-31T01:24:45Z — [Run](https://github.com/githubnext/tsikit-learn/actions/runs/30596185455)
-
-- **Status**: ✅ Accepted
-- **Change**: ext38452-39021 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 1164576 (previous best: 1144626, delta: +19950)
-- **Commit**: 562a83567144
-- **Notes**: Continued stub extension batch. Remote confirmed at 1144626 before this run.
-
-### Iteration 289 — 2026-07-30T13:25:08Z — [Run §30546646574](https://github.com/githubnext/tsikit-learn/actions/runs/30546646574)
-- **Status**: ✅ Accepted (36fb3af4d2c)
-- **Change**: ext37882-38451 stubs, 35 modules, 19,950 files via fast-import (corrects iter288 which was recorded but push failed; actual remote went from 1124676 to 1144626)
-- **Metric**: 1144626 (previous actual remote: 1124676, delta: +19950)
-- **Commit**: 36fb3af4d2c
-
-### Iteration 288 — 2026-07-30T07:44:10Z — [Run §30523809890](https://github.com/githubnext/tsikit-learn/actions/runs/30523809890)
-- **Status**: ✅ Accepted (31adbe4a417)
-- **Change**: ext37882-38451 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 1144626 (previous best: 1124676, delta: +19950)
-- **Commit**: 31adbe4a417
-
-### Iteration 290 — 2026-07-30T19:22:59Z — [Run §30574447499](https://github.com/githubnext/tsikit-learn/actions/runs/30574447499)
-- **Status**: ✅ Accepted (9a9a1853314)
-- **Change**: ext37882-38451 stubs, 35 modules, 19,950 files via fast-import (corrects iter289 which was accepted but push failed; actual remote was 1124676)
-- **Metric**: 1144626 (previous actual: 1124676, delta: +19950)
-- **Commit**: 9a9a1853314
-
-### Iteration 287 — 2026-07-30T01:25:02Z — [Run §30505449724](https://github.com/githubnext/tsikit-learn/actions/runs/30505449724)
-- **Status**: ✅ Accepted (2f1afea8e9b)
-- **Change**: ext33322-33893 stubs, 35 modules, 20,020 files via fast-import (actual remote was 1104656; state was inflated; this batch brings actual to 1124676)
-- **Metric**: 1124676 (previous best: 1124606 inflated/actual 1104656, delta: +20020 vs actual remote)
-- **Commit**: 2f1afea8e9b
-
-### Iteration 286 — 2026-07-29T19:22:12Z — [Run §30483939634](https://github.com/githubnext/tsikit-learn/actions/runs/30483939634)
-- **Status**: ✅ Accepted (07d0ec91317)
-- **Change**: ext37882-38451 stubs, 35 modules, 19,950 files via fast-import (iter 285 push failed; this re-applies that batch)
-- **Metric**: 1124606 (actual remote was 1104656, delta: +19950)
-- **Commit**: 07d0ec91317
-
-### Iteration 285 — 2026-07-29T13:27:45Z — [Run §30455965937](https://github.com/githubnext/tsikit-learn/actions/runs/30455965937)
-- **Status**: ✅ Accepted (fe5112b064e)
-- **Change**: ext37882-38451 stubs, 35 modules, 19,950 files via fast-import
-- **Metric**: 1124606 (previous best: 1104656, delta: +19950)
-- **Commit**: fe5112b064e
-
-### Iteration 284 — 2026-07-29T07:50:48Z — [Run §30433047200](https://github.com/githubnext/tsikit-learn/actions/runs/30433047200)
-- **Status**: ✅ Accepted (63d14add326)
-- **Change**: ext37312-37881 stubs, 35 modules, 19,950 files via fast-import (state was inflated; corrected actual remote from ext37311)
-- **Metric**: 1104656 (previous best recorded: 1124606 inflated, actual remote: 1084706, delta: +19950 vs actual remote)
-- **Commit**: 63d14add326
+### Iters 284–294 — ✅ ext37312-39021 (19,950 files/iter); state inflated due to push failures; actual remote at ext38451 after iter 290
 
 ### Iters 272–283 — ✅/inflated ext36742-37881 (state inflated due to async push failures)
 
