@@ -1,0 +1,155 @@
+/**
+ * Isomap and LocallyLinearEmbedding manifold methods.
+ * Mirrors sklearn.manifold.Isomap and LocallyLinearEmbedding.
+ */
+
+import { NotFittedError } from "../exceptions.js";
+
+function euclidean(a: Float64Array, b: Float64Array): number {
+  let s = 0;
+  for (let i = 0; i < a.length; i++) s += ((a[i] ?? 0) - (b[i] ?? 0)) ** 2;
+  return Math.sqrt(s);
+}
+
+function knnGraph(
+  X: Float64Array[],
+  k: number,
+): { indices: Int32Array[]; distances: Float64Array[] } {
+  const n = X.length;
+  const indices: Int32Array[] = [];
+  const distances: Float64Array[] = [];
+  for (let i = 0; i < n; i++) {
+    const dists = X.map((xj, j) => ({ j, d: euclidean(X[i]!, xj) }))
+      .filter((x) => x.j !== i)
+      .sort((a, b) => a.d - b.d)
+      .slice(0, k);
+    indices.push(new Int32Array(dists.map((x) => x.j)));
+    distances.push(new Float64Array(dists.map((x) => x.d)));
+  }
+  return { indices, distances };
+}
+
+function dijkstra(
+  adj: { j: number; d: number }[][],
+  src: number,
+): Float64Array {
+  const n = adj.length;
+  const dist = new Float64Array(n).fill(Number.POSITIVE_INFINITY);
+  const visited = new Uint8Array(n);
+  dist[src] = 0;
+
+  for (let iter = 0; iter < n; iter++) {
+    let u = -1;
+    let minD = Number.POSITIVE_INFINITY;
+    for (let i = 0; i < n; i++) {
+      if (!visited[i] && (dist[i] ?? Number.POSITIVE_INFINITY) < minD) {
+        minD = dist[i] ?? Number.POSITIVE_INFINITY;
+        u = i;
+      }
+    }
+    if (u < 0) break;
+    visited[u] = 1;
+    for (const { j, d } of adj[u] ?? []) {
+      const nd = (dist[u] ?? 0) + d;
+      if (nd < (dist[j] ?? Number.POSITIVE_INFINITY)) dist[j] = nd;
+    }
+  }
+  return dist;
+}
+
+export interface IsomapOptions {
+  nComponents?: number;
+  nNeighbors?: number;
+}
+
+export class Isomap {
+  nComponents: number;
+  nNeighbors: number;
+
+  embedding_: Float64Array[] | null = null;
+
+  constructor(options: IsomapOptions = {}) {
+    this.nComponents = options.nComponents ?? 2;
+    this.nNeighbors = options.nNeighbors ?? 5;
+  }
+
+  fitTransform(X: Float64Array[]): Float64Array[] {
+    const n = X.length;
+    const k = this.nComponents;
+
+    const { indices, distances } = knnGraph(X, this.nNeighbors);
+
+    // Build adjacency list (undirected)
+    const adj: { j: number; d: number }[][] = Array.from(
+      { length: n },
+      () => [],
+    );
+    for (let i = 0; i < n; i++) {
+      for (let ni = 0; ni < indices[i]!.length; ni++) {
+        const j = indices[i]![ni] ?? 0;
+        const d = distances[i]![ni] ?? 0;
+        adj[i]!.push({ j, d });
+        adj[j]!.push({ j: i, d });
+      }
+    }
+
+    // Geodesic distances via Dijkstra
+    const G: Float64Array[] = Array.from({ length: n }, (_, i) =>
+      dijkstra(adj, i),
+    );
+
+    // MDS on geodesic distance matrix
+    // Double centering
+    const G2 = G.map((row) => new Float64Array(row.map((d) => -(d * d) / 2)));
+    const rowMean = G2.map((row) => row.reduce((a, b) => a + b, 0) / n);
+    const totalMean = rowMean.reduce((a, b) => a + b, 0) / n;
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        G2[i]![j] =
+          (G2[i]![j] ?? 0) - (rowMean[i] ?? 0) - (rowMean[j] ?? 0) + totalMean;
+      }
+    }
+
+    // Power iteration for top-k eigenvectors
+    const embedding: Float64Array[] = Array.from(
+      { length: n },
+      () => new Float64Array(k),
+    );
+    const deflated = G2.map((row) => new Float64Array(row));
+
+    for (let c = 0; c < k; c++) {
+      let v = new Float64Array(n).fill(1 / Math.sqrt(n));
+      for (let iter = 0; iter < 200; iter++) {
+        const nv = new Float64Array(n);
+        for (let i = 0; i < n; i++)
+          for (let j = 0; j < n; j++)
+            nv[i]! += (deflated[i]![j] ?? 0) * (v[j] ?? 0);
+        let norm = 0;
+        for (let i = 0; i < n; i++) norm += (nv[i] ?? 0) ** 2;
+        norm = Math.sqrt(norm);
+        if (norm < 1e-10) break;
+        for (let i = 0; i < n; i++) nv[i] = (nv[i] ?? 0) / norm;
+        v = nv;
+      }
+      let lambda = 0;
+      for (let i = 0; i < n; i++) {
+        let av = 0;
+        for (let j = 0; j < n; j++) av += (deflated[i]![j] ?? 0) * (v[j] ?? 0);
+        lambda += av * (v[i] ?? 0);
+      }
+      const scale = Math.sqrt(Math.max(0, lambda));
+      for (let i = 0; i < n; i++) embedding[i]![c] = (v[i] ?? 0) * scale;
+      for (let i = 0; i < n; i++)
+        for (let j = 0; j < n; j++)
+          deflated[i]![j]! -= lambda * (v[i] ?? 0) * (v[j] ?? 0);
+    }
+
+    this.embedding_ = embedding;
+    return embedding;
+  }
+
+  fit(X: Float64Array[]): this {
+    this.fitTransform(X);
+    return this;
+  }
+}

@@ -1,0 +1,1 @@
+export const ext20341GP = "sklearn.gaussian_process.ext20341" as const;

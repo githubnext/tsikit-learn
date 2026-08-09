@@ -1,0 +1,1 @@
+export const ext26477Ens = "sklearn.ensemble.ext26477" as const;

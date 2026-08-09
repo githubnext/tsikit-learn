@@ -1,0 +1,1 @@
+export const ext27424BC = "sklearn.bicluster.ext27424" as const;

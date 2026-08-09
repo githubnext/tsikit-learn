@@ -1,0 +1,1 @@
+export const ext26627KApprox = "sklearn.kernel_approximation.ext26627" as const;

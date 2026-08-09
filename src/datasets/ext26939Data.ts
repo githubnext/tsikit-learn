@@ -1,0 +1,1 @@
+export const ext26939Data = "sklearn.datasets.ext26939" as const;

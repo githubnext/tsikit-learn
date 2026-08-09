@@ -1,0 +1,1 @@
+export const ext26590RProj = "sklearn.random_projection.ext26590" as const;

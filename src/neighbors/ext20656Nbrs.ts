@@ -1,0 +1,1 @@
+export const ext20656Nbrs = "sklearn.neighbors.ext20656" as const;

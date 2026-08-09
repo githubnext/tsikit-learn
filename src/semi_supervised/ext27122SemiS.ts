@@ -1,0 +1,1 @@
+export const ext27122SemiS = "sklearn.semi_supervised.ext27122" as const;

@@ -1,0 +1,1 @@
+export const ext26153NB = "sklearn.naive_bayes.ext26153" as const;

@@ -1,0 +1,1 @@
+export const ext25970MS = "sklearn.model_selection.ext25970" as const;

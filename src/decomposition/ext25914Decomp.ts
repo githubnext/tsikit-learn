@@ -1,0 +1,1 @@
+export const ext25914Decomp = "sklearn.decomposition.ext25914" as const;

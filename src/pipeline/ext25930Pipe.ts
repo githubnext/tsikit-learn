@@ -1,0 +1,1 @@
+export const ext25930Pipe = "sklearn.pipeline.ext25930" as const;

@@ -1,0 +1,1 @@
+export const ext26078MC = "sklearn.multiclass.ext26078" as const;

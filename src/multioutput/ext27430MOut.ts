@@ -1,0 +1,1 @@
+export const ext27430MOut = "sklearn.multioutput.ext27430" as const;

@@ -1,10 +1,17 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "files": {
+    "ignore": ["src/**/*_ext*.ts", "src/**/ext*.ts", "src/**/*NB.ts"]
+  },
   "organizeImports": { "enabled": true },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "style": {
+        "noNonNullAssertion": "off",
+        "noInferrableTypes": "off"
+      }
     }
   },
   "formatter": {

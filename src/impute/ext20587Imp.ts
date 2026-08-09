@@ -1,0 +1,1 @@
+export const ext20587Imp = "sklearn.impute.ext20587" as const;

@@ -1,0 +1,1 @@
+export const ext26067CrossD = "sklearn.cross_decomposition.ext26067" as const;

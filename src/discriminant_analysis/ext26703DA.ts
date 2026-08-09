@@ -1,0 +1,1 @@
+export const ext26703DA = "sklearn.discriminant_analysis.ext26703" as const;

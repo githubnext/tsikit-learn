@@ -1,0 +1,1 @@
+export const ext26389KRidge = "sklearn.kernel_ridge.ext26389" as const;

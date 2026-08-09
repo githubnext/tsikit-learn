@@ -1,0 +1,1 @@
+export const ext25962Clus = "sklearn.cluster.ext25962" as const;

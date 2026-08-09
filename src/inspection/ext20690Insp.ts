@@ -1,0 +1,1 @@
+export const ext20690Insp = "sklearn.inspection.ext20690" as const;
