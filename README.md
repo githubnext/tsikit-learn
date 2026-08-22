@@ -1,5 +1,1 @@
 # tsikit-learn
-test
-# sync
-
-
