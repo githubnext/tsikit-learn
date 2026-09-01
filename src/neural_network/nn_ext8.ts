@@ -148,13 +148,9 @@ export class TransformerMLP extends BaseEstimator {
       const fanIn = sizes[l] ?? 1;
       const fanOut = sizes[l + 1] ?? 1;
       const scale = Math.sqrt(2 / fanIn);
-      const W = Array.from({ length: fanIn }, () => new Float64Array(fanOut).map(() => (Math.random() - 0.5) * 2 * scale));
-      this.weights_.push(W.flat() as unknown as Float64Array);
-      const W2: Float64Array[] = W;
-      this.weights_[l] = W2.flat() as unknown as Float64Array;
       const w = new Float64Array(fanIn * fanOut);
       for (let i = 0; i < fanIn; i++) for (let j = 0; j < fanOut; j++) w[i * fanOut + j] = (Math.random() - 0.5) * 2 * scale;
-      this.weights_[l] = w;
+      this.weights_.push(w);
       this.biases_.push(new Float64Array(fanOut));
     }
     return this;

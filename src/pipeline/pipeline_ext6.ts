@@ -103,7 +103,7 @@ export class SequentialFeatureSelectorExt6 {
   }
 
   transform(X: Float64Array[]): Float64Array[] {
-    if (!this.fitted) throw new NotFittedError("SequentialFeatureSelector not fitted");
+    if (!this.fitted) throw new NotFittedError("SequentialFeatureSelectorExt6 not fitted");
     return X.map(row => Float64Array.from(this.selectedFeatures_, col => row[col] ?? 0));
   }
 

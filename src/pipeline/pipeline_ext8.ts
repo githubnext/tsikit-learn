@@ -8,6 +8,17 @@ export interface TransformerLike {
   fitTransform?(X: Float64Array[]): Float64Array[];
 }
 
+interface RegressorLike {
+  fit(X: Float64Array[], y: Float64Array): RegressorLike;
+  predict(X: Float64Array[]): Float64Array;
+}
+
+interface TransformerLikeForTarget {
+  fit(y: Float64Array[]): TransformerLikeForTarget;
+  transform(y: Float64Array[]): Float64Array[];
+  inverseTransform(y: Float64Array[]): Float64Array[];
+}
+
 export class FunctionTransformer implements TransformerLike {
   func: (X: Float64Array[]) => Float64Array[];
   inverseFunc: ((X: Float64Array[]) => Float64Array[]) | null;

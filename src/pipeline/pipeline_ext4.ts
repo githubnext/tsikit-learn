@@ -69,7 +69,7 @@ export class FeatureUnionWeighted {
 export class FunctionTransformerExt4 {
 	private fitted_ = false;
 	readonly func: (X: Float64Array[]) => Float64Array[];
-	readonly inverseFunc?: (X: Float64Array[]) => Float64Array[];
+	readonly inverseFunc: ((X: Float64Array[]) => Float64Array[]) | undefined;
 	readonly validate: boolean;
 
 	constructor(options: {
