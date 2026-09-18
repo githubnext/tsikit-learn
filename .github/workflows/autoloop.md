@@ -11,7 +11,8 @@ description: |
   - Maintains a single draft PR per program that accumulates all accepted iterations
 
 on:
-  schedule: every 6h
+  # schedule trigger removed to disable automatic runs (workflow turned off; see AGENTS.md / task history)
+  # schedule: every 6h
   workflow_dispatch:
     inputs:
       program:

@@ -5,7 +5,8 @@ description: |
   PR per run, and gives up after 5 attempts that don't improve the same repo state.
 
 on:
-  schedule: every 5m
+  # schedule trigger removed to disable automatic runs (workflow turned off; see AGENTS.md / task history)
+  # schedule: every 5m
   workflow_dispatch:
     inputs:
       pr_number:
